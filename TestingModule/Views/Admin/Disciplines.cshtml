@@ -1,0 +1,20 @@
+﻿@model TestingModule.Models.Discipline
+@{
+    ViewBag.Title = "Disciplines";
+}
+
+<h2>Дисципліни</h2>
+<div>@Model.Name </div>
+<hr>
+<h3>Створити нову?</h3>
+<form method="post" action="newLecture">
+    <div>
+        Введіть назву дисципліни:
+        
+        <input type="text" name="DisciplineName" runat="server"/><br />
+        <input type="submit" value="Зберегти" id="OK" runat="server"/>
+    </div>
+</form> 
+
+
+<hr>
