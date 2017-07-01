@@ -1,8 +1,30 @@
-﻿
+﻿@model IEnumerable<TestingModule.Models.Lecture>
+
 @{
     ViewBag.Title = "Lectures";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Lectures</h2>
+<h2>Лекції</h2>
+<table border="1">
+    <tr><th>Назва</th><th>Дії</th></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><a href="disciplines/@item.ID/lectures">@item.Name</a></td>
+            <td><a href="EditDiscipline">Редагувати</a>/Видалити</td>
+        </tr>
+    }
+</table>
+<hr>
 
+<h3>Створити нову?</h3>
+@*@using (Html.BeginForm("NewLecture", "Admin", FormMethod.Post))
+{
+    <form action="newLecture">
+        <div>
+            Введіть назву лекції:
+            @Html.TextBoxFor(model => model.Name)
+            <button type="submit">Зберегти</button>
+        </div>
+    </form>*@
+}

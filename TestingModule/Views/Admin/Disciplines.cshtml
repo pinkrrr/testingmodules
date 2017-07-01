@@ -1,20 +1,33 @@
-﻿@model TestingModule.Models.Discipline
+﻿@model IEnumerable<TestingModule.Models.Discipline>
+
 @{
     ViewBag.Title = "Disciplines";
 }
 
 <h2>Дисципліни</h2>
-<div>@Model.Name </div>
+<table border="1">
+    <tr><th>Назва</th><th>Дії</th></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><a href="disciplines/@item.ID/lectures">@item.Name</a></td>
+            <td><a href="EditDiscipline">Редагувати</a>/Видалити</td>
+        </tr>
+    }
+</table>
 <hr>
-<h3>Створити нову?</h3>
-<form method="post" action="newLecture">
-    <div>
-        Введіть назву дисципліни:
-        
-        <input type="text" name="DisciplineName" runat="server"/><br />
-        <input type="submit" value="Зберегти" id="OK" runat="server"/>
-    </div>
-</form> 
 
+
+<h3>Створити нову?</h3>
+@using (Html.BeginForm("NewDiscipline", "Admin", FormMethod.Post))
+{
+    <form>
+        <div>
+            Введіть назву дисципліни:
+            @Html.TextBoxFor(model => model.Last().Name)
+            <button type="submit">Створити</button>
+        </div>
+    </form>
+}
 
 <hr>
