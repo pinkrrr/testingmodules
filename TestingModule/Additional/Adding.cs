@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using TestingModule.Models;
 
 namespace TestingModule.Additional
@@ -23,6 +24,19 @@ namespace TestingModule.Additional
                 result = "Current skill has been already created before! Try another one.";
             }
             return result;
+        }
+
+        public void DeleteDiscipline(int disciplineId)
+        {
+            var disc = new Discipline() { ID = disciplineId };
+            _db.Entry(disc).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
+        public void EditDiscipline(int disciplineId, string name)
+        {
+            var disc = _db.Disciplines.Where(t => t.ID == disciplineId).FirstOrDefault();
+            disc.Name = name;
+            _db.SaveChanges();
         }
     }
 }

@@ -12,6 +12,17 @@ namespace TestingModule
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            routes.MapRoute(
+                name: "Modules",
+                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules",
+                defaults: new { controller = "Admin", action = "Modules" });
+
+            routes.MapRoute(
+                name: "DeleteDiscipline",
+                url: "admin/disciplines/{Disciplineid}/Delete",
+                defaults: new { controller = "Admin", action = "DeleteDiscipline" });
+
             routes.MapRoute(
                 name: "Lectures",
                 url: "admin/disciplines/{Disciplineid}/Lectures",

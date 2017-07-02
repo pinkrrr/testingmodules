@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Antlr.Runtime.Misc;
 using TestingModule.Additional;
 using TestingModule.Models;
 
@@ -23,17 +24,17 @@ namespace TestingModule.Controllers
         public ActionResult NewDiscipline(TestModel model)
         {
             var result = new Adding().AddNewDiscipline(model.Name);
-            return View("Disciplines");
+            return RedirectToAction("Disciplines");
         }
         public ActionResult EditDiscipline(TestModel model)
         {
             var result = new Adding().AddNewDiscipline(model.Name);
-            return View("Disciplines");
+            return RedirectToAction("Disciplines");
         }
-        public ActionResult DeleteDiscipline(TestModel model)
+        public ActionResult DeleteDiscipline(int disciplineId)
         {
-            var result = new Adding().AddNewDiscipline(model.Name);
-            return View("Disciplines");
+            new Adding().DeleteDiscipline(disciplineId);
+            return RedirectToAction("Disciplines");
         }
 
 
@@ -45,9 +46,8 @@ namespace TestingModule.Controllers
         }
         public ActionResult Modules()
         {
-            ViewBag.Message = "All modules from previously selected lecture";
-
-            return View();
+            List<Module> test = new testingDbEntities().Modules.ToList();
+            return View(test);
         }
         public ActionResult Questions()
         {
