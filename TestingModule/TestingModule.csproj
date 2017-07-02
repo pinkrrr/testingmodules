@@ -147,6 +147,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additional\Deleting.cs" />
+    <Compile Include="Additional\Editing.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -262,7 +264,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Admin\Disciplines.cshtml" />
-    <Content Include="Views\Admin\Contact.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <EntityDeploy Include="Models\TestingDb.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
