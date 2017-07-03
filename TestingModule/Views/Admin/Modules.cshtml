@@ -19,7 +19,7 @@ else
         {
             <tr>
                 <td><a href="modules/@item.ID/questions">@item.Name</a></td>
-                <td><a href="EditModule">Редагувати</a>/Видалити</td>
+                <td><a href="EditModule">Редагувати</a>/<a href="modules/@item.ID/Delete">Видалити</a></td>
             </tr>
         }
 
@@ -30,3 +30,15 @@ else
 
 <h3>Створити нову?</h3>
 
+@using (Html.BeginForm("NewModule", "Admin", FormMethod.Post))
+{
+    <form>
+        <div>
+            Введіть назву лекції:
+            @Html.TextBoxFor(model => model.LastOrDefault().Name)
+            @Html.HiddenFor(model => model.LastOrDefault().LectureId)
+            @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
+            <button type="submit">Створити</button>
+        </div>
+    </form>
+}
