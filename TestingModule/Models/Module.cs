@@ -7,14 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TestingModule.Sql
+namespace TestingModule.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Discipline
+    public partial class Module
     {
         public int ID { get; set; }
+        public int DisciplineId { get; set; }
+        public int LectureId { get; set; }
         public string Name { get; set; }
     }
 }

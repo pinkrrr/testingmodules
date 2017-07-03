@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TestingModule.Models.Lecture>
+
+@{
+    ViewBag.Title = "Lectures";
+}
+
+<h2>Лекції</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодної лекції...</h3>
+}
+else
+{
+    <table border="1">
+        <tr><th>Назва</th><th>Дії</th></tr>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="lectures/@item.ID/modules">@item.Name</a></td>
+                <td><a href="EditLecture">Редагувати</a>/Видалити</td>
+            </tr>
+        }
+
+
+    </table>
+}
+<hr>
+
+<h3>Створити нову?</h3>
+@*@using (Html.BeginForm("NewLecture", "Admin", FormMethod.Post))
+    {
+        <form action="newLecture">
+            <div>
+                Введіть назву лекції:
+                @Html.TextBoxFor(model => model.Name)
+                <button type="submit">Зберегти</button>
+            </div>
+        </form>
+    }*@

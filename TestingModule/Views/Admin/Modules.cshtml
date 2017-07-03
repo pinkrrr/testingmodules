@@ -1,0 +1,32 @@
+﻿@model IEnumerable<TestingModule.Models.Module>
+@{
+    ViewBag.Title = "Modules";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Модулі</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодного модуля...</h3>
+}
+else
+{
+    <table border="1">
+        <tr><th>Назва</th><th>Дії</th></tr>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="modules/@item.ID/questions">@item.Name</a></td>
+                <td><a href="EditModule">Редагувати</a>/Видалити</td>
+            </tr>
+        }
+
+
+    </table>
+}
+<hr>
+
+<h3>Створити нову?</h3>
+
