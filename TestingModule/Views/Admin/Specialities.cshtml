@@ -1,0 +1,42 @@
+﻿@model IEnumerable<TestingModule.Models.Speciality>
+@{
+    ViewBag.Title = "Specialities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Спеціальності</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодної спеціальності...</h3>
+}
+else
+{
+    <table border="1">
+        <tr><th>Назва</th><th>Дії</th></tr>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="specialities/@item.ID/groups">@item.Name</a></td>
+                <td><a href="EditSpeciality">Редагувати</a>/<a href="specialities/@item.ID/Delete">Видалити</a></td>
+            </tr>
+        }
+
+
+    </table>
+}
+<hr>
+<h3>Створити нову?</h3>
+@using (Html.BeginForm("NewSpeciality", "Admin", FormMethod.Post))
+{
+    <form>
+        <div>
+            Введіть назву спеціальності:
+            @Html.TextBoxFor(model => model.Last().Name)
+            <button type="submit">Створити</button>
+        </div>
+    </form>
+}
+
+<hr>

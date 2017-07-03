@@ -1,0 +1,50 @@
+﻿@model IEnumerable<TestingModule.Models.Student>
+@{
+    ViewBag.Title = "Students";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Студенти</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодного студента...</h3>
+}
+else
+{
+    <table border="1">
+        <tr><th>Ім'я</th><th>Прізвище</th><th>Username</th><th>Password</th><th>Дії</th></tr>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Surname</td>
+                <td>@item.Email</td>
+                <td>@item.Pass</td>
+                <td><a href="EditStudent">Редагувати</a>/<a href="students/@item.ID/Delete">Видалити</a></td>
+            </tr>
+        }
+
+
+    </table>
+}
+<hr>
+
+<h3>Створити нову?</h3>
+
+@using (Html.BeginForm("NewStudent", "Admin", FormMethod.Post))
+{
+    <form>
+        <div>
+            Введіть ім'я студента:
+            @Html.TextBoxFor(model => model.LastOrDefault().Name)
+            Введіть прізвище студента:
+            @Html.TextBoxFor(model => model.LastOrDefault().Surname)
+            @Html.HiddenFor(model => model.LastOrDefault().GorupId)
+            @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
+            <button type="submit">Створити</button>
+        </div>
+    </form>
+}
+

@@ -13,6 +13,40 @@ namespace TestingModule
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //Students
+            routes.MapRoute(
+                name: "Students",
+                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students",
+                defaults: new { controller = "Admin", action = "Students" });
+            routes.MapRoute(
+                name: "AddStudent",
+                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewLStudent",
+                defaults: new { controller = "Admin", action = "NewStudent" });
+            routes.MapRoute(
+                name: "DeleteStudent",
+                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/{StudentId}/Delete",
+                defaults: new { controller = "Admin", action = "DeleteStudent" });
+
+            //Groups
+            routes.MapRoute(
+                name: "AddGroup",
+                url: "admin/specialities/{Specialityid}/Groups/NewGroup",
+                defaults: new { controller = "Admin", action = "NewGroup" });
+            routes.MapRoute(
+                name: "DeleteGroup",
+                url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Delete",
+                defaults: new { controller = "Admin", action = "DeleteGroup" });
+            routes.MapRoute(
+                name: "Groups",
+                url: "admin/specialities/{Specialityid}/Groups",
+                defaults: new { controller = "Admin", action = "Groups" });
+
+            //Specialities
+            routes.MapRoute(
+                name: "DeleteSpeciality",
+                url: "admin/specialities/{Specialityid}/Delete",
+                defaults: new { controller = "Admin", action = "DeleteSpeciality" });
+
             //Modules
             routes.MapRoute(
                 name: "Modules",
