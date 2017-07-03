@@ -14,12 +14,12 @@ namespace TestingModule.Controllers
             return View();
         }
 
+        //Discipline
         public ActionResult Disciplines()
         {
             ViewBag.Message = "All disciplines";
             List<Discipline> test = new testingDbEntities().Disciplines.ToList();
             return View(test);
-
         }
         public ActionResult NewDiscipline(TestModel model)
         {
@@ -33,22 +33,49 @@ namespace TestingModule.Controllers
         }
         public ActionResult DeleteDiscipline(int disciplineId)
         {
-            new Adding().DeleteDiscipline(disciplineId);
+            new Deleting().DeleteDiscipline(disciplineId);
             return RedirectToAction("Disciplines");
         }
 
 
-
+        //Lecture
         public ActionResult Lectures(int disciplineId)
         {
             List<Lecture> test = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
             return View(test);
         }
-        public ActionResult Modules()
+        public ActionResult NewLecture(TestModel model)
         {
-            List<Module> test = new testingDbEntities().Modules.ToList();
+            var result = new Adding().AddNewLecture(model.Name,  model.DisciplineId);
+            return RedirectToAction("Lectures");
+        }
+        public ActionResult DeleteLecture(int lectureId)
+        {
+            new Deleting().DeleteLecture(lectureId);
+            return RedirectToAction("Lectures");
+        }
+
+
+
+        //Module
+        public ActionResult Modules(int lectureId)
+        {
+            List<Module> test = new testingDbEntities().Modules.Where(t => t.LectureId == lectureId).ToList();
             return View(test);
         }
+        public ActionResult NewModule(TestModel model)
+        {
+            var result = new Adding().AddNewModule(model.Name, model.LectureId, model.DisciplineId);
+            return RedirectToAction("Modules");
+        }
+        public ActionResult DeleteModule(int moduleId)
+        {
+            new Deleting().DeleteModule(moduleId);
+            return RedirectToAction("Modules");
+        }
+
+
+        //Question
         public ActionResult Questions()
         {
             ViewBag.Message = "All questions from previously selected module";
@@ -56,12 +83,6 @@ namespace TestingModule.Controllers
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
 
 
     }
