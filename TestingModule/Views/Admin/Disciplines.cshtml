@@ -24,7 +24,7 @@
     <form>
         <div>
             Введіть назву дисципліни:
-            @Html.TextBoxFor(model => model.Last().Name)
+            @Html.TextBoxFor(model => model.LastOrDefault().Name)
             <button type="submit">Створити</button>
         </div>
     </form>

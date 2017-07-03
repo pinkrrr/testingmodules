@@ -28,5 +28,24 @@ namespace TestingModule.Additional
             _db.Entry(disc).State = EntityState.Deleted;
             _db.SaveChanges();
         }
+        public void DeleteSpeciality(int SpecialityId)
+        {
+            var disc = new Speciality() { ID = SpecialityId };
+            _db.Entry(disc).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
+        public void DeleteGroup(int GroupId)
+        {
+            var disc = new Group() { ID = GroupId };
+            _db.Entry(disc).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
+        public void DeleteStudent(int StudentId)
+        {
+            var disc = new Student() { ID = StudentId };
+            _db.Entry(disc).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
+
     }
 }
