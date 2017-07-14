@@ -21,12 +21,12 @@ namespace TestingModule.Controllers
             List<Discipline> test = new testingDbEntities().Disciplines.ToList();
             return View(test);
         }
-        public ActionResult NewDiscipline(DisciplinesModel model)
+        public ActionResult NewDiscipline(Discipline model)
         {
             var result = new Adding().AddNewDiscipline(model.Name);
             return RedirectToAction("Disciplines");
         }
-        public ActionResult EditDiscipline(DisciplinesModel model)
+        public ActionResult EditDiscipline(Discipline model)
         {
             var result = new Adding().AddNewDiscipline(model.Name);
             return RedirectToAction("Disciplines");
@@ -44,7 +44,7 @@ namespace TestingModule.Controllers
             List<Lecture> test = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
             return View(test);
         }
-        public ActionResult NewLecture(DisciplinesModel model)
+        public ActionResult NewLecture(Lecture model)
         {
             var result = new Adding().AddNewLecture(model.Name, model.DisciplineId);
             return RedirectToAction("Lectures");
@@ -63,7 +63,7 @@ namespace TestingModule.Controllers
             List<Module> test = new testingDbEntities().Modules.Where(t => t.LectureId == lectureId).ToList();
             return View(test);
         }
-        public ActionResult NewModule(DisciplinesModel model)
+        public ActionResult NewModule(Module model)
         {
             var result = new Adding().AddNewModule(model.Name, model.LectureId, model.DisciplineId);
             return RedirectToAction("Modules");
@@ -89,7 +89,7 @@ namespace TestingModule.Controllers
             List<Speciality> test = new testingDbEntities().Specialities.ToList();
             return View(test);
         }
-        public ActionResult NewSpeciality(StudentModel model)
+        public ActionResult NewSpeciality(Student model)
         {
             var result = new Adding().AddNewSpeciality(model.Name);
             return RedirectToAction("Specialities");
@@ -108,7 +108,7 @@ namespace TestingModule.Controllers
             List<Group> test = new testingDbEntities().Groups.Where(t => t.SpecialityId == specialityId).ToList();
             return View(test);
         }
-        public ActionResult NewGroup(Student model)
+        public ActionResult NewGroup(Group model)
         {
             var result = new Adding().AddNewGroup(model.Name, model.SpecialityId);
             return RedirectToAction("Groups");
@@ -122,10 +122,10 @@ namespace TestingModule.Controllers
         //Students
         public ActionResult Students(int groupId)
         {
-            List<Student> test = new testingDbEntities().Students.Where(t => t.GorupId == groupId).ToList();
+            List<Student> test = new testingDbEntities().Students.Where(t => t.GroupId == groupId).ToList();
             return View(test);
         }
-        public ActionResult NewStudent(StudentModel model)
+        public ActionResult NewStudent(Student model)
         {
             var result = new Adding().AddNewStudent(model.Name, model.Surname, model.GroupId, model.SpecialityId);
             return RedirectToAction("Students");
