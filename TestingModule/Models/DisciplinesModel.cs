@@ -7,7 +7,7 @@ namespace TestingModule.Models
 {
     public class DisciplinesModel
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public int DisciplineId { get; set; }
         public int LectureId { get; set; }
