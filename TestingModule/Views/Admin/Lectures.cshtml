@@ -18,8 +18,8 @@ else
         @foreach (var item in Model)
         {
             <tr>
-                <td><a href="lectures/@item.ID/modules">@item.Name</a></td>
-                <td><a href="EditLecture">Редагувати</a>/<a href="lectures/@item.ID/Delete">Видалити</a></td>
+                <td><a href="lectures/@item.Id/modules">@item.Name</a></td>
+                <td><a href="EditLecture">Редагувати</a>/<a href="lectures/@item.Id/Delete">Видалити</a></td>
             </tr>
         }
 
@@ -35,7 +35,7 @@ else
         <div>
             Введіть назву лекції:
             @Html.TextBoxFor(model => model.LastOrDefault().Name)
-            @Html.HiddenFor(model => model.LastOrDefault().ID)
+            @Html.HiddenFor(model => model.LastOrDefault().Id)
             @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
             <button type="submit">Створити</button>
         </div>

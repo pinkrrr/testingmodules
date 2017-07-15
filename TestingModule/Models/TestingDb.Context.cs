@@ -33,9 +33,9 @@ namespace TestingModule.Models
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Respons> Responses { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Speciality> Specialities { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
     }
 }

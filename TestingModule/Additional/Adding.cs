@@ -13,9 +13,9 @@ namespace TestingModule.Additional
             var matches = _db.Disciplines.Count(t => t.Name == name);
             if (matches == 0)
             {
-                var last = _db.Disciplines.OrderByDescending(t => t.ID).Select(t => t.ID).FirstOrDefault() + 1;
+                var last = _db.Disciplines.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var disciplinesTable = _db.Set<Discipline>();
-                disciplinesTable.Add(new Discipline() { ID = last, Name = name });
+                disciplinesTable.Add(new Discipline() { Id = last, Name = name });
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
@@ -31,9 +31,9 @@ namespace TestingModule.Additional
             var matches = _db.Lectures.Count(t => t.Name == name);
             if (matches == 0)
             {
-                var last = _db.Lectures.OrderByDescending(t => t.ID).Select(t => t.ID).FirstOrDefault() + 1;
+                var last = _db.Lectures.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var lecturesTable = _db.Set<Lecture>();
-                lecturesTable.Add(new Lecture() { ID = last, DisciplineId = disciplineId, Name = name });
+                lecturesTable.Add(new Lecture() { Id = last, DisciplineId = disciplineId, Name = name });
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
@@ -49,9 +49,9 @@ namespace TestingModule.Additional
             var matches = _db.Modules.Count(t => t.Name == name);
             if (matches == 0)
             {
-                var last = _db.Modules.OrderByDescending(t => t.ID).Select(t => t.ID).FirstOrDefault() + 1;
+                var last = _db.Modules.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var lecturesTable = _db.Set<Module>();
-                lecturesTable.Add(new Module() { ID = last, DisciplineId = disciplineId, LectureId = lectureId, Name = name });
+                lecturesTable.Add(new Module() { Id = last, DisciplineId = disciplineId, LectureId = lectureId, Name = name });
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
@@ -67,9 +67,9 @@ namespace TestingModule.Additional
             var matches = _db.Specialities.Count(t => t.Name == name);
             if (matches == 0)
             {
-                var last = _db.Specialities.OrderByDescending(t => t.ID).Select(t => t.ID).FirstOrDefault() + 1;
+                var last = _db.Specialities.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var specialityTable = _db.Set<Speciality>();
-                specialityTable.Add(new Speciality() { ID = last, Name = name });
+                specialityTable.Add(new Speciality() { Id = last, Name = name });
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
@@ -85,9 +85,9 @@ namespace TestingModule.Additional
             var matches = _db.Groups.Count(t => t.Name == name);
             if (matches == 0)
             {
-                var last = _db.Groups.OrderByDescending(t => t.ID).Select(t => t.ID).FirstOrDefault() + 1;
+                var last = _db.Groups.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var groupsTable = _db.Set<Group>();
-                groupsTable.Add(new Group() { ID = last, SpecialityId = specialityId, Name = name });
+                groupsTable.Add(new Group() { Id = last, SpecialityId = specialityId, Name = name });
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
@@ -107,9 +107,9 @@ namespace TestingModule.Additional
                 var username = usernameAndPassword.TranslitFileName(name.ToLower()) + "." +
                                usernameAndPassword.TranslitFileName(surname.ToLower());
                 var password = usernameAndPassword.Password();
-                var last = _db.Students.OrderByDescending(t => t.ID).Select(t => t.ID).FirstOrDefault() + 1;
+                var last = _db.Students.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var studentsTable = _db.Set<Student>();
-                studentsTable.Add(new Student() { ID = last, SpecialityId = specialityId, GroupId = groupId, Name = name , Surname = surname, Email = username, Pass = password});
+                studentsTable.Add(new Student() { Id = last, SpecialityId = specialityId, GroupId = groupId, Name = name , Surname = surname, Email = username, Pass = password});
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }

@@ -14,7 +14,7 @@ namespace TestingModule.Models
     
     public partial class Group
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public int SpecialityId { get; set; }
         public string Name { get; set; }
     }

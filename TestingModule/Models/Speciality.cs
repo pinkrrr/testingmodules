@@ -14,7 +14,7 @@ namespace TestingModule.Models
     
     public partial class Speciality
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }
