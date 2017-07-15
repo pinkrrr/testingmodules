@@ -14,7 +14,7 @@ namespace TestingModule.Models
     
     public partial class LecturesHistory
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public int LectureId { get; set; }
         public int DisciplineId { get; set; }
         public int GroupId { get; set; }

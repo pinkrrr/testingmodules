@@ -14,9 +14,9 @@ namespace TestingModule.Models
     
     public partial class Account
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
-        public int RoleID { get; set; }
+        public int RoleId { get; set; }
     }
 }

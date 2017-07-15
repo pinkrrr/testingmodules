@@ -11,7 +11,7 @@ namespace TestingModule.Additional
         private readonly testingDbEntities _db = new testingDbEntities();
         public void EditDiscipline(int disciplineId, string name)
         {
-            var disc = _db.Disciplines.Where(t => t.ID == disciplineId).FirstOrDefault();
+            var disc = _db.Disciplines.Where(t => t.Id == disciplineId).FirstOrDefault();
             disc.Name = name;
             _db.SaveChanges();
         }

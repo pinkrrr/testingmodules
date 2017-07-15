@@ -14,12 +14,12 @@ namespace TestingModule.Models
     
     public partial class Student
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public int SpecialityId { get; set; }
+        public int GroupId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Pass { get; set; }
-        public int GroupId { get; set; }
     }
 }
