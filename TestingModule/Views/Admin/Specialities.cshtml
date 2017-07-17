@@ -11,16 +11,21 @@
 }
 else
 {
-    <table border="1">
-        <tr><th>Назва</th><th>Дії</th></tr>
-
+    <table class="table" border="1">
+        <tr class="table-row"><th class="table-header">Назва</th><th class="table-header">Дії</th></tr>
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td><a href="specialities/@item.Id/groups">@item.Name</a></td>
-                <td><a href="EditSpeciality">Редагувати</a>/<a href="specialities/@item.Id/Delete">Видалити</a></td>
+            <tr class="table-row">
+                <td class="table-item table-item_name"><a href="specialities/@item.Id/groups" class="specialityName">@item.Name</a></td>
+                <td class="table-item table-item_edit">
+                    <div class="table-edit-button">Редагувати</div>
+                    <div class="table-remove-button">Видалити</div>
+                    <!--<a href="EditSpeciality">Редагувати</a>-->
+                    <!--<a href="specialities/@item.Id/Delete">Видалити</a>-->
+                </td>
             </tr>
+
         }
 
 
@@ -39,4 +44,12 @@ else
     </form>
 }
 
-<hr>
+<div class="popup popup-edit-specialities">
+    <div class="popup-body">
+        <div class="popup-content">
+            <input class="input-text" type="text" />
+            <button class="btn popup-btn popup-save-btn">Зберегти</button>
+            <button class="btn popup-btn popup-cancel-btn">Відмінити</button>
+        </div>
+    </div>
+</div>

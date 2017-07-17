@@ -1,24 +1,187 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    padding: 0;
+    margin: 0;
+    font-family: 'Helvetica CE', 'Arial', sans-serif;
+    font-size: 16px;
+    color: #000000;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+body *{
+    box-sizing: border-box;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+.container{
+    width: 960px;
+    display: block;
+    position: relative;
+    margin: auto;
+
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.btn{
+    cursor: pointer;
+    border: 0;
+    transition: color .3s, background .3s;
+    outline: none;
+}
+
+input[type="text"]{
+    outline: none;
+    transition: border .3s;
+    border: 1px solid #bababa;
+}
+
+input[type="text"]:focus{
+    border-color: #4cacff;
+}
+
+.navbar{
+    background-color: #4cacff;
+}
+
+.navbar-logo{
+    font-size: 64px;
+    font-family: 'Times New Roman', Times, serif;
+    color: #ffe74c;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+    transition: color .3s;
+}
+
+.navbar-logo:hover{
+    color: #ffffff;
+}
+
+.navbar ul{
+    padding: 0;
+    margin: 0;
+}
+
+.navbar li{
+    list-style-type: none;
+}
+
+.navbar-nav{
+    font-size: 0;
+    display: inline-block;
+}
+
+.navbar-nav a{
+    display: inline-block;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 10px;
+    padding: 5px 10px;
+    transition: background .3s, color .3s;
+}
+
+.navbar-nav a:hover{
+    background-color: #ffffff;
+    color: #4cacff;
+}
+
+.navbar-login{
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    float: right;
+    transition: color .3s;
+}
+
+.navbar-login:hover{
+    color: #ffe74c;
+}
+
+.table{
+    width: 100%;
+    border: 1px solid #bababa;
+    border-collapse: collapse;
+}
+
+.table-edit-button, .table-remove-button{
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.popup{
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    background-color: rgba(0,0,0,.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s, visibility .3s;
+    user-select: none;
+}
+
+.popup.popup-active{
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup .popup-body{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: #ffffff;
+    padding: 50px;
+    box-shadow: 10px 10px 20px 5px rgba(0,0,0,.3);
+}
+
+.popup .popup-content{
+    font-size: 0;
+    white-space: nowrap;
+}
+
+.popup:before{
+    content: '';
+    height: 100%;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.popup .input-text{
+    display: block;
+    width: 100%;
+    position: relative;
+    font-size: 22px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.popup .popup-btn{
+    color: #ffffff;
+    font-size: 18px;
+    padding: 10px 40px;
+}
+
+.popup .popup-save-btn{
+    background-color: #31ac00;
+    margin-right: 20px;
+}
+
+.popup .popup-save-btn:hover{
+    background-color: #3cd300;
+}
+
+.popup .popup-cancel-btn{
+    background-color: #c21409;
+    margin-left: 20px;
+}
+
+.popup .popup-cancel-btn:hover{
+    background-color: #ee2317;
 }
