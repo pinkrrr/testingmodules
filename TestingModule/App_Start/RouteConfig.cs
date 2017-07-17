@@ -47,6 +47,12 @@ namespace TestingModule
                 url: "admin/specialities/{Specialityid}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteSpeciality" });
 
+            //Questions
+            routes.MapRoute(
+                name: "Questions",
+                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/{ModuleId}/Questions",
+                defaults: new { controller = "Admin", action = "Questions" });
+
             //Modules
             routes.MapRoute(
                 name: "Modules",

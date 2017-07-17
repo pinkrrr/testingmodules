@@ -1,8 +1,31 @@
-﻿
+﻿@model IEnumerable<TestingModule.Models.QueAns>
 @{
     ViewBag.Title = "Questions";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Questions</h2>
+<h2>Питання</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодного питання...</h3>
+}
+else
+{
+    <table border="1">
+        <tr><th>QuiestionId</th><th>Питання</th><th>AnswerId</th><th>Відповідь</th></tr>
 
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.QuestionId</td>
+                <td>@item.Question</td>
+                <td>@item.AnswerId</td>
+                <td>@item.Answer</td>
+            </tr>
+        }
+
+
+    </table>
+}
+<hr>
