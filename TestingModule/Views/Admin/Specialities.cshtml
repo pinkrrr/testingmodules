@@ -38,7 +38,7 @@ else
     <form>
         <div>
             Введіть назву спеціальності:
-            @Html.TextBoxFor(model => model.Last().Name)
+            @Html.TextBoxFor(model => model.Last().Name, new { @class = "form-control" })
             <button type="submit">Створити</button>
         </div>
     </form>

@@ -36,8 +36,10 @@ else
         <div>
             Введіть назву лекції:
             @Html.TextBoxFor(model => model.LastOrDefault().Name)
+            </div>
             @Html.HiddenFor(model => model.LastOrDefault().LectureId)
             @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
+        <div>
             <button type="submit">Створити</button>
         </div>
     </form>

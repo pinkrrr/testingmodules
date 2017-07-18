@@ -19,7 +19,7 @@ namespace TestingModule.Models
         public int GroupId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Email { get; set; }
         public string Pass { get; set; }
+        public string Username { get; set; }
     }
 }

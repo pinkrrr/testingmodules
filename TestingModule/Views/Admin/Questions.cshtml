@@ -11,21 +11,22 @@
 }
 else
 {
-    <table border="1">
-        <tr><th>QuiestionId</th><th>Питання</th><th>AnswerId</th><th>Відповідь</th></tr>
+    foreach (var item in Model.GroupBy(t => t.QuestionId))
+    {
+        <table border="1">
+            <tr><th>QuiestionId</th><th>Питання</th><th>AnswerId</th><th>Відповідь</th></tr>
 
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.QuestionId</td>
-                <td>@item.Question</td>
-                <td>@item.AnswerId</td>
-                <td>@item.Answer</td>
-            </tr>
-        }
-
-
-    </table>
+            @foreach (var que in item)
+            {
+                <tr>
+                    <td>@que.QuestionId</td>
+                    <td>@que.Question</td>
+                    <td>@que.AnswerId</td>
+                    <td>@que.Answer</td>
+                </tr>
+            }
+        </table>
+        <br>
+    }
 }
 <hr>

@@ -109,7 +109,7 @@
           <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Surname" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Pass" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityContainer Name="testingDbModelStoreContainer">
@@ -239,8 +239,8 @@
           <Property Name="GroupId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Pass" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Account">
           <Key>
@@ -356,8 +356,8 @@
           <EntitySetMapping Name="Students">
             <EntityTypeMapping TypeName="testingDbModel.Student">
               <MappingFragment StoreEntitySet="Students">
+                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Pass" ColumnName="Pass" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />

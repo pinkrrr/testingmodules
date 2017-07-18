@@ -9,22 +9,22 @@ namespace TestingModule.Controllers
     public class AccountController : Controller
     {
         private testingDbEntities _context = new testingDbEntities();
-       
+
         public ActionResult Registration()
         {
             var registrationForm = CreateRegistrationViewmodel();
-            return View("Registration",registrationForm);
+            return View("Registration", registrationForm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegistrationSave(Student student, Account account)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var registrationForm=CreateRegistrationViewmodel();
+                var registrationForm = CreateRegistrationViewmodel();
             }
-            account.Login = student.Email;
+            account.Login = student.Username;
             account.Password = student.Pass;
             account.RoleId = 0;
             _context.Students.Add(student);
@@ -66,11 +66,11 @@ namespace TestingModule.Controllers
                 Groups = groups,
                 Specialities = specialities,
                 Roles = roles
-                };
+            };
             return registrationForm;
         }
-       
+
     }
 
-     
+
 }

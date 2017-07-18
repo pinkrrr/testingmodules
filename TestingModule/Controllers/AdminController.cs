@@ -78,21 +78,21 @@ namespace TestingModule.Controllers
         //Question
         public ActionResult Questions(int moduleId)
         {
-             testingDbEntities db = new testingDbEntities();
-           
+            testingDbEntities db = new testingDbEntities();
+
 
             var viewModels = (from q in db.Questions
-                join a in db.Answers on q.Id equals a.QuestionId
-                select new QueAns()
-                {
-                    DisciplineId = q.DisciplineId,
-                    LectureId = q.LectureId,
-                    ModuleId = q.ModuleId,
-                    QuestionId = q.Id,
-                    Question = q.Text,
-                    AnswerId = a.Id,
-                    Answer = a.Text
-                }).ToList();
+                              join a in db.Answers on q.Id equals a.QuestionId
+                              select new QueAns()
+                              {
+                                  DisciplineId = q.DisciplineId,
+                                  LectureId = q.LectureId,
+                                  ModuleId = q.ModuleId,
+                                  QuestionId = q.Id,
+                                  Question = q.Text,
+                                  AnswerId = a.Id,
+                                  Answer = a.Text
+                              }).ToList();
 
             var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId);
 
@@ -112,7 +112,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditSpeciality(Student model)
         {
-            new Editing().EditSpeciality(model.SpecialityId,model.Name);
+            new Editing().EditSpeciality(model.SpecialityId, model.Name);
             return RedirectToAction("Specialities");
         }
         public ActionResult DeleteSpeciality(int specialityId)
