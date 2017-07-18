@@ -14,6 +14,8 @@
             _$editBtn.on('click', function () {
                 inputText = $(this).closest('.table-row').find('.specialityName').text();
                 showPopupEditSpecialities(inputText);
+                var nameId = $(this).closest('.table-row').find('.specialityName').attr('data-id');
+                $('#id').val(nameId);
             });
         }
 
@@ -28,21 +30,15 @@
             var method = $popup.editSpecialities.find('form').attr('method');
 
             saveBtn.on('click', function (e) {
-                e.preventDefault();
-                var hiddenField = $popup.editSpecialities.find('#id');
-                var id = hiddenField.val();
-
-                hiddenField.val(id);
-                var inputText = $popup.editSpecialities.find('.input-text').val();
+               // e.preventDefault();
+                var inputText = $popup.editSpecialities.find('.input-text');
 
                 var data = {
-                    text: inputText,
-                    id: id
+                    name: inputText.val(),
+                    id: $('#id').val()
                 };
 
-                console.log(data);
-
-                //sendData(data, url, method);
+                sendData(data, url, method);
 
             });
         }
@@ -60,7 +56,7 @@
                 method: method,
                 data: data
             }).done(function (response) {
-                alert(response);
+               // location.reload();
             });
         }
 
