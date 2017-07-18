@@ -76,11 +76,27 @@ namespace TestingModule.Controllers
 
 
         //Question
-        public ActionResult Questions()
+        public ActionResult Questions(int moduleId)
         {
-            ViewBag.Message = "All questions from previously selected module";
+            testingDbEntities db = new testingDbEntities();
 
-            return View();
+
+            var viewModels = (from q in db.Questions
+                              join a in db.Answers on q.Id equals a.QuestionId
+                              select new QueAns()
+                              {
+                                  DisciplineId = q.DisciplineId,
+                                  LectureId = q.LectureId,
+                                  ModuleId = q.ModuleId,
+                                  QuestionId = q.Id,
+                                  Question = q.Text,
+                                  AnswerId = a.Id,
+                                  Answer = a.Text
+                              }).ToList();
+
+            var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId);
+
+            return View(neededQuestions);
         }
 
         //Specialities
@@ -92,6 +108,11 @@ namespace TestingModule.Controllers
         public ActionResult NewSpeciality(Student model)
         {
             var result = new Adding().AddNewSpeciality(model.Name);
+            return RedirectToAction("Specialities");
+        }
+        public ActionResult EditSpeciality(Student model)
+        {
+            new Editing().EditSpeciality(model.SpecialityId, model.Name);
             return RedirectToAction("Specialities");
         }
         public ActionResult DeleteSpeciality(int specialityId)

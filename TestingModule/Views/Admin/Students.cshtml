@@ -31,7 +31,7 @@ else
 }
 <hr>
 
-<h3>Створити нову?</h3>
+<h3>Додати студента?</h3>
 
 @using (Html.BeginForm("NewStudent", "Admin", FormMethod.Post))
 {
@@ -39,10 +39,14 @@ else
         <div>
             Введіть ім'я студента:
             @Html.TextBoxFor(model => model.LastOrDefault().Name)
-            Введіть прізвище студента:
-            @Html.TextBoxFor(model => model.LastOrDefault().Surname)
+        </div>
+        Введіть прізвище студента:
+        @Html.TextBoxFor(model => model.LastOrDefault().Surname)
+        <div>
             @Html.HiddenFor(model => model.LastOrDefault().GroupId)
             @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
+        </div>
+        <div>
             <button type="submit">Створити</button>
         </div>
     </form>

@@ -8,37 +8,28 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Masters of masters", "Index", "Admin", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
-                    <li>@Html.ActionLink("Disciplines", "Disciplines", "Admin")</li>
-                    <li>@Html.ActionLink("Specialities", "Specialities", "Admin")</li>
-                   @* <li>@Html.ActionLink("Contact", "Contact", "Admin")</li>*@
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+            @Html.ActionLink("Masters of masters", "Index", "Admin", new { area = "" }, new { @class = "navbar-logo" })
+            <nav class="navbar-nav">
+                @Html.ActionLink("Admin", "Index", "Admin")
+                @Html.ActionLink("Disciplines", "Disciplines", "Admin")
+                @Html.ActionLink("Contact", "Contact", "Admin")
+                @Html.ActionLink("Specialities", "Specialities", "Admin")
+            </nav>
+            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })
+            @*@Html.Partial("_LoginPartial")*@
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - RBS</p>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

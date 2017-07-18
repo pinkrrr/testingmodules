@@ -1,8 +1,32 @@
-﻿
+﻿@model IEnumerable<TestingModule.Models.QueAns>
 @{
     ViewBag.Title = "Questions";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Questions</h2>
+<h2>Питання</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодного питання...</h3>
+}
+else
+{
+    foreach (var item in Model.GroupBy(t => t.QuestionId))
+    {
+        <table border="1">
+            <tr><th>QuiestionId</th><th>Питання</th><th>AnswerId</th><th>Відповідь</th></tr>
 
+            @foreach (var que in item)
+            {
+                <tr>
+                    <td>@que.QuestionId</td>
+                    <td>@que.Question</td>
+                    <td>@que.AnswerId</td>
+                    <td>@que.Answer</td>
+                </tr>
+            }
+        </table>
+        <br>
+    }
+}
+<hr>

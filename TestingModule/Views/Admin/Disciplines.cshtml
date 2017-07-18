@@ -15,8 +15,6 @@
         </tr>
     }
 </table>
-<hr>
-
 
 <h3>Створити нову?</h3>
 @using (Html.BeginForm("NewDiscipline", "Admin", FormMethod.Post))
@@ -25,9 +23,9 @@
         <div>
             Введіть назву дисципліни:
             @Html.TextBoxFor(model => model.LastOrDefault().Name)
+        </div>
+        <div>
             <button type="submit">Створити</button>
         </div>
     </form>
 }
-
-<hr>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace TestingModule
@@ -46,6 +42,12 @@ namespace TestingModule
                 name: "DeleteSpeciality",
                 url: "admin/specialities/{Specialityid}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteSpeciality" });
+
+            //Questions
+            routes.MapRoute(
+                name: "Questions",
+                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/{ModuleId}/Questions",
+                defaults: new { controller = "Admin", action = "Questions" });
 
             //Modules
             routes.MapRoute(
