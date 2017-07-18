@@ -14,22 +14,22 @@ namespace TestingModule.Controllers
     public class AccountController : Controller
     {
         private testingDbEntities _context = new testingDbEntities();
-       
+
         //~Account/Registration
 
         public ActionResult Registration()
         {
             var registrationForm = CreateRegistrationViewmodel();
-            return View("Registration",registrationForm);
+            return View("Registration", registrationForm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegistrationSave(Student student, Account account)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var registrationForm=CreateRegistrationViewmodel();
+                var registrationForm = CreateRegistrationViewmodel();
             }
             account.Login = student.Username;
             account.Password = student.Pass;
@@ -37,7 +37,7 @@ namespace TestingModule.Controllers
             _context.Students.Add(student);
             _context.Accounts.Add(account);
             _context.SaveChanges();
-            return View("Index","Admin");
+            return View("Index", "Admin");
         }
 
         private RegistrationFormViewModel CreateRegistrationViewmodel()
@@ -52,53 +52,64 @@ namespace TestingModule.Controllers
                 Groups = groups,
                 Specialities = specialities,
                 Roles = roles
-                };
+            };
             return registrationForm;
         }
 
         //~Account/Login
 
+        public ActionResult Login()
+        {
+            var loginForm = new Account();
+            return View("Login", loginForm);
+        }
+        
         [HttpPost]
-        public ActionResult Login(string username, string password)
+        [ValidateAntiForgeryToken]
+        public ActionResult LoginAttempt(string username, string password)
         {
             if (AccountValid(username, password))
             {
-                var accounts = _context.Accounts;
+                //var accounts = _context.Accounts.ToList();
                 var roles = _context.Roles.ToList();
-                Account account = accounts.Single(a => a.Login == username && a.Password == password);
-
-                if (account.RoleId == roles.Where(r => r.Name == "Administrator").Select(r => r.Id).Single())
+                Account account = _context.Accounts.SingleOrDefault(a => a.Login == username && a.Password == password);
+                if (account.RoleId != _context.Roles.Where(r => r.Name == "Student").Select(r => r.Id).SingleOrDefault())
                 {
-
+                    var ident = new ClaimsIdentity(
+                        new[]
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, username),
+                            new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
+                            new Claim(ClaimTypes.Role,roles.Where(r=>r.Id==account.RoleId).Select(r=>r.Name).SingleOrDefault())
+                        },
+                        DefaultAuthenticationTypes.ApplicationCookie);
+                    HttpContext.GetOwinContext().Authentication.SignIn(
+                    new AuthenticationProperties { IsPersistent = false }, ident);
                 }
                 else
                 {
-                    Student student; 
+                    Student student = _context.Students.SingleOrDefault(s => s.Username == username && s.Pass == password);
                     var ident = new ClaimsIdentity(
-                      new[] { 
-              // adding following 2 claim just for supporting default antiforgery provider
-              new Claim(ClaimTypes.NameIdentifier, username),
-              new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
-
-              new Claim(ClaimTypes.Name,username),
-              new Claim(ClaimTypes.Surname,username),
-
-              // optionally you could add roles if any
-              new Claim("Group","RoleName"),
-              new Claim(ClaimTypes.Role, "AnotherRole"),
-
-                      },
-                      DefaultAuthenticationTypes.ApplicationCookie);
+                    new[]
+                        { 
+                            new Claim(ClaimTypes.NameIdentifier, username),
+                            new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
+                            new Claim(ClaimTypes.Name,student.Name),
+                            new Claim(ClaimTypes.Surname,student.Surname),
+                            new Claim("Speciality", _context.Specialities.Where(sp=>sp.Id==student.SpecialityId).Select(sp=>sp.Name).SingleOrDefault()),
+                            new Claim("Group",_context.Groups.Where(g=>g.Id==student.GroupId).Select(g=>g.Name).SingleOrDefault()),
+                            new Claim(ClaimTypes.Role,"Student")
+                        },
+                        DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
-                       new AuthenticationProperties { IsPersistent = false }, ident);
+                    new AuthenticationProperties { IsPersistent = false }, ident);
                 }
-                return RedirectToAction("MyAction"); // auth succeed 
+                return RedirectToAction("Index", "Admin");
             }
             // invalid username or password
             ModelState.AddModelError("", "invalid username or password");
             return View();
         }
-
         private bool AccountValid(string username, string password)
         {
             var accounts = _context.Accounts;

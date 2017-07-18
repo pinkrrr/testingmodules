@@ -180,7 +180,7 @@
     <Compile Include="Models\Account.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\QueAns.cs" />
+    <Compile Include="ViewModels\QueAns.cs" />
     <Compile Include="Models\Role.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -296,6 +296,7 @@
     <Content Include="Views\Admin\Students.cshtml" />
     <Content Include="Views\Account\Registration.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
