@@ -47,9 +47,14 @@ else
 <div class="popup popup-edit-specialities">
     <div class="popup-body">
         <div class="popup-content">
-            <input class="input-text" type="text" />
-            <button class="btn popup-btn popup-save-btn">Зберегти</button>
-            <button class="btn popup-btn popup-cancel-btn">Відмінити</button>
+            @using (Html.BeginForm("EditSpeciality", "Admin", FormMethod.Post))
+            {
+                <form>
+                    <input class="input-text" type="text" />
+                    <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
+                    <button class="btn popup-btn popup-cancel-btn">Відмінити</button>
+                </form>
+            }
         </div>
     </div>
 </div>

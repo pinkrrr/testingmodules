@@ -110,6 +110,11 @@ namespace TestingModule.Controllers
             var result = new Adding().AddNewSpeciality(model.Name);
             return RedirectToAction("Specialities");
         }
+        public ActionResult EditSpeciality(Student model)
+        {
+            new Editing().EditSpeciality(model.SpecialityId,model.Name);
+            return RedirectToAction("Specialities");
+        }
         public ActionResult DeleteSpeciality(int specialityId)
         {
             new Deleting().DeleteSpeciality(specialityId);
