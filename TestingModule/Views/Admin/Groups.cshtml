@@ -35,7 +35,7 @@ else
         <div>
             Введіть назву групи:
             @Html.TextBoxFor(model => model.LastOrDefault().Name)
-            @Html.HiddenFor(model => model.LastOrDefault().ID)
+            @Html.HiddenFor(model => model.LastOrDefault().Id)
             @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
             <button type="submit">Створити</button>
         </div>

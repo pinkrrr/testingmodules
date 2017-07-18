@@ -109,7 +109,7 @@ namespace TestingModule.Additional
                 var password = usernameAndPassword.Password();
                 var last = _db.Students.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
                 var studentsTable = _db.Set<Student>();
-                studentsTable.Add(new Student() { Id = last, SpecialityId = specialityId, GroupId = groupId, Name = name , Surname = surname, Email = username, Pass = password});
+                studentsTable.Add(new Student() { Id = last, SpecialityId = specialityId, GroupId = groupId, Name = name , Surname = surname, Username = username, Pass = password});
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
