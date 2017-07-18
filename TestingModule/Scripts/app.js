@@ -28,10 +28,22 @@
             var method = $popup.editSpecialities.find('form').attr('method');
 
             saveBtn.on('click', function (e) {
-                //e.preventDefault();
+                e.preventDefault();
+                var hiddenField = $popup.editSpecialities.find('#id');
+                var id = hiddenField.val();
+
+                hiddenField.val(id);
                 var inputText = $popup.editSpecialities.find('.input-text').val();
-                alert('I am sending this: \"' + inputText + '\" to that url: \"' + url + '\" with method \"' + method + '\"')
-                //sendData(inputText, url, method);
+
+                var data = {
+                    text: inputText,
+                    id: id
+                };
+
+                console.log(data);
+
+                //sendData(data, url, method);
+
             });
         }
 
@@ -46,7 +58,7 @@
             $.ajax({
                 url: url,
                 method: method,
-                data: { dataToSend: data }
+                data: data
             }).done(function (response) {
                 alert(response);
             });
