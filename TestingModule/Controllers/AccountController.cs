@@ -73,7 +73,7 @@ namespace TestingModule.Controllers
                 }
                 else
                 {
-                    Student student 
+                    Student student; 
                     var ident = new ClaimsIdentity(
                       new[] { 
               // adding following 2 claim just for supporting default antiforgery provider
