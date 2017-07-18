@@ -159,7 +159,7 @@ input[type="text"]:focus{
     position: relative;
     font-size: 22px;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 10px;
 }
 
 .popup .popup-btn{
