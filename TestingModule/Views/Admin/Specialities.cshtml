@@ -50,7 +50,8 @@ else
             @using (Html.BeginForm("EditSpeciality", "Admin", FormMethod.Post))
             {
                 <form>
-                    <input class="input-text" type="text" />
+                    @Html.TextBoxFor(model => model.Last().Name, new { @class = "input-text" })
+                    @Html.HiddenFor(model => model.Last().Id)
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn">Відмінити</button>
                 </form>

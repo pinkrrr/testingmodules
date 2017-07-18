@@ -28,10 +28,10 @@
             var method = $popup.editSpecialities.find('form').attr('method');
 
             saveBtn.on('click', function (e) {
-                e.preventDefault();
+                //e.preventDefault();
                 var inputText = $popup.editSpecialities.find('.input-text').val();
                 alert('I am sending this: \"' + inputText + '\" to that url: \"' + url + '\" with method \"' + method + '\"')
-                sendData(inputText, url, method);
+                //sendData(inputText, url, method);
             });
         }
 
