@@ -153,24 +153,37 @@ input[type="text"]:focus{
     vertical-align: middle;
 }
 
+.popup-title{
+    font-size: 24px;
+    color: #000000;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.popup-title span{
+    font-weight: bold;
+    color: #e43100
+}
+
 .popup .input-text{
     display: block;
-    width: 100%;
+    width: 360px;
     position: relative;
     font-size: 22px;
     margin-bottom: 20px;
     padding: 10px;
+    color: #606060
 }
 
 .popup .popup-btn{
     color: #ffffff;
     font-size: 18px;
     padding: 10px 40px;
+    width: 170px;
 }
 
 .popup .popup-save-btn{
     background-color: #31ac00;
-    margin-right: 20px;
 }
 
 .popup .popup-save-btn:hover{
@@ -178,10 +191,18 @@ input[type="text"]:focus{
 }
 
 .popup .popup-cancel-btn{
-    background-color: #c21409;
+    background-color: #606060;
     margin-left: 20px;
 }
 
 .popup .popup-cancel-btn:hover{
-    background-color: #ee2317;
+    background-color: #868686;
+}
+
+.popup .popup-remove-btn{
+    background-color: #ff0000;
+}
+
+.popup .popup-remove-btn:hover{
+    background-color: #ff3737;
 }
