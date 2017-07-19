@@ -16,7 +16,8 @@
         <EntityTypeShape EntityType="testingDbModel.Role" Width="1.5" PointX="6.75" PointY="6.75" />
         <EntityTypeShape EntityType="testingDbModel.Speciality" Width="1.5" PointX="2.75" PointY="7.75" />
         <EntityTypeShape EntityType="testingDbModel.Account" Width="1.5" PointX="0.875" PointY="0.875" />
-        <EntityTypeShape EntityType="testingDbModel.Student" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Lector" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Student" Width="1.5" PointX="9.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

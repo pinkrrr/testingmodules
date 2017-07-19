@@ -36,6 +36,7 @@ namespace TestingModule.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Speciality> Specialities { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Lector> Lectors { get; set; }
         public virtual DbSet<Student> Students { get; set; }
     }
 }
