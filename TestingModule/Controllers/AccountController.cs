@@ -66,19 +66,20 @@ namespace TestingModule.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LoginAttempt(string username, string password)
+        
+        public ActionResult LoginAttempt(Account account)
         {
-            if (AccountValid(username, password))
+            if (AccountValid(account.Login,account.Password))
             {
                 //var accounts = _context.Accounts.ToList();
                 var roles = _context.Roles.ToList();
-                Account account = _context.Accounts.SingleOrDefault(a => a.Login == username && a.Password == password);
+                account = _context.Accounts.SingleOrDefault(a => a.Login == account.Login && a.Password == account.Password);
                 if (account.RoleId != _context.Roles.Where(r => r.Name == "Student").Select(r => r.Id).SingleOrDefault())
                 {
                     var ident = new ClaimsIdentity(
                         new[]
                         {
-                            new Claim(ClaimTypes.NameIdentifier, username),
+                            new Claim(ClaimTypes.NameIdentifier, account.Login),
                             new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                             new Claim(ClaimTypes.Role,roles.Where(r=>r.Id==account.RoleId).Select(r=>r.Name).SingleOrDefault())
                         },
@@ -88,11 +89,11 @@ namespace TestingModule.Controllers
                 }
                 else
                 {
-                    Student student = _context.Students.SingleOrDefault(s => s.Username == username && s.Pass == password);
+                    Student student = _context.Students.SingleOrDefault(s => s.Username == account.Login && s.Pass == account.Password);
                     var ident = new ClaimsIdentity(
                     new[]
                         { 
-                            new Claim(ClaimTypes.NameIdentifier, username),
+                            new Claim(ClaimTypes.NameIdentifier, account.Login),
                             new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                             new Claim(ClaimTypes.Name,student.Name),
                             new Claim(ClaimTypes.Surname,student.Surname),
@@ -108,7 +109,7 @@ namespace TestingModule.Controllers
             }
             // invalid username or password
             ModelState.AddModelError("", "invalid username or password");
-            return View();
+            return View("Admin", "Index");
         }
         private bool AccountValid(string username, string password)
         {
