@@ -20,12 +20,11 @@ else
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="specialities/@item.Id/groups" class="specialityName">@item.Name</a></td>
                 <td class="table-item table-item_edit">
                     <div class="table-edit-button">Редагувати</div>
-                    <div class="table-remove-button">Видалити</div>
+                    <div class="table-remove-button">Видалити</div> <!--<a href="specialities/@item.Id/Delete">Видалити</a>-->
                     <!--<a href="EditSpeciality">Редагувати</a>-->
-                    <!--<a href="specialities/@item.Id/Delete">Видалити</a>-->
+                    
                 </td>
             </tr>
-
         }
 
     </table>
@@ -49,8 +48,8 @@ else
             @using (Html.BeginForm("EditSpeciality", "Admin", FormMethod.Post))
             {
                 <form>
-                     @Html.TextBoxFor(model => model.Last().Name, new { @class = "input-text" })
-                     @Html.HiddenFor(model => model.Last().Id) 
+                    @Html.TextBoxFor(model => model.Last().Name, new { @class = "input-text" })
+                    @Html.HiddenFor(model => model.ElementAt(1).Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn">Відмінити</button>
                 </form>
