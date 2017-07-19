@@ -7,16 +7,21 @@ namespace TestingModule.Additional
     {
         Dictionary<string, string> dictionaryChar = new Dictionary<string, string>()
             {
+                {"'",""},
                 {"а","a"},
                 {"б","b"},
                 {"в","v"},
                 {"г","g"},
+                {"ґ","g"},
                 {"д","d"},
                 {"е","e"},
+                {"є","e"},
                 {"ё","yo"},
                 {"ж","zh"},
                 {"з","z"},
                 {"и","i"},
+                {"і","i"},
+                {"ї","i"},
                 {"й","y"},
                 {"к","k"},
                 {"л","l"},
@@ -40,20 +45,29 @@ namespace TestingModule.Additional
                 {"э","e"},
                 {"ю","yu"},
                 {"я","ya"}
+
             };
         public string TranslitFileName(string source)
         {
             var result = "";
-            foreach (var ch in source)
+            try
             {
-                var ss = "";
-                if (dictionaryChar.TryGetValue(ch.ToString(), out ss))
+                foreach (var ch in source)
                 {
-                    result += ss;
+                    var ss = "";
+                    if (dictionaryChar.TryGetValue(ch.ToString(), out ss))
+                    {
+                        result += ss;
+                    }
+                    else result += ch;
                 }
-                else result += ch;
             }
-            return result;
+            catch (Exception e)
+            {
+                result = source;
+            }
+            
+            return result.TrimEnd().TrimStart();
         }
 
         public string Password()

@@ -24,12 +24,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewDiscipline(Discipline model)
         {
-            new Adding().AddNewDiscipline(model.Name);
+            new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Disciplines");
         }
         public ActionResult EditDiscipline(Discipline model)
         {
-            new Editing().EditDiscipline(model.Id, model.Name);
+            new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Disciplines");
         }
         public ActionResult DeleteDiscipline(int disciplineId)
@@ -47,12 +47,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewLecture(Lecture model)
         {
-            new Adding().AddNewLecture(model.Name, model.DisciplineId);
+            new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
             return RedirectToAction("Lectures");
         }
         public ActionResult EditLecture(Lecture model)
         {
-            new Editing().EditLecture(model.Id, model.Name);
+            new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Lectures");
         }
         public ActionResult DeleteLecture(int lectureId)
@@ -71,12 +71,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewModule(Module model)
         {
-            new Adding().AddNewModule(model.Name, model.LectureId, model.DisciplineId);
+            new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId);
             return RedirectToAction("Modules");
         }
         public ActionResult EditModule(Module model)
         {
-            new Editing().EditModule(model.Id, model.Name);
+            new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Modules");
         }
         public ActionResult DeleteModule(int moduleId)
@@ -116,12 +116,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewSpeciality(Speciality model)
         {
-            new Adding().AddNewSpeciality(model.Name);
+            new Adding().AddNewSpeciality(model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Specialities");
         }
         public ActionResult EditSpeciality(Speciality model)
         {
-            new Editing().EditSpeciality(model.Id, model.Name);
+            new Editing().EditSpeciality(model.Id, model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Specialities");
         }
         public ActionResult DeleteSpeciality(int specialityId)
@@ -140,12 +140,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewGroup(Group model)
         {
-            new Adding().AddNewGroup(model.Name, model.SpecialityId);
+            new Adding().AddNewGroup(model.Name.TrimEnd().TrimStart(), model.SpecialityId);
             return RedirectToAction("Groups");
         }
         public ActionResult EditGroup(Group model)
         {
-            new Editing().EditGroup(model.Id, model.Name);
+            new Editing().EditGroup(model.Id, model.Name.TrimEnd().TrimStart());
             return RedirectToAction("Groups");
         }
         public ActionResult DeleteGroup(int groupId)
@@ -179,12 +179,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewStudent(Student model)
         {
-            new Adding().AddNewStudent(model.Name, model.Surname, model.GroupId, model.SpecialityId);
+            new Adding().AddNewStudent(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.GroupId, model.SpecialityId);
             return RedirectToAction("Students");
         }
         public ActionResult EditStudent(UserViewModel model)
         {
-            new Editing().EditStudent(model.Id, model.Name, model.Surname, model.Login, model.Password);
+            new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
             return RedirectToAction("Students");
         }
         public ActionResult DeleteStudent(int studentId)
@@ -215,12 +215,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewLector(Lector model)
         {
-            new Adding().AddNewLector(model.Name, model.Surname);
+            new Adding().AddNewLector(model.Name.TrimEnd().TrimStart(), model.Surname);
             return RedirectToAction("Lectors");
         }
         public ActionResult EditLector(UserViewModel model)
         {
-            new Editing().EditLector(model.Id, model.Name, model.Surname, model.Login, model.Password);
+            new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
             return RedirectToAction("Lectors");
         }
         public ActionResult DeleteLector(int lectorId)
