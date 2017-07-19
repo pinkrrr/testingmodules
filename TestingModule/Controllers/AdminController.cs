@@ -167,6 +167,8 @@ namespace TestingModule.Controllers
                     SpecialityId =  s.SpecialityId,
                     GroupId = s.GroupId,
                     AccountId = s.AccountId,
+                    Name = s.Name,
+                    Surname = s.Surname,
                     Login = a.Login,
                     Password = a.Password,
                     RoleId = a.RoleId

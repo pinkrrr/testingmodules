@@ -99,16 +99,20 @@ namespace TestingModule.Additional
         public string AddNewStudent(string name, string surname, int groupId, int specialityId)
         {
             UsernameAndPassword usernameAndPassword = new UsernameAndPassword();
+            var username = usernameAndPassword.TranslitFileName(name.ToLower()) + "." +
+                           usernameAndPassword.TranslitFileName(surname.ToLower());
+            var password = usernameAndPassword.Password();
+            var accountsTable = _db.Set<Account>();
+            accountsTable.Add(new Account() { Login = username, Password = password, RoleId = 2 });
+            _db.SaveChanges();
+
             string result;
             var matches = _db.Students.Count(t => t.Name == name);
             if (matches == 0)
             {
-                var username = usernameAndPassword.TranslitFileName(name.ToLower()) + "." +
-                               usernameAndPassword.TranslitFileName(surname.ToLower());
-                var password = usernameAndPassword.Password();
-                var last = _db.Students.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
+                var last = _db.Accounts.FirstOrDefault(t => t.Login == username);
                 var studentsTable = _db.Set<Student>();
-               // studentsTable.Add(new Student() { Id = last, SpecialityId = specialityId, GroupId = groupId, Name = name, Surname = surname, Pass = password, Username = username });
+                studentsTable.Add(new Student() { SpecialityId = specialityId, GroupId = groupId, Name = name, Surname = surname, AccountId = last.Id });
                 _db.SaveChanges();
                 result = "New skill has been successfully added to DB!";
             }
