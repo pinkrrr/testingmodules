@@ -7,39 +7,51 @@
 <h2>Групи</h2>
 @if (!Model.Any())
 {
-<h3>Немає жодної групи...</h3>
+    <h3>Немає жодної групи...</h3>
 }
 else
 {
-<table border="1">
-    <tr><th>Назва</th><th>Дії</th></tr>
+    <table border="1">
+        <tr><th>Назва</th><th>Дії</th></tr>
 
 
-    @foreach (var item in Model)
-    {
-    <tr>
-        <td><a href="groups/@item.Id/students">@item.Name</a></td>
-        <td><a href="EditGroup">Редагувати</a>/<a href="groups/@item.Id/delete">Видалити</a></td>
-    </tr>
-    }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="groups/@item.Id/students">@item.Name</a></td>
+                <td><a href="EditGroup">Редагувати</a>/<a href="groups/@item.Id/delete">Видалити</a></td>
+            </tr>
+        }
 
 
-</table>
+    </table>
 }
 <hr>
 
 <h3>Створити нову?</h3>
 @using (Html.BeginForm("NewGroup", "Admin", FormMethod.Post))
 {
-<form>
-    <div>
-        Введіть назву групи:
-        @Html.TextBoxFor(model => model.LastOrDefault().Name)
-    </div>
-    @Html.HiddenFor(model => model.LastOrDefault().Id)
-    @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
-    <div>
-        <button type="submit">Створити</button>
-    </div>
-</form>
-}
+    <form>
+        <div>
+            Введіть назву групи:
+
+            @{
+                var name = Model.LastOrDefault();
+            }
+            @if (name == null)
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "form - control" })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "form - control" })
+            }
+
+        </div>
+        @Html.HiddenFor(model => model.LastOrDefault().Id)
+        @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
+        <div>
+            <button type="submit">Створити</button>
+        </div>
+    </form>
+                }

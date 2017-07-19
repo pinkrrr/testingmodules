@@ -34,7 +34,17 @@ else
     <form>
         <div>
             Введіть назву лекції:
-            @Html.TextBoxFor(model => model.LastOrDefault().Name)
+            @{
+                var name = Model.LastOrDefault();
+            }
+            @if (name == null)
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "form - control" })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "form - control" })
+            }
         </div>
         @Html.HiddenFor(model => model.LastOrDefault().Id)
         @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)

@@ -36,7 +36,17 @@ else
     <form>
         <div>
             Введіть назву спеціальності:
-            @Html.TextBoxFor(model => model.Last().Name, new { @class = "form-control" })
+            @{
+                var name = Model.LastOrDefault();
+            }
+            @if (name == null)
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "form - control" })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "form - control" })
+            }
             <button type="submit">Створити</button>
         </div>
     </form>
@@ -48,8 +58,8 @@ else
             @using (Html.BeginForm("EditSpeciality", "Admin", FormMethod.Post))
             {
                 <form>
-                    @Html.TextBoxFor(model => model.Last().Name, new { @class = "input-text" })
-                    @Html.HiddenFor(model => model.ElementAt(1).Id, new { @id = "id" })
+                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn">Відмінити</button>
                 </form>

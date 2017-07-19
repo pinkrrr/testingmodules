@@ -22,7 +22,17 @@
     <form>
         <div>
             Введіть назву дисципліни:
-            @Html.TextBoxFor(model => model.LastOrDefault().Name)
+            @{
+                var name = Model.LastOrDefault();
+            }
+            @if (name == null)
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "form - control" })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "form - control" })
+            }
         </div>
         <div>
             <button type="submit">Створити</button>

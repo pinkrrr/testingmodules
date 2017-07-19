@@ -28,7 +28,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditDiscipline(Discipline model)
         {
-            var result = new Adding().AddNewDiscipline(model.Name);
+            new Editing().EditDiscipline(model.Id, model.Name);
             return RedirectToAction("Disciplines");
         }
         public ActionResult DeleteDiscipline(int disciplineId)
@@ -47,6 +47,11 @@ namespace TestingModule.Controllers
         public ActionResult NewLecture(Lecture model)
         {
             var result = new Adding().AddNewLecture(model.Name, model.DisciplineId);
+            return RedirectToAction("Lectures");
+        }
+        public ActionResult EditLecture(Lecture model)
+        {
+            new Editing().EditLecture(model.Id, model.Name);
             return RedirectToAction("Lectures");
         }
         public ActionResult DeleteLecture(int lectureId)
@@ -68,6 +73,11 @@ namespace TestingModule.Controllers
             var result = new Adding().AddNewModule(model.Name, model.LectureId, model.DisciplineId);
             return RedirectToAction("Modules");
         }
+        public ActionResult EditModule(Module model)
+        {
+            new Editing().EditModule(model.Id, model.Name);
+            return RedirectToAction("Modules");
+        }
         public ActionResult DeleteModule(int moduleId)
         {
             new Deleting().DeleteModule(moduleId);
@@ -79,8 +89,7 @@ namespace TestingModule.Controllers
         public ActionResult Questions(int moduleId)
         {
             testingDbEntities db = new testingDbEntities();
-
-
+            
             var viewModels = (from q in db.Questions
                               join a in db.Answers on q.Id equals a.QuestionId
                               select new QueAns()
@@ -95,7 +104,6 @@ namespace TestingModule.Controllers
                               }).ToList();
 
             var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId);
-
             return View(neededQuestions);
         }
 
@@ -105,12 +113,12 @@ namespace TestingModule.Controllers
             List<Speciality> test = new testingDbEntities().Specialities.ToList();
             return View(test);
         }
-        public ActionResult NewSpeciality(Student model)
+        public ActionResult NewSpeciality(Speciality model)
         {
             var result = new Adding().AddNewSpeciality(model.Name);
             return RedirectToAction("Specialities");
         }
-        public ActionResult EditSpeciality(Student model)
+        public ActionResult EditSpeciality(Speciality model)
         {
             new Editing().EditSpeciality(model.Id, model.Name);
             return RedirectToAction("Specialities");
@@ -134,6 +142,11 @@ namespace TestingModule.Controllers
             var result = new Adding().AddNewGroup(model.Name, model.SpecialityId);
             return RedirectToAction("Groups");
         }
+        public ActionResult EditGroup(Group model)
+        {
+            new Editing().EditGroup(model.Id, model.Name);
+            return RedirectToAction("Groups");
+        }
         public ActionResult DeleteGroup(int groupId)
         {
             new Deleting().DeleteGroup(groupId);
@@ -151,10 +164,22 @@ namespace TestingModule.Controllers
             var result = new Adding().AddNewStudent(model.Name, model.Surname, model.GroupId, model.SpecialityId);
             return RedirectToAction("Students");
         }
+        public ActionResult EditStudent(Student model)
+        {
+            new Editing().EditStudent(model.Id, model.Name, model.Surname, model.Surname, model.Pass);
+            return RedirectToAction("Students");
+        }
         public ActionResult DeleteStudent(int studentId)
         {
             new Deleting().DeleteStudent(studentId);
             return RedirectToAction("Students");
+        }
+
+        //Lectors
+        public ActionResult Lectors()
+        {
+            ViewBag.Message = "All lectors";
+            return View();
         }
     }
 }

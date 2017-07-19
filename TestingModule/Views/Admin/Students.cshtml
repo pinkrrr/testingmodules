@@ -38,10 +38,30 @@ else
     <form>
         <div>
             Введіть ім'я студента:
-            @Html.TextBoxFor(model => model.LastOrDefault().Name)
+            @{
+                var name = Model.LastOrDefault();
+            }
+            @if (name == null)
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "form - control" })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "form - control" })
+            }
         </div>
         Введіть прізвище студента:
-        @Html.TextBoxFor(model => model.LastOrDefault().Surname)
+        @{
+            var surname = Model.LastOrDefault();
+        }
+        @if (surname == null)
+        {
+            @Html.TextBoxFor(model => model.LastOrDefault().Surname, new { @class = "form - control" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.LastOrDefault().Surname, surname.Surname = "", new { @class = "form - control" })
+        }
         <div>
             @Html.HiddenFor(model => model.LastOrDefault().GroupId)
             @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
@@ -50,5 +70,4 @@ else
             <button type="submit">Створити</button>
         </div>
     </form>
-}
-
+            }
