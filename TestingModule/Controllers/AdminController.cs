@@ -24,7 +24,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewDiscipline(Discipline model)
         {
-            var result = new Adding().AddNewDiscipline(model.Name);
+            new Adding().AddNewDiscipline(model.Name);
             return RedirectToAction("Disciplines");
         }
         public ActionResult EditDiscipline(Discipline model)
@@ -47,7 +47,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewLecture(Lecture model)
         {
-            var result = new Adding().AddNewLecture(model.Name, model.DisciplineId);
+            new Adding().AddNewLecture(model.Name, model.DisciplineId);
             return RedirectToAction("Lectures");
         }
         public ActionResult EditLecture(Lecture model)
@@ -71,7 +71,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewModule(Module model)
         {
-            var result = new Adding().AddNewModule(model.Name, model.LectureId, model.DisciplineId);
+            new Adding().AddNewModule(model.Name, model.LectureId, model.DisciplineId);
             return RedirectToAction("Modules");
         }
         public ActionResult EditModule(Module model)
@@ -116,7 +116,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewSpeciality(Speciality model)
         {
-            var result = new Adding().AddNewSpeciality(model.Name);
+            new Adding().AddNewSpeciality(model.Name);
             return RedirectToAction("Specialities");
         }
         public ActionResult EditSpeciality(Speciality model)
@@ -140,7 +140,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewGroup(Group model)
         {
-            var result = new Adding().AddNewGroup(model.Name, model.SpecialityId);
+            new Adding().AddNewGroup(model.Name, model.SpecialityId);
             return RedirectToAction("Groups");
         }
         public ActionResult EditGroup(Group model)
@@ -179,12 +179,12 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewStudent(Student model)
         {
-            var result = new Adding().AddNewStudent(model.Name, model.Surname, model.GroupId, model.SpecialityId);
+            new Adding().AddNewStudent(model.Name, model.Surname, model.GroupId, model.SpecialityId);
             return RedirectToAction("Students");
         }
         public ActionResult EditStudent(UserViewModel model)
         {
-            new Editing().EditStudent(model.Id, model.Name, model.Surname, model.Surname, model.Password);
+            new Editing().EditStudent(model.Id, model.Name, model.Surname, model.Login, model.Password);
             return RedirectToAction("Students");
         }
         public ActionResult DeleteStudent(int studentId)
@@ -194,10 +194,39 @@ namespace TestingModule.Controllers
         }
 
         //Lectors
+        
         public ActionResult Lectors()
         {
-            ViewBag.Message = "All lectors";
-            return View();
+            testingDbEntities db = new testingDbEntities();
+
+            var viewModels = (from l in db.Lectors
+                join a in db.Accounts on l.AccountId equals a.Id
+                select new UserViewModel()
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    Surname = l.Surname,
+                    Login = a.Login,
+                    Password = a.Password,
+                    RoleId = a.RoleId
+                }).ToList();
+
+            return View(viewModels);
+        }
+        public ActionResult NewLector(Lector model)
+        {
+            new Adding().AddNewLector(model.Name, model.Surname);
+            return RedirectToAction("Lectors");
+        }
+        public ActionResult EditLector(UserViewModel model)
+        {
+            new Editing().EditLector(model.Id, model.Name, model.Surname, model.Login, model.Password);
+            return RedirectToAction("Lectors");
+        }
+        public ActionResult DeleteLector(int lectorId)
+        {
+            new Deleting().DeleteLector(lectorId);
+            return RedirectToAction("Lectors");
         }
     }
 }

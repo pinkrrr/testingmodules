@@ -45,6 +45,14 @@ namespace TestingModule.Additional
             _db.Entry(ac).State = EntityState.Deleted;
             _db.SaveChanges();
         }
+        public void DeleteLector(int lectorId)
+        {
+            var lct = new Lector() { Id = lectorId };
+            var ac = new Account() { Id = _db.Lectors.Where(t => t.Id == lectorId).Select(t => t.AccountId).FirstOrDefault() };
+            _db.Entry(lct).State = EntityState.Deleted;
+            _db.Entry(ac).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
 
     }
 }

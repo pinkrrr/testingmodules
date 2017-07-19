@@ -9,6 +9,12 @@ namespace TestingModule
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //lectors
+            routes.MapRoute(
+                name: "DeleteLector",
+                url: "admin/lectors/{LectorId}/Delete",
+                defaults: new { controller = "Admin", action = "DeleteLector" });
+
             //Students
             routes.MapRoute(
                 name: "Students",

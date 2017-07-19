@@ -47,5 +47,15 @@ namespace TestingModule.Additional
             ac.Password = pass;
             _db.SaveChanges();
         }
+        public void EditLector(int lectorId, string name, string surname, string username, string pass)
+        {
+            var lct = _db.Lectors.FirstOrDefault(t => t.Id == lectorId);
+            var ac = _db.Accounts.FirstOrDefault(t => t.Id == lct.AccountId);
+            lct.Name = name;
+            lct.Surname = surname;
+            ac.Login = username;
+            ac.Password = pass;
+            _db.SaveChanges();
+        }
     }
 }
