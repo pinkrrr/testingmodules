@@ -20,9 +20,8 @@ else
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="specialities/@item.Id/groups" class="table-item_name_text">@item.Name</a></td>
                 <td class="table-item table-item_edit">
                     <div class="table-edit-button">Редагувати</div>
-                    <div data-remove="specialities/@item.Id/Delete" class="table-remove-button">Видалити</div> <!--<a href="specialities/@item.Id/Delete">Видалити</a>-->
-                    <!--<a href="EditSpeciality">Редагувати</a>-->
-                    
+                    <div data-remove="specialities/@item.Id/Delete" class="table-remove-button">Видалити</div>
+
                 </td>
             </tr>
         }
@@ -50,7 +49,7 @@ else
             <button type="submit">Створити</button>
         </div>
     </form>
-}
+                }
 
 <div class="popup popup-edit">
     <div class="popup-body">
@@ -72,14 +71,11 @@ else
 <div class="popup popup-remove">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditSpeciality", "Admin", FormMethod.Post))
-            {
-                <div class="popup-title">Дійсно видалити <span></span>?</div>
-                <form>
-                    <button class="btn popup-btn popup-remove-btn">Видалити</button>
-                    <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-                </form>
-            }
+            <div class="popup-title">Дійсно видалити <span></span>?</div>
+            <form>
+                <button class="btn popup-btn popup-remove-btn">Видалити</button>
+                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+            </form>
         </div>
     </div>
 </div>

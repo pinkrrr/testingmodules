@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Antlr.Runtime.Misc;
 using TestingModule.Additional;
 using TestingModule.Models;
+using TestingModule.ViewModels;
 
 namespace TestingModule.Controllers
 {
@@ -156,17 +157,32 @@ namespace TestingModule.Controllers
         //Students
         public ActionResult Students(int groupId)
         {
-            List<Student> test = new testingDbEntities().Students.Where(t => t.GroupId == groupId).ToList();
-            return View(test);
+            testingDbEntities db = new testingDbEntities();
+
+            var viewModels = (from s in db.Students
+                join a in db.Accounts on s.AccountId equals a.Id
+                select new UserViewModel()
+                {
+                    Id = s.Id,
+                    SpecialityId =  s.SpecialityId,
+                    GroupId = s.GroupId,
+                    AccountId = s.AccountId,
+                    Login = a.Login,
+                    Password = a.Password,
+                    RoleId = a.RoleId
+                }).ToList();
+
+            var neededGroup = viewModels.Where(t => t.GroupId == groupId);
+            return View(neededGroup);
         }
         public ActionResult NewStudent(Student model)
         {
             var result = new Adding().AddNewStudent(model.Name, model.Surname, model.GroupId, model.SpecialityId);
             return RedirectToAction("Students");
         }
-        public ActionResult EditStudent(Student model)
+        public ActionResult EditStudent(UserViewModel model)
         {
-            new Editing().EditStudent(model.Id, model.Name, model.Surname, model.Surname, model.Pass);
+            new Editing().EditStudent(model.Id, model.Name, model.Surname, model.Surname, model.Password);
             return RedirectToAction("Students");
         }
         public ActionResult DeleteStudent(int studentId)

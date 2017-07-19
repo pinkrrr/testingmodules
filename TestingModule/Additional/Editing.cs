@@ -40,10 +40,11 @@ namespace TestingModule.Additional
         public void EditStudent(int studentId, string name, string surname, string username, string pass)
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
+            var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
             std.Name = name;
             std.Surname = surname;
-            std.Username = username;
-            std.Pass = pass;
+            ac.Login = username;
+            ac.Password = pass;
             _db.SaveChanges();
         }
     }

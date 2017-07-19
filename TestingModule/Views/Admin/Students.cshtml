@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestingModule.Models.Student>
+﻿@model IEnumerable<TestingModule.ViewModels.UserViewModel>
 @{
     ViewBag.Title = "Students";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,8 +20,8 @@ else
             <tr>
                 <td>@item.Name</td>
                 <td>@item.Surname</td>
-                <td>@item.Username</td>
-                <td>@item.Pass</td>
+                <td>@item.Login</td>
+                <td>@item.Password</td>
                 <td><a href="EditStudent">Редагувати</a>/<a href="students/@item.Id/Delete">Видалити</a></td>
             </tr>
         }
@@ -71,3 +71,14 @@ else
         </div>
     </form>
             }
+<div class="popup popup-remove">
+    <div class="popup-body">
+        <div class="popup-content">
+            <div class="popup-title">Дійсно видалити <span></span>?</div>
+            <form>
+                <button class="btn popup-btn popup-remove-btn">Видалити</button>
+                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+            </form>
+        </div>
+    </div>
+</div>

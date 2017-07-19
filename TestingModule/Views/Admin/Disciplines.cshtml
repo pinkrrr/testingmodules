@@ -9,9 +9,13 @@
     <tr><th>Назва</th><th>Дії</th></tr>
     @foreach (var item in Model)
     {
-        <tr>
-            <td><a href="disciplines/@item.Id/lectures">@item.Name</a></td>
-            <td><a href="EditDiscipline">Редагувати</a>/<a href="Disciplines/@item.Id/delete">Видалити</a></td>
+        <tr class="table-row">
+            <td class="table-item table-item_name"><a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a></td>
+            <td class="table-item table-item_edit">
+                <div class="table-edit-button">Редагувати</div>
+                <div data-remove="disciplines/@item.Id/Delete" class="table-remove-button">Видалити</div>
+
+            </td>
         </tr>
     }
 </table>
@@ -38,4 +42,15 @@
             <button type="submit">Створити</button>
         </div>
     </form>
-}
+                }
+<div class="popup popup-remove">
+    <div class="popup-body">
+        <div class="popup-content">
+            <div class="popup-title">Дійсно видалити <span></span>?</div>
+            <form>
+                <button class="btn popup-btn popup-remove-btn">Видалити</button>
+                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+            </form>
+        </div>
+    </div>
+</div>
