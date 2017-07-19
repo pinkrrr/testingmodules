@@ -31,8 +31,8 @@ namespace TestingModule.Controllers
             {
                 var registrationForm = CreateRegistrationViewmodel();
             }
-            account.Login = student.Username;
-            account.Password = student.Pass;
+            //account.Login = student.Username;
+            //account.Password = student.Pass;
             account.RoleId = 2;
             _context.Students.Add(student);
             _context.Accounts.Add(account);
@@ -69,6 +69,7 @@ namespace TestingModule.Controllers
         
         public ActionResult LoginAttempt(Account account)
         {
+            var loginForm = new Account();
             if (AccountValid(account.Login,account.Password))
             {
                 //var accounts = _context.Accounts.ToList();
@@ -89,7 +90,7 @@ namespace TestingModule.Controllers
                 }
                 else
                 {
-                    Student student = _context.Students.SingleOrDefault(s => s.Username == account.Login && s.Pass == account.Password);
+                    Student student = _context.Students.SingleOrDefault(s=>s.AccountId==account.Id);
                     var ident = new ClaimsIdentity(
                     new[]
                         { 
@@ -109,7 +110,7 @@ namespace TestingModule.Controllers
             }
             // invalid username or password
             ModelState.AddModelError("", "invalid username or password");
-            return View("Admin", "Index");
+            return View("Login", loginForm);
         }
         private bool AccountValid(string username, string password)
         {

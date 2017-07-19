@@ -180,6 +180,9 @@
     <Compile Include="Models\Account.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Lector.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\QueAns.cs" />
     <Compile Include="Models\Role.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>

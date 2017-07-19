@@ -12,11 +12,9 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Student
+    public partial class Lector
     {
         public int Id { get; set; }
-        public int SpecialityId { get; set; }
-        public int GroupId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public int AccountId { get; set; }
