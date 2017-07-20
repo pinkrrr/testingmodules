@@ -3,10 +3,11 @@
     function popup() {
         var _$editBtn = $('.table-edit-button');
         var _$removeBtn = $('.table-remove-button');
-        var _$removeButton = $('.table-remove-button');
+        var _$addBtn = $('.addNewItem-btn');
         var inputText = '';
         var $popup = {
             edit: $('.popup.popup-edit'),
+            add: $('.popup.popup-add'),
             remove: $('.popup.popup-remove')
         };
         var $popupRemoveName = $popup.remove.find('.popup-title span');
@@ -62,7 +63,7 @@
         }
 
         function initShowRemovePopup() {
-            _$removeButton.on('click', function () {
+            _$removeBtn.on('click', function () {
                 var removeLink = $(this).attr('data-remove');
                 var removeName = $(this).closest('.table-row').find('.table-item_name_text').text();
                 showRemovePopup(removeName);
@@ -83,8 +84,19 @@
             });
         }
 
+        function showAddPopup() {
+            $popup.add.addClass('popup-active');
+        }
+
+        function initShowAddPopup() {
+            _$addBtn.on('click', function (e) {
+                showAddPopup();
+            });
+        }
+
         initShowEditPopup();
         initShowRemovePopup();
+        initShowAddPopup();
         closePopup();
         initSaveData();
 
