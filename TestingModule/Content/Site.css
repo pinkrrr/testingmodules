@@ -23,6 +23,8 @@ h1, h2, h3, h4, h5, h6{
 .main-container{
     font-size: 0;
     white-space: nowrap;
+    background-color: #f7f7f7;
+    overflow-x: hidden;
 }
 
 button{
@@ -51,11 +53,10 @@ input[type="text"]:focus{
 }
 
 .body-content{
-    background-color: #f7f7f7;
     width: calc(100vw - 250px);
     min-height: 100vh;
     min-width: 710px;
-    padding: 40px;
+    padding: 20px;
     user-select: text;
 }
 
@@ -104,8 +105,8 @@ input[type="text"]:focus{
 .addNewItem-btn{
     text-align: right;
     position: absolute;
-    top: 40px;
-    right: 40px;
+    top: 20px;
+    right: 20px;
     background-color: #4cacff;
     padding: 10px;
     font-size: 16px;
@@ -287,7 +288,7 @@ input[type="text"]:focus{
     font-size: 22px;
     margin-bottom: 20px;
     padding: 10px;
-    color: #606060
+    color: #272727;
 }
 
 .popup .popup-btn{
