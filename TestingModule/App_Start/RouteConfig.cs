@@ -39,6 +39,10 @@ namespace TestingModule
                 url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteGroup" });
             routes.MapRoute(
+                name: "EditGroup",
+                url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Edit",
+                defaults: new { controller = "Admin", action = "EditGroup" });
+            routes.MapRoute(
                 name: "Groups",
                 url: "admin/specialities/{Specialityid}/Groups",
                 defaults: new { controller = "Admin", action = "Groups" });
