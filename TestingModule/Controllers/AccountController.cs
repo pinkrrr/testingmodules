@@ -81,6 +81,7 @@ namespace TestingModule.Controllers
                         new[]
                         {
                             new Claim(ClaimTypes.NameIdentifier, account.Login),
+                            new Claim(ClaimTypes.Name, account.Login),
                             new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                             new Claim(ClaimTypes.Role,roles.Where(r=>r.Id==account.RoleId).Select(r=>r.Name).SingleOrDefault())
                         },
@@ -116,6 +117,12 @@ namespace TestingModule.Controllers
         {
             var accounts = _context.Accounts;
             return accounts.Any(a => a.Login == username && a.Password == password);
+        }
+
+        public ActionResult Logout()
+        {
+            HttpContext.GetOwinContext().Authentication.SignOut();
+            return RedirectToAction("Index", "Admin");
         }
     }
 }

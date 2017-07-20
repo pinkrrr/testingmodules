@@ -12,7 +12,7 @@ namespace TestingModule.Models
         public int LectureId { get; set; }
         public int ModuleId { get; set; }
         public string Question { get; set; }
-        public int AnswerId { get; set; }
-        public string Answer { get; set; }
+        public int? AnswerId { get; set; }
+        public String Answer { get; set; }
     }
 }
