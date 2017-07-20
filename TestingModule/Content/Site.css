@@ -1,4 +1,9 @@
-﻿body {
+﻿@font-face {
+    font-family: 'fontAwesome';
+    src: url('fontawesome-webfont.woff'); /* Путь к файлу со шрифтом */
+   }
+
+body {
     padding: 0;
     margin: 0;
     font-family: 'Helvetica CE', 'Arial', sans-serif;
@@ -10,24 +15,28 @@ body *{
     box-sizing: border-box;
 }
 
-.container{
-    width: 960px;
-    display: block;
-    position: relative;
-    margin: auto;
-
+h1, h2, h3, h4, h5, h6{
+    padding: 0;
+    margin-top: 0;
 }
 
-.btn{
+.main-container{
+    font-size: 0;
+    white-space: nowrap;
+    background-color: #f7f7f7;
+    overflow-x: hidden;
+}
+
+button{
     cursor: pointer;
     border: 0;
-    transition: color .3s, background .3s;
+    transition: color .2s, background .2s;
     outline: none;
 }
 
 input[type="text"]{
     outline: none;
-    transition: border .3s;
+    transition: border .2s;
     border: 1px solid #bababa;
 }
 
@@ -35,72 +44,135 @@ input[type="text"]:focus{
     border-color: #4cacff;
 }
 
-.navbar{
-    background-color: #4cacff;
-}
-
-.navbar-logo{
-    font-size: 64px;
-    font-family: 'Times New Roman', Times, serif;
-    color: #ffe74c;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 20px;
-    position: relative;
-    transition: color .3s;
-}
-
-.navbar-logo:hover{
-    color: #ffffff;
-}
-
-.navbar ul{
-    padding: 0;
-    margin: 0;
-}
-
-.navbar li{
-    list-style-type: none;
-}
-
-.navbar-nav{
-    font-size: 0;
+.navbar, .body-content{
     display: inline-block;
+    vertical-align: top;
+    position: relative;
+    font-size: 16px;
+    white-space: normal;
+}
+
+.body-content{
+    width: calc(100vw - 250px);
+    min-height: 100vh;
+    min-width: 710px;
+    padding: 20px;
+    user-select: text;
+}
+
+.navbar{
+    background-color: #3d3d3d;
+    width: 250px;
+    height: 100vh;
+}
+
+.navbar i.fa{
+    margin-right: 10px;
+    width: 22px;
+    text-align: center;
 }
 
 .navbar-nav a{
-    display: inline-block;
+    display: block;
     color: #ffffff;
     text-decoration: none;
-    font-size: 16px;
-    margin-right: 10px;
-    padding: 5px 10px;
-    transition: background .3s, color .3s;
+    padding: 10px;
+    transition: color .2s, background .2s;
 }
 
 .navbar-nav a:hover{
-    background-color: #ffffff;
+    background-color: #8d0404
+}
+
+.navbar-nav a.navbar-item_active{
+    border-left: 5px solid #8d0404;
+    padding-left: 15px;
+}
+
+.navbar-logo{
+    color: #ffffff;
+    text-decoration: none;
+    margin: 30px 10px;
+    display: inline-block;
+    font-weight: bold;
+    transition: color .2s, background .2s;
+}
+
+.navbar-logo:hover{
     color: #4cacff;
 }
 
-.navbar-login{
-    color: #ffffff;
-    text-decoration: none;
+.addNewItem-btn{
+    text-align: right;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #4cacff;
+    padding: 10px;
     font-size: 16px;
-    font-weight: bold;
-    float: right;
-    transition: color .3s;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
 }
 
-.navbar-login:hover{
-    color: #ffe74c;
+.addNewItem-btn:hover{
+    background-color: #72beff;
+}
+
+.addNewItem-btn i{
+    margin-right: 5px;
 }
 
 .table{
     width: 100%;
     border: 1px solid #bababa;
     border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+.table .table-header-row{
+    line-height: 41px;
+    background-color: #818181;
+    color: #ffffff;
+}
+
+.table .table-header-row:hover{
+    background-color: #818181;
+}
+
+.table-header-row .table-header{
+    padding: 0 15px;
+}
+
+.table-header-row .table-header_name{
+    text-align: left;
+}
+
+.table-row{
+    transition: background .2s;
+    padding: 30px 0;
+}
+
+.table-row:hover{
+    background-color: #f2f2f2;
+}
+
+.table-item{
+    padding: 10px 15px;
+}
+
+.table-item_name{
+    padding-left: 15px;
+}
+
+.table .table-item_name_text{
+    color: #000000;
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.table .table-item_name_text:hover{
+    color: #4cacff;
 }
 
 .table-edit-button, .table-remove-button{
@@ -108,6 +180,50 @@ input[type="text"]:focus{
     cursor: pointer;
     display: inline-block;
 }
+
+.table-item_edit{
+    text-align: right;
+    font-size: 16px;
+    text-align: center;
+    user-select: none;
+    width: 310px;
+    white-space: nowrap;
+}
+
+.table-item_edit .table-button {
+    transition: background .2s, color .2s;
+    padding: 5px 10px;
+    display: inline-block;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin: 0 6px;
+    background-color: #ffffff;
+}
+
+.table-item_edit .table-button i{
+    margin-right: 10px;
+}
+
+.table-item_edit .table-edit-button{
+    color: #099fc1;
+}
+
+.table-item_edit .table-edit-button:hover{
+    background-color: #099fc1; 
+    color: #ffffff;
+}
+
+.table-item_edit .table-remove-button{
+    color: #e50d0d;
+}
+
+.table-item_edit .table-remove-button:hover{
+    background-color: #e50d0d; 
+    color: #ffffff;
+}
+
+
 
 .popup{
     display: block;
@@ -122,7 +238,7 @@ input[type="text"]:focus{
     background-color: rgba(0,0,0,.5);
     opacity: 0;
     visibility: hidden;
-    transition: opacity .3s, visibility .3s;
+    transition: opacity .2s, visibility .2s;
     user-select: none;
 }
 
@@ -172,7 +288,7 @@ input[type="text"]:focus{
     font-size: 22px;
     margin-bottom: 20px;
     padding: 10px;
-    color: #606060
+    color: #272727;
 }
 
 .popup .popup-btn{
@@ -188,6 +304,14 @@ input[type="text"]:focus{
 
 .popup .popup-save-btn:hover{
     background-color: #3cd300;
+}
+
+.popup .popup-create-btn{
+    background-color: #4cacff;
+}
+
+.popup .popup-create-btn:hover{
+    background-color: #7ac1ff;
 }
 
 .popup .popup-cancel-btn{
