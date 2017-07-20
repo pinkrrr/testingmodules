@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Antlr.Runtime.Misc;
+using Microsoft.Ajax.Utilities;
 using TestingModule.Additional;
 using TestingModule.Models;
 using TestingModule.ViewModels;
@@ -87,12 +88,12 @@ namespace TestingModule.Controllers
 
 
         //Question
-        public ActionResult Questions(int moduleId)
+        public ActionResult Questions(int? moduleId)
         {
             testingDbEntities db = new testingDbEntities();
-            
+
             var viewModels = (from q in db.Questions
-                              join a in db.Answers on q.Id equals a.QuestionId
+                              from a in db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
                               select new QueAns()
                               {
                                   DisciplineId = q.DisciplineId,
@@ -106,6 +107,36 @@ namespace TestingModule.Controllers
 
             var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId);
             return View(neededQuestions);
+        }
+        public ActionResult NewQuestion(QueAns model)
+        {
+            new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId);
+            return RedirectToAction("Questions");
+        }
+        public ActionResult EditQuestion(QueAns model)
+        {
+            new Editing().EditModule(model.QuestionId, model.Question.TrimEnd().TrimStart());
+            return RedirectToAction("Questions");
+        }
+        public ActionResult DeleteQuestion(int questionId)
+        {
+            new Deleting().DeleteQuestion(questionId);
+            return RedirectToAction("Questions");
+        }
+        public ActionResult NewAnswer(QueAns model)
+        {
+            new Adding().AddNewAnswer(model.Answer.TrimEnd().TrimStart(), model.QuestionId);
+            return RedirectToAction("Questions");
+        }
+        public ActionResult EditAnswer(QueAns model)
+        {
+            // new Editing().EditAnswer(model.QuestionId, model.Answer.TrimEnd().TrimStart());
+            return RedirectToAction("Questions");
+        }
+        public ActionResult DeleteAnswer(int answerId)
+        {
+            new Deleting().DeleteAnswer(answerId);
+            return RedirectToAction("Questions");
         }
 
         //Specialities
@@ -160,19 +191,19 @@ namespace TestingModule.Controllers
             testingDbEntities db = new testingDbEntities();
 
             var viewModels = (from s in db.Students
-                join a in db.Accounts on s.AccountId equals a.Id
-                select new UserViewModel()
-                {
-                    Id = s.Id,
-                    SpecialityId =  s.SpecialityId,
-                    GroupId = s.GroupId,
-                    AccountId = s.AccountId,
-                    Name = s.Name,
-                    Surname = s.Surname,
-                    Login = a.Login,
-                    Password = a.Password,
-                    RoleId = a.RoleId
-                }).ToList();
+                              join a in db.Accounts on s.AccountId equals a.Id
+                              select new UserViewModel()
+                              {
+                                  Id = s.Id,
+                                  SpecialityId = s.SpecialityId,
+                                  GroupId = s.GroupId,
+                                  AccountId = s.AccountId,
+                                  Name = s.Name,
+                                  Surname = s.Surname,
+                                  Login = a.Login,
+                                  Password = a.Password,
+                                  RoleId = a.RoleId
+                              }).ToList();
 
             var neededGroup = viewModels.Where(t => t.GroupId == groupId);
             return View(neededGroup);
@@ -194,22 +225,22 @@ namespace TestingModule.Controllers
         }
 
         //Lectors
-        
+
         public ActionResult Lectors()
         {
             testingDbEntities db = new testingDbEntities();
 
             var viewModels = (from l in db.Lectors
-                join a in db.Accounts on l.AccountId equals a.Id
-                select new UserViewModel()
-                {
-                    Id = l.Id,
-                    Name = l.Name,
-                    Surname = l.Surname,
-                    Login = a.Login,
-                    Password = a.Password,
-                    RoleId = a.RoleId
-                }).ToList();
+                              join a in db.Accounts on l.AccountId equals a.Id
+                              select new UserViewModel()
+                              {
+                                  Id = l.Id,
+                                  Name = l.Name,
+                                  Surname = l.Surname,
+                                  Login = a.Login,
+                                  Password = a.Password,
+                                  RoleId = a.RoleId
+                              }).ToList();
 
             return View(viewModels);
         }

@@ -25,6 +25,19 @@ namespace TestingModule.Additional
             _db.Entry(mod).State = EntityState.Deleted;
             _db.SaveChanges();
         }
+        public void DeleteQuestion(int questionId)
+        {
+            _db.Answers.RemoveRange(_db.Answers.Where(t => t.QuestionId == questionId));
+            var que = new Question() { Id = questionId };
+            _db.Entry(que).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
+        public void DeleteAnswer(int answerId)
+        {
+            var ans = new Answer() { Id = answerId };
+            _db.Entry(ans).State = EntityState.Deleted;
+            _db.SaveChanges();
+        }
         public void DeleteSpeciality(int specialityId)
         {
             var spc = new Speciality() { Id = specialityId };

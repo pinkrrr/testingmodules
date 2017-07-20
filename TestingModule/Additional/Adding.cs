@@ -27,6 +27,18 @@ namespace TestingModule.Additional
             lecturesTable.Add(new Module() { Id = last, DisciplineId = disciplineId, LectureId = lectureId, Name = name });
             _db.SaveChanges();
         }
+        public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
+        {
+            var questionsTable = _db.Set<Question>();
+            questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name });
+            _db.SaveChanges();
+        }
+        public void AddNewAnswer(string name, int questionId)
+        {
+            var questionsTable = _db.Set<Answer>();
+            questionsTable.Add(new Answer() { QuestionId = questionId, Text = name });
+            _db.SaveChanges();
+        }
         public void AddNewSpeciality(string name)
         {
             var last = _db.Specialities.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
