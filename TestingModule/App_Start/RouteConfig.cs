@@ -22,7 +22,7 @@ namespace TestingModule
                 defaults: new { controller = "Admin", action = "Students" });
             routes.MapRoute(
                 name: "AddStudent",
-                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewLStudent",
+                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewStudent",
                 defaults: new { controller = "Admin", action = "NewStudent" });
             routes.MapRoute(
                 name: "DeleteStudent",
@@ -78,7 +78,7 @@ namespace TestingModule
                 defaults: new { controller = "Admin", action = "Modules" });
             routes.MapRoute(
                 name: "AddModule",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/NewLModule",
+                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/NewModule",
                 defaults: new { controller = "Admin", action = "NewModule" });
             routes.MapRoute(
                 name: "DeleteModule",

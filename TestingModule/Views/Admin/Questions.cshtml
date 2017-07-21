@@ -27,6 +27,9 @@ else
             {
                 foreach (var que in item)
                 {
+                    if (que.Answer == null)
+                    {break;}
+     
                     <tr class="table-row" bgcolor="f1f1f1">
                         <td class="table-item table-item_name"><a data-id="@que.AnswerId" class="table-item_name_text">@que.Answer</a></td>
                         <td class="table-item table-item_edit">
@@ -59,7 +62,7 @@ else
                             @Html.HiddenFor(model => model.LastOrDefault().QuestionId)
                         </td>
                         <td>
-                            <button type="submit">Додати</button>
+                            <button type="submit">Додати відповідь</button>
                         </td>
                     </form>
                 </tr>
