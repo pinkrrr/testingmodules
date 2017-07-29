@@ -130,6 +130,10 @@ input[type="text"]:focus{
     background-color: #ffffff;
 }
 
+.table.table__lectors .table-item_name_text:hover {
+    color: #000000;
+}
+
 .table .table-header-row{
     line-height: 41px;
     background-color: #818181;

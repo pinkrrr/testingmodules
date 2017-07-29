@@ -25,6 +25,10 @@ namespace TestingModule
                 url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewStudent",
                 defaults: new { controller = "Admin", action = "NewStudent" });
             routes.MapRoute(
+                name: "EditStudent",
+                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewStudent",
+                defaults: new { controller = "Admin", action = "EditStudent" });
+            routes.MapRoute(
                 name: "DeleteStudent",
                 url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/{StudentId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteStudent" });
@@ -34,6 +38,10 @@ namespace TestingModule
                 name: "AddGroup",
                 url: "admin/specialities/{Specialityid}/Groups/NewGroup",
                 defaults: new { controller = "Admin", action = "NewGroup" });
+            routes.MapRoute(
+                name: "EditGroup",
+                url: "admin/specialities/{Specialityid}/Groups/EditGroup",
+                defaults: new { controller = "Admin", action = "EditGroup" });
             routes.MapRoute(
                 name: "DeleteGroup",
                 url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Delete",
@@ -81,6 +89,10 @@ namespace TestingModule
                 url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/NewModule",
                 defaults: new { controller = "Admin", action = "NewModule" });
             routes.MapRoute(
+                name: "EditModule",
+                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/EditModule",
+                defaults: new { controller = "Admin", action = "EditModule" });
+            routes.MapRoute(
                 name: "DeleteModule",
                 url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/{ModuleId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteModule" });
@@ -98,6 +110,10 @@ namespace TestingModule
                 name: "Lectures",
                 url: "admin/disciplines/{Disciplineid}/Lectures",
                 defaults: new { controller = "Admin", action = "Lectures" });
+            routes.MapRoute(
+                name: "EditLecture",
+                url: "admin/disciplines/{Disciplineid}/Lectures/Edit",
+                defaults: new { controller = "Admin", action = "EditLecture" });
 
             //Disciplines
             routes.MapRoute(
