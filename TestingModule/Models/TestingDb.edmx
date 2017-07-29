@@ -21,6 +21,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="QuestionId" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsCorrect" Type="bit" />
         </EntityType>
         <EntityType Name="Disciplines">
           <Key>
@@ -36,6 +37,14 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SpecialityId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LectorDisciplines">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LectorId" Type="int" Nullable="false" />
+          <Property Name="DisciplineId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Lectors">
           <Key>
@@ -109,6 +118,14 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="StudentDisciplines">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="DisciplineId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Students">
           <Key>
             <PropertyRef Name="Id" />
@@ -125,6 +142,7 @@
           <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Disciplines" EntityType="Self.Disciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LectorDisciplines" EntityType="Self.LectorDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lectors" EntityType="Self.Lectors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lectures" EntityType="Self.Lectures" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LecturesHistory" EntityType="Self.LecturesHistory" Schema="dbo" store:Type="Tables" />
@@ -133,6 +151,7 @@
           <EntitySet Name="Responses" EntityType="Self.Responses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciality" EntityType="Self.Speciality" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentDisciplines" EntityType="Self.StudentDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -153,6 +172,8 @@
           <EntitySet Name="Accounts" EntityType="testingDbModel.Account" />
           <EntitySet Name="Lectors" EntityType="testingDbModel.Lector" />
           <EntitySet Name="Students" EntityType="testingDbModel.Student" />
+          <EntitySet Name="LectorDisciplines" EntityType="testingDbModel.LectorDiscipline" />
+          <EntitySet Name="StudentDisciplines" EntityType="testingDbModel.StudentDiscipline" />
         </EntityContainer>
         <EntityType Name="Answer">
           <Key>
@@ -161,6 +182,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
           <Property Name="Text" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsCorrect" Type="Boolean" />
         </EntityType>
         <EntityType Name="Discipline">
           <Key>
@@ -269,6 +291,22 @@
           <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AccountId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="LectorDiscipline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LectorId" Type="Int32" Nullable="false" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StudentDiscipline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -278,6 +316,7 @@
           <EntitySetMapping Name="Answers">
             <EntityTypeMapping TypeName="testingDbModel.Answer">
               <MappingFragment StoreEntitySet="Answers">
+                <ScalarProperty Name="IsCorrect" ColumnName="IsCorrect" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -399,6 +438,24 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="SpecialityId" ColumnName="SpecialityId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LectorDisciplines">
+            <EntityTypeMapping TypeName="testingDbModel.LectorDiscipline">
+              <MappingFragment StoreEntitySet="LectorDisciplines">
+                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
+                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentDisciplines">
+            <EntityTypeMapping TypeName="testingDbModel.StudentDiscipline">
+              <MappingFragment StoreEntitySet="StudentDisciplines">
+                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
