@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Antlr.Runtime.Misc;
-using Microsoft.Ajax.Utilities;
 using TestingModule.Additional;
 using TestingModule.Models;
 using TestingModule.ViewModels;
@@ -51,6 +49,11 @@ namespace TestingModule.Controllers
             new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
             return RedirectToAction("Lectures");
         }
+        /*       public ActionResult EditLecture(Lecture model)
+               {
+                   new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
+                   return RedirectToAction("Lectures");
+               }*/
         public ActionResult EditLecture(Lecture model)
         {
             new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
