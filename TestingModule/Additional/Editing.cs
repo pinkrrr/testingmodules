@@ -24,6 +24,18 @@ namespace TestingModule.Additional
             mdl.Name = name;
             _db.SaveChanges();
         }
+        public void EditQuestion(int questionId, string text)
+        {
+            var qs = _db.Questions.FirstOrDefault(t => t.Id == questionId);
+            qs.Text = text;
+            _db.SaveChanges();
+        }
+        public void EditAnswer(int? answerId, string text)
+        {
+            var anw = _db.Answers.FirstOrDefault(t => t.Id == answerId);
+            anw.Text = text;
+            _db.SaveChanges();
+        }
 
         public void EditSpeciality(int specialityId, string name)
         {

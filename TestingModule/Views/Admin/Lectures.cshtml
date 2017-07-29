@@ -82,7 +82,6 @@ else
                 <form>
                     @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
                     @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
-                    @Html.HiddenFor(model => model.FirstOrDefault().DisciplineId, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                 </form>

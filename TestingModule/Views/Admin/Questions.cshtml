@@ -13,14 +13,10 @@ else
 {
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
-        <table border="1">
+        <table class="table table__question" border="1">
 
-            <tr class="table-row">
-                <th class="table-item table-item_name"><a data-id="@item.FirstOrDefault().QuestionId" class="table-item_name_text">@item.FirstOrDefault().Question</a></th>
-                <th class="table-item table-item_edit">
-                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                    <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
-                </th>
+            <tr class="table-row table-header-row">
+                <th class="table-header table-header_name" data-id="@item.FirstOrDefault().QuestionId">@item.FirstOrDefault().Question</th>
             </tr>
 
             @if (item.Any())
@@ -28,51 +24,27 @@ else
                 foreach (var que in item)
                 {
                     if (que.Answer == null && que.AnswerId == null)
-                    {break;}
-     
-                    <tr class="table-row" bgcolor="f1f1f1">
-                        <td class="table-item table-item_name"><a data-id="@que.AnswerId" class="table-item_name_text">@que.Answer</a></td>
-                        <td class="table-item table-item_edit">
-                            <div class="table-button table-edit-button">
-                                <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
-                            </div>
-                            <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
-                                <i class='fa fa-trash' aria-hidden='true'></i>Видалити
-                            </div>
-                        </td>
+                    { break; }
+
+                    <tr class="table-row">
+                        <td class="table-item table-item_name"><div data-id="@que.AnswerId" class="table-item_name_text">@que.Answer</div></td>
                     </tr>
                 }
             }
-            @using (Html.BeginForm("NewAnswer", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
-            {
-                <tr>
-                    <form>
-                        @{
-                            var name = Model.LastOrDefault();
-                        }
-                        <td>
-                            @if (name == null)
-                            {
-                                @Html.TextBoxFor(model => model.LastOrDefault().Answer, new { @class = "input-text" })
-                            }
-                            else
-                            {
-                                @Html.TextBoxFor(model => model.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
-                            }
-                            @Html.HiddenFor(model => model.LastOrDefault().QuestionId)
-                        </td>
-                        <td>
-                            <button type="submit">Додати відповідь</button>
-                        </td>
-                    </form>
-                </tr>
-                            }
         </table>
-        <br>
-                                }
-                            }
-<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання?</button>
-<hr>
+
+        <div class="table-edit-button_wrapper">
+            <div class="table-button table-edit-button">
+                <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
+            </div>
+            <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button">
+                <i class='fa fa-trash' aria-hidden='true'></i>Видалити
+            </div>
+        </div>
+
+    }
+}
+<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання</button>
 
 <div class="popup popup-remove">
     <div class="popup-body">
@@ -111,6 +83,51 @@ else
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                 </form>
                         }
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-add">
+    <div class="popup-body">
+        <div class="popup-content">
+            <div class="popup-title">Створити нове питання</div>
+
+            @using (Html.BeginForm("NewAnswer", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
+            {
+                <form>
+                    @{ var name = Model.LastOrDefault(); }
+                    @if (name == null)
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Answer, new { @class = "input-text" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
+                    }
+                    @Html.HiddenFor(model => model.LastOrDefault().QuestionId)
+                    <button type="submit">Додати відповідь</button>
+                </form>
+                        }
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-edit">
+    <div class="popup-body">
+        <div class="popup-content">
+            @using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
+            {
+                <div class="popup-title">Редагування</div>
+                <form>
+                    @*@for (int i = 0; i < Model.Where(t => t.QuestionId == 4).Coun i++)
+                    {
+                        @Html.TextBoxFor(model => model.FirstOrDefault().Answer, new { @class = "input-text" })
+                        @Html.HiddenFor(model => model.FirstOrDefault().AnswerId, new { @id = "id" })
+                    }*@
+                    <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
+                    <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                </form>
+            }
         </div>
     </div>
 </div>
