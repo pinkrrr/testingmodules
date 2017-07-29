@@ -28,8 +28,8 @@ else
                 foreach (var que in item)
                 {
                     if (que.Answer == null && que.AnswerId == null)
-                    {break;}
-     
+                    { break; }
+
                     <tr class="table-row" bgcolor="f1f1f1">
                         <td class="table-item table-item_name"><a data-id="@que.AnswerId" class="table-item_name_text">@que.Answer</a></td>
                         <td class="table-item table-item_edit">
@@ -53,13 +53,15 @@ else
                         <td>
                             @if (name == null)
                             {
-                                @Html.TextBoxFor(model => model.LastOrDefault().Answer, new { @class = "input-text" })
+                                @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text" })
                             }
                             else
                             {
-                                @Html.TextBoxFor(model => model.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
+                                @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
                             }
-                            @Html.HiddenFor(model => model.LastOrDefault().QuestionId)
+                            @Html.HiddenFor(model => item.LastOrDefault().QuestionId)
+                            @Html.HiddenFor(model => item.LastOrDefault().DisciplineId)
+                            @Html.HiddenFor(model => item.LastOrDefault().LectureId)
                         </td>
                         <td>
                             <button type="submit">Додати відповідь</button>
