@@ -68,6 +68,7 @@
                 var data = {
                     name: inputText.val(),
                     id: $('#id').val(),
+                    lectorId: $('#lectorId').val(),
                     answer: inputText.val(),
                     answerId: $('#id').val(),
                     question: inputText.val(),

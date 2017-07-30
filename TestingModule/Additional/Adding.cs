@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TestingModule.Models;
 
 namespace TestingModule.Additional
@@ -6,11 +7,14 @@ namespace TestingModule.Additional
     public class Adding
     {
         private readonly testingDbEntities _db = new testingDbEntities();
-        public void AddNewDiscipline(string name)
+        public void AddNewDiscipline(string name, int? lectorId)
         {
-            var last = _db.Disciplines.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var disciplinesTable = _db.Set<Discipline>();
-            disciplinesTable.Add(new Discipline() { Id = last, Name = name });
+            disciplinesTable.Add(new Discipline() {  Name = name });
+            _db.SaveChanges();
+            var disciplineId = _db.Disciplines.Where(t => t.Name == name).FirstOrDefault().Id;
+            var lecturesTable = _db.Set<LectorDiscipline>();
+            lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
             _db.SaveChanges();
         }
         public void AddNewLecture(string name, int disciplineId)

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TestingModule.Models;
 
 namespace TestingModule.Additional
@@ -6,9 +7,21 @@ namespace TestingModule.Additional
     public class Editing
     {
         private readonly testingDbEntities _db = new testingDbEntities();
-        public void EditDiscipline(int disciplineId, string name)
+        public void EditDiscipline(int disciplineId, string name, int? lectorId)
         {
             var disc = _db.Disciplines.FirstOrDefault(t => t.Id == disciplineId);
+            if (_db.LectorDisciplines.Any(t => t.DisciplineId == disciplineId))
+            {
+                var connect = _db.LectorDisciplines.FirstOrDefault(t => t.DisciplineId == disciplineId);
+                connect.LectorId = Convert.ToInt32(lectorId);
+                _db.SaveChanges();
+            }
+            else
+            {
+                var lecturesTable = _db.Set<LectorDiscipline>();
+
+                lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
+            }
             disc.Name = name;
             _db.SaveChanges();
         }
@@ -30,10 +43,15 @@ namespace TestingModule.Additional
             qs.Text = text;
             _db.SaveChanges();
         }
-        public void EditAnswer(int? answerId, string text)
+        public void EditAnswer(int? answerId, string text, bool? isCorrect)
         {
+            if (isCorrect == null)
+            {
+                isCorrect = false;
+            }
             var anw = _db.Answers.FirstOrDefault(t => t.Id == answerId);
             anw.Text = text;
+            anw.IsCorrect = isCorrect;
             _db.SaveChanges();
         }
 

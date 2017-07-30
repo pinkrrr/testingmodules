@@ -17,18 +17,38 @@ namespace TestingModule.Controllers
         //Discipline
         public ActionResult Disciplines()
         {
+            var db = new testingDbEntities();
             ViewBag.Message = "All disciplines";
-            List<Discipline> test = new testingDbEntities().Disciplines.ToList();
-            return View(test);
+            IEnumerable<Lector> lectors = db.Lectors.ToList();
+            List<DiscLecotorViewModel> viewModels = db.Disciplines.Select(d => new DiscLecotorViewModel
+            {
+                Id = d.Id,
+                Name = d.Name
+            }
+            ).ToList();
+            foreach (var model in viewModels)
+            {
+                model.Lectors = lectors;
+                model.LectorId = db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
+                    .FirstOrDefault();
+            }
+            return View(viewModels);
         }
-        public ActionResult NewDiscipline(Discipline model)
+        public ActionResult NewDiscipline(DiscLecotorViewModel model)
         {
-            new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart());
+            if (model.LectorId != null)
+            {
+                new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart(), model.LectorId);
+            }
             return RedirectToAction("Disciplines");
         }
-        public ActionResult EditDiscipline(Discipline model)
+        public ActionResult EditDiscipline(DiscLecotorViewModel model)
         {
-            new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart());
+            if (model.LectorId != null)
+            {
+                new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
+            }
+            
             return RedirectToAction("Disciplines");
         }
         public ActionResult DeleteDiscipline(int disciplineId)
