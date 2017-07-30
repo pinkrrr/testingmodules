@@ -1,0 +1,93 @@
+﻿@model IEnumerable<TestingModule.ViewModels.UserViewModel>
+@{
+    ViewBag.Title = "Lectors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Лектори!</h2>
+@if (!Model.Any())
+{
+    <h3>Немає жодного лектора...</h3>
+}
+else
+{
+
+    <table class="table table__lectors" border="1">
+        <tr class="table-row table-header-row">
+            <th class="table-header">Ім'я</th>
+            <th class="table-header">Прізвище</th>
+            <th class="table-header">Username</th>
+            <th class="table-header">Password</th>
+            <th class="table-header">Дії</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr class="table-row">
+                <td class="table-item table-item_name_text">@item.Name</td>
+                <td class="table-item table-item_surname_text">@item.Surname</td>
+                <td class="table-item">@item.Login</td>
+                <td class="table-item">@item.Password</td>
+                <td class="table-item table-item_edit">
+                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
+                    <div data-remove="lectors/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
+
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нового лектора</button>
+
+<div class="popup popup-remove">
+    <div class="popup-body">
+        <div class="popup-content">
+            <div class="popup-title">Дійсно видалити лектора <span></span>?</div>
+            <form>
+                <button class="btn popup-btn popup-remove-btn">Видалити</button>
+                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-add">
+    <div class="popup-body">
+        <div class="popup-content">
+            <div class="popup-title">Додати нового лектора</div>
+            @using (Html.BeginForm("NewLector", "Admin", FormMethod.Post))
+            {
+                <form>
+                    @{
+                        var name = Model.LastOrDefault();
+                    }
+                    @if (name == null)
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім\'я лектора" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім\'я лектора" })
+                    }
+                    @{
+                        var surname = Model.LastOrDefault();
+                    }
+                    @if (surname == null)
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище лектора" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище лектора" })
+                    }
+                    <div>
+                        <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
+                        <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                    </div>
+                </form>
+                        }
+        </div>
+    </div>
+</div>
