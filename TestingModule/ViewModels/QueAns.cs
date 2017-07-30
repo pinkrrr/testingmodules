@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TestingModule.Models
 {
-    public class QueAns
+    public class  QueAns
     {
         public int QuestionId { get; set; }
         public int DisciplineId { get; set; }

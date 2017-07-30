@@ -47,10 +47,6 @@ namespace TestingModule
                 url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteGroup" });
             routes.MapRoute(
-                name: "EditGroup",
-                url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Edit",
-                defaults: new { controller = "Admin", action = "EditGroup" });
-            routes.MapRoute(
                 name: "Groups",
                 url: "admin/specialities/{Specialityid}/Groups",
                 defaults: new { controller = "Admin", action = "Groups" });
@@ -71,13 +67,21 @@ namespace TestingModule
                 url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/NewQuestion",
                 defaults: new { controller = "Admin", action = "NewQuestion" });
             routes.MapRoute(
-                name: "AddAnswer",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/NewAnswer",
-                defaults: new { controller = "Admin", action = "NewAnswer" });
+                name: "EditQuestion",
+                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/EditQuestion",
+                defaults: new { controller = "Admin", action = "EditQuestion" });
             routes.MapRoute(
                 name: "DeleteQuestion",
                 url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/{questionId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteQuestion" });
+            routes.MapRoute(
+                name: "AddAnswer",
+                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/NewAnswer",
+                defaults: new { controller = "Admin", action = "NewAnswer" });
+            routes.MapRoute(
+                name: "EditAnswer",
+                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/EditAnswer",
+                defaults: new { controller = "Admin", action = "EditAnswer" });
             routes.MapRoute(
                 name: "DeleteAswer",
                 url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Answers/{answerId}/Delete",

@@ -118,7 +118,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditQuestion(QueAns model)
         {
-            new Editing().EditModule(model.QuestionId, model.Question.TrimEnd().TrimStart());
+            new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart());
             return RedirectToAction("Questions");
         }
         public ActionResult DeleteQuestion(int questionId)
@@ -131,16 +131,28 @@ namespace TestingModule.Controllers
             new Adding().AddNewAnswer(model.Answer.TrimEnd().TrimStart(), model.QuestionId);
             return RedirectToAction("Questions");
         }
-        public ActionResult EditAnswer(QueAns model)
+        public ActionResult EditAnswer(List<QueAns> model)
         {
-            // new Editing().EditAnswer(model.QuestionId, model.Answer.TrimEnd().TrimStart());
+            new Deleting().DeleteAnswers(model);
+            foreach (var item in model)
+            {
+                if (item.AnswerId != null)
+                {
+                    new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart());
+                }
+                else
+                {
+                    new Adding().AddNewAnswer(item.Answer.TrimEnd().TrimStart(), item.QuestionId);
+                }
+            }
+
             return RedirectToAction("Questions");
         }
-        public ActionResult DeleteAnswer(int answerId)
-        {
-            new Deleting().DeleteAnswer(answerId);
-            return RedirectToAction("Questions");
-        }
+        //public ActionResult DeleteAnswer(int answerId)
+        //{
+        //    new Deleting().DeleteAnswer(answerId);
+        //    return RedirectToAction("Questions");
+        //}
 
         //Specialities
         public ActionResult Specialities()

@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using TestingModule.Models;
 
@@ -65,10 +66,21 @@ namespace TestingModule.Additional
             _db.Entry(que).State = EntityState.Deleted;
             _db.SaveChanges();
         }
-        public void DeleteAnswer(int answerId)
+        public void DeleteAnswers(List<QueAns> model)
         {
-            var ans = new Answer() { Id = answerId };
-            _db.Entry(ans).State = EntityState.Deleted;
+            List<int?> answers = new List<int?>();
+            foreach (var item in model)
+            {
+                try
+                {
+                    answers.Add(item.AnswerId);
+                }
+                catch (System.Exception)
+                {
+
+                }
+            }
+            _db.Answers.RemoveRange(_db.Answers.Where(t => !answers.Contains(t.Id) && t.QuestionId == model.FirstOrDefault().QuestionId));
             _db.SaveChanges();
         }
         public void DeleteSpeciality(int specialityId)

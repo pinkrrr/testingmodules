@@ -3,6 +3,11 @@
     src: url('fontawesome-webfont.woff'); /* Путь к файлу со шрифтом */
    }
 
+html, body{
+    width: 100%;
+    height: 100%;
+}
+
 body {
     padding: 0;
     margin: 0;
@@ -20,11 +25,16 @@ h1, h2, h3, h4, h5, h6{
     margin-top: 0;
 }
 
-.main-container{
+.main-container {
     font-size: 0;
     white-space: nowrap;
     background-color: #f7f7f7;
     overflow-x: hidden;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: relative;
+    min-width: 800px;
 }
 
 button{
@@ -45,25 +55,26 @@ input[type="text"]:focus{
 }
 
 .navbar, .body-content{
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
     font-size: 16px;
     white-space: normal;
 }
 
-.body-content{
+.body-content {
     width: calc(100vw - 250px);
     min-height: 100vh;
-    min-width: 710px;
-    padding: 20px;
     user-select: text;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 20px;
 }
 
 .navbar{
     background-color: #3d3d3d;
     width: 250px;
     height: 100vh;
+    position: fixed;
+    display: block;
 }
 
 .navbar i.fa{
@@ -102,7 +113,7 @@ input[type="text"]:focus{
     color: #4cacff;
 }
 
-.addNewItem-btn{
+.addNewItem-btn {
     text-align: right;
     position: absolute;
     top: 20px;
@@ -128,10 +139,28 @@ input[type="text"]:focus{
     border: 1px solid #bababa;
     border-collapse: collapse;
     background-color: #ffffff;
+    margin-bottom: 42px;
 }
 
 .table.table__lectors .table-item_name_text:hover {
     color: #000000;
+}
+
+.table.table__question{
+    margin-bottom: 0;
+}
+
+.table.table__question .table-item_name_text:hover {
+    color: #000000;
+}
+
+.table.table__question .table-row:hover {
+    background-color: #ffffff;
+}
+
+.table-edit-button_wrapper{
+    margin: 10px 0 60px;
+    text-align: right;
 }
 
 .table .table-header-row{
@@ -141,6 +170,10 @@ input[type="text"]:focus{
 }
 
 .table .table-header-row:hover{
+    background-color: #818181;
+}
+
+.table.table__question .table-header-row:hover {
     background-color: #818181;
 }
 
@@ -194,7 +227,7 @@ input[type="text"]:focus{
     white-space: nowrap;
 }
 
-.table-item_edit .table-button {
+.table-button {
     transition: background .2s, color .2s;
     padding: 5px 10px;
     display: inline-block;
@@ -205,24 +238,24 @@ input[type="text"]:focus{
     background-color: #ffffff;
 }
 
-.table-item_edit .table-button i{
+.table-button i{
     margin-right: 10px;
 }
 
-.table-item_edit .table-edit-button{
+.table-edit-button{
     color: #099fc1;
 }
 
-.table-item_edit .table-edit-button:hover{
+.table-edit-button:hover{
     background-color: #099fc1; 
     color: #ffffff;
 }
 
-.table-item_edit .table-remove-button{
+.table-remove-button{
     color: #e50d0d;
 }
 
-.table-item_edit .table-remove-button:hover{
+.table-remove-button:hover{
     background-color: #e50d0d; 
     color: #ffffff;
 }
@@ -273,15 +306,45 @@ input[type="text"]:focus{
     vertical-align: middle;
 }
 
-.popup-title{
+.popup-edit .answer_item {
+    font-size: 0;
+}
+
+.popup-edit .answer_item .input-text, .popup-edit .answer_item .answer_remove {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+}
+
+.popup-edit .answer_item .input-text {
+    width: 313px;
+    font-size: 22px;
+    border-right: 0;
+}
+
+.popup-edit .answer_item .answer_remove {
+    color: #ffffff;
+    background-color: #e50d0d;
+    border: 1px solid #e50d0d;
+    transition: color .2s, background .2s;
+    font-size: 32px;
+    padding: 4px 10px;
+}
+
+.popup-edit .answer_item .answer_remove:hover{
+    color: #e50d0d;
+    background-color: #ffffff;
+}
+
+.popup-title {
     font-size: 24px;
     color: #000000;
     text-align: left;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .popup-title span{
-    font-weight: bold;
     color: #e43100
 }
 
