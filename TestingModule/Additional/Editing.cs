@@ -14,13 +14,13 @@ namespace TestingModule.Additional
         }
         public void EditLecture(int lectureId, string name)
         {
-            var lct = _db.Disciplines.FirstOrDefault(t => t.Id == lectureId);
+            var lct = _db.Lectures.FirstOrDefault(t => t.Id == lectureId);
             lct.Name = name;
             _db.SaveChanges();
         }
         public void EditModule(int moduleId, string name)
         {
-            var mdl = _db.Disciplines.FirstOrDefault(t => t.Id == moduleId);
+            var mdl = _db.Modules.FirstOrDefault(t => t.Id == moduleId);
             mdl.Name = name;
             _db.SaveChanges();
         }

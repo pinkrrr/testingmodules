@@ -49,6 +49,11 @@ namespace TestingModule.Controllers
             new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
             return RedirectToAction("Lectures");
         }
+        /*       public ActionResult EditLecture(Lecture model)
+               {
+                   new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
+                   return RedirectToAction("Lectures");
+               }*/
         public ActionResult EditLecture(Lecture model)
         {
             new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
