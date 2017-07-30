@@ -130,26 +130,18 @@ namespace TestingModule.Controllers
         {
             if (model != null)
             {
-                new Deleting().DeleteAnswers(model);
                 foreach (var item in model)
                 {
-                    if (item.AnswerId != null)
-                    {
-                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart());
-                    }
-                    else
-                    {
-                        new Adding().AddNewAnswer(item.Answer.TrimEnd().TrimStart(), item.QuestionId);
-                    }
+                    new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart());
                 }
             }
             return RedirectToAction("Questions");
         }
-        //public ActionResult DeleteAnswer(int answerId)
-        //{
-        //    new Deleting().DeleteAnswer(answerId);
-        //    return RedirectToAction("Questions");
-        //}
+        public ActionResult DeleteAnswer(int answerId)
+        {
+            new Deleting().DeleteAnswer(answerId);
+            return RedirectToAction("Questions");
+        }
 
         //Specialities
         public ActionResult Specialities()

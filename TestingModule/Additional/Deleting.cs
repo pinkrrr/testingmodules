@@ -67,23 +67,9 @@ namespace TestingModule.Additional
             _db.Entry(que).State = EntityState.Deleted;
             _db.SaveChanges();
         }
-        public void DeleteAnswers(List<QueAns> model)
+        public void DeleteAnswer(int answerId)
         {
-            List<int> answers = new List<int>();
-            List<int> questions = new List<int>();
-            foreach (var item in model)
-            {
-                try
-                {
-                    answers.Add(Convert.ToInt32(item.AnswerId));
-                    questions.Add(item.QuestionId);
-                }
-                catch (System.Exception)
-                {
-
-                }
-            }
-            _db.Answers.RemoveRange(_db.Answers.Where(t => !answers.Contains(t.Id) && questions.Contains(t.QuestionId)));
+            _db.Answers.RemoveRange(_db.Answers.Where(t => t.Id == answerId));
             _db.SaveChanges();
         }
         public void DeleteSpeciality(int specialityId)

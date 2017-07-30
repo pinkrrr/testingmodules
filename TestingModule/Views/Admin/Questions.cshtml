@@ -25,22 +25,36 @@ else
 
             @if (item.Any())
             {
-                foreach (var que in item)
+                using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
                 {
-                    if (que.Answer == null && que.AnswerId == null)
-                    { break; }
+                    foreach (var que in item)
+                    {
+                        if (que.Answer == null && que.AnswerId == null)
+                        {
+                            break;
+                        }
 
-                    <tr class="table-row" bgcolor="f1f1f1">
-                        <td class="table-item table-item_name"><a data-id="@que.AnswerId" class="table-item_name_text">@que.Answer</a></td>
-                        <td class="table-item table-item_edit">
-                            <div class="table-button table-edit-button">
-                                <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
-                            </div>
-                            <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
-                                <i class='fa fa-trash' aria-hidden='true'></i>Видалити
-                            </div>
+                        <tr class="table-row" bgcolor="f1f1f1">
+                            <td class="table-item table-item_name">
+                                @Html.TextBoxFor(model => Model[Model.IndexOf(que)].Answer)
+                                @Html.HiddenFor(model => Model[Model.IndexOf(que)].AnswerId)
+                                @Html.HiddenFor(model => Model[Model.IndexOf(que)].Question)
+                                @Html.HiddenFor(model => Model[Model.IndexOf(que)].QuestionId)
+                            </td>
+                            <td class="table-item table-item_edit">
+                                <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
+                                    <i class='fa fa-trash' aria-hidden='true'></i>Видалити
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr align="center" bgcolor="c6ffd8">
+                        <td class="table-item table-item_name" colspan="2">
+                            <input type="submit" value="Зберегти відповіді" />
                         </td>
                     </tr>
+
                 }
             }
             @using (Html.BeginForm("NewAnswer", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
@@ -48,20 +62,20 @@ else
                 <tr>
                     <form>
                         @{
-                            var name = Model.LastOrDefault();
+                            var name = item.LastOrDefault();
                         }
                         <td>
                             @if (name == null)
-                            {
+                        {
                                 @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text" })
                             }
                             else
                             {
                                 @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
                             }
-                            @Html.HiddenFor(model => item.LastOrDefault().QuestionId)
-                            @Html.HiddenFor(model => item.LastOrDefault().DisciplineId)
-                            @Html.HiddenFor(model => item.LastOrDefault().LectureId)
+                            @Html.HiddenFor(model => item.FirstOrDefault().QuestionId)
+                            @Html.HiddenFor(model => item.FirstOrDefault().DisciplineId)
+                            @Html.HiddenFor(model => item.FirstOrDefault().LectureId)
                         </td>
                         <td>
                             <button type="submit">Додати відповідь</button>
@@ -74,23 +88,6 @@ else
                                 }
                             }
 
-@using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
-{
-    <table>
-        @for (int item = 0; item < Model.Count(); item++)
-        {
-            <tr>
-                <td>
-                    @Html.TextBoxFor(modelItem => Model[item].Answer)
-                    @Html.HiddenFor(model => Model[item].AnswerId)
-                    @Html.HiddenFor(model => Model[item].Question)
-                    @Html.HiddenFor(model => Model[item].QuestionId)
-                </td>
-            </tr>
-        }
-    </table>
-        <input type="submit" value=“Edit All” />
-}
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання?</button>
 <hr>
 
