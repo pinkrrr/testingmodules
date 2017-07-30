@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestingModule.Models.QueAns>
+﻿@model IList<TestingModule.Models.QueAns>
 @{
     ViewBag.Title = "Questions";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -73,6 +73,24 @@ else
         <br>
                                 }
                             }
+
+@using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
+{
+    <table>
+        @for (int item = 0; item < Model.Count(); item++)
+        {
+            <tr>
+                <td>
+                    @Html.TextBoxFor(modelItem => Model[item].Answer)
+                    @Html.HiddenFor(model => Model[item].AnswerId)
+                    @Html.HiddenFor(model => Model[item].Question)
+                    @Html.HiddenFor(model => Model[item].QuestionId)
+                </td>
+            </tr>
+        }
+    </table>
+        <input type="submit" value=“Edit All” />
+}
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання?</button>
 <hr>
 

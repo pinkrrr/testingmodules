@@ -49,11 +49,6 @@ namespace TestingModule.Controllers
             new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
             return RedirectToAction("Lectures");
         }
-        /*       public ActionResult EditLecture(Lecture model)
-               {
-                   new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
-                   return RedirectToAction("Lectures");
-               }*/
         public ActionResult EditLecture(Lecture model)
         {
             new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
@@ -95,20 +90,20 @@ namespace TestingModule.Controllers
         {
             testingDbEntities db = new testingDbEntities();
 
-            var viewModels = (from q in db.Questions
-                              from a in db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
-                              select new QueAns()
-                              {
-                                  DisciplineId = q.DisciplineId,
-                                  LectureId = q.LectureId,
-                                  ModuleId = q.ModuleId,
-                                  QuestionId = q.Id,
-                                  Question = q.Text,
-                                  AnswerId = a.Id,
-                                  Answer = a.Text
-                              }).ToList();
+            List<QueAns> viewModels = (from q in db.Questions
+                                       from a in db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
+                                       select new QueAns()
+                                       {
+                                           DisciplineId = q.DisciplineId,
+                                           LectureId = q.LectureId,
+                                           ModuleId = q.ModuleId,
+                                           QuestionId = q.Id,
+                                           Question = q.Text,
+                                           AnswerId = a.Id,
+                                           Answer = a.Text
+                                       }).ToList();
 
-            var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId);
+            var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId).ToList();
             return View(neededQuestions);
         }
         public ActionResult NewQuestion(QueAns model)
@@ -133,19 +128,21 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditAnswer(List<QueAns> model)
         {
-            new Deleting().DeleteAnswers(model);
-            foreach (var item in model)
+            if (model != null)
             {
-                if (item.AnswerId != null)
+                new Deleting().DeleteAnswers(model);
+                foreach (var item in model)
                 {
-                    new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart());
-                }
-                else
-                {
-                    new Adding().AddNewAnswer(item.Answer.TrimEnd().TrimStart(), item.QuestionId);
+                    if (item.AnswerId != null)
+                    {
+                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart());
+                    }
+                    else
+                    {
+                        new Adding().AddNewAnswer(item.Answer.TrimEnd().TrimStart(), item.QuestionId);
+                    }
                 }
             }
-
             return RedirectToAction("Questions");
         }
         //public ActionResult DeleteAnswer(int answerId)

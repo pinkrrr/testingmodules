@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using TestingModule.Models;
@@ -68,19 +69,21 @@ namespace TestingModule.Additional
         }
         public void DeleteAnswers(List<QueAns> model)
         {
-            List<int?> answers = new List<int?>();
+            List<int> answers = new List<int>();
+            List<int> questions = new List<int>();
             foreach (var item in model)
             {
                 try
                 {
-                    answers.Add(item.AnswerId);
+                    answers.Add(Convert.ToInt32(item.AnswerId));
+                    questions.Add(item.QuestionId);
                 }
                 catch (System.Exception)
                 {
 
                 }
             }
-            _db.Answers.RemoveRange(_db.Answers.Where(t => !answers.Contains(t.Id) && t.QuestionId == model.FirstOrDefault().QuestionId));
+            _db.Answers.RemoveRange(_db.Answers.Where(t => !answers.Contains(t.Id) && questions.Contains(t.QuestionId)));
             _db.SaveChanges();
         }
         public void DeleteSpeciality(int specialityId)
