@@ -1,13 +1,13 @@
-﻿@model IEnumerable<TestingModule.Models.Discipline>
-
+﻿@model IEnumerable<TestingModule.Models.Group>
 @{
-    ViewBag.Title = "Disciplines";
+    ViewBag.Title = "Groups";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Дисципліни</h2>
+<h2>Групи</h2>
 @if (!Model.Any())
 {
-    <h3>Немає жодної дисципліни...</h3>
+    <h3>Немає жодної групи...</h3>
 }
 else
 {
@@ -17,21 +17,20 @@ else
         @foreach (var item in Model)
         {
             <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a></td>
+                <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                    <div data-remove="disciplines/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
+                    <div data-remove="groups/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
 
                 </td>
             </tr>
         }
 
     </table>
+
 }
 
-
-
-<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову дисципліну</button>
+<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову групу</button>
 
 <div class="popup popup-remove">
     <div class="popup-body">
@@ -48,7 +47,7 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditDiscipline", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditGroup", "Admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>
@@ -65,12 +64,12 @@ else
 <div class="popup popup-add">
     <div class="popup-body">
         <div class="popup-content">
-            <div class="popup-title">Додати нову дисципліну</div>
-            @using (Html.BeginForm("NewDiscipline", "Admin", FormMethod.Post))
+            <div class="popup-title">Додати нову групу</div>
+            @using (Html.BeginForm("NewGroup", "Admin", FormMethod.Post))
             {
                 <form>
                     <div>
-                        Введіть назву дисципліни:
+                        Введіть назву групи:
                         @{
                             var name = Model.LastOrDefault();
                         }

@@ -5,16 +5,21 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="2755647ab4c34fb7b086b4d091eb1680" Name="Diagram1">
-        <EntityTypeShape EntityType="testingDbModel.Answer" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Discipline" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Group" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Lecture" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.LecturesHistory" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Module" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Question" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Respons" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Speciality" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="testingDbModel.Student" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="testingDbModel.Answer" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Discipline" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.Group" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.Lecture" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.LecturesHistory" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.Module" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Question" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="testingDbModel.Respons" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.Role" Width="1.5" PointX="6.75" PointY="6.75" />
+        <EntityTypeShape EntityType="testingDbModel.Speciality" Width="1.5" PointX="2.75" PointY="7.75" />
+        <EntityTypeShape EntityType="testingDbModel.Account" Width="1.5" PointX="0.875" PointY="0.875" />
+        <EntityTypeShape EntityType="testingDbModel.Lector" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Student" Width="1.5" PointX="9.375" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.LectorDiscipline" Width="1.5" PointX="5.375" PointY="9.75" />
+        <EntityTypeShape EntityType="testingDbModel.StudentDiscipline" Width="1.5" PointX="9.375" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
