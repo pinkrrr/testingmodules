@@ -11,13 +11,21 @@
             remove: $('.popup.popup-remove')
         };
         var $popupRemoveName = $popup.remove.find('.popup-title span');
+        var $tableQuestion = $('.table__question');
+        var answers = [];
 
         function initShowEditPopup() {
             _$editBtn.on('click', function () {
                 inputText = $(this).closest('.table-row').find('.table-item_name_text').text();
                 showPopupEdit(inputText);
+                var $table = $(this).parent().prev();
                 var nameId = $(this).closest('.table-row').find('.table-item_name_text').attr('data-id');
                 $('#id').val(nameId);
+                if ($tableQuestion.length) {
+                    var $question = $(this).parent().prev().find('.table-header_name');
+                    getAnswerList($table, showAnswersInEdit);
+                    showQuestionInEdit($question);
+                }
             });
         }
 
@@ -31,15 +39,41 @@
             var url = $popup.edit.find('form').attr('action');
             var method = $popup.edit.find('form').attr('method');
 
-            saveBtn.on('click', function (e) {
+            $('form').on('submit', function (e) {
                 //e.preventDefault();
                 var inputText = $popup.edit.find('.input-text');
 
+                //if (inputText.parent('.answer_item')){
+                //    $popup.edit.find('.answer_item').each(function (item) {
+                //        data.push({
+                //            answer: $(this).find('.input-text').val(),
+                //            answerId: $(this).attr('data-id'),
+                //            question: $(this).closest('form').find('.input-text.question').val(),
+                //            questionId: $(this).closest('form').find('.input-text.question').attr('data-id'),
+                //        });
+                //    });
+                //    data = JSON.stringify(data);
+                //    console.log(data);
+                //} else {
+                //    data = {
+                //        name: inputText.val(),
+                //        id: $('#id').val(),
+                //        answer: inputText.val(),
+                //        answerId: $('#id').val(),
+                //        question: inputText.val(),
+                //        questionId: $('#id').val(),
+                //    };
+                //}
+
                 var data = {
                     name: inputText.val(),
-                    id: $('#id').val()
+                    id: $('#id').val(),
+                    answer: inputText.val(),
+                    answerId: $('#id').val(),
+                    question: inputText.val(),
+                    questionId: $('#id').val(),
                 };
-
+                
                 sendData(data, url, method);
 
             });
@@ -99,6 +133,38 @@
             });
         }
 
+        function getAnswerList($table, callback) {
+            answers = [];
+            $table.find('.table-item_name_text').each(function (i, item) {
+                answers.push({
+                    text: $(this).text(),
+                    id: $(this).attr('data-id')
+                });
+            });
+            if (callback) {
+                callback();
+            }
+        }
+
+        function showAnswersInEdit() {
+            var hmtlQuestionData = [];
+            var answerHtml;
+            answers.forEach(function (answer) {
+                answerHTML = '<div class="answer_item" data-id="' + answer.id + '"><input id="' + answer.id +'" name="Question" type="text" class="input-text" value="' + answer.text + '"><div class="answer_remove"><i class="fa fa-trash" aria-hidden="true"></i></div></div>';
+                hmtlQuestionData += answerHTML;
+            });
+            $popup.edit.find('.answer_item').remove();
+            $(hmtlQuestionData).insertAfter($popup.edit.find('form .popup-title'));
+        }
+
+        function showQuestionInEdit($question) {
+            var qText = $question.text();
+            var qId = $question.attr('data-id');
+            var questionHtml = '<input name="Answer" type="text" data-id="' + qId+'" value="' + qText + '" class="input-text question">';
+            $popup.edit.find('.input-text.question').remove();
+            $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
+        }
+        
         initShowEditPopup();
         initShowRemovePopup();
         initShowAddPopup();
