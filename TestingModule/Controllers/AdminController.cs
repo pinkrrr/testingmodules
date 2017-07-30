@@ -100,7 +100,8 @@ namespace TestingModule.Controllers
                                            QuestionId = q.Id,
                                            Question = q.Text,
                                            AnswerId = a.Id,
-                                           Answer = a.Text
+                                           Answer = a.Text,
+                                           IsCorrect = a.IsCorrect
                                        }).ToList();
 
             var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId).ToList();
@@ -132,8 +133,9 @@ namespace TestingModule.Controllers
             {
                 foreach (var item in model)
                 {
-                    new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart());
+                    new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
                 }
+                new Editing().EditQuestion(model.FirstOrDefault().QuestionId, model.FirstOrDefault().Question.TrimEnd().TrimStart());
             }
             return RedirectToAction("Questions");
         }

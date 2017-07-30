@@ -16,13 +16,13 @@ else
         <table border="1">
 
             <tr class="table-row">
-                <th class="table-item table-item_name"><a data-id="@item.FirstOrDefault().QuestionId" class="table-item_name_text">@item.FirstOrDefault().Question</a></th>
+                <th class="table-item table-item_name">@Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question)</th>
+                <th class="table-item table-item_edit"> Правильна відповідь </th>
                 <th class="table-item table-item_edit">
-                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
                 </th>
             </tr>
-
+            
             @if (item.Any())
             {
                 using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
@@ -40,6 +40,11 @@ else
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].AnswerId)
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].Question)
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].QuestionId)
+                            </td>
+                            <td class="table-item table-item_edit">
+                                <div class="table-button table-item_edit">
+                                    @Html.RadioButtonFor(model => Model[Model.IndexOf(que)].IsCorrect, true)
+                                </div>
                             </td>
                             <td class="table-item table-item_edit">
                                 <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
