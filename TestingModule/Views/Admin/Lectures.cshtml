@@ -82,7 +82,6 @@ else
                 <form>
                     @Html.TextBoxFor(model => model.Lectures.FirstOrDefault().Name, new { @class = "input-text" })
                     <div>
-                        Оберіть лектора
                         @Html.DropDownListFor(model => model.Lectures.FirstOrDefault().DisciplineId, new SelectList(Model.Disciplines, "Id", "Name", new {@id = "disciplineId"}), "Оберіть дисципліну")
                     </div>
                     @Html.HiddenFor(model => model.Lectures.FirstOrDefault().Id, new { @id = "id" })

@@ -13,5 +13,9 @@ namespace TestingModule.ViewModels
         public IEnumerable<Module> Modules { get; set; }
         public IEnumerable<Question> Questions { get; set; }
         public IEnumerable<Answer> Answers { get; set; }
+        public IEnumerable<Speciality> Specialities { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
+        public IEnumerable<Account> Accounts { get; set; }
+        public IEnumerable<Student> Students { get; set; }
     }
 }

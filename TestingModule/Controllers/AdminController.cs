@@ -80,6 +80,7 @@ namespace TestingModule.Controllers
             }
             catch
             {
+                // ignored
             }
             return RedirectToAction("Lectures");
         }
@@ -94,17 +95,28 @@ namespace TestingModule.Controllers
         //Module
         public ActionResult Modules(int lectureId)
         {
-            List<Module> test = new testingDbEntities().Modules.Where(t => t.LectureId == lectureId).ToList();
+            var db = new testingDbEntities();
+            var discId = db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
+            IEnumerable<Module> mod = db.Modules.Where(t => t.LectureId == lectureId).ToList();
+            IEnumerable<Lecture> lect = db.Lectures.Where(t => t.DisciplineId == discId).ToList();
+            ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Modules = mod };
             return View(test);
         }
         public ActionResult NewModule(Module model)
         {
-            new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId);
+            try
+            {
+                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId);
+            }
+            catch
+            {
+                // ignored
+            }
             return RedirectToAction("Modules");
         }
         public ActionResult EditModule(Module model)
         {
-            new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart());
+            new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
             return RedirectToAction("Modules");
         }
         public ActionResult DeleteModule(int moduleId)
@@ -201,17 +213,27 @@ namespace TestingModule.Controllers
         //Groups
         public ActionResult Groups(int specialityId)
         {
-            List<Group> test = new testingDbEntities().Groups.Where(t => t.SpecialityId == specialityId).ToList();
+            var db = new testingDbEntities();
+            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
+            IEnumerable<Speciality> spc = db.Specialities.ToList();
+            ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc };
             return View(test);
         }
         public ActionResult NewGroup(Group model)
         {
-            new Adding().AddNewGroup(model.Name.TrimEnd().TrimStart(), model.SpecialityId);
+            try
+            {
+                new Adding().AddNewGroup(model.Name.TrimEnd().TrimStart(), model.SpecialityId);
+            }
+            catch
+            {
+                // ignored
+            }
             return RedirectToAction("Groups");
         }
         public ActionResult EditGroup(Group model)
         {
-            new Editing().EditGroup(model.Id, model.Name.TrimEnd().TrimStart());
+            new Editing().EditGroup(model.Id, model.Name.TrimEnd().TrimStart(), model.SpecialityId);
             return RedirectToAction("Groups");
         }
         public ActionResult DeleteGroup(int groupId)
@@ -223,34 +245,34 @@ namespace TestingModule.Controllers
         //Students
         public ActionResult Students(int groupId)
         {
-            testingDbEntities db = new testingDbEntities();
-
-            var viewModels = (from s in db.Students
-                              join a in db.Accounts on s.AccountId equals a.Id
-                              select new UserViewModel()
-                              {
-                                  Id = s.Id,
-                                  SpecialityId = s.SpecialityId,
-                                  GroupId = s.GroupId,
-                                  AccountId = s.AccountId,
-                                  Name = s.Name,
-                                  Surname = s.Surname,
-                                  Login = a.Login,
-                                  Password = a.Password,
-                                  RoleId = a.RoleId
-                              }).ToList();
-
-            var neededGroup = viewModels.Where(t => t.GroupId == groupId);
-            return View(neededGroup);
+            var db = new testingDbEntities();
+            var specId = db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
+            List<int> accList = new List<int>();
+            IEnumerable<Student> std = db.Students.Where(t => t.GroupId == groupId).ToList();
+            foreach (var student in std)
+            {
+                accList.Add(student.AccountId);
+            }
+            IEnumerable<Account> acc = db.Accounts.Where(t => accList.Contains(t.Id)).ToList();
+            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == specId).ToList();
+            ReasignViewModel test = new ReasignViewModel() { Groups = grp, Accounts = acc, Students = std };
+            return View(test);
         }
         public ActionResult NewStudent(Student model)
         {
-            new Adding().AddNewStudent(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.GroupId, model.SpecialityId);
+            try
+            {
+                new Adding().AddNewStudent(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.GroupId, model.SpecialityId);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
             return RedirectToAction("Students");
         }
         public ActionResult EditStudent(UserViewModel model)
         {
-            new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
+            new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
             return RedirectToAction("Students");
         }
         public ActionResult DeleteStudent(int studentId)

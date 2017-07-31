@@ -13,7 +13,7 @@ namespace TestingModule.Additional
             if (_db.LectorDisciplines.Any(t => t.DisciplineId == disciplineId))
             {
                 var connect = _db.LectorDisciplines.FirstOrDefault(t => t.DisciplineId == disciplineId);
-                connect.LectorId = Convert.ToInt32(lectorId);
+                if (connect != null) connect.LectorId = Convert.ToInt32(lectorId);
                 _db.SaveChanges();
             }
             else
@@ -22,7 +22,7 @@ namespace TestingModule.Additional
 
                 lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
             }
-            disc.Name = name;
+            if (disc != null) disc.Name = name;
             _db.SaveChanges();
         }
         public void EditLecture(int lectureId, string name, int disciplineId)
@@ -32,13 +32,16 @@ namespace TestingModule.Additional
             {
                 lct.DisciplineId = disciplineId;
             }
-            
             lct.Name = name;
             _db.SaveChanges();
         }
-        public void EditModule(int moduleId, string name)
+        public void EditModule(int moduleId, string name, int lectureId)
         {
             var mdl = _db.Modules.FirstOrDefault(t => t.Id == moduleId);
+            if (lectureId != _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId)
+            {
+                mdl.LectureId = lectureId;
+            }
             mdl.Name = name;
             _db.SaveChanges();
         }
@@ -66,16 +69,24 @@ namespace TestingModule.Additional
             spc.Name = name;
             _db.SaveChanges();
         }
-        public void EditGroup(int groupId, string name)
+        public void EditGroup(int groupId, string name, int specialityId)
         {
             var grp = _db.Groups.FirstOrDefault(t => t.Id == groupId);
+            if (specialityId != _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId)
+            {
+                grp.SpecialityId = specialityId;
+            }
             grp.Name = name;
             _db.SaveChanges();
         }
-        public void EditStudent(int studentId, string name, string surname, string username, string pass)
+        public void EditStudent(int studentId, string name, string surname, string username, string pass, int groupId)
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
             var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
+            if (groupId != _db.Students.FirstOrDefault(t => t.Id == studentId).SpecialityId)
+            {
+                std.GroupId = groupId;
+            }
             std.Name = name;
             std.Surname = surname;
             ac.Login = username;

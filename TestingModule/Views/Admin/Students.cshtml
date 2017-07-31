@@ -1,11 +1,11 @@
-﻿@model IEnumerable<TestingModule.ViewModels.UserViewModel>
+﻿@model TestingModule.ViewModels.ReasignViewModel
 @{
     ViewBag.Title = "Students";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Студенти</h2>
-@if (!Model.Any())
+@if (!Model.Students.Any())
 {
     <h3>Немає жодного студента...</h3>
 }
@@ -20,13 +20,13 @@ else
             <th class="table-header">Password</th>
             <th class="table-header">Дії</th>
         </tr>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Students)
         {
             <tr class="table-row">
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
                 <td class="table-item table-item_surname_text">@item.Surname</td>
-                <td class="table-item">@item.Login</td>
-                <td class="table-item">@item.Password</td>
+                <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Login</td>
+                <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Password</td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="students/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
@@ -48,32 +48,32 @@ else
                     <div>
                         Введіть ім'я студента:
                         @{
-                            var name = Model.LastOrDefault();
+                            var name = Model.Students.LastOrDefault();
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
                         }
                     </div>
                     Введіть прізвище студента:
                     @{
-                        var surname = Model.LastOrDefault();
+                        var surname = Model.Students.LastOrDefault();
                     }
                     @if (surname == null)
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text" })
                     }
                     <div>
-                        @Html.HiddenFor(model => model.LastOrDefault().GroupId)
-                        @Html.HiddenFor(model => model.LastOrDefault().SpecialityId)
+                        @Html.HiddenFor(model => model.Students.LastOrDefault().GroupId)
+                        @Html.HiddenFor(model => model.Students.LastOrDefault().SpecialityId)
                     </div>
                     <div>
                         <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
@@ -105,11 +105,14 @@ else
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Surname, new { @class = "input-text" })
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Login, new { @class = "input-text" })
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Password, new { @class = "input-text" })
+                    @Html.HiddenFor(model => model.Students.FirstOrDefault().Id, new { @id = "id" })
+                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Surname, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Login, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Password, new { @class = "input-text" })
+                    <div>
+                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "groupId" }), "Оберіть групу")
+                    </div>
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                 </form>

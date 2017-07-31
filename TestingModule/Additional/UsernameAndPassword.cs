@@ -59,16 +59,20 @@ namespace TestingModule.Additional
 
                     if (ch.ToString() == opt[0])
                     {
-                        try
+                        if (source.IndexOf(ch) == 0)
+                        {
+                            result += "h";
+                        }
+                        else
                         {
                             if (source[source.IndexOf(ch) - 1].ToString() == "з")
                             {
                                 result += "gh";
                             }
-                        }
-                        catch
-                        {
-                            result += "h";
+                            else
+                            {
+                                result += "h";
+                            }
                         }
                     }
                     else if (ch.ToString() == opt[1] && source.IndexOf(ch) == 0)
@@ -102,7 +106,7 @@ namespace TestingModule.Additional
 
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 result = source;
             }
