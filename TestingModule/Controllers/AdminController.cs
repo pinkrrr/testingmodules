@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -144,7 +145,12 @@ namespace TestingModule.Controllers
                                            Answer = a.Text,
                                            IsCorrect = a.IsCorrect
                                        }).ToList();
-
+            var lectId = db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
+            IEnumerable<Module> mod = db.Modules.Where(t => t.LectureId == lectId).ToList();
+            foreach (var model in viewModels)
+            {
+                model.Modules = mod;
+            }
             var neededQuestions = viewModels.Where(t => t.ModuleId == moduleId).ToList();
             return View(neededQuestions);
         }
@@ -155,7 +161,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditQuestion(QueAns model)
         {
-            new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart());
+            new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
             return RedirectToAction("Questions");
         }
         public ActionResult DeleteQuestion(int questionId)
@@ -176,7 +182,8 @@ namespace TestingModule.Controllers
                 {
                     new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
                 }
-                new Editing().EditQuestion(model.FirstOrDefault().QuestionId, model.FirstOrDefault().Question.TrimEnd().TrimStart());
+                new Editing().EditQuestion(model.FirstOrDefault().QuestionId, model.FirstOrDefault().Question.TrimEnd().TrimStart()
+                    , model.FirstOrDefault().ModuleId);
             }
             return RedirectToAction("Questions");
         }

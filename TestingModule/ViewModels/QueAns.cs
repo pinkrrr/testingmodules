@@ -15,5 +15,6 @@ namespace TestingModule.Models
         public int? AnswerId { get; set; }
         public String Answer { get; set; }
         public bool? IsCorrect { get; set; }
+        public IEnumerable<Module> Modules { get; set; }
     }
 }
