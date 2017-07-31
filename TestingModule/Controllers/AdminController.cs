@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using TestingModule.Additional;
@@ -48,7 +49,7 @@ namespace TestingModule.Controllers
             {
                 new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
             }
-            
+
             return RedirectToAction("Disciplines");
         }
         public ActionResult DeleteDiscipline(int disciplineId)
@@ -61,7 +62,9 @@ namespace TestingModule.Controllers
         //Lecture
         public ActionResult Lectures(int disciplineId)
         {
-            List<Lecture> test = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
+            IEnumerable<Lecture> lect = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
+            IEnumerable<Discipline> disc = new testingDbEntities().Disciplines.ToList();
+            ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Disciplines = disc };
             return View(test);
         }
         public ActionResult NewLecture(Lecture model)
@@ -71,7 +74,13 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditLecture(Lecture model)
         {
-            new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart());
+            try
+            {
+                new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+            }
+            catch
+            {
+            }
             return RedirectToAction("Lectures");
         }
         public ActionResult DeleteLecture(int lectureId)

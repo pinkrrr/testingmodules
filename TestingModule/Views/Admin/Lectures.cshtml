@@ -1,12 +1,12 @@
-﻿@model IEnumerable<TestingModule.Models.Lecture>
-  
+﻿@model TestingModule.ViewModels.ReasignViewModel
+
 @{
     ViewBag.Title = "Lectures";
 }
 
 <h2>Лекції</h2>
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
-@if (!Model.Any())
+@if (!Model.Lectures.Any())
 {
     <h3>Немає жодної лекції...</h3>
 }
@@ -15,7 +15,7 @@ else
     <table class="table" border="1">
         <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Дії</th></tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.Lectures)
         {
             <tr class="table-row">
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text">@item.Name</a></td>
@@ -52,15 +52,15 @@ else
                     <div>
                         Введіть назву лекції:
                         @{
-                            var name = Model.LastOrDefault();
+                            var name = Model.Lectures.LastOrDefault();
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, new { @class = "input-text" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
                         }
                     </div>
                     <div>
@@ -80,8 +80,12 @@ else
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
-                    @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
+                    @Html.TextBoxFor(model => model.Lectures.FirstOrDefault().Name, new { @class = "input-text" })
+                    <div>
+                        Оберіть лектора
+                        @Html.DropDownListFor(model => model.Lectures.FirstOrDefault().DisciplineId, new SelectList(Model.Disciplines, "Id", "Name", new {@id = "disciplineId"}), "Оберіть дисципліну")
+                    </div>
+                    @Html.HiddenFor(model => model.Lectures.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                 </form>

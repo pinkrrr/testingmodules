@@ -25,9 +25,14 @@ namespace TestingModule.Additional
             disc.Name = name;
             _db.SaveChanges();
         }
-        public void EditLecture(int lectureId, string name)
+        public void EditLecture(int lectureId, string name, int disciplineId)
         {
             var lct = _db.Lectures.FirstOrDefault(t => t.Id == lectureId);
+            if (disciplineId != _db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId)
+            {
+                lct.DisciplineId = disciplineId;
+            }
+            
             lct.Name = name;
             _db.SaveChanges();
         }
