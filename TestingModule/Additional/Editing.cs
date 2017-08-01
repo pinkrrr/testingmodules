@@ -28,7 +28,7 @@ namespace TestingModule.Additional
         public void EditLecture(int lectureId, string name, int disciplineId)
         {
             var lct = _db.Lectures.FirstOrDefault(t => t.Id == lectureId);
-            if (disciplineId != _db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId)
+            if (disciplineId != _db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId && disciplineId != 0)
             {
                 lct.DisciplineId = disciplineId;
             }
@@ -38,7 +38,7 @@ namespace TestingModule.Additional
         public void EditModule(int moduleId, string name, int lectureId)
         {
             var mdl = _db.Modules.FirstOrDefault(t => t.Id == moduleId);
-            if (lectureId != _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId)
+            if (lectureId != _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId && lectureId != 0)
             {
                 mdl.LectureId = lectureId;
             }
@@ -48,7 +48,7 @@ namespace TestingModule.Additional
         public void EditQuestion(int questionId, string text, int moduleId)
         {
             var qs = _db.Questions.FirstOrDefault(t => t.Id == questionId);
-            if (moduleId != _db.Questions.FirstOrDefault(t => t.Id == questionId).ModuleId)
+            if (moduleId != _db.Questions.FirstOrDefault(t => t.Id == questionId).ModuleId && moduleId != 0)
             {
                 qs.ModuleId = moduleId;
             }
@@ -76,7 +76,7 @@ namespace TestingModule.Additional
         public void EditGroup(int groupId, string name, int specialityId)
         {
             var grp = _db.Groups.FirstOrDefault(t => t.Id == groupId);
-            if (specialityId != _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId)
+            if (specialityId != _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId && specialityId != 0)
             {
                 grp.SpecialityId = specialityId;
             }
@@ -87,7 +87,7 @@ namespace TestingModule.Additional
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
             var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
-            if (groupId != _db.Students.FirstOrDefault(t => t.Id == studentId).SpecialityId)
+            if (groupId != _db.Students.FirstOrDefault(t => t.Id == studentId).SpecialityId && groupId != 0)
             {
                 std.GroupId = groupId;
             }

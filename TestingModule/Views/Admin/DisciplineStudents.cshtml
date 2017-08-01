@@ -1,0 +1,58 @@
+﻿@using System.Web.UI.WebControls
+@model TestingModule.ViewModels.ReasignViewModel
+@{
+    ViewBag.Title = "DisciplineStudents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<h1>Студенти які слухають курс - @Model.Disciplines.FirstOrDefault().Name</h1>
+@if (!Model.Specialities.Any())
+{
+    <h3>Немає жодної спеціальності...</h3>
+}
+@foreach (var spec in Model.Specialities)
+{
+    if (Model.Groups.All(t => t.SpecialityId != spec.Id))
+    {
+        continue;
+
+    }
+    if (Model.Students.All(t => t.SpecialityId != spec.Id))
+    {
+        continue;
+    }
+    <h2 title="Спеціальність" bgcolor="#c1d5f4">@spec.Name</h2>
+    foreach (var group in Model.Groups.Where(t => t.SpecialityId == spec.Id))
+    {
+        
+        <h3 title="Група">@group.Name</h3>
+        <table border="1" border-color="white">
+            
+            <tr title="Студенти" bgcolor="#c5f7da"> <th>Ім'я</th><th>Прізвище</th><th>Слухає дисципліну</th> </tr>
+            @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id))
+            {
+                <tr bgcolor="#e4eab9">
+                    <td>@student.Name</td>
+                    <td>@student.Surname</td>
+                    @if (Model.StudentDisciplines.FirstOrDefault(r => r.StudentId == student.Id && r.DisciplineId == Model.Disciplines.FirstOrDefault().Id) != null)
+                    {
+                        //<td>@Html.TextBoxFor(t => Model.StudentDisciplines.Where(r => r.StudentId == student.Id && r.DisciplineId == Model.Disciplines.FirstOrDefault().Id).FirstOrDefault(), new { @checked = "checked" })</td>
+                        <td>@Html.CheckBox("Слухає", new { @checked = "checked" })</td>
+                    }
+                    else
+                    {
+                        // <td>@Html.TextBoxFor(t => Model.StudentDisciplines.Where(r => r.StudentId == student.Id && r.DisciplineId == Model.Disciplines.FirstOrDefault().Id).FirstOrDefault())</td>
+                        <td>@Html.CheckBox("Не слухає")</td>
+                    }
+
+                </tr>
+            }
+        </table>
+        <br>
+    }
+    <br>
+    <hr>
+}
+<a href="https://www.youtube.com/watch?v=u3S6ycTvuyI" target="blank"><img src="http://301-1.ru/img_files/2015_06_10_12_06_35_79b56615ad6b75a28352dc50425e6c19.jpg" align="middle"></a>

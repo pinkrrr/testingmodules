@@ -323,5 +323,18 @@ namespace TestingModule.Controllers
             new Deleting().DeleteLector(lectorId);
             return RedirectToAction("Lectors");
         }
+
+        //DisciplineStudents
+        public ActionResult DisciplineStudents(int disciplineId)
+        {
+            var db = new testingDbEntities();
+            IEnumerable<Group> grp = db.Groups.ToList();
+            IEnumerable<Speciality> spc = db.Specialities.ToList();
+            IEnumerable<Student> std = db.Students.ToList();
+            IEnumerable<StudentDiscipline> studDisc = db.StudentDisciplines.ToList();
+            IEnumerable<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
+            ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc, Students = std, Disciplines = disc, StudentDisciplines = studDisc};
+            return View(test);
+        }
     }
 }

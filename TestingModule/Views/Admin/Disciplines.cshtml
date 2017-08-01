@@ -12,7 +12,7 @@
 else
 {
     <table class="table" border="1">
-        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Лектор</th><th class="table-header">Дії</th></tr>
+        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Лектор</th><th class="table-header">Дії</th><th>Студенти</th></tr>
 
         @foreach (var item in Model)
         {
@@ -40,6 +40,9 @@ else
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="disciplines/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
 
+                </td>
+                <td>
+                    <a href="disciplines/@item.Id/DisciplineStudents">Студенти</a>
                 </td>
             </tr>
                         }

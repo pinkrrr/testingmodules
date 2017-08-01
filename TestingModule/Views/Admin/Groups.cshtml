@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Групи</h2>
+<h2>Групи спеціальності <u>@Model.Specialities.FirstOrDefault(t => t.Id == Model.Groups.FirstOrDefault().SpecialityId).Name</u></h2>
 @if (!Model.Groups.Any())
 {
     <h3>Немає жодної групи...</h3>

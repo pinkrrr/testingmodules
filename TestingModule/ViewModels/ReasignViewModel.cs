@@ -17,5 +17,6 @@ namespace TestingModule.ViewModels
         public IEnumerable<Group> Groups { get; set; }
         public IEnumerable<Account> Accounts { get; set; }
         public IEnumerable<Student> Students { get; set; }
+        public IEnumerable<StudentDiscipline> StudentDisciplines { get; set; }
     }
 }

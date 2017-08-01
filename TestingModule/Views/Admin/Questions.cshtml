@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Питання</h2>
+<h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
 @if (!Model.Any())
 {
     <h3>Немає жодного питання...</h3>
@@ -14,7 +14,8 @@ else
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
         <table border="1">
-
+            @using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
+            {
             <tr class="table-row">
                 <th class="table-item table-item_name">@Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question)</th>
                 <th class="table-item table-item_edit"> Правильна відповідь </th>
@@ -23,10 +24,9 @@ else
                 </th>
             </tr>
             
-            @if (item.Any())
+            if (item.Any())
             {
-                using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
-                {
+                
                     foreach (var que in item)
                     {
                         if (que.Answer == null && que.AnswerId == null)

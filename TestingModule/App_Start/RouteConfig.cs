@@ -105,6 +105,12 @@ namespace TestingModule
                 url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/{ModuleId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteModule" });
 
+            //DisciplineStudents
+            routes.MapRoute(
+                name: "DisciplineStudents",
+                url: "admin/disciplines/{Disciplineid}/DisciplineStudents",
+                defaults: new { controller = "Admin", action = "DisciplineStudents" });
+
             //Lectures
             routes.MapRoute(
                 name: "AddLecture",

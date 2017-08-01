@@ -4,7 +4,7 @@
     ViewBag.Title = "Lectures";
 }
 
-<h2>Лекції</h2>
+<h2>Лекції дисципліни <u>@Model.Disciplines.FirstOrDefault(t => t.Id == Model.Lectures.FirstOrDefault().DisciplineId).Name</u></h2>
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
 @if (!Model.Lectures.Any())
 {

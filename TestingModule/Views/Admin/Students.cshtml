@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Студенти</h2>
+<h2>Студенти  лекції <u>@Model.Groups.FirstOrDefault(t => t.Id == Model.Students.FirstOrDefault().GroupId).Name</u></h2>
 @if (!Model.Students.Any())
 {
     <h3>Немає жодного студента...</h3>
