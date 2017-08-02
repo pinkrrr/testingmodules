@@ -17,7 +17,9 @@ else
         @foreach (var item in Model)
         {
             <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a></td>
+                <td class="table-item table-item_name">
+                    <a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a>
+                </td>
                 <td class="table-item table-item_name">
 
                     @{
@@ -41,8 +43,8 @@ else
                     <div data-remove="disciplines/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
 
                 </td>
-                <td>
-                    <a href="disciplines/@item.Id/DisciplineStudents">Студенти</a>
+                <td class="table-item table-item_students">
+                    <a class="" href="disciplines/@item.Id/DisciplineStudents">Студенти</a>
                 </td>
             </tr>
                         }
@@ -74,9 +76,10 @@ else
                 <div class="popup-title">Редагування</div>
                 <form>
                     @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
-                    <div>Оберіть лектора
-                    @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname"), "Оберіть лектора")
-                        </div>
+                    <div class="selectmenu">
+                        <div class="selectmenu_title">Оберіть лектора</div>
+                    @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Name", "Surname"), "Оберіть лектора")
+                    </div>
                     @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>

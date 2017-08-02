@@ -134,12 +134,28 @@ input[type="text"]:focus{
     margin-right: 5px;
 }
 
-.table{
+.table {
     width: 100%;
     border: 1px solid #bababa;
     border-collapse: collapse;
     background-color: #ffffff;
     margin-bottom: 42px;
+    table-layout: auto;
+    border-collapse: collapse;
+}
+
+.table-item_students{
+    text-align: center;
+}
+
+.table-item_students a{
+    color: #000000;
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.table-item_students a:hover {
+    color: #4cacff;
 }
 
 .table.table__lectors .table-item_name_text:hover {
@@ -396,4 +412,43 @@ input[type="text"]:focus{
 
 .popup .popup-remove-btn:hover{
     background-color: #ff3737;
+}
+
+.selectmenu{
+    width: 100%;
+    font-size: 16px;
+}
+
+.selectmenu_title{
+    font-size: 22px;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.ui-selectmenu-button.ui-button {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    display: block;
+    padding: 10px;
+    margin-bottom: 20px;
+    outline: none;
+    background-color: #ffffff;
+    transition: background .2s;
+}
+
+.ui-selectmenu-button.ui-button:focus{
+    background-color: #ffffff;
+    border: 1px solid #c5c5c5;
+    color: #454545;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    transition: .2s;
+    background: #4cacff;
+    border: 0;
+}
+
+.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
+    margin: 0;
 }

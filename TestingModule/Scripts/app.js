@@ -179,6 +179,11 @@
 
     }
 
+    function selectmenuInit() {
+        $('select').selectmenu();
+    }
+
     popup();
+    selectmenuInit();
 
 })
