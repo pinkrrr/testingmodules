@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TestingModule.Models;
+using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
 {
@@ -10,7 +12,7 @@ namespace TestingModule.Additional
         public void AddNewDiscipline(string name, int? lectorId)
         {
             var disciplinesTable = _db.Set<Discipline>();
-            disciplinesTable.Add(new Discipline() {  Name = name });
+            disciplinesTable.Add(new Discipline() { Name = name });
             _db.SaveChanges();
             var disciplineId = _db.Disciplines.Where(t => t.Name == name).FirstOrDefault().Id;
             var lecturesTable = _db.Set<LectorDiscipline>();
@@ -87,6 +89,42 @@ namespace TestingModule.Additional
             var lectorsTable = _db.Set<Lector>();
             lectorsTable.Add(new Lector() { Name = name, Surname = surname, AccountId = last.Id });
             _db.SaveChanges();
+        }
+
+        public void AddNewStudentConnection(ReasignViewModel model)
+        {
+            if (model.StudentDisciplines.FirstOrDefault().DisciplineId == 0 || model.StudentDisciplines.FirstOrDefault().StudentId == 0)
+            {
+
+            }
+            else
+            {
+                var connectionTable = _db.Set<StudentDiscipline>();
+                var disc = model.StudentDisciplines.FirstOrDefault().DisciplineId;
+                var students = _db.StudentDisciplines
+                    .Where(t => t.DisciplineId == disc)
+                    .Select(t => t.StudentId).ToList();
+                List<int> lstd = new List<int>();
+                foreach (var item in model.StudentDisciplines)
+                {
+
+                    if (!students.Contains(item.StudentId))
+                    {
+                        connectionTable.Add(new StudentDiscipline() { DisciplineId = item.DisciplineId, StudentId = item.StudentId });
+                    }
+
+                    lstd.Add(item.StudentId);
+                }
+                foreach (var stud in students)
+                {
+                    if (model.StudentDisciplines.All(t => t.StudentId != stud))
+                    {
+                        connectionTable.Remove(_db.StudentDisciplines.FirstOrDefault(t => t.DisciplineId == model.StudentDisciplines.FirstOrDefault().DisciplineId && t.StudentId == stud));
+                    }
+                }
+                _db.SaveChanges();
+            }
+
         }
     }
 }

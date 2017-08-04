@@ -331,10 +331,46 @@ namespace TestingModule.Controllers
             IEnumerable<Group> grp = db.Groups.ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
             IEnumerable<Student> std = db.Students.ToList();
-            IEnumerable<StudentDiscipline> studDisc = db.StudentDisciplines.ToList();
+            IList<StudentDiscipline> studDisc = db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId).ToList();
             IEnumerable<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
-            ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc, Students = std, Disciplines = disc, StudentDisciplines = studDisc};
+            foreach (var stdc in std)
+            {
+                if (studDisc.All(t => t.StudentId != stdc.Id))
+                {
+                    studDisc.Add(new StudentDiscipline()
+                    {
+                        Id = 666,
+                        StudentId = stdc.Id,
+                        DisciplineId = disciplineId,
+                        IsSelected = false
+                    });
+                }
+                else
+                {
+                    try
+                    {
+                        studDisc.FirstOrDefault(t => t.StudentId == stdc.Id && t.DisciplineId == disciplineId).IsSelected =
+                            true;
+                    }
+                    catch
+                    {
+                        studDisc.Add(new StudentDiscipline()
+                        {
+                            Id = 666,
+                            StudentId = stdc.Id,
+                            DisciplineId = disciplineId,
+                            IsSelected = false
+                        });
+                    }
+                }
+            }
+            ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc, Students = std, Disciplines = disc, StudentDisciplines = studDisc };
             return View(test);
+        }
+        public ActionResult NewStudentConnections(ReasignViewModel model)
+        {
+            new Adding().AddNewStudentConnection(model);
+            return RedirectToAction("DisciplineStudents");
         }
     }
 }

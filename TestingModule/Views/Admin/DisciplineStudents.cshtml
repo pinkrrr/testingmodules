@@ -26,31 +26,37 @@
     <h2 title="Спеціальність" bgcolor="#c1d5f4">@spec.Name</h2>
     foreach (var group in Model.Groups.Where(t => t.SpecialityId == spec.Id))
     {
-        
-        <h3 title="Група">@group.Name</h3>
-        <table border="1" border-color="white">
-            
-            <tr title="Студенти" bgcolor="#c5f7da"> <th>Ім'я</th><th>Прізвище</th><th>Слухає дисципліну</th> </tr>
-            @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id))
-            {
-                <tr bgcolor="#e4eab9">
-                    <td>@student.Name</td>
-                    <td>@student.Surname</td>
-                    @if (Model.StudentDisciplines.FirstOrDefault(r => r.StudentId == student.Id && r.DisciplineId == Model.Disciplines.FirstOrDefault().Id) != null)
-                    {
-                        //<td>@Html.TextBoxFor(t => Model.StudentDisciplines.Where(r => r.StudentId == student.Id && r.DisciplineId == Model.Disciplines.FirstOrDefault().Id).FirstOrDefault(), new { @checked = "checked" })</td>
-                        <td>@Html.CheckBox("Слухає", new { @checked = "checked" })</td>
-                    }
-                    else
-                    {
-                        // <td>@Html.TextBoxFor(t => Model.StudentDisciplines.Where(r => r.StudentId == student.Id && r.DisciplineId == Model.Disciplines.FirstOrDefault().Id).FirstOrDefault())</td>
-                        <td>@Html.CheckBox("Не слухає")</td>
-                    }
 
+        <h3 title="Група">@group.Name</h3>
+        using (Html.BeginForm("NewStudentConnections", "Admin", FormMethod.Post))
+        {
+
+            <table border="1" border-color="white">
+
+                <tr title="Студенти" bgcolor="#c5f7da"> <th>Ім'я</th><th>Прізвище</th><th>Слухає дисципліну</th> </tr>
+
+                @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id))
+                {
+                    var index = Model.StudentDisciplines.IndexOf(Model.StudentDisciplines.FirstOrDefault(t => t.StudentId == student.Id
+                                                                                                               && t.DisciplineId == Model.Disciplines.FirstOrDefault().Id));
+                    <tr bgcolor="#e4eab9">
+                        <td>@student.Name</td>
+                        <td>@student.Surname</td>
+                        <td>@Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)</td>
+                        @Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)
+                        @Html.HiddenFor(r => Model.StudentDisciplines[index].StudentId)
+
+
+                    </tr>
+                }
+                <tr align="center" bgcolor="c6ffd8">
+                    <td class="table-item table-item_name" colspan="3">
+                        <input type="submit" value="Зберегти" />
+                    </td>
                 </tr>
-            }
-        </table>
-        <br>
+            </table>
+            <br>
+        }
     }
     <br>
     <hr>
