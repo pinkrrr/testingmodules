@@ -4,13 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
+
 @if (!Model.Any())
 {
     <h3>Немає жодного питання...</h3>
 }
 else
 {
+    <h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
         <table border="1">

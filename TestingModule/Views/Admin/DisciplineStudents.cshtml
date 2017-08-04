@@ -7,12 +7,13 @@
 
 
 
-<h1>Студенти які слухають курс - @Model.Disciplines.FirstOrDefault().Name</h1>
+
 @if (!Model.Specialities.Any())
 {
     <h3>Немає жодної спеціальності...</h3>
 }
-@foreach (var spec in Model.Specialities)
+<h1>Студенти які слухають курс - @Model.Disciplines.FirstOrDefault().Name</h1>
+@foreach (var spec in Model.Specialities.OrderBy(t => t.Name))
 {
     if (Model.Groups.All(t => t.SpecialityId != spec.Id))
     {
@@ -24,30 +25,38 @@
         continue;
     }
     <h2 title="Спеціальність" bgcolor="#c1d5f4">@spec.Name</h2>
-    foreach (var group in Model.Groups.Where(t => t.SpecialityId == spec.Id))
+    foreach (var group in Model.Groups.Where(t => t.SpecialityId == spec.Id).OrderBy(t => t.Name))
     {
 
         <h3 title="Група">@group.Name</h3>
         using (Html.BeginForm("NewStudentConnections", "Admin", FormMethod.Post))
         {
-
+            var min = 100;
             <table border="1" border-color="white">
 
                 <tr title="Студенти" bgcolor="#c5f7da"> <th>Ім'я</th><th>Прізвище</th><th>Слухає дисципліну</th> </tr>
-
-                @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id))
+               
+                @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id).OrderBy(t => t.Surname))
                 {
                     var index = Model.StudentDisciplines.IndexOf(Model.StudentDisciplines.FirstOrDefault(t => t.StudentId == student.Id
                                                                                                                && t.DisciplineId == Model.Disciplines.FirstOrDefault().Id));
+                    
+                    if (index<min)
+                    {
+                        min = index;
+                    }
                     <tr bgcolor="#e4eab9">
                         <td>@student.Name</td>
                         <td>@student.Surname</td>
                         <td>@Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)</td>
-                        @Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)
+                        @*@@Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)*@
                         @Html.HiddenFor(r => Model.StudentDisciplines[index].StudentId)
-
-
+                       
                     </tr>
+                }
+                @for (int i = 0; i < Model.StudentDisciplines.Count; i++)
+                {
+                    @Html.HiddenFor(t => Model.StudentDisciplines[i].DisciplineId);
                 }
                 <tr align="center" bgcolor="c6ffd8">
                     <td class="table-item table-item_name" colspan="3">

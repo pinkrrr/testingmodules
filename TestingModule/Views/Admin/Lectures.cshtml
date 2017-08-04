@@ -4,7 +4,7 @@
     ViewBag.Title = "Lectures";
 }
 
-<h2>Лекції дисципліни <u>@Model.Disciplines.FirstOrDefault(t => t.Id == Model.Lectures.FirstOrDefault().DisciplineId).Name</u></h2>
+
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
 @if (!Model.Lectures.Any())
 {
@@ -12,10 +12,11 @@
 }
 else
 {
+    <h2>Лекції дисципліни <u>@Model.Disciplines.FirstOrDefault(t => t.Id == Model.Lectures.FirstOrDefault().DisciplineId).Name</u></h2>
     <table class="table" border="1">
         <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Дії</th></tr>
 
-        @foreach (var item in Model.Lectures)
+        @foreach (var item in Model.Lectures.OrderBy(t => t.Name))
         {
             <tr class="table-row">
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text">@item.Name</a></td>

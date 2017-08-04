@@ -14,7 +14,7 @@ else
     <table class="table" border="1">
         <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Лектор</th><th class="table-header">Дії</th><th>Студенти</th></tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(t => t.Name))
         {
             <tr class="table-row">
                 <td class="table-item table-item_name">
@@ -44,7 +44,7 @@ else
 
                 </td>
                 <td class="table-item table-item_students">
-                    <a class="" href="disciplines/@item.Id/DisciplineStudents">Студенти</a>
+                    <a class="" href="disciplines/@item.Id/disciplinestudents">Студенти</a>
                 </td>
             </tr>
                         }

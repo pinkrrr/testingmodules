@@ -4,37 +4,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Студенти  лекції <u>@Model.Groups.FirstOrDefault(t => t.Id == Model.Students.FirstOrDefault().GroupId).Name</u></h2>
+
 @if (!Model.Students.Any())
 {
     <h3>Немає жодного студента...</h3>
 }
 else
 {
+    <h2>Студенти  групи <u>@Model.Groups.FirstOrDefault(t => t.Id == Model.Students.FirstOrDefault().GroupId).Name</u></h2>
 
-    <table class="table" border="1">
-        <tr class="table-row table-header-row">
-            <th class="table-header">Ім'я</th>
-            <th class="table-header">Прізвище</th>
-            <th class="table-header">Username</th>
-            <th class="table-header">Password</th>
-            <th class="table-header">Дії</th>
+<table class="table" border="1">
+    <tr class="table-row table-header-row">
+        <th class="table-header">Ім'я</th>
+        <th class="table-header">Прізвище</th>
+        <th class="table-header">Username</th>
+        <th class="table-header">Password</th>
+        <th class="table-header">Дії</th>
+    </tr>
+    @foreach (var item in Model.Students.OrderBy(t => t.Surname))
+    {
+        <tr class="table-row">
+            <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
+            <td class="table-item table-item_surname_text">@item.Surname</td>
+            <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Login</td>
+            <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Password</td>
+            <td class="table-item table-item_edit">
+                <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
+                <div data-remove="students/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
+            </td>
         </tr>
-        @foreach (var item in Model.Students)
-        {
-            <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
-                <td class="table-item table-item_surname_text">@item.Surname</td>
-                <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Login</td>
-                <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Password</td>
-                <td class="table-item table-item_edit">
-                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                    <div data-remove="students/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
-                </td>
-            </tr>
-        }
+    }
 
-    </table>
+</table>
 }
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нового студента</button>
 
@@ -46,30 +47,30 @@ else
             {
                 <form>
                     <div>
-                        Введіть ім'я студента:
+                        @Html.Label("Введіть ім'я студента");
                         @{
                             var name = Model.Students.LastOrDefault();
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім'я студента" })
                         }
                     </div>
-                    Введіть прізвище студента:
+                    @Html.Label("Введіть прізвище студента");
                     @{
                         var surname = Model.Students.LastOrDefault();
                     }
                     @if (surname == null)
                     {
-                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище студента" })
                     }
                     <div>
                         @Html.HiddenFor(model => model.Students.LastOrDefault().GroupId)

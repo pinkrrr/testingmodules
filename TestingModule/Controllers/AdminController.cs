@@ -330,7 +330,7 @@ namespace TestingModule.Controllers
             var db = new testingDbEntities();
             IEnumerable<Group> grp = db.Groups.ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
-            IEnumerable<Student> std = db.Students.ToList();
+            IEnumerable<Student> std = db.Students.OrderBy(t => t.GroupId).ToList();
             IList<StudentDiscipline> studDisc = db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId).ToList();
             IEnumerable<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
             foreach (var stdc in std)
@@ -369,7 +369,10 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewStudentConnections(ReasignViewModel model)
         {
-            new Adding().AddNewStudentConnection(model);
+            if (model.StudentDisciplines!=null)
+            {
+                new Adding().AddNewStudentConnection(model);
+            }
             return RedirectToAction("DisciplineStudents");
         }
     }

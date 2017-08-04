@@ -1,4 +1,7 @@
-﻿@if (Request.IsAuthenticated)
+﻿@using System.Web.UI.WebControls
+@using TestingModule.Models
+@using TestingModule.Controllers
+@if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "login-form" }))
     {
@@ -14,6 +17,6 @@
 }
 else
 {
-    @*@Html.ActionLink("Log in", "Login", "Account")*@
-    <a href="@Url.Action("Log in", "Login", "Account")"><i class="fa fa-sign-in" aria-hidden="true"></i>Увійти</a>
+   @*@ @Html.ActionLink("Log in", "Login", "Account")*@
+    <a href="@Url.Action("Login", "Account")"><i class="fa fa-sign-in" aria-hidden="true"></i>Увійти</a>
 }

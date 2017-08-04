@@ -93,38 +93,36 @@ namespace TestingModule.Additional
 
         public void AddNewStudentConnection(ReasignViewModel model)
         {
-            if (model.StudentDisciplines.FirstOrDefault().DisciplineId == 0 || model.StudentDisciplines.FirstOrDefault().StudentId == 0)
-            {
-
-            }
-            else
+            try
             {
                 var connectionTable = _db.Set<StudentDiscipline>();
                 var disc = model.StudentDisciplines.FirstOrDefault().DisciplineId;
                 var students = _db.StudentDisciplines
                     .Where(t => t.DisciplineId == disc)
                     .Select(t => t.StudentId).ToList();
-                List<int> lstd = new List<int>();
-                foreach (var item in model.StudentDisciplines)
+                foreach (var item in model.StudentDisciplines.Where(t => t.StudentId != null))
                 {
-
-                    if (!students.Contains(item.StudentId))
+                    if (item.IsSelected)
                     {
-                        connectionTable.Add(new StudentDiscipline() { DisciplineId = item.DisciplineId, StudentId = item.StudentId });
+                        if (!students.Contains(item.StudentId))
+                        {
+                            connectionTable.Add(new StudentDiscipline() { DisciplineId = item.DisciplineId, StudentId = item.StudentId });
+                        }
                     }
-
-                    lstd.Add(item.StudentId);
-                }
-                foreach (var stud in students)
-                {
-                    if (model.StudentDisciplines.All(t => t.StudentId != stud))
+                    else
                     {
-                        connectionTable.Remove(_db.StudentDisciplines.FirstOrDefault(t => t.DisciplineId == model.StudentDisciplines.FirstOrDefault().DisciplineId && t.StudentId == stud));
+                        if (students.Contains(item.StudentId))
+                        {
+                            connectionTable.Remove(_db.StudentDisciplines.FirstOrDefault(t => t.DisciplineId == item.DisciplineId && t.StudentId == item.StudentId));
+                        }
                     }
                 }
                 _db.SaveChanges();
             }
+            catch (Exception)
+            {
 
+            }
         }
     }
 }

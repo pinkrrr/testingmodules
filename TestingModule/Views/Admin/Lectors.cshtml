@@ -21,7 +21,7 @@ else
             <th class="table-header">Дії</th>
         </tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(t => t.Surname))
         {
             <tr class="table-row">
                 <td class="table-item table-item_name_text">@item.Name</td>

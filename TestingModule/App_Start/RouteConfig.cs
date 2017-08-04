@@ -15,41 +15,41 @@ namespace TestingModule
                 url: "admin/lectors/{LectorId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteLector" });
 
-            //Students
+            //students
             routes.MapRoute(
-                name: "Students",
-                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students",
-                defaults: new { controller = "Admin", action = "Students" });
+                name: "students",
+                url: "admin/specialities/{specialityId}/groups/{GroupId}/students",
+                defaults: new { controller = "Admin", action = "students" });
             routes.MapRoute(
                 name: "AddStudent",
-                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewStudent",
+                url: "admin/specialities/{specialityId}/groups/{GroupId}/students/NewStudent",
                 defaults: new { controller = "Admin", action = "NewStudent" });
             routes.MapRoute(
                 name: "EditStudent",
-                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/NewStudent",
+                url: "admin/specialities/{specialityId}/groups/{GroupId}/students/NewStudent",
                 defaults: new { controller = "Admin", action = "EditStudent" });
             routes.MapRoute(
                 name: "DeleteStudent",
-                url: "admin/specialities/{specialityId}/Groups/{GroupId}/Students/{StudentId}/Delete",
+                url: "admin/specialities/{specialityId}/groups/{GroupId}/students/{StudentId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteStudent" });
 
-            //Groups
+            //groups
             routes.MapRoute(
                 name: "AddGroup",
-                url: "admin/specialities/{Specialityid}/Groups/NewGroup",
+                url: "admin/specialities/{Specialityid}/groups/NewGroup",
                 defaults: new { controller = "Admin", action = "NewGroup" });
             routes.MapRoute(
                 name: "EditGroup",
-                url: "admin/specialities/{Specialityid}/Groups/EditGroup",
+                url: "admin/specialities/{Specialityid}/groups/EditGroup",
                 defaults: new { controller = "Admin", action = "EditGroup" });
             routes.MapRoute(
                 name: "DeleteGroup",
-                url: "admin/specialities/{Specialityid}/Groups/{GroupId}/Delete",
+                url: "admin/specialities/{Specialityid}/groups/{GroupId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteGroup" });
             routes.MapRoute(
-                name: "Groups",
-                url: "admin/specialities/{Specialityid}/Groups",
-                defaults: new { controller = "Admin", action = "Groups" });
+                name: "groups",
+                url: "admin/specialities/{Specialityid}/groups",
+                defaults: new { controller = "Admin", action = "groups" });
 
             //Specialities
             routes.MapRoute(
@@ -57,87 +57,87 @@ namespace TestingModule
                 url: "admin/specialities/{Specialityid}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteSpeciality" });
 
-            //Questions
+            //questions
             routes.MapRoute(
-                name: "Questions",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/{ModuleId}/Questions",
-                defaults: new { controller = "Admin", action = "Questions" });
+                name: "questions",
+                url: "admin/disciplines/{disciplineid}/lectures/{LectureId}/modules/{ModuleId}/questions",
+                defaults: new { controller = "Admin", action = "questions" });
             routes.MapRoute(
                 name: "AddQuestion",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/NewQuestion",
+                url: "admin/disciplines/{disciplineId}/lectures/{LectureId}/modules/{moduleId}/questions/NewQuestion",
                 defaults: new { controller = "Admin", action = "NewQuestion" });
             routes.MapRoute(
                 name: "EditQuestion",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/EditQuestion",
+                url: "admin/disciplines/{disciplineId}/lectures/{LectureId}/modules/{moduleId}/questions/EditQuestion",
                 defaults: new { controller = "Admin", action = "EditQuestion" });
             routes.MapRoute(
                 name: "DeleteQuestion",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/{questionId}/Delete",
+                url: "admin/disciplines/{disciplineId}/lectures/{LectureId}/modules/{moduleId}/questions/{questionId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteQuestion" });
             routes.MapRoute(
                 name: "AddAnswer",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/NewAnswer",
+                url: "admin/disciplines/{disciplineId}/lectures/{LectureId}/modules/{moduleId}/questions/NewAnswer",
                 defaults: new { controller = "Admin", action = "NewAnswer" });
             routes.MapRoute(
                 name: "EditAnswer",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Questions/EditAnswer",
+                url: "admin/disciplines/{disciplineId}/lectures/{LectureId}/modules/{moduleId}/questions/EditAnswer",
                 defaults: new { controller = "Admin", action = "EditAnswer" });
             routes.MapRoute(
                 name: "DeleteAswer",
-                url: "admin/disciplines/{disciplineId}/Lectures/{LectureId}/Modules/{moduleId}/Answers/{answerId}/Delete",
+                url: "admin/disciplines/{disciplineId}/lectures/{LectureId}/modules/{moduleId}/Answers/{answerId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteAnswer" });
 
-            //Modules
+            //modules
             routes.MapRoute(
-                name: "Modules",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules",
-                defaults: new { controller = "Admin", action = "Modules" });
+                name: "modules",
+                url: "admin/disciplines/{disciplineid}/lectures/{LectureId}/modules",
+                defaults: new { controller = "Admin", action = "modules" });
             routes.MapRoute(
                 name: "AddModule",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/NewModule",
+                url: "admin/disciplines/{disciplineid}/lectures/{LectureId}/modules/NewModule",
                 defaults: new { controller = "Admin", action = "NewModule" });
             routes.MapRoute(
                 name: "EditModule",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/EditModule",
+                url: "admin/disciplines/{disciplineid}/lectures/{LectureId}/modules/EditModule",
                 defaults: new { controller = "Admin", action = "EditModule" });
             routes.MapRoute(
                 name: "DeleteModule",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Modules/{ModuleId}/Delete",
+                url: "admin/disciplines/{disciplineid}/lectures/{LectureId}/modules/{ModuleId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteModule" });
 
-            //DisciplineStudents
+            //disciplinestudents
             routes.MapRoute(
-                name: "DisciplineStudents",
-                url: "admin/disciplines/{Disciplineid}/DisciplineStudents",
-                defaults: new { controller = "Admin", action = "DisciplineStudents" });
+                name: "disciplinestudents",
+                url: "admin/disciplines/{disciplineid}/disciplinestudents",
+                defaults: new { controller = "Admin", action = "disciplinestudents" });
             routes.MapRoute(
                 name: "NewStudentConnections",
-                url: "admin/disciplines/{Disciplineid}/DisciplineStudents/NewStudentConnections",
+                url: "admin/disciplines/{disciplineid}/disciplinestudents/NewStudentConnections",
                 defaults: new { controller = "Admin", action = "NewStudentConnections" });
 
-            //Lectures
+            //lectures
             routes.MapRoute(
                 name: "AddLecture",
-                url: "admin/disciplines/{Disciplineid}/Lectures/NewLecture",
+                url: "admin/disciplines/{disciplineid}/lectures/NewLecture",
                 defaults: new { controller = "Admin", action = "NewLecture" });
             routes.MapRoute(
                 name: "DeleteLecture",
-                url: "admin/disciplines/{Disciplineid}/Lectures/{LectureId}/Delete",
+                url: "admin/disciplines/{disciplineid}/lectures/{LectureId}/Delete",
                 defaults: new { controller = "Admin", action = "DeleteLecture" });
             routes.MapRoute(
-                name: "Lectures",
-                url: "admin/disciplines/{Disciplineid}/Lectures",
-                defaults: new { controller = "Admin", action = "Lectures" });
+                name: "lectures",
+                url: "admin/disciplines/{disciplineid}/lectures",
+                defaults: new { controller = "Admin", action = "lectures" });
             routes.MapRoute(
                 name: "EditLecture",
-                url: "admin/disciplines/{Disciplineid}/Lectures/Edit",
+                url: "admin/disciplines/{disciplineid}/lectures/Edit",
                 defaults: new { controller = "Admin", action = "EditLecture" });
 
-            //Disciplines
+            //disciplines
             routes.MapRoute(
-                name: "DeleteDiscipline",
-                url: "admin/disciplines/{Disciplineid}/Delete",
-                defaults: new { controller = "Admin", action = "DeleteDiscipline" });
+                name: "Deletediscipline",
+                url: "admin/disciplines/{disciplineid}/Delete",
+                defaults: new { controller = "Admin", action = "Deletediscipline" });
 
 
             routes.MapRoute(
