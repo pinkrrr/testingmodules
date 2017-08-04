@@ -13,14 +13,20 @@
         <div class="navbar">
             @*@Html.ActionLink("Masters of masters", "Index", "Admin", new { area = "" }, new { @class = "navbar-logo" })*@
             <a href="@Url.Action("Index", "Admin")" class="navbar-logo" target="_blank"><i class='fa fa-globe' aria-hidden='true'></i>Відкрити сайт</a>
+
+            <div class="navbar-login">
+                @Html.Partial("_LoginPartial")
+            </div>
+
             <nav class="navbar-nav">
+
                 @{  var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
                     var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
                     if (Request.IsAuthenticated)
                     {
                         if (c.Value.ToString() != "Student")
                         {
-                            <a href="@Url.Action("Index", "Admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>Admin</a>
+                            <!--<a href="@Url.Action("Index", "Admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>Admin</a>-->
                             <a href="@Url.Action("Disciplines", "Admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
                         }
                         if (c.Value.ToString() != "Lecturer")
@@ -30,11 +36,6 @@
                         }
                     }
                 }
-                @Html.Partial("_LoginPartial")
-                @*@Html.ActionLink("Admin", "Index", "Admin")
-                    @Html.ActionLink("Дисципліни", "Disciplines", "Admin")
-                    @Html.ActionLink("Спеціальності", "Specialities", "Admin")
-                    @Html.ActionLink("Лектори", "Lectors", "Admin")*@
             </nav>
             @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })*@
 
@@ -48,6 +49,7 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
 </body>

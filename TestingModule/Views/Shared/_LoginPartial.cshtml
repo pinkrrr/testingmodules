@@ -1,21 +1,19 @@
 ﻿@if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "login-form" }))
     {
     @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.Name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
-    </ul>
+    @*@Html.ActionLink(User.Identity.Name, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+
+   <div class="login-greeting">Вітаю, <a class="login-greeting_name" href="@Url.Action("Index","Manage")">@User.Identity.Name</a>!</div>
+
+    <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Вийти</a>
+
     }
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        @*<li>@Html.ActionLink("Registration", "Registration", "Account")</li>*@
-        <li>@Html.ActionLink("Log in", "Login", "Account")</li>
-    </ul>
+    @*@Html.ActionLink("Log in", "Login", "Account")*@
+    <a href="@Url.Action("Log in", "Login", "Account")"><i class="fa fa-sign-in" aria-hidden="true"></i>Увійти</a>
 }
