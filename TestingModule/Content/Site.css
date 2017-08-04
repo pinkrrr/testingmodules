@@ -83,11 +83,14 @@ input[type="text"]:focus{
     text-align: center;
 }
 
-.navbar-nav a{
+.navbar a{
     display: block;
     color: #ffffff;
     text-decoration: none;
     padding: 10px;
+}
+
+.navbar-nav a{
     transition: color .2s, background .2s;
 }
 
@@ -100,16 +103,37 @@ input[type="text"]:focus{
     padding-left: 15px;
 }
 
-.navbar-logo{
+.navbar-login{
+    margin-bottom: 20px;
+}
+
+.navbar a.navbar-logo{
     color: #ffffff;
     text-decoration: none;
     margin: 30px 10px;
     display: inline-block;
     font-weight: bold;
     transition: color .2s, background .2s;
+    padding: 0;
 }
 
-.navbar-logo:hover{
+.navbar a.navbar-logo:hover{
+    color: #4cacff;
+}
+
+.login-greeting {
+    display: block;
+    position: relative;
+    color: #ffffff;
+}
+
+.login-greeting .login-greeting_name{
+    font-weight: bold;
+    transition: color .2s;
+    display: inline-block;
+}
+
+.login-greeting .login-greeting_name:hover{
     color: #4cacff;
 }
 
