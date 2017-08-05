@@ -145,15 +145,18 @@ namespace TestingModule
             routes.MapRoute(
                 name: "Deletediscipline",
                 url: "admin/disciplines/{disciplineid}/Delete",
-                defaults: new { controller = "Admin", action = "Deletediscipline" });
-
+                defaults: new { controller = "Admin", action = "Deletediscipline" });          
 
             routes.MapRoute(
-                name: "Default",
+                name: "Admin",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Admin", action = "Index", id = UrlParameter.Optional });
 
-            routes.MapMvcAttributeRoutes();
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}",
+                defaults: new { controller = "Quiz", action = "Index" });
+
         }
     }
 }

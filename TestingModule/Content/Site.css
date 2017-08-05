@@ -37,6 +37,15 @@ h1, h2, h3, h4, h5, h6{
     min-width: 800px;
 }
 
+.navbar, .body-content{
+    vertical-align: top;
+    height: 100%;
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    white-space: normal;
+}
+
 button{
     cursor: pointer;
     border: 0;
@@ -54,33 +63,33 @@ input[type="text"]:focus{
     border-color: #4cacff;
 }
 
-.navbar, .body-content{
-    font-size: 16px;
-    white-space: normal;
-}
-
 .body-content {
-    width: calc(100vw - 250px);
+    display: inline-block;
+    width: 80%;
     min-height: 100vh;
     user-select: text;
-    position: absolute;
     right: 0;
     top: 0;
     padding: 20px;
+    overflow: auto;
+}
+
+.main-container__default .body-content{
+    width: 100%;
 }
 
 .navbar{
     background-color: #3d3d3d;
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    display: block;
+    width: 20%;
+}
+
+i.fa{
+    margin-right: 10px;
+    text-align: center;
 }
 
 .navbar i.fa{
-    margin-right: 10px;
     width: 22px;
-    text-align: center;
 }
 
 .navbar a{
@@ -131,10 +140,12 @@ input[type="text"]:focus{
     font-weight: bold;
     transition: color .2s;
     display: inline-block;
+    padding: 0;
 }
 
 .login-greeting .login-greeting_name:hover{
     color: #4cacff;
+    padding-left: 12px;
 }
 
 .addNewItem-btn {
@@ -388,7 +399,7 @@ input[type="text"]:focus{
     color: #e43100
 }
 
-.popup .input-text{
+.input-text{
     display: block;
     width: 360px;
     position: relative;
@@ -475,4 +486,66 @@ input[type="text"]:focus{
 
 .ui-menu .ui-state-focus, .ui-menu .ui-state-active {
     margin: 0;
+}
+
+.main-login{
+    text-align: center;
+    font-size: 0;
+    height: 100%;
+}
+
+.main-login:before{
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    height: 100%;
+}
+
+.login-form{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+
+.form-title{
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.loginBtn{
+    width: 100%;
+    padding: 15px 0;
+    color: #ffffff;
+    background-color: #4cacff;
+    font-size: 24px;
+}
+
+.accordion_header{
+    outline: none;
+}
+
+.accordion_header{
+    border-radius: 0;
+    user-select: none;
+}
+
+.ui-accordion .ui-accordion-content{
+    padding: 20px;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active{
+    background-color: #4cacff;
+}
+
+.ui-corner-bottom{
+    border-radius: 0;
+}
+
+.ui-accordion .ui-accordion-header:first-child{
+    margin-top: 0;
+}
+
+.ui-accordion .ui-accordion-header{
+    margin-top: 20px;
 }

@@ -439,7 +439,7 @@ namespace TestingModule.Controllers
             var students = db.Students.Where(t => t.GroupId == groupId).ToList();
             var account = db.Accounts.ToList();
             var name = group + ".xls";
-            var path = AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Temp\" + name;
+            var path = AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"Temp\" + name;
             var file = File(path, System.Net.Mime.MediaTypeNames.Application.Octet, name);
             Application Inte;
             _Workbook intbook;

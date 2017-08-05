@@ -79,7 +79,7 @@
                     question: inputText.val(),
                     questionId: $('#id').val(),
                 };
-                
+
                 sendData(data, url, method);
 
             });
@@ -98,7 +98,7 @@
                 method: method,
                 data: data
             }).done(function (response) {
-               // location.reload();
+                // location.reload();
             });
         }
 
@@ -156,7 +156,7 @@
             var hmtlQuestionData = [];
             var answerHtml;
             answers.forEach(function (answer) {
-                answerHTML = '<div class="answer_item" data-id="' + answer.id + '"><input id="' + answer.id +'" name="Question" type="text" class="input-text" value="' + answer.text + '"><div class="answer_remove"><i class="fa fa-trash" aria-hidden="true"></i></div></div>';
+                answerHTML = '<div class="answer_item" data-id="' + answer.id + '"><input id="' + answer.id + '" name="Question" type="text" class="input-text" value="' + answer.text + '"><div class="answer_remove"><i class="fa fa-trash" aria-hidden="true"></i></div></div>';
                 hmtlQuestionData += answerHTML;
             });
             $popup.edit.find('.answer_item').remove();
@@ -166,11 +166,11 @@
         function showQuestionInEdit($question) {
             var qText = $question.text();
             var qId = $question.attr('data-id');
-            var questionHtml = '<input name="Answer" type="text" data-id="' + qId+'" value="' + qText + '" class="input-text question">';
+            var questionHtml = '<input name="Answer" type="text" data-id="' + qId + '" value="' + qText + '" class="input-text question">';
             $popup.edit.find('.input-text.question').remove();
             $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
         }
-        
+
         initShowEditPopup();
         initShowRemovePopup();
         initShowAddPopup();
@@ -183,7 +183,43 @@
         $('select').selectmenu();
     }
 
+    function specialitiesStudentsAccordion() {
+
+        $('.accordion').accordion({
+            header: '.accordion_header',
+            collapsible: true,
+            heightStyle: "content",
+            event: "click",
+            beforeActivate: function (event, ui) {
+                // The accordion believes a panel is being opened
+                if (ui.newHeader[0]) {
+                    var currHeader = ui.newHeader;
+                    var currContent = currHeader.next('.ui-accordion-content');
+                    // The accordion believes a panel is being closed
+                } else {
+                    var currHeader = ui.oldHeader;
+                    var currContent = currHeader.next('.ui-accordion-content');
+                }
+                // Since we've changed the default behavior, this detects the actual status
+                var isPanelSelected = currHeader.attr('aria-selected') == 'true';
+
+                // Toggle the panel's header
+                currHeader.toggleClass('ui-corner-all', isPanelSelected).toggleClass('accordion-header-active ui-state-active ui-corner-top', !isPanelSelected).attr('aria-selected', ((!isPanelSelected).toString()));
+
+                // Toggle the panel's icon
+                currHeader.children('.ui-icon').toggleClass('ui-icon-triangle-1-e', isPanelSelected).toggleClass('ui-icon-triangle-1-s', !isPanelSelected);
+
+                // Toggle the panel's content
+                currContent.toggleClass('accordion-content-active', !isPanelSelected)
+                if (isPanelSelected) { currContent.slideUp(); } else { currContent.slideDown(); }
+
+                return false; // Cancel the default action
+            }
+        });
+
+    }
+
     popup();
     selectmenuInit();
-
-})
+    specialitiesStudentsAccordion();
+});
