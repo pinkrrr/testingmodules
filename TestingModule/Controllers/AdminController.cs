@@ -42,24 +42,48 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewDiscipline(DiscLecotorViewModel model)
         {
-            if (model.LectorId != null)
+            try
             {
-                new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart(), model.LectorId);
+                if (model.LectorId != null)
+                {
+                    new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart(), model.LectorId);
+                    TempData["Success"] = "Дисципліна - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
+                }
             }
-            return RedirectToAction("Disciplines");
-        }
-        public ActionResult EditDiscipline(DiscLecotorViewModel model)
-        {
-            if (model.LectorId != null)
+            catch (Exception)
             {
-                new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
             }
 
             return RedirectToAction("Disciplines");
         }
+        public ActionResult EditDiscipline(DiscLecotorViewModel model)
+        {
+            try
+            {
+                if (model.LectorId != null)
+                {
+                    new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
+                    TempData["Success"] = "Зміни було успішно збережено";
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return RedirectToAction("Disciplines");
+        }
         public ActionResult DeleteDiscipline(int disciplineId)
         {
-            new Deleting().DeleteDiscipline(disciplineId);
+            try
+            {
+                new Deleting().DeleteDiscipline(disciplineId);
+                TempData["Success"] = "Дисципліна - \"" + disciplineId + "\" була успішно видалена!";
+            }
+            catch (Exception)
+            {
+
+            }
+
             return RedirectToAction("Disciplines");
         }
 
@@ -74,7 +98,15 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewLecture(Lecture model)
         {
-            new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+            try
+            {
+                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+                TempData["Success"] = "Лекція - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
+            }
+            catch (Exception)
+            {
+
+            }
             return RedirectToAction("Lectures");
         }
         public ActionResult EditLecture(Lecture model)
@@ -82,6 +114,7 @@ namespace TestingModule.Controllers
             try
             {
                 new Editing().EditLecture(model.Id, model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+                TempData["Success"] = "Зміни було успішно збережено!";
             }
             catch
             {
@@ -91,7 +124,15 @@ namespace TestingModule.Controllers
         }
         public ActionResult DeleteLecture(int lectureId)
         {
-            new Deleting().DeleteLecture(lectureId);
+            try
+            {
+                new Deleting().DeleteLecture(lectureId);
+                TempData["Success"] = "Лекція була успішно видалена!";
+            }
+            catch (Exception)
+            {
+
+            }
             return RedirectToAction("Lectures");
         }
 
@@ -112,6 +153,7 @@ namespace TestingModule.Controllers
             try
             {
                 new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId);
+                TempData["Success"] = "Модуль - \"" + model.Name.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch
             {
@@ -121,12 +163,28 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditModule(Module model)
         {
-            new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
+            try
+            {
+                new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
+                TempData["Success"] = "Зміни було успіщно збережено!";
+            }
+            catch (Exception)
+            {
+
+            }
             return RedirectToAction("Modules");
         }
         public ActionResult DeleteModule(int moduleId)
         {
-            new Deleting().DeleteModule(moduleId);
+            try
+            {
+                new Deleting().DeleteModule(moduleId);
+                TempData["Success"] = "Модуль був успішно видалений!";
+            }
+            catch (Exception)
+            {
+
+            }
             return RedirectToAction("Modules");
         }
 
@@ -160,40 +218,83 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewQuestion(QueAns model)
         {
-            new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId);
+            try
+            {
+                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId);
+                TempData["Success"] = "Питання - \"" + model.Question.TrimEnd().TrimStart() + "\" було успішно додано!";
+            }
+            catch (Exception)
+            {
+
+            }
             return RedirectToAction("Questions");
         }
         public ActionResult EditQuestion(QueAns model)
         {
-            new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
+            try
+            {
+                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
+                TempData["Success"] = "Зміни було збережено!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Questions");
         }
         public ActionResult DeleteQuestion(int questionId)
         {
-            new Deleting().DeleteQuestion(questionId);
+            try
+            {
+                new Deleting().DeleteQuestion(questionId);
+                TempData["Success"] = "Модуль був успішно видалений!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Questions");
         }
         public ActionResult NewAnswer(QueAns model)
         {
-            new Adding().AddNewAnswer(model.Answer.TrimEnd().TrimStart(), model.QuestionId);
+            try
+            {
+                new Adding().AddNewAnswer(model.Answer.TrimEnd().TrimStart(), model.QuestionId);
+                TempData["Success"] = "Відповідь - \"" + model.Answer.TrimEnd().TrimStart() + "\" була успішно додана!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Questions");
         }
         public ActionResult EditAnswer(List<QueAns> model)
         {
-            if (model != null)
+            try
             {
-                foreach (var item in model)
+                if (model != null)
                 {
-                    new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
+                    foreach (var item in model)
+                    {
+                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
+                    }
+                    new Editing().EditQuestion(model.FirstOrDefault().QuestionId, model.FirstOrDefault().Question.TrimEnd().TrimStart()
+                        , model.FirstOrDefault().ModuleId);
                 }
-                new Editing().EditQuestion(model.FirstOrDefault().QuestionId, model.FirstOrDefault().Question.TrimEnd().TrimStart()
-                    , model.FirstOrDefault().ModuleId);
+                TempData["Success"] = "Модуль був успішно видалений!";
+            }
+            catch (Exception)
+            {
             }
             return RedirectToAction("Questions");
         }
         public ActionResult DeleteAnswer(int answerId)
         {
-            new Deleting().DeleteAnswer(answerId);
+            try
+            {
+                new Deleting().DeleteAnswer(answerId);
+                TempData["Success"] = "Відповідь була успішно видалена!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Questions");
         }
 
@@ -205,17 +306,39 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewSpeciality(Speciality model)
         {
-            new Adding().AddNewSpeciality(model.Name.TrimEnd().TrimStart());
+            try
+            {
+                new Adding().AddNewSpeciality(model.Name.TrimEnd().TrimStart());
+                TempData["Success"] = "Спеціальність - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
+            }
+            catch (Exception)
+            {
+
+            }
             return RedirectToAction("Specialities");
         }
         public ActionResult EditSpeciality(Speciality model)
         {
-            new Editing().EditSpeciality(model.Id, model.Name.TrimEnd().TrimStart());
+            try
+            {
+                new Editing().EditSpeciality(model.Id, model.Name.TrimEnd().TrimStart());
+                TempData["Success"] = "Зміни було успішно збережено!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Specialities");
         }
         public ActionResult DeleteSpeciality(int specialityId)
         {
-            new Deleting().DeleteSpeciality(specialityId);
+            try
+            {
+                new Deleting().DeleteSpeciality(specialityId);
+                TempData["Success"] = "Спеціальність була успішно видалена!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Specialities");
         }
 
@@ -235,6 +358,7 @@ namespace TestingModule.Controllers
             try
             {
                 new Adding().AddNewGroup(model.Name.TrimEnd().TrimStart(), model.SpecialityId);
+                TempData["Success"] = "Група - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
             }
             catch
             {
@@ -244,12 +368,26 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditGroup(Group model)
         {
-            new Editing().EditGroup(model.Id, model.Name.TrimEnd().TrimStart(), model.SpecialityId);
+            try
+            {
+                new Editing().EditGroup(model.Id, model.Name.TrimEnd().TrimStart(), model.SpecialityId);
+                TempData["Success"] = "Зміни було успішно збережено!";
+            }
+            catch (Exception )
+            {
+            }
             return RedirectToAction("Groups");
         }
         public ActionResult DeleteGroup(int groupId)
         {
-            new Deleting().DeleteGroup(groupId);
+            try
+            {
+                new Deleting().DeleteGroup(groupId);
+                TempData["Success"] = "Групу було успішно видалено!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Groups");
         }
 
@@ -274,6 +412,7 @@ namespace TestingModule.Controllers
             try
             {
                 new Adding().AddNewStudent(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.GroupId, model.SpecialityId);
+                TempData["Success"] = "Студент - \"" + model.Name.TrimEnd().TrimStart() +" " + model.Surname.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch (Exception)
             {
@@ -398,6 +537,7 @@ namespace TestingModule.Controllers
                                 new Deleting().DeleteStudent(student.Id);
                             }
                         }
+                        TempData["Success"] = "Зміни по студентах групи - \""+new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).Name+"\" було успішно збережено!";
                     }
                     catch (Exception e)
                     {
@@ -411,12 +551,26 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditStudent(UserViewModel model)
         {
-            new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
+            try
+            {
+                new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
+                TempData["Success"] = "Зміни було успішно збережено!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Students");
         }
         public ActionResult DeleteStudent(int studentId)
         {
-            new Deleting().DeleteStudent(studentId);
+            try
+            {
+                new Deleting().DeleteStudent(studentId);
+                TempData["Success"] = "Студент був успішно видалений!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Students");
         }
 
@@ -442,17 +596,38 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewLector(Lector model)
         {
-            new Adding().AddNewLector(model.Name.TrimEnd().TrimStart(), model.Surname);
+            try
+            {
+                new Adding().AddNewLector(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart());
+                TempData["Success"] = "Лектор - "+ model.Name.TrimEnd().TrimStart()+" "+ model.Surname.TrimEnd().TrimStart() + " успішно доданий!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Lectors");
         }
         public ActionResult EditLector(UserViewModel model)
         {
-            new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
+            try
+            {
+                new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
+                TempData["Success"] = "Зміни було успішно збережено!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Lectors");
         }
         public ActionResult DeleteLector(int lectorId)
         {
-            new Deleting().DeleteLector(lectorId);
+            try
+            {
+                new Deleting().DeleteLector(lectorId);
+                TempData["Success"] = "Лектор був успішно видалений!";
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Lectors");
         }
 
@@ -501,9 +676,16 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewStudentConnections(ReasignViewModel model)
         {
-            if (model.StudentDisciplines != null)
+            try
             {
-                new Adding().AddNewStudentConnection(model);
+                if (model.StudentDisciplines != null)
+                {
+                    new Adding().AddNewStudentConnection(model);
+                    TempData["Success"] = "Зміни було успішно збережено!";
+                }
+            }
+            catch (Exception)
+            {
             }
             return RedirectToAction("DisciplineStudents");
         }
