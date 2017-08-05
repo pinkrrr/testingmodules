@@ -26,6 +26,11 @@
     margin: 0;
 }
 
+.accordion.ui-accordion{
+    transition: opacity .3s;
+    opacity: 1;
+}
+
 .ui-accordion .ui-accordion-content{
     padding: 20px;
 }

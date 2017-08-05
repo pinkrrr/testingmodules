@@ -92,6 +92,10 @@
     color: #4cacff;
 }
 
+.table .table-item_centered{
+    text-align: center;
+}
+
 .table-edit-button, .table-remove-button{
     user-select: none;
     cursor: pointer;

@@ -1,18 +1,18 @@
-﻿.login-greeting {
-    display: block;
-    position: relative;
-    color: #ffffff;
+﻿.active-user, .active-user_logout{
+    transition: color .2s, background .2s;
+    width: 100%;
 }
 
-.login-greeting .login-greeting_name{
+.active-user_name:hover, .active-user_logout:hover{
+    background-color: #4cacff;
+}
+
+.active-username{
     font-weight: bold;
-    transition: color .2s;
-    display: inline-block;
-    padding: 0;
 }
 
-.login-greeting .login-greeting_name:hover{
-    color: #4cacff;
+.active-user_logout{
+
 }
 
 .main-login{

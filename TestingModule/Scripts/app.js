@@ -183,6 +183,12 @@
         $('select').selectmenu();
     }
 
+    function checkboxradioInit() {
+        $('input:checkbox, input:radio').checkboxradio({
+            icon: false
+        });
+    }
+
     function specialitiesStudentsAccordion() {
 
         $('.accordion').accordion({
@@ -221,5 +227,6 @@
 
     popup();
     selectmenuInit();
+    checkboxradioInit();
     specialitiesStudentsAccordion();
 });

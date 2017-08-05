@@ -1,6 +1,7 @@
 ﻿.navbar{
     background-color: #3d3d3d;
     width: 20%;
+    min-width: 200px;
 }
 
 .navbar i.fa{

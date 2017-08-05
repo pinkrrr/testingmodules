@@ -3,15 +3,15 @@
 @using TestingModule.Controllers
 @if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "login-form" }))
+    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "active-user" }))
     {
     @Html.AntiForgeryToken()
 
     @*@Html.ActionLink(User.Identity.Name, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
 
-   <div class="login-greeting">Вітаю, <a class="login-greeting_name" href="@Url.Action("Index","Manage")">@User.Identity.Name</a>!</div>
+    <a class="active-user_name" href="@Url.Action("Index","Manage")"><i class="fa fa-user-o" aria-hidden="true"></i>@User.Identity.Name</a>
 
-    <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Вийти</a>
+    <a class="active-user_logout" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Вийти</a>
 
     }
 }

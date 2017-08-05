@@ -35,34 +35,36 @@
                 <div class="accordion_body">
                         @using (Html.BeginForm("NewStudentConnections", "Admin", FormMethod.Post))
                     {
-                            <table border="1">
+                            <table class="table table__lectors" border="1">
 
-                                <tr title="Студенти"> <th>Ім'я</th><th>Прізвище</th><th>Слухає дисципліну</th> </tr>
+                                <tr class="table-row table-header-row">
+                                    <th>Ім'я</th>
+                                    <th>Прізвище</th>
+                                    <th>Слухає дисципліну</th> 
+                                </tr>
 
                                 @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id).OrderBy(t => t.Surname))
                                 {
                                     var index = Model.StudentDisciplines.IndexOf(Model.StudentDisciplines.FirstOrDefault(t => t.StudentId == student.Id
                                                                                                                                && t.DisciplineId == Model.Disciplines.FirstOrDefault().Id));
 
-                                    <tr>
-                                        <td>@student.Name</td>
-                                        <td>@student.Surname</td>
-                                        <td>@Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)</td>
+                                    <tr class="table-row">
+                                        <td class="table-item">@student.Name</td>
+                                        <td class="table-item">@student.Surname</td>
+                                        <td class="table-item table-item_centered">
+                                            @Html.LabelFor(r => Model.StudentDisciplines[index].IsSelected)
+                                            @Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)
+                                        </td>
                                         @*@@Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)*@
                                         @Html.HiddenFor(r => Model.StudentDisciplines[index].StudentId)
-
                                     </tr>
                                 }
                                 @for (int i = 0; i < Model.StudentDisciplines.Count; i++)
                                 {
                                     @Html.HiddenFor(t => Model.StudentDisciplines[i].DisciplineId);
                                 }
-                                <tr>
-                                    <td class="table-item table-item_name" colspan="3">
-                                        <input type="submit" value="Зберегти" />
-                                    </td>
-                                </tr>
                             </table>
+                            <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                         }
                     </div>
             }
