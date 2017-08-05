@@ -341,7 +341,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Admin\Disciplines.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <EntityDeploy Include="Models\TestingDb.edmx">
@@ -362,6 +362,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Admin\Lectors.cshtml" />
     <Content Include="Views\Admin\DisciplineStudents.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LayoutStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

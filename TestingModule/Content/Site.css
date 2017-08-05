@@ -77,10 +77,13 @@ input[type="text"]:focus{
     display: block;
 }
 
-.navbar i.fa{
+i.fa{
     margin-right: 10px;
-    width: 22px;
     text-align: center;
+}
+
+.navbar i.fa{
+    width: 22px;
 }
 
 .navbar a{
@@ -388,7 +391,7 @@ input[type="text"]:focus{
     color: #e43100
 }
 
-.popup .input-text{
+.input-text{
     display: block;
     width: 360px;
     position: relative;
@@ -475,4 +478,41 @@ input[type="text"]:focus{
 
 .ui-menu .ui-state-focus, .ui-menu .ui-state-active {
     margin: 0;
+}
+
+.main-login{
+    text-align: center;
+    font-size: 0;
+    height: 100%;
+}
+
+.main-login:before{
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    height: 100%;
+}
+
+.login-form{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+
+.form-title{
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.login-form{
+    width: 360px;
+}
+
+.loginBtn{
+    width: 100%;
+    padding: 15px 0;
+    color: #ffffff;
+    background-color: #4cacff;
+    font-size: 24px;
 }
