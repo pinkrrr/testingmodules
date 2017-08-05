@@ -1,0 +1,141 @@
+﻿.table {
+    width: 100%;
+    border: 1px solid #bababa;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    margin-bottom: 42px;
+    table-layout: auto;
+    border-collapse: collapse;
+}
+
+.table-item_students{
+    text-align: center;
+}
+
+.table-item_students a{
+    color: #000000;
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.table-item_students a:hover {
+    color: #4cacff;
+}
+
+.table.table__lectors .table-item_name_text:hover {
+    color: #000000;
+}
+
+.table.table__question{
+    margin-bottom: 0;
+}
+
+.table.table__question .table-item_name_text:hover {
+    color: #000000;
+}
+
+.table.table__question .table-row:hover {
+    background-color: #ffffff;
+}
+
+.table-edit-button_wrapper{
+    margin: 10px 0 60px;
+    text-align: right;
+}
+
+.table .table-header-row{
+    line-height: 41px;
+    background-color: #818181;
+    color: #ffffff;
+}
+
+.table .table-header-row:hover{
+    background-color: #818181;
+}
+
+.table.table__question .table-header-row:hover {
+    background-color: #818181;
+}
+
+.table-header-row .table-header{
+    padding: 0 15px;
+}
+
+.table-header-row .table-header_name{
+    text-align: left;
+}
+
+.table-row{
+    transition: background .2s;
+    padding: 30px 0;
+}
+
+.table-row:hover{
+    background-color: #f2f2f2;
+}
+
+.table-item{
+    padding: 10px 15px;
+}
+
+.table-item_name{
+    padding-left: 15px;
+}
+
+.table .table-item_name_text{
+    color: #000000;
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.table .table-item_name_text:hover{
+    color: #4cacff;
+}
+
+.table-edit-button, .table-remove-button{
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.table-item_edit{
+    text-align: right;
+    font-size: 16px;
+    text-align: center;
+    user-select: none;
+    width: 310px;
+    white-space: nowrap;
+}
+
+.table-button {
+    transition: background .2s, color .2s;
+    padding: 5px 10px;
+    display: inline-block;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin: 0 6px;
+    background-color: #ffffff;
+}
+
+.table-button i{
+    margin-right: 10px;
+}
+
+.table-edit-button{
+    color: #099fc1;
+}
+
+.table-edit-button:hover{
+    background-color: #099fc1; 
+    color: #ffffff;
+}
+
+.table-remove-button{
+    color: #e50d0d;
+}
+
+.table-remove-button:hover{
+    background-color: #e50d0d; 
+    color: #ffffff;
+}

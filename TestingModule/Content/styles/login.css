@@ -1,0 +1,36 @@
+﻿.login-greeting {
+    display: block;
+    position: relative;
+    color: #ffffff;
+}
+
+.login-greeting .login-greeting_name{
+    font-weight: bold;
+    transition: color .2s;
+    display: inline-block;
+    padding: 0;
+}
+
+.login-greeting .login-greeting_name:hover{
+    color: #4cacff;
+}
+
+.main-login{
+    text-align: center;
+    font-size: 0;
+    height: 100%;
+}
+
+.main-login:before{
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    height: 100%;
+}
+
+.login-form{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
