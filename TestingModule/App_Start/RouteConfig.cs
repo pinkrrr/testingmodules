@@ -21,6 +21,14 @@ namespace TestingModule
                 url: "admin/specialities/{specialityId}/groups/{GroupId}/students",
                 defaults: new { controller = "Admin", action = "students" });
             routes.MapRoute(
+                name: "DownloadStudentExcel",
+                url: "admin/specialities/{specialityId}/groups/{GroupId}/students/download",
+                defaults: new { controller = "Admin", action = "DownloadStudentExcel" });
+            routes.MapRoute(
+                name: "UploadStudentExcel",
+                url: "admin/specialities/{specialityId}/groups/{GroupId}/students/upload",
+                defaults: new { controller = "Admin", action = "UploadStudentExcel" });
+            routes.MapRoute(
                 name: "AddStudent",
                 url: "admin/specialities/{specialityId}/groups/{GroupId}/students/NewStudent",
                 defaults: new { controller = "Admin", action = "NewStudent" });

@@ -4,6 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<a href="students/download">Excel </a>
+
+@using (Html.BeginForm("UploadStudentExcel", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(t => t.Students.FirstOrDefault().SpecialityId)
+    @Html.HiddenFor(t => t.Students.FirstOrDefault().GroupId)
+    <input type="file" name="FileUpload" />
+    <input type="submit" name="Submit" id="Submit" value="Upload" />
+}
 
 @if (!Model.Students.Any())
 {

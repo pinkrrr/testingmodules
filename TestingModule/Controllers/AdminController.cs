@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Antlr.Runtime.Misc;
+using Microsoft.Office.Interop.Excel;
 using TestingModule.Additional;
 using TestingModule.Models;
 using TestingModule.ViewModels;
+using Module = TestingModule.Models.Module;
 
 namespace TestingModule.Controllers
 {
@@ -277,6 +281,134 @@ namespace TestingModule.Controllers
             }
             return RedirectToAction("Students");
         }
+        public ActionResult DownloadStudentExcel(int groupId)
+        {
+            try
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Temp");
+                foreach (FileInfo item in di.GetFiles())
+                {
+                    item.Delete();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            var db = new testingDbEntities();
+            var group = db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
+            var students = db.Students.Where(t => t.GroupId == groupId).ToList();
+            var account = db.Accounts.ToList();
+            var name = group + ".xls";
+            var path = AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Temp\" + name;
+            var file = File(path, System.Net.Mime.MediaTypeNames.Application.Octet, name);
+            Application Inte;
+            _Workbook intbook;
+            _Worksheet intsheet;
+            Inte = new Application();
+            intbook = Inte.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Templates\studentsTemplate.xlsx");
+            try
+            {
+                intsheet = (_Worksheet)Inte.ActiveSheet;
+                intsheet.Name = DateTime.Now.ToString(group);
+                intsheet.Cells[1, 1] = group;
+                foreach (var student in students)
+                {
+                    intsheet.Cells[3 + students.IndexOf(student), 1] = student.Name;
+                    intsheet.Cells[3 + students.IndexOf(student), 2] = student.Surname;
+                    intsheet.Cells[3 + students.IndexOf(student), 3] = student.Id;
+                    intsheet.Cells[3 + students.IndexOf(student), 4] = account.FirstOrDefault(t => t.Id == student.AccountId).Login;
+                    intsheet.Cells[3 + students.IndexOf(student), 5] = account.FirstOrDefault(t => t.Id == student.AccountId).Password;
+                }
+                intsheet.Columns.AutoFit();
+                intsheet.SaveAs(path);
+                intbook.Close();
+            }
+            catch (Exception)
+            {
+                intbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                Inte.Quit();
+            }
+            return File(path, System.Net.Mime.MediaTypeNames.Application.Octet, name);
+        }
+        [HttpPost]
+        public ActionResult UploadStudentExcel(int groupId, int specialityId)
+        {
+            try
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Temp");
+                foreach (FileInfo item in di.GetFiles())
+                {
+                    item.Delete();
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            if (Request.Files.Count > 0)
+            {
+                var file = Request.Files[0];
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(file.FileName.Replace(".xls", "").Replace(".xlsx", "") + DateTime.Now.ToString("MM_dd_yyyy_H_mm_ss") + ".xls");
+                    var path = Path.Combine(Server.MapPath("~/Temp/"), fileName);
+                    file.SaveAs(path);
+                    Application Inte;
+                    _Workbook intbook;
+                    _Worksheet intsheet;
+                    Inte = new Application();
+                    intbook = Inte.Workbooks.Open(path);
+                    intsheet = (_Worksheet)Inte.ActiveSheet;
+                    try
+                    {
+                        var count = intsheet.Cells[1, 8].Value;
+                        var students = new testingDbEntities().Students.Where(t => t.GroupId == groupId && t.SpecialityId == specialityId).ToList();
+                        var accounts = new testingDbEntities().Accounts.ToList();
+                        List<int?> ids = new ListStack<int?>();
+                        for (int i = 0; i < count; i++)
+                        {
+                            var name = intsheet.Cells[3 + i, 1].Value.ToString();
+                            var surname = intsheet.Cells[3 + i, 2].Value.ToString();
+                            int? studId = (int?)intsheet.Cells[3 + i, 3].Value;
+                            String login = intsheet.Cells[3 + i, 4].Value;
+                            String password = intsheet.Cells[3 + i, 5].Value;
+                            ids.Add(studId);
+                            if (!students.Any(t => t.Id == studId))
+                            {
+                                new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
+                            }
+                            else
+                            {
+                                var stud = students.FirstOrDefault(t => t.Id == studId);
+                                var acc = accounts.FirstOrDefault(t => t.Id == stud.AccountId);
+                                if (stud.Name != name || stud.Surname != surname || acc.Login == login || acc.Password == password)
+                                {
+                                    new Editing().EditStudent((int)studId, name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), login, password, groupId);
+                                }
+                            }
+                        }
+                        intbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        Inte.Quit();
+                        foreach (var student in students)
+                        {
+                            if (!ids.Contains(student.Id))
+                            {
+                                new Deleting().DeleteStudent(student.Id);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        var error = e;
+                        intbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        Inte.Quit();
+                    }
+                }
+            }
+            return RedirectToAction("Students");
+        }
         public ActionResult EditStudent(UserViewModel model)
         {
             new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
@@ -369,7 +501,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult NewStudentConnections(ReasignViewModel model)
         {
-            if (model.StudentDisciplines!=null)
+            if (model.StudentDisciplines != null)
             {
                 new Adding().AddNewStudentConnection(model);
             }
