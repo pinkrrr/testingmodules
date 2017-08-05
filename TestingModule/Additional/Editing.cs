@@ -83,7 +83,7 @@ namespace TestingModule.Additional
             grp.Name = name;
             _db.SaveChanges();
         }
-        public void EditStudent(int studentId, string name, string surname, string username, string pass, int groupId)
+        public void EditStudent(int studentId, string name, string surname, String username, String pass, int groupId)
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
             var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
@@ -93,8 +93,11 @@ namespace TestingModule.Additional
             }
             std.Name = name;
             std.Surname = surname;
-            ac.Login = username;
-            ac.Password = pass;
+            if (username != null && pass != null)
+            {
+                ac.Login = username;
+                ac.Password = pass;
+            }
             _db.SaveChanges();
         }
         public void EditLector(int lectorId, string name, string surname, string username, string pass)
