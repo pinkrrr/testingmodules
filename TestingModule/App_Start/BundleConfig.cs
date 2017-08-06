@@ -27,10 +27,10 @@ namespace TestingModule
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/font-awesome.min.css",
+                      "~/Content/font-awesome.css",
                       "~/Content/themes/base/jquery-ui.css",
                       "~/Content/themes/base/theme.css",
-                      "~/Content/site.css"));
+                      "~/Content/styles/*.css"));
         }
     }
 }
