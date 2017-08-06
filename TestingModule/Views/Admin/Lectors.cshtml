@@ -66,22 +66,22 @@ else
                     }
                     @if (name == null)
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім\'я лектора" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім\'я лектора", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім\'я лектора" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім\'я лектора", @required = "required" })
                     }
                     @{
                         var surname = Model.LastOrDefault();
                     }
                     @if (surname == null)
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище лектора" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище лектора", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище лектора" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище лектора", @required = "required" })
                     }
                     <div>
                         <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>

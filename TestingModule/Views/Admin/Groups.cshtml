@@ -52,7 +52,7 @@ else
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.Groups.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Groups.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required" })
                     <div>
                         @Html.DropDownListFor(model => model.Groups.FirstOrDefault().SpecialityId, new SelectList(Model.Specialities, "Id", "Name", new { @id = "SpecialityId" }), "Оберіть спеціальність")
                     </div>
@@ -79,11 +79,11 @@ else
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required", })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required" })
                         }
                     </div>
                     <div>

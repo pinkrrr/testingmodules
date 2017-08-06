@@ -40,7 +40,7 @@ else
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву спеціальності", @required = "required" })
                     @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
@@ -74,11 +74,11 @@ else
                     }
                     @if (name == null)
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву спеціальності", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву спеціальності", @required = "required" })
                     }
                     <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>

@@ -66,11 +66,11 @@ else
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента",  @required = "required"})
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім'я студента" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
                         }
                     </div>
                     @Html.Label("Введіть прізвище студента");
@@ -79,11 +79,11 @@ else
                     }
                     @if (surname == null)
                     {
-                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище студента" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                     }
                     <div>
                         @Html.HiddenFor(model => model.Students.LastOrDefault().GroupId)
@@ -120,8 +120,8 @@ else
                 <div class="popup-title">Редагування</div>
                 <form>
                     @Html.HiddenFor(model => model.Students.FirstOrDefault().Id, new { @id = "id" })
-                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Name, new { @class = "input-text" })
-                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Surname, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Name, new { @class = "input-text",  @placeholder = "Введіть ім'я студента", @required = "required" })
+                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Login, new { @class = "input-text" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Password, new { @class = "input-text" })
                     <div>

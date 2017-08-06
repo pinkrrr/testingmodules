@@ -18,7 +18,7 @@ else
             @using (Html.BeginForm("EditAnswer", "admin", FormMethod.Post))
             {
             <tr class="table-row">
-                <th class="table-item table-item_name">@Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question)</th>
+                <th class="table-item table-item_name">@Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new { @class = "input-text", @placeholder = "Введіть текст запитання", @required = "required" })</th>
                 <th class="table-item table-item_edit"> Правильна відповідь </th>
                 <th class="table-item table-item_edit">
                     <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
@@ -37,7 +37,7 @@ else
 
                         <tr class="table-row" bgcolor="f1f1f1">
                             <td class="table-item table-item_name">
-                                @Html.TextBoxFor(model => Model[Model.IndexOf(que)].Answer)
+                                @Html.TextBoxFor(model => Model[Model.IndexOf(que)].Answer, new { @class = "input-text", @placeholder = "Введіть текст відповіді", @required = "required" })
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].AnswerId)
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].Question)
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].QuestionId)
@@ -81,11 +81,11 @@ else
                         <td>
                             @if (name == null)
                         {
-                                @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text" })
+                                @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text" ,@placeholder = "Введіть нову відповідь", @required = "required" })
                             }
                             else
                             {
-                                @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
+                                @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" , @placeholder = "Введіть нову відповідь", @required = "required" })
                             }
                             @Html.HiddenFor(model => item.FirstOrDefault().QuestionId)
                             @Html.HiddenFor(model => item.FirstOrDefault().DisciplineId)
@@ -129,11 +129,11 @@ else
                     }
                     @if (name == null)
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text" , @placeholder = "Введіть нове запитання", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Question, name.Question = "", new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Question, name.Question = "", new { @class = "input-text" , @placeholder = "Введіть нове запитання", @required = "required" })
                     }
                     @Html.HiddenFor(model => model.LastOrDefault().ModuleId)
                     @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
