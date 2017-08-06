@@ -4,7 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+     using System.Web;
+     using System.Web.Mvc;
 using Antlr.Runtime.Misc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -435,11 +436,48 @@ namespace TestingModule.Controllers
 
             using (ExcelPackage pck = new ExcelPackage())
             {
-                //Create the worksheet
                 ExcelWorksheet ws = pck.Workbook.Worksheets.Add(group);
-
-                //Format the header for column 1-3
-                using (ExcelRange rng = ws.Cells["A1:E2"])
+                var filter = "";
+                if (students.Count != 0)
+                {
+                    using (ExcelRange rng = ws.Cells["G1:G4"])
+                    {
+                        rng.Style.Font.Size = 12;
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rng.Style.Fill.BackgroundColor.SetColor(Color.Black);
+                        rng.Style.Font.Color.SetColor(Color.White);
+                        rng.Style.Border.BorderAround(ExcelBorderStyle.Thin, System.Drawing.Color.White);
+                        rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    }
+                    ws.Cells[2, 3].Value = "StudentId";
+                    ws.Cells[2, 4].Value = "Обліковий запис";
+                    ws.Cells[2, 5].Value = "Пароль";
+                    ws.Cells[2, 7].Value =
+                        "2 - для того, щоб редагувати ім'я, прізвище, обліковий запис, або пароль студента, змініть необхідні дані на його рядку в колонках рядка в колонка A, B, D, або E";
+                    ws.Cells[3, 7].Value =
+                        "3 - для того, щоб видалити студента, видаліть рядок студента повністю за допомогою виділення рядка, та його видалення. Важливо, щоб між рядками студентів не було порожних рядків!";
+                    ws.Cells[4, 7].Value =
+                        "4 - після заврешення редагування документу, збережіть його і завантажте на сайті в необхідну групу.";
+                    filter = "E";
+                }
+                else
+                {
+                    using (ExcelRange rng = ws.Cells["G1:G2"])
+                    {
+                        rng.Style.Font.Size = 12;
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rng.Style.Fill.BackgroundColor.SetColor(Color.Black);
+                        rng.Style.Font.Color.SetColor(Color.White);
+                        rng.Style.Border.BorderAround(ExcelBorderStyle.Thin, System.Drawing.Color.White);
+                        rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    }
+                    ws.Cells[2, 7].Value =
+                        "2 - після заврешення редагування документу, збережіть його і завантажте на сайті в необхідну групу.";
+                    filter = "B";
+                }
+                using (ExcelRange rng = ws.Cells["A1:"+filter+"2"])
                 {
                     rng.Style.Font.Bold = true;
                     rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -451,9 +489,9 @@ namespace TestingModule.Controllers
                 ws.Cells[1, 1].Style.Font.Size = 14;
                 ws.Cells[2, 1].Value = "Прізвище";
                 ws.Cells[2, 2].Value = "Ім'я";
-                ws.Cells[2, 3].Value = "StudentId";
-                ws.Cells[2, 4].Value = "Обліковий запис";
-                ws.Cells[2, 5].Value = "Пароль";
+                ws.Cells[1, 7].Value =
+                    "1 - для того, щоб додати нового студента, введіть його ім'я та прізвище з нового рядка в колонка А та В";
+                
                 foreach (var stud in students)
                 {
                     var row = 3 + students.IndexOf(stud);
@@ -463,26 +501,25 @@ namespace TestingModule.Controllers
                     ws.Cells[row, 4].Value = account.FirstOrDefault(t => t.Id == stud.AccountId).Login;
                     ws.Cells[row, 5].Value = account.FirstOrDefault(t => t.Id == stud.AccountId).Password;
                 }
-                //Example how to Format Column 1 as numeric 
-                ws.Cells["A1:E1"].Merge = true;
+                ws.Cells["A1:"+filter+"1"].Merge = true;
+                ws.Column(7).AutoFit();
                 ws.Cells.AutoFitColumns();
                 //Write it back to the client
                 using (var memoryStream = new MemoryStream())
                 {
+                    var fileName = group;
                     Encoding encoding = Encoding.UTF8;
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.Charset = encoding.EncodingName;
                     Response.ContentEncoding = Encoding.Unicode;
-                    Response.AddHeader("content-disposition", "attachment; filename=" + group + ".xlsx");
+                    Response.AddHeader("content-disposition", "attachment; filename=\"" + HttpUtility.UrlEncode(fileName, Encoding.UTF8) + ".xlsx\"");
                     pck.SaveAs(memoryStream);
                     memoryStream.WriteTo(Response.OutputStream);
                     Response.Flush();
                     Response.End();
                 }
                 pck.Dispose();
-
             }
-            //return File(path, System.Net.Mime.MediaTypeNames.Application.Octet, group+".xlsx");
             return null;
         }
 
