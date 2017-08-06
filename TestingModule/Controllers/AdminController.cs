@@ -1,4 +1,4 @@
-﻿using System;
+﻿     using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -15,7 +15,7 @@ using Module = TestingModule.Models.Module;
 
 namespace TestingModule.Controllers
 {
-    public class AdminController : Controller
+    public class adminController : Controller
     {
         public ActionResult Index()
         {
@@ -334,11 +334,11 @@ namespace TestingModule.Controllers
             }
             return RedirectToAction("Specialities");
         }
-        public ActionResult DeleteSpeciality(int specialityId)
+        public ActionResult DeleteSpeciality(int SpecialityId)
         {
             try
             {
-                new Deleting().DeleteSpeciality(specialityId);
+                new Deleting().DeleteSpeciality(SpecialityId);
                 TempData["Success"] = "Спеціальність була успішно видалена!";
             }
             catch (Exception)
@@ -350,10 +350,10 @@ namespace TestingModule.Controllers
 
 
         //Groups
-        public ActionResult Groups(int specialityId)
+        public ActionResult Groups(int SpecialityId)
         {
             var db = new testingDbEntities();
-            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
+            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == SpecialityId).ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
             ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc };
             return View(test);
@@ -383,11 +383,11 @@ namespace TestingModule.Controllers
             }
             return RedirectToAction("Groups");
         }
-        public ActionResult DeleteGroup(int groupId)
+        public ActionResult DeleteGroup(int GroupId)
         {
             try
             {
-                new Deleting().DeleteGroup(groupId);
+                new Deleting().DeleteGroup(GroupId);
                 TempData["Success"] = "Групу було успішно видалено!";
             }
             catch (Exception)
@@ -397,12 +397,12 @@ namespace TestingModule.Controllers
         }
 
         //Students
-        public ActionResult Students(int groupId)
+        public ActionResult Students(int GroupId)
         {
             var db = new testingDbEntities();
-            var specId = db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
+            var specId = db.Groups.FirstOrDefault(t => t.Id == GroupId).SpecialityId;
             List<int> accList = new List<int>();
-            IEnumerable<Student> std = db.Students.Where(t => t.GroupId == groupId).ToList();
+            IEnumerable<Student> std = db.Students.Where(t => t.GroupId == GroupId).ToList();
             foreach (var student in std)
             {
                 accList.Add(student.AccountId);
@@ -426,11 +426,11 @@ namespace TestingModule.Controllers
             return RedirectToAction("Students");
         }
 
-        public ActionResult DownloadStudentExcel(int groupId)
+        public ActionResult DownloadStudentExcel(int GroupId)
         {
             var db = new testingDbEntities();
-            var group = db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
-            var students = db.Students.Where(t => t.GroupId == groupId).ToList();
+            var group = db.Groups.FirstOrDefault(t => t.Id == GroupId).Name;
+            var students = db.Students.Where(t => t.GroupId == GroupId).ToList();
             var account = db.Accounts.ToList();
 
             using (ExcelPackage pck = new ExcelPackage())
@@ -487,7 +487,7 @@ namespace TestingModule.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadStudentExcel(int groupId, int specialityId)
+        public ActionResult UploadStudentExcel(int groupId)
         {
             if (Request.Files.Count != 0)
             {
@@ -500,6 +500,7 @@ namespace TestingModule.Controllers
                 {
                     {
                         ExcelWorksheet ws = p.Workbook.Worksheets[1];
+                        var specialityId = new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
                         var students = new testingDbEntities().Students.Where(t => t.GroupId == groupId && t.SpecialityId == specialityId).ToList();
                         var accounts = new testingDbEntities().Accounts.ToList();
                         List<int> ids = new ListStack<int>();

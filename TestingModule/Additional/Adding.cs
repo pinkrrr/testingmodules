@@ -52,14 +52,14 @@ namespace TestingModule.Additional
             specialityTable.Add(new Speciality() { Id = last, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewGroup(string name, int specialityId)
+        public void AddNewGroup(string name, int SpecialityId)
         {
             var last = _db.Groups.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var groupsTable = _db.Set<Group>();
-            groupsTable.Add(new Group() { Id = last, SpecialityId = specialityId, Name = name });
+            groupsTable.Add(new Group() { Id = last, SpecialityId = SpecialityId, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewStudent(string name, string surname, int groupId, int specialityId)
+        public void AddNewStudent(string name, string surname, int GroupId, int SpecialityId)
         {
             UsernameAndPassword usernameAndPassword = new UsernameAndPassword();
             var username = usernameAndPassword.TranslitFileName(name.ToLower()) + "." +
@@ -69,9 +69,9 @@ namespace TestingModule.Additional
             accountsTable.Add(new Account() { Login = username, Password = password, RoleId = 2 });
             _db.SaveChanges();
 
-            var last = _db.Accounts.FirstOrDefault(t => t.Login == username);
+            var last = _db.Accounts.FirstOrDefault(t => t.Login == username && t.Password == password);
             var studentsTable = _db.Set<Student>();
-            studentsTable.Add(new Student() { SpecialityId = specialityId, GroupId = groupId, Name = name, Surname = surname, AccountId = last.Id });
+            studentsTable.Add(new Student() { SpecialityId = SpecialityId, GroupId = GroupId, Name = name, Surname = surname, AccountId = last.Id });
             _db.SaveChanges();
         }
 

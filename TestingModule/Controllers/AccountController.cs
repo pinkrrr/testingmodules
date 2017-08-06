@@ -37,7 +37,7 @@ namespace TestingModule.Controllers
             _context.Students.Add(student);
             _context.Accounts.Add(account);
             _context.SaveChanges();
-            return View("Index", "Admin");
+            return View("Index", "admin");
         }
 
         private RegistrationFormViewModel CreateRegistrationViewmodel()
@@ -107,7 +107,7 @@ namespace TestingModule.Controllers
                     HttpContext.GetOwinContext().Authentication.SignIn(
                     new AuthenticationProperties { IsPersistent = false }, ident);
                 }
-                return RedirectToAction("Index", "Admin");
+                return RedirectToAction("Index", "admin");
             }
             // invalid username or password
             ModelState.AddModelError("", "invalid username or password");
@@ -122,7 +122,7 @@ namespace TestingModule.Controllers
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return RedirectToAction("Index", "Admin");
+            return RedirectToAction("Index", "admin");
         }
     }
 }

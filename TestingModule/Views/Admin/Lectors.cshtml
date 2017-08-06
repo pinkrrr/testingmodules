@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<TestingModule.ViewModels.UserViewModel>
 @{
     ViewBag.Title = "Lectors";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
-
+@TempData["Success"]
 <h2>Лектори!</h2>
 @if (!Model.Any())
 {
@@ -14,8 +14,8 @@ else
 
     <table class="table table__lectors" border="1">
         <tr class="table-row table-header-row">
-            <th class="table-header">Ім'я</th>
             <th class="table-header">Прізвище</th>
+            <th class="table-header">Ім'я</th>
             <th class="table-header">Username</th>
             <th class="table-header">Password</th>
             <th class="table-header">Дії</th>
@@ -24,13 +24,15 @@ else
         @foreach (var item in Model.OrderBy(t => t.Surname))
         {
             <tr class="table-row">
-                <td class="table-item table-item_name_text">@item.Name</td>
                 <td class="table-item table-item_surname_text">@item.Surname</td>
+                <td class="table-item table-item_name_text">@item.Name</td>
                 <td class="table-item">@item.Login</td>
                 <td class="table-item">@item.Password</td>
                 <td class="table-item table-item_edit">
-                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                    <div data-remove="lectors/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
+                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
+                    </div>
+                    <div data-remove="lectors/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити
+                    </div>
                 </td>
             </tr>
         }
@@ -56,7 +58,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нового лектора</div>
-            @using (Html.BeginForm("NewLector", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewLector", "admin", FormMethod.Post))
             {
                 <form>
                     @{

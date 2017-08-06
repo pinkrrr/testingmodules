@@ -1,9 +1,9 @@
 ﻿@model TestingModule.ViewModels.ReasignViewModel
 @{
     ViewBag.Title = "Groups";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
-
+@TempData["Success"]
 
 @if (!Model.Groups.Any())
 {
@@ -48,13 +48,13 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditGroup", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditGroup", "admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>
                     @Html.TextBoxFor(model => model.Groups.FirstOrDefault().Name, new { @class = "input-text" })
                     <div>
-                        @Html.DropDownListFor(model => model.Groups.FirstOrDefault().SpecialityId, new SelectList(Model.Specialities, "Id", "Name", new { @id = "specialityId" }), "Оберіть спеціальність")
+                        @Html.DropDownListFor(model => model.Groups.FirstOrDefault().SpecialityId, new SelectList(Model.Specialities, "Id", "Name", new { @id = "SpecialityId" }), "Оберіть спеціальність")
                     </div>
                     @Html.HiddenFor(model => model.Groups.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
@@ -69,7 +69,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нову групу</div>
-            @using (Html.BeginForm("NewGroup", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewGroup", "admin", FormMethod.Post))
             {
                 <form>
                     <div>

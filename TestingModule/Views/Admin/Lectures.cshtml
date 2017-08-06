@@ -1,10 +1,10 @@
 ﻿@model TestingModule.ViewModels.ReasignViewModel
 
 @{
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
 
-
+@TempData["Success"]
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
 @if (!Model.Lectures.Any())
 {
@@ -47,7 +47,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нову дисципліну</div>
-            @using (Html.BeginForm("NewLecture", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewLecture", "admin", FormMethod.Post))
             {
                 <form>
                     <div>
@@ -77,7 +77,7 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditLecture", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditLecture", "admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>

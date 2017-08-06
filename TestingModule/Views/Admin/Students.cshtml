@@ -1,19 +1,19 @@
 ﻿@model TestingModule.ViewModels.ReasignViewModel
 @{
     ViewBag.Title = "Students";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
 
 <div border="1">@TempData["Success"]</div>
 
-<a href="students/download">Excel </a>
+<a href="students/download">Excel шаблон</a>
 
-@using (Html.BeginForm("UploadStudentExcel", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("UploadStudentExcel", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.HiddenFor(t => t.Students.FirstOrDefault().SpecialityId)
     @Html.HiddenFor(t => t.Students.FirstOrDefault().GroupId)
-    <input type="file" name="FileUpload" />
-    <input type="submit" name="Submit" id="Submit" value="Upload" />
+    <input type="file" name="Upload" value="Завантажте відредагований шаблон" />
+    <input type="submit" name="Submit" id="Submit" value="Зберегти" />
 }
 
 @if (!Model.Students.Any())
@@ -26,8 +26,8 @@ else
 
 <table class="table" border="1">
     <tr class="table-row table-header-row">
-        <th class="table-header">Ім'я</th>
         <th class="table-header">Прізвище</th>
+        <th class="table-header">Ім'я</th>
         <th class="table-header">Username</th>
         <th class="table-header">Password</th>
         <th class="table-header">Дії</th>
@@ -35,13 +35,15 @@ else
     @foreach (var item in Model.Students.OrderBy(t => t.Surname))
     {
         <tr class="table-row">
-            <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
             <td class="table-item table-item_surname_text">@item.Surname</td>
+            <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
             <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Login</td>
             <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Password</td>
             <td class="table-item table-item_edit">
-                <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                <div data-remove="students/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
+                <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
+                </div>
+                <div data-remove="students/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити
+                </div>
             </td>
         </tr>
     }
@@ -54,7 +56,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нового студента</div>
-            @using (Html.BeginForm("NewStudent", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewStudent", "admin", FormMethod.Post))
             {
                 <form>
                     <div>
@@ -113,7 +115,7 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditStudent", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditStudent", "admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>
@@ -123,7 +125,7 @@ else
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Login, new { @class = "input-text" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Password, new { @class = "input-text" })
                     <div>
-                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "groupId" }), "Оберіть групу")
+                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "GroupId" }), "Оберіть групу")
                     </div>
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>

@@ -2,11 +2,11 @@
 @model TestingModule.ViewModels.ReasignViewModel
 @{
     ViewBag.Title = "DisciplineStudents";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
 
 
-
+@TempData["Success"]
 
 @if (!Model.Specialities.Any())
 {
@@ -33,7 +33,7 @@
                 {
                 <div class="accordion_header group_header">@group.Name</div>
                 <div class="accordion_body">
-                        @using (Html.BeginForm("NewStudentConnections", "Admin", FormMethod.Post))
+                        @using (Html.BeginForm("NewStudentConnections", "admin", FormMethod.Post))
                     {
                             <table class="table table__studentsDisciplines" border="1">
 
@@ -49,12 +49,10 @@
 
                                     <tr class="table-row">
                                         <td class="table-item">@student.Surname @student.Name</td>
-                                        @*<td class="table-item">@student.Surname</td>*@
                                         <td class="table-item table-item_centered">
                                             @Html.LabelFor(r => Model.StudentDisciplines[index].IsSelected, "Слухає дисципліну")
                                             @Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)
                                         </td>
-                                        @*@@Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)*@
                                         @Html.HiddenFor(r => Model.StudentDisciplines[index].StudentId)
                                     </tr>
                                 }
