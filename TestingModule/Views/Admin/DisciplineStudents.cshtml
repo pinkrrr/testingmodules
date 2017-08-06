@@ -51,8 +51,10 @@
                                         <td class="table-item">@student.Surname @student.Name</td>
                                         @*<td class="table-item">@student.Surname</td>*@
                                         <td class="table-item table-item_centered">
-                                            @Html.LabelFor(r => Model.StudentDisciplines[index].IsSelected, "Слухає дисципліну")
-                                            @Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)
+                                            <label for="@student.Id" class="label_disciplineStudent">
+                                                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            </label>
+                                            @Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected, new { @id= @student.Id })
                                         </td>
                                         @*@@Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)*@
                                         @Html.HiddenFor(r => Model.StudentDisciplines[index].StudentId)
