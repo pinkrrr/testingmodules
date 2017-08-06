@@ -10,17 +10,19 @@ namespace TestingModule.Additional
         public void EditDiscipline(int disciplineId, string name, int? lectorId)
         {
             var disc = _db.Disciplines.FirstOrDefault(t => t.Id == disciplineId);
-            if (_db.LectorDisciplines.Any(t => t.DisciplineId == disciplineId))
+            if (lectorId != null)
             {
-                var connect = _db.LectorDisciplines.FirstOrDefault(t => t.DisciplineId == disciplineId);
-                if (connect != null) connect.LectorId = Convert.ToInt32(lectorId);
-                _db.SaveChanges();
-            }
-            else
-            {
-                var lecturesTable = _db.Set<LectorDiscipline>();
-
-                lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
+                if (_db.LectorDisciplines.Any(t => t.DisciplineId == disciplineId))
+                {
+                    var connect = _db.LectorDisciplines.FirstOrDefault(t => t.DisciplineId == disciplineId);
+                    if (connect != null) connect.LectorId = Convert.ToInt32(lectorId);
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    var lecturesTable = _db.Set<LectorDiscipline>();
+                    lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
+                }
             }
             if (disc != null) disc.Name = name;
             _db.SaveChanges();
@@ -93,7 +95,7 @@ namespace TestingModule.Additional
             }
             std.Name = name;
             std.Surname = surname;
-            if (username != null && pass != null)
+            if (username != null && pass != null && username != "" && pass != "")
             {
                 ac.Login = username;
                 ac.Password = pass;

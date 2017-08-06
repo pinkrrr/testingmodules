@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<div border="1">@TempData["Success"]</div>
+
 <a href="students/download">Excel </a>
 
 @using (Html.BeginForm("UploadStudentExcel", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
