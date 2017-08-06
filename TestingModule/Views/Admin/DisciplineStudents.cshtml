@@ -35,11 +35,10 @@
                 <div class="accordion_body">
                         @using (Html.BeginForm("NewStudentConnections", "Admin", FormMethod.Post))
                     {
-                            <table class="table table__lectors" border="1">
+                            <table class="table table__studentsDisciplines" border="1">
 
                                 <tr class="table-row table-header-row">
-                                    <th>Ім'я</th>
-                                    <th>Прізвище</th>
+                                    <th>Студент</th>
                                     <th>Слухає дисципліну</th> 
                                 </tr>
 
@@ -49,10 +48,10 @@
                                                                                                                                && t.DisciplineId == Model.Disciplines.FirstOrDefault().Id));
 
                                     <tr class="table-row">
-                                        <td class="table-item">@student.Name</td>
-                                        <td class="table-item">@student.Surname</td>
+                                        <td class="table-item">@student.Surname @student.Name</td>
+                                        @*<td class="table-item">@student.Surname</td>*@
                                         <td class="table-item table-item_centered">
-                                            @Html.LabelFor(r => Model.StudentDisciplines[index].IsSelected)
+                                            @Html.LabelFor(r => Model.StudentDisciplines[index].IsSelected, "Слухає дисципліну")
                                             @Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)
                                         </td>
                                         @*@@Html.HiddenFor(r => Model.StudentDisciplines[index].DisciplineId)*@
@@ -65,6 +64,10 @@
                                 }
                             </table>
                             <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
+                            <div class="selectAllorNobody">
+                                <button class="btnSelectAll"><i class="fa fa-users" aria-hidden="true"></i>Вибрати всіх</button>
+                                <button class="btnSelectNobody"><i class="fa fa-user-times" aria-hidden="true"></i>Зняти всіх</button>
+                            </div>
                         }
                     </div>
             }

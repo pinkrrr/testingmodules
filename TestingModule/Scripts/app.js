@@ -225,8 +225,50 @@
 
     }
 
+    function selectAllorNobody() {
+        var _$btnSelectAll = $('.btnSelectAll');
+        var _$btnSelectNobody = $('.btnSelectNobody');
+
+        initSelectAll();
+        initSelectNobody();
+
+        function selectAll(table) {
+            table.find('label').each(function () {
+                if (!$(this).hasClass('ui-state-active')) {
+                    $(this).click();
+                }
+            })
+        }
+
+        function initSelectAll() {
+            _$btnSelectAll.on('click', function (e) {
+                e.preventDefault();
+                var table = $(this).closest('form').find('.table');
+                selectAll(table);
+            });
+        }
+
+        function selectNobody(table) {
+            table.find('label').each(function () {
+                if ($(this).hasClass('ui-state-active')) {
+                    $(this).click();
+                }
+            })
+        }
+
+        function initSelectNobody() {
+            _$btnSelectNobody.on('click', function (e) {
+                e.preventDefault();
+                var table = $(this).closest('form').find('.table');
+                selectNobody(table);
+            });
+        }
+
+    }
+
     popup();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
+    selectAllorNobody();
 });

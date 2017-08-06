@@ -50,3 +50,7 @@
 .ui-accordion .ui-accordion-header{
     margin-top: 20px;
 }
+
+.ui-checkboxradio-label:focus{
+    outline: none;
+}

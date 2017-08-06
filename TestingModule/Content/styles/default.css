@@ -149,6 +149,38 @@ i.fa{
     color: #31ac00;
 }
 
+.selectAllorNobody{
+    float: right;
+}
+
+.btnSelectAll, .btnSelectNobody{
+    display: inline-block;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 10px 40px;
+    font-weight: bold;
+}
+
+.btnSelectAll{
+    background-color: #4cacff;
+    border: 3px solid #4cacff;
+}
+
+.btnSelectAll:hover{
+    background-color: #ffffff;
+    color: #4cacff;
+}
+
+.btnSelectNobody{
+    background-color: #8d0404;
+    border: 3px solid #8d0404;
+}
+
+.btnSelectNobody:hover{
+    background-color: #ffffff;
+    color: #8d0404;
+}
+
 .accordion {
     opacity: 0;
 }
