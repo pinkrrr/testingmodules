@@ -1,0 +1,125 @@
+﻿.popup{
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    background-color: rgba(0,0,0,.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s, visibility .2s;
+    user-select: none;
+}
+
+.popup.popup-active{
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup .popup-body{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: #ffffff;
+    padding: 50px;
+    box-shadow: 10px 10px 20px 5px rgba(0,0,0,.3);
+}
+
+.popup .popup-content{
+    font-size: 0;
+    white-space: nowrap;
+}
+
+.popup:before{
+    content: '';
+    height: 100%;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.popup-edit .answer_item {
+    font-size: 0;
+}
+
+.popup-edit .answer_item .input-text, .popup-edit .answer_item .answer_remove {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+}
+
+.popup-edit .answer_item .input-text {
+    width: 313px;
+    font-size: 22px;
+    border-right: 0;
+}
+
+.popup-edit .answer_item .answer_remove {
+    color: #ffffff;
+    background-color: #e50d0d;
+    border: 1px solid #e50d0d;
+    transition: color .2s, background .2s;
+    font-size: 32px;
+    padding: 4px 10px;
+}
+
+.popup-edit .answer_item .answer_remove:hover{
+    color: #e50d0d;
+    background-color: #ffffff;
+}
+
+.popup-title {
+    font-size: 24px;
+    color: #000000;
+    text-align: left;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.popup-title span{
+    color: #e43100
+}
+
+.popup .popup-btn{
+    color: #ffffff;
+    font-size: 18px;
+    padding: 10px 40px;
+    width: 170px;
+}
+
+.popup .popup-save-btn{
+    background-color: #31ac00;
+}
+
+.popup .popup-save-btn:hover{
+    background-color: #3cd300;
+}
+
+.popup .popup-create-btn{
+    background-color: #4cacff;
+}
+
+.popup .popup-create-btn:hover{
+    background-color: #7ac1ff;
+}
+
+.popup .popup-cancel-btn{
+    background-color: #606060;
+    margin-left: 20px;
+}
+
+.popup .popup-cancel-btn:hover{
+    background-color: #868686;
+}
+
+.popup .popup-remove-btn{
+    background-color: #ff0000;
+}
+
+.popup .popup-remove-btn:hover{
+    background-color: #ff3737;
+}
