@@ -157,6 +157,15 @@ namespace TestingModule
                 url: "{controller}/{action}",
                 defaults: new { controller = "Quiz", action = "Index" });
 
+            routes.MapRoute(
+                name: "NotFound",
+                url: "notfount",
+                defaults: new { controller = "Error", action = "NotFound" });
+            routes.MapRoute(
+                name: "ServerError",
+                url: "servererror",
+                defaults: new { controller = "Error", action = "ServerError" });
+
         }
     }
 }

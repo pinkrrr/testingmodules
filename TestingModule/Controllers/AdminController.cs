@@ -528,57 +528,72 @@ namespace TestingModule.Controllers
         {
             if (Request.Files.Count != 0)
             {
+                string ext = Path.GetExtension(Request.Files[0].FileName);
+                var validExtensions = new[] {".xlsx", ".xls", "csv"};
+                if (!validExtensions.Contains(ext))
+                {
+                    TempData["Fail"] =
+                        "Невірний формат файлу! Тільки файли створенні за допомогою Excel підтримуються (.xlsx ; .xls)";
+                }
                 var file = Request.Files[0];
                 MemoryStream mem = new MemoryStream();
                 mem.SetLength((int)file.ContentLength);
                 file.InputStream.Read(mem.GetBuffer(), 0, (int)file.ContentLength);
-
-                using (ExcelPackage p = new ExcelPackage(mem))
+                try
                 {
+                    using (ExcelPackage p = new ExcelPackage(mem))
                     {
-                        ExcelWorksheet ws = p.Workbook.Worksheets[1];
-                        var specialityId = new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
-                        var students = new testingDbEntities().Students.Where(t => t.GroupId == groupId && t.SpecialityId == specialityId).ToList();
-                        var accounts = new testingDbEntities().Accounts.ToList();
-                        List<int> ids = new ListStack<int>();
-                        for (int i = 0; i < 100; i++)
                         {
-                            if (ws.Cells[3 + i, 1].Value == null)
+                            ExcelWorksheet ws = p.Workbook.Worksheets[1];
+                            var specialityId = new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
+                            var students = new testingDbEntities().Students.Where(t => t.GroupId == groupId && t.SpecialityId == specialityId).ToList();
+                            var accounts = new testingDbEntities().Accounts.ToList();
+                            List<int> ids = new ListStack<int>();
+                            for (int i = 0; i < 100; i++)
                             {
-                                break;
-                            }
-                            var name = ws.Cells[3 + i, 1].Value.ToString();
-                            var surname = ws.Cells[3 + i, 2].Value.ToString();
-                            var studId = Convert.ToInt32(ws.Cells[3 + i, 3].Value);
-                            var login = Convert.ToString(ws.Cells[3 + i, 4].Value);
-                            var password = Convert.ToString(ws.Cells[3 + i, 5].Value);
-                            ids.Add(studId);
-                            if (!students.Any(t => t.Id == studId))
-                            {
-                                new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
-                            }
-                            else
-                            {
-                                var stud = students.FirstOrDefault(t => t.Id == studId);
-                                var acc = accounts.FirstOrDefault(t => t.Id == stud.AccountId);
-                                if (stud.Name != name || stud.Surname != surname || acc.Login == login || acc.Password == password)
+                                if (ws.Cells[3 + i, 1].Value == null)
                                 {
-                                    new Editing().EditStudent((int)studId, name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), login, password, groupId);
+                                    break;
+                                }
+                                var name = ws.Cells[3 + i, 1].Value.ToString();
+                                var surname = ws.Cells[3 + i, 2].Value.ToString();
+                                var studId = Convert.ToInt32(ws.Cells[3 + i, 3].Value);
+                                var login = Convert.ToString(ws.Cells[3 + i, 4].Value);
+                                var password = Convert.ToString(ws.Cells[3 + i, 5].Value);
+                                ids.Add(studId);
+                                if (!students.Any(t => t.Id == studId))
+                                {
+                                    new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
+                                }
+                                else
+                                {
+                                    var stud = students.FirstOrDefault(t => t.Id == studId);
+                                    var acc = accounts.FirstOrDefault(t => t.Id == stud.AccountId);
+                                    if (stud.Name != name || stud.Surname != surname || acc.Login == login || acc.Password == password)
+                                    {
+                                        new Editing().EditStudent((int)studId, name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), login, password, groupId);
+                                    }
                                 }
                             }
-                        }
-                        foreach (var student in students)
-                        {
-                            if (!ids.Contains(student.Id))
+                            foreach (var student in students)
                             {
-                                new Deleting().DeleteStudent(student.Id);
+                                if (!ids.Contains(student.Id))
+                                {
+                                    new Deleting().DeleteStudent(student.Id);
+                                }
                             }
+                            TempData["Success"] = "Зміни по студентах групи - \"" + new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).Name + "\" було успішно збережено!";
+                            p.Dispose();
                         }
-                        TempData["Success"] = "Зміни по студентах групи - \"" + new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).Name + "\" було успішно збережено!";
-                        p.Dispose();
-                    }
 
+                    }
                 }
+                catch (Exception)
+                {
+                    TempData["Fail"] =
+                        "Невірне оформлення документу! Будь ласка, завантажте шаблон і заповніть згідно вказаних праввил.";
+                }
+                
             }
             return RedirectToAction("Students");
         }

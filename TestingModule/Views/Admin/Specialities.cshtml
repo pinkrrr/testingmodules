@@ -3,7 +3,23 @@
     ViewBag.Title = "Specialities";
     Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
-@TempData["Success"]
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
+
 <h2>Спеціальності</h2>
 
 @if (!Model.Any())

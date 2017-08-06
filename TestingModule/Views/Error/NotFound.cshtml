@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    .w3-btn {width:150px;}
+</style>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Отакої!
+                </h1>
+                <h2>
+                    404
+                </h2>
+                <div class="error-details">
+                    Вибачаємось, сталася помилка, даної сторінки не існує!
+                </div>
+                <div class="error-actions">
+                    <a href="/" class="w3-button w3-black w3-round-xxlarge">
+                        <span class="glyphicon glyphicon-home"></span>
+                        Домашня сторінка
+                    </a><a href="javascript:history.go(-1)" class="w3-button w3-teal w3-round-xxlarge"><span class="glyphicon glyphicon-envelope"></span> Повернутись назад </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

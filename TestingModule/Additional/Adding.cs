@@ -124,5 +124,10 @@ namespace TestingModule.Additional
 
             }
         }
+
+        public void AddNewError(string url)
+        {
+            
+        }
     }
 }
