@@ -149,7 +149,7 @@ namespace TestingModule
 
             routes.MapRoute(
                 name: "admin",
-                url: "admin/{action}/{id}",
+                url: "admin/{action}",
                 defaults: new { controller = "admin", action = "Index"});
 
             routes.MapRoute(
