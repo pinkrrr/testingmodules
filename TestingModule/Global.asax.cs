@@ -32,13 +32,13 @@ namespace TestingModule
             {
                 HttpContext con = HttpContext.Current;
                 var url = con.Request.Url.ToString();
-                new Additional.Adding().AddNewError(url,exept.Message);
+                new Additional.Adding().AddNewError(url, exept.Message);
                 Server.ClearError();
                 Response.Redirect("/Error/ServerError");
             }
-            
+
         }
-        /*
+        
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
         {
             // This is the page
@@ -61,17 +61,5 @@ namespace TestingModule
                 }
             }
         }
-
-        protected void Login1_LoggedIn(object sender, EventArgs e)
-        {
-            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-            var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
-            if (Roles.IsUserInRole("Student"))
-                Response.Redirect("~/Student/Index");
-                else
-                    Response.Redirect("~/Admin/Index");
-            
-        }
-        */
     }
 }
