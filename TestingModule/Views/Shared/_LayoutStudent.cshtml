@@ -3,16 +3,29 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>TestingModule - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
-    <ul>
-        <li><a href="/Student/Index">TestingModule</a></li>
-        <li  style="float:right"><a href="/manage">@User.Identity.Name</a></li>
-        <li style="float:right"><a class="active" href="javascript:document.getElementById('logoutForm').submit()">Вийти</a></li>
-    </ul>
+    @{
+        var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+        var surname = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Surname).Value;
+        <ul>
+            <li><a href="/Student">TestingModule</a></li>
+
+            <li style="float: right"><span>@User.Identity.Name @surname</span></li>
+
+            @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "active-user" }))
+            {
+                @Html.AntiForgeryToken()
+                <li style="float: right">
+                    <a class="active" href="javascript:document.getElementById('logoutForm').submit()">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>Вийти
+                    </a>
+                </li>
+            }
+        </ul>
+    }
 
 
     @Scripts.Render("~/bundles/jquery")

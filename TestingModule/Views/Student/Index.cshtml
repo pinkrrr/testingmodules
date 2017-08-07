@@ -22,10 +22,10 @@
         </div>
     }
 
-    <h2>Дисципліни</h2>
+    <h2>Ви прослуховуєте наступні дисципліни:</h2>
     @if (!Model.Any())
     {
-        <h3>Немає жодної дисципліни...</h3>
+        <h3>У Вас немає жодної дисципліни. Будь ласка, зверніться до Вашого куратора.</h3>
     }
     else
     {
@@ -36,7 +36,7 @@
             {
                 <tr class="table-row">
                     <td class="table-item table-item_name">
-                        <a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a>
+                        @item.Name
                     </td>
                     <td class="table-item table-item_name">
 
