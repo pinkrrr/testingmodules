@@ -1,12 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "admin";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
-<div class="jumbotron">
-    <h1>KROK TESTING</h1>
-    
-    @if (Request.IsAuthenticated)
-    {
-        <h2>Hello </h2>
-    }
-</div>
-
+@if (Request.IsAuthenticated)
+{
+    <h2>Hello </h2>
+}

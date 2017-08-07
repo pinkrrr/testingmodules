@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using TestingModule.Models;
@@ -66,26 +67,14 @@ namespace TestingModule.Additional
             _db.Entry(que).State = EntityState.Deleted;
             _db.SaveChanges();
         }
-        public void DeleteAnswers(List<QueAns> model)
+        public void DeleteAnswer(int answerId)
         {
-            List<int?> answers = new List<int?>();
-            foreach (var item in model)
-            {
-                try
-                {
-                    answers.Add(item.AnswerId);
-                }
-                catch (System.Exception)
-                {
-
-                }
-            }
-            _db.Answers.RemoveRange(_db.Answers.Where(t => !answers.Contains(t.Id) && t.QuestionId == model.FirstOrDefault().QuestionId));
+            _db.Answers.RemoveRange(_db.Answers.Where(t => t.Id == answerId));
             _db.SaveChanges();
         }
-        public void DeleteSpeciality(int specialityId)
+        public void DeleteSpeciality(int SpecialityId)
         {
-            var groups = _db.Groups.Where(t => t.SpecialityId == specialityId).Select(t => t.Id).ToList();
+            var groups = _db.Groups.Where(t => t.SpecialityId == SpecialityId).Select(t => t.Id).ToList();
             foreach (var group in groups)
             {
                 var students = _db.Students.Where(t => t.GroupId == group).Select(t => t.Id).ToList();
@@ -96,21 +85,21 @@ namespace TestingModule.Additional
                 }
                 _db.Students.RemoveRange(_db.Students.Where(t => t.GroupId == group));
             }
-            _db.Groups.RemoveRange(_db.Groups.Where(t => t.SpecialityId == specialityId));
-            var spc = new Speciality() { Id = specialityId };
+            _db.Groups.RemoveRange(_db.Groups.Where(t => t.SpecialityId == SpecialityId));
+            var spc = new Speciality() { Id = SpecialityId };
             _db.Entry(spc).State = EntityState.Deleted;
             _db.SaveChanges();
         }
-        public void DeleteGroup(int groupId)
+        public void DeleteGroup(int GroupId)
         {
-            var students = _db.Students.Where(t => t.GroupId == groupId).Select(t => t.Id).ToList();
+            var students = _db.Students.Where(t => t.GroupId == GroupId).Select(t => t.Id).ToList();
             foreach (var student in students)
             {
                 var id = _db.Students.Where(t => t.Id == student).Select(t => t.AccountId).FirstOrDefault();
                 _db.Accounts.RemoveRange(_db.Accounts.Where(t => t.Id == id));
             }
-            _db.Students.RemoveRange(_db.Students.Where(t => t.GroupId == groupId));
-            var grp = new Group() { Id = groupId };
+            _db.Students.RemoveRange(_db.Students.Where(t => t.GroupId == GroupId));
+            var grp = new Group() { Id = GroupId };
             _db.Entry(grp).State = EntityState.Deleted;
             _db.SaveChanges();
         }

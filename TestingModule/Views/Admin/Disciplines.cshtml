@@ -1,7 +1,25 @@
-﻿@model IEnumerable<TestingModule.Models.Discipline>
+﻿@model IEnumerable<TestingModule.ViewModels.DiscLecotorViewModel>
 
 @{
-    ViewBag.Title = "Disciplines";
+    ViewBag.Title = "Дисципліни";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
+}
+
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
 }
 
 <h2>Дисципліни</h2>
@@ -12,22 +30,45 @@
 else
 {
     <table class="table" border="1">
-        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Дії</th></tr>
+        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Лектор</th><th class="table-header">Дії</th><th>Студенти</th></tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(t => t.Name))
         {
             <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a></td>
+                <td class="table-item table-item_name">
+                    <a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a>
+                </td>
+                <td class="table-item table-item_name">
+
+                    @{
+                        var name = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                    }
+                    @if (name != null)
+                    {
+                        @name.Name
+                    }
+
+                    @{
+                        var surname = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                    }
+                    @if (surname != null)
+                    {
+                        @surname.Surname
+                    }
+                </td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="disciplines/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
 
                 </td>
+                <td class="table-item table-item_students">
+                    <a class="" href="disciplines/@item.Id/disciplinestudents">Студенти</a>
+                </td>
             </tr>
-        }
+                        }
 
     </table>
-}
+                        }
 
 
 
@@ -48,11 +89,15 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditDiscipline", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditDiscipline", "admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
+                    <div class="selectmenu">
+                        <div class="selectmenu_title">Оберіть лектора</div>
+                    @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Name", "Surname"), "Оберіть лектора")
+                    </div>
                     @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
@@ -66,7 +111,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нову дисципліну</div>
-            @using (Html.BeginForm("NewDiscipline", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewDiscipline", "admin", FormMethod.Post))
             {
                 <form>
                     <div>
@@ -76,12 +121,15 @@ else
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" , @placeholder="Введіть назву дисципліни", @required = "required"})
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву дицсипліни", @required = "required" })
                         }
+                        <div>
+                            @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"),"Оберіть лектора")
+                        </div>
                     </div>
                     <div>
                         <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>

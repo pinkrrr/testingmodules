@@ -30,6 +30,16 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="ExeptionLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" MaxLength="100" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+          <Property Name="Date" Type="nvarchar" MaxLength="20" />
+          <Property Name="Resolved" Type="bit" />
+        </EntityType>
         <EntityType Name="Groups">
           <Key>
             <PropertyRef Name="Id" />
@@ -141,6 +151,7 @@
           <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Disciplines" EntityType="Self.Disciplines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExeptionLogs" EntityType="Self.ExeptionLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LectorDisciplines" EntityType="Self.LectorDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lectors" EntityType="Self.Lectors" Schema="dbo" store:Type="Tables" />
@@ -174,6 +185,7 @@
           <EntitySet Name="Students" EntityType="testingDbModel.Student" />
           <EntitySet Name="LectorDisciplines" EntityType="testingDbModel.LectorDiscipline" />
           <EntitySet Name="StudentDisciplines" EntityType="testingDbModel.StudentDiscipline" />
+          <EntitySet Name="ExeptionLogs" EntityType="testingDbModel.ExeptionLog" />
         </EntityContainer>
         <EntityType Name="Answer">
           <Key>
@@ -306,6 +318,16 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExeptionLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Url" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Resolved" Type="Boolean" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -456,6 +478,17 @@
               <MappingFragment StoreEntitySet="StudentDisciplines">
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExeptionLogs">
+            <EntityTypeMapping TypeName="testingDbModel.ExeptionLog">
+              <MappingFragment StoreEntitySet="ExeptionLogs">
+                <ScalarProperty Name="Resolved" ColumnName="Resolved" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -1,0 +1,56 @@
+﻿.ui-selectmenu-button.ui-button {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    display: block;
+    padding: 10px;
+    margin-bottom: 20px;
+    outline: none;
+    background-color: #ffffff;
+    transition: background .2s;
+}
+
+.ui-selectmenu-button.ui-button:focus{
+    background-color: #ffffff;
+    border: 1px solid #c5c5c5;
+    color: #454545;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    transition: .2s;
+    background: #4cacff;
+    border: 0;
+}
+
+.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
+    margin: 0;
+}
+
+.accordion.ui-accordion{
+    transition: opacity .3s;
+    opacity: 1;
+}
+
+.ui-accordion .ui-accordion-content{
+    padding: 20px;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active{
+    background-color: #4cacff;
+}
+
+.ui-corner-bottom{
+    border-radius: 0;
+}
+
+.ui-accordion .ui-accordion-header:first-child{
+    margin-top: 0;
+}
+
+.ui-accordion .ui-accordion-header{
+    margin-top: 20px;
+}
+
+.ui-checkboxradio-label:focus{
+    outline: none;
+}

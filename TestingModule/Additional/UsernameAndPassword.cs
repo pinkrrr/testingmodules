@@ -45,7 +45,17 @@ namespace TestingModule.Additional
                 {"ь",""},
                 {"э","e"},
                 {"ю","iu"},
-                {"я","ia"}
+                {"я","ia"},
+                {"1","1"},
+                {"2","2"},
+                {"3","3"},
+                {"4","4"},
+                {"5","5"},
+                {"6","6"},
+                {"7","7"},
+                {"8","8"},
+                {"9","9"},
+                {"0","0"}
             };
         public string TranslitFileName(string source)
         {
@@ -59,16 +69,20 @@ namespace TestingModule.Additional
 
                     if (ch.ToString() == opt[0])
                     {
-                        try
+                        if (source.IndexOf(ch) == 0)
+                        {
+                            result += "h";
+                        }
+                        else
                         {
                             if (source[source.IndexOf(ch) - 1].ToString() == "з")
                             {
                                 result += "gh";
                             }
-                        }
-                        catch
-                        {
-                            result += "h";
+                            else
+                            {
+                                result += "h";
+                            }
                         }
                     }
                     else if (ch.ToString() == opt[1] && source.IndexOf(ch) == 0)
@@ -102,7 +116,7 @@ namespace TestingModule.Additional
 
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 result = source;
             }

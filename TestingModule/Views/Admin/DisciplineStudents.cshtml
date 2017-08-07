@@ -1,0 +1,92 @@
+﻿@using System.Web.UI.WebControls
+@model TestingModule.ViewModels.ReasignViewModel
+@{
+    ViewBag.Title = "Слухачі дисципліни";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
+}
+
+
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
+
+
+@if (!Model.Specialities.Any())
+{
+    <h3>Немає жодної спеціальності...</h3>
+}
+<h1>Студенти які слухають курс - @Model.Disciplines.FirstOrDefault().Name</h1>
+@foreach (var spec in Model.Specialities.OrderBy(t => t.Name))
+{
+    if (Model.Groups.All(t => t.SpecialityId != spec.Id))
+    {
+        continue;
+
+    }
+    if (Model.Students.All(t => t.SpecialityId != spec.Id))
+    {
+        continue;
+    }
+
+    <div class="accordion">
+        <div class="accordion_header speciality_header">@spec.Name</div>
+        <div class="accordion_body">
+
+            @foreach (var group in Model.Groups.Where(t => t.SpecialityId == spec.Id).OrderBy(t => t.Name))
+                {
+                <div class="accordion_header group_header">@group.Name</div>
+                <div class="accordion_body">
+                        @using (Html.BeginForm("NewStudentConnections", "admin", FormMethod.Post))
+                    {
+                            <table class="table table__studentsDisciplines" border="1">
+
+                                <tr class="table-row table-header-row">
+                                    <th>Студент</th>
+                                    <th>Слухає дисципліну</th> 
+                                </tr>
+
+                                @foreach (var student in Model.Students.Where(t => t.GroupId == group.Id).OrderBy(t => t.Surname))
+                                {
+                                    var index = Model.StudentDisciplines.IndexOf(Model.StudentDisciplines.FirstOrDefault(t => t.StudentId == student.Id
+                                                                                                                               && t.DisciplineId == Model.Disciplines.FirstOrDefault().Id));
+
+                                    <tr class="table-row">
+                                        <td class="table-item">@student.Surname @student.Name</td>
+                                        <td class="table-item table-item_centered">
+                                            @Html.LabelFor(r => Model.StudentDisciplines[index].IsSelected, "Слухає дисципліну")
+                                            @Html.CheckBoxFor(r => Model.StudentDisciplines[index].IsSelected)
+                                        </td>
+                                        @Html.HiddenFor(r => Model.StudentDisciplines[index].StudentId)
+                                    </tr>
+                                }
+                                @for (int i = 0; i < Model.StudentDisciplines.Count; i++)
+                                {
+                                    @Html.HiddenFor(t => Model.StudentDisciplines[i].DisciplineId);
+                                }
+                            </table>
+                            <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
+                            <div class="selectAllorNobody">
+                                <button class="btnSelectAll"><i class="fa fa-users" aria-hidden="true"></i>Вибрати всіх</button>
+                                <button class="btnSelectNobody"><i class="fa fa-user-times" aria-hidden="true"></i>Зняти всіх</button>
+                            </div>
+                        }
+                    </div>
+            }
+
+        </div>
+    </div>
+
+}
