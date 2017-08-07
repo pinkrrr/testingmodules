@@ -148,13 +148,8 @@ namespace TestingModule
                 defaults: new { controller = "admin", action = "Deletediscipline" });          
 
             routes.MapRoute(
-                name: "admin",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "admin", action = "Index", id = UrlParameter.Optional });
-
-            routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}",
+                name: "Quiz",
+                url: "quiz/{action}",
                 defaults: new { controller = "Quiz", action = "Index" });
 
             routes.MapRoute(
@@ -170,6 +165,7 @@ namespace TestingModule
                 name: "Resolved",
                 url: "dashboard/{exeptionId}/resolved",
                 defaults: new { controller = "Error", action = "Resolved" });
+
             routes.MapRoute(
                 name: "Dashboard",
                 url: "dashboard",
@@ -180,8 +176,15 @@ namespace TestingModule
                 url: "index",
                 defaults: new { controller = "Student", action = "Index" });
 
+            routes.MapRoute(
+                name: "Default",
+                url: "{action}",
+                defaults: new { controller = "account", action = "login" });
 
-
+            routes.MapRoute(
+                name: "admin",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "admin", action = "Index", id = UrlParameter.Optional });
         }
     }
 }
