@@ -175,6 +175,11 @@ namespace TestingModule
                 url: "dashboard",
                 defaults: new { controller = "Error", action = "Dashboard" });
 
+            routes.MapRoute(
+                name: "StudentIndex",
+                url: "index",
+                defaults: new { controller = "Student", action = "Index" });
+
 
 
         }

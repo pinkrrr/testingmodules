@@ -28,14 +28,14 @@ namespace TestingModule
                 Server.ClearError();
                 Response.Redirect("/Error/NotFound");
             }
-            else
-            {
-                HttpContext con = HttpContext.Current;
-                var url = con.Request.Url.ToString();
-                new Additional.Adding().AddNewError(url,exept.Message);
-                Server.ClearError();
-                Response.Redirect("/Error/ServerError");
-            }
+            //else
+            //{
+            //    HttpContext con = HttpContext.Current;
+            //    var url = con.Request.Url.ToString();
+            //    new Additional.Adding().AddNewError(url,exept.Message);
+            //    Server.ClearError();
+            //    Response.Redirect("/Error/ServerError");
+            //}
             
         }
 
@@ -60,6 +60,17 @@ namespace TestingModule
                     return;
                 }
             }
+        }
+
+        protected void Login1_LoggedIn(object sender, EventArgs e)
+        {
+            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+            var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
+            if (Roles.IsUserInRole("Student"))
+                Response.Redirect("~/Student/Index");
+                else
+                    Response.Redirect("~/Admin/Index");
+            
         }
     }
 }

@@ -8,49 +8,17 @@
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
+    <ul>
+        <li><a href="/Student/Index">TestingModule</a></li>
+        <li  style="float:right"><a href="/manage">@User.Identity.Name</a></li>
+        <li style="float:right"><a class="active" href="javascript:document.getElementById('logoutForm').submit()">Вийти</a></li>
+    </ul>
 
-    <div class="main-container">
-        <div class="navbar">
-            @*@Html.ActionLink("Masters of masters", "Index", "admin", new { area = "" }, new { @class = "navbar-logo" })*@
-            <a href="@Url.Action("Index", "admin")" class="navbar-logo" target="_blank"><i class='fa fa-globe' aria-hidden='true'></i>Відкрити сайт</a>
-
-            <div class="navbar-login">
-                @Html.Partial("_LoginPartial")
-            </div>
-
-            <nav class="navbar-nav">
-
-                @{  var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-                    var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
-                    if (Request.IsAuthenticated)
-                    {
-                        if (c.Value.ToString() != "Student")
-                        {
-                            <!--<a href="@Url.Action("Index", "admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
-                            <a href="@Url.Action("Disciplines", "admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
-                        }
-                        if (c.Value.ToString() != "Lecturer")
-                        {
-                            <a href="@Url.Action("Specialities", "admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
-                            <a href="@Url.Action("Lectors", "admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
-                        }
-                    }
-                }
-            </nav>
-            @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })*@
-
-        </div>
-        <div class="body-content">
-            @RenderBody()
-            <footer>
-                <!-- <p>&copy; @DateTime.Now.Year - RBS</p> -->
-            </footer>
-        </div>
-    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
+    @RenderBody()
 </body>
 </html>
