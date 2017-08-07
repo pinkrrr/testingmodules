@@ -38,7 +38,7 @@ namespace TestingModule
             }
 
         }
-        
+        /*
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
         {
             // This is the page
@@ -61,5 +61,6 @@ namespace TestingModule
                 }
             }
         }
+        */
     }
 }

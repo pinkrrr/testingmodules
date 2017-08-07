@@ -88,6 +88,7 @@ namespace TestingModule.Controllers
                         DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
                     new AuthenticationProperties { IsPersistent = false }, ident);
+                    return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
@@ -106,8 +107,9 @@ namespace TestingModule.Controllers
                         DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
                     new AuthenticationProperties { IsPersistent = false }, ident);
+                    return RedirectToAction("Index", "Student");
                 }
-                return RedirectToAction("Index", "admin");
+                
             }
             // invalid username or password
             ModelState.AddModelError("", "invalid username or password");
