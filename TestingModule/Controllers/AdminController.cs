@@ -16,6 +16,7 @@ using Module = TestingModule.Models.Module;
 
 namespace TestingModule.Controllers
 {
+    [CustomAuthorize(RoleName.Administrator,RoleName.Lecturer)]
     public class adminController : Controller
     {
         public ActionResult Index()
