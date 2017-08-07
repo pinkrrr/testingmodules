@@ -18,7 +18,7 @@ namespace TestingModule
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
-
+        
         protected void Application_Error(object sender, EventArgs e)
         {
             Exception exept = Server.GetLastError();
@@ -28,17 +28,17 @@ namespace TestingModule
                 Server.ClearError();
                 Response.Redirect("/Error/NotFound");
             }
-            //else
-            //{
-            //    HttpContext con = HttpContext.Current;
-            //    var url = con.Request.Url.ToString();
-            //    new Additional.Adding().AddNewError(url,exept.Message);
-            //    Server.ClearError();
-            //    Response.Redirect("/Error/ServerError");
-            //}
+            else
+            {
+                HttpContext con = HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Additional.Adding().AddNewError(url,exept.Message);
+                Server.ClearError();
+                Response.Redirect("/Error/ServerError");
+            }
             
         }
-
+        /*
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
         {
             // This is the page
@@ -72,5 +72,6 @@ namespace TestingModule
                     Response.Redirect("~/Admin/Index");
             
         }
+        */
     }
 }

@@ -57,7 +57,7 @@ namespace TestingModule.Controllers
         }
 
         //~Account/Login
-
+        [AllowAnonymous]
         public ActionResult Login()
         {
             var loginForm = new Account();
@@ -65,8 +65,8 @@ namespace TestingModule.Controllers
         }
         
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        
         public ActionResult LoginAttempt(Account account)
         {
             var loginForm = new Account();
