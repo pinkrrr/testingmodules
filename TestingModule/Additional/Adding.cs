@@ -125,9 +125,11 @@ namespace TestingModule.Additional
             }
         }
 
-        public void AddNewError(string url)
+        public void AddNewError(string url, string description)
         {
-            
+            var errorTable = _db.Set<ExeptionLog>();
+            errorTable.Add(new ExeptionLog() { Url = url, Description = description, Date = DateTime.Now.ToString("MM_dd_yyyy_H_mm_ss"), Resolved = false});
+            _db.SaveChanges();
         }
     }
 }

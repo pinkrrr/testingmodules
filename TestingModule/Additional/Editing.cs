@@ -112,5 +112,11 @@ namespace TestingModule.Additional
             ac.Password = pass;
             _db.SaveChanges();
         }
+        public void EditExeption(int exeptionId)
+        {
+            var exl = _db.ExeptionLogs.FirstOrDefault(t => t.Id == exeptionId);
+            exl.Resolved = true;
+            _db.SaveChanges();
+        }
     }
 }

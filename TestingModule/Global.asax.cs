@@ -27,11 +27,11 @@ namespace TestingModule
                 Server.ClearError();
                 Response.Redirect("/Error/NotFound");
             }
-            else if (httpEx.GetHttpCode() == 500)
+            else
             {
                 HttpContext con = HttpContext.Current;
                 var url = con.Request.Url.ToString();
-                new Additional.Adding().AddNewError(url);
+                new Additional.Adding().AddNewError(url,exept.Message);
                 Server.ClearError();
                 Response.Redirect("/Error/ServerError");
             }

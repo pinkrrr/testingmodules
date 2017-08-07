@@ -193,6 +193,9 @@
     <Compile Include="Models\Account.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ExeptionLog.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Lector.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -381,6 +384,7 @@
     <Content Include="Views\Quiz\Index.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\ServerError.cshtml" />
+    <Content Include="Views\Error\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -166,6 +166,17 @@ namespace TestingModule
                 url: "servererror",
                 defaults: new { controller = "Error", action = "ServerError" });
 
+            routes.MapRoute(
+                name: "Resolved",
+                url: "dashboard/{exeptionId}/resolved",
+                defaults: new { controller = "Error", action = "Resolved" });
+            routes.MapRoute(
+                name: "Dashboard",
+                url: "dashboard",
+                defaults: new { controller = "Error", action = "Dashboard" });
+
+
+
         }
     }
 }

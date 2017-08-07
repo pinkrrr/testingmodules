@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TestingModule.Models.ExeptionLog>
+@{
+    ViewBag.Title = "Dasboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Errors dasboard</h2>
+
+@if (!Model.Any())
+{
+    <h3>No one error :)</h3>
+}
+else
+{
+    <table class="table" border="1">
+        <tr class="table-row table-header-row">
+            <th class="table-header">Id</th>
+            <th class="table-header">URL</th>
+            <th class="table-header">Description</th>
+            <th class="table-header">Date</th>
+            <th class="table-header">Resolved?</th>
+        </tr>
+        @foreach (var item in Model.OrderByDescending(t => t.Id))
+        {
+            <tr class="table-row">
+                <td class="table-item table-item">@item.Id</td>
+                <td class="table-item table-item"><a href="@item.Url" class="table-item_name_text">@item.Url</a></td>
+                <td class="table-item">@item.Description</td>
+                <td class="table-item">@item.Date</td>
+                <td class="table-item table-item_edit">
+                    <div data-remove="dashboard/@item.Id/Resolved" class="table-button table-remove-button">
+                        <i class='fa fa-trash' aria-hidden='true'></i>Resolved
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+}
