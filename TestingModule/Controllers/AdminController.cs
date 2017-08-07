@@ -1,11 +1,11 @@
-﻿     using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-     using System.Web;
-     using System.Web.Mvc;
+using System.Web;
+using System.Web.Mvc;
 using Antlr.Runtime.Misc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -55,7 +55,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewDiscipline Name = " + model.Name + " LectorId = " + model.LectorId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
 
             return RedirectToAction("Disciplines");
@@ -69,7 +72,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditDiscipline Name = " + model.Name + " LectorId = " + model.LectorId + " Id = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Disciplines");
         }
@@ -82,7 +88,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteDiscipline ID = " + disciplineId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Disciplines");
         }
@@ -105,7 +114,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewLecture Name = " + model.Name + " DisciplineId = " + model.DisciplineId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectures");
         }
@@ -118,7 +130,10 @@ namespace TestingModule.Controllers
             }
             catch
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditLecture Name = " + model.Name + " DiciplineId = " + model.DisciplineId + " LectureId = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectures");
         }
@@ -131,7 +146,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteLecture Id = " + lectureId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectures");
         }
@@ -157,7 +175,11 @@ namespace TestingModule.Controllers
             }
             catch
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewModule Name = " + model.Name + " LectureId = " + model.LectureId
+                    + " DisciplineId = " + model.DisciplineId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
         }
@@ -170,7 +192,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditModule Name = " + model.Name + " LectureId = " + model.LectureId + " Id = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
         }
@@ -183,7 +208,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteModule Id = " + moduleId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
         }
@@ -225,7 +253,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewQuestion Name = " + model.Question + " LectureId = "
+                    + model.LectureId + " DiscpilineId = " + model.DisciplineId + " ModuleId = " + model.ModuleId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -238,7 +270,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditQuestion Name = " + model.Question + " ModuleId = "
+                    + model.ModuleId + " Id = " + model.QuestionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -251,7 +287,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteQuestion Id = " + questionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -264,7 +303,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewAnswer Name = " + model.Answer + " QuestionId = " + model.QuestionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -288,6 +330,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditAnswer Answers = " + model.FirstOrDefault().Answer + " AnswerId = "
+                    + model.FirstOrDefault().AnswerId + " Question = " + model.FirstOrDefault().Question + " QuestionId = " + model.FirstOrDefault().QuestionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -300,6 +347,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteAnswer Id = " + answerId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -319,7 +370,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewSpeciality Name = " + model.Name);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Specialities");
         }
@@ -332,18 +386,26 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditSpeciality Name = " + model.Name + " Id = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Specialities");
         }
-        public ActionResult DeleteSpeciality(int SpecialityId)
+        public ActionResult DeleteSpeciality(int specialityId)
         {
             try
             {
-                new Deleting().DeleteSpeciality(SpecialityId);
+                new Deleting().DeleteSpeciality(specialityId);
                 TempData["Success"] = "Спеціальність була успішно видалена!";
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteSpeciality Id = " + specialityId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Specialities");
         }
@@ -351,10 +413,10 @@ namespace TestingModule.Controllers
 
 
         //Groups
-        public ActionResult Groups(int SpecialityId)
+        public ActionResult Groups(int specialityId)
         {
             var db = new testingDbEntities();
-            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == SpecialityId).ToList();
+            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
             ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc };
             return View(test);
@@ -368,7 +430,10 @@ namespace TestingModule.Controllers
             }
             catch
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewGroup Name = " + model.Name + " SpecialityId = " + model.SpecialityId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Groups");
         }
@@ -381,18 +446,26 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditGroup Name = " + model.Name + " GroupId = " + model.Id + " SpecialityId = " + model.SpecialityId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Groups");
         }
-        public ActionResult DeleteGroup(int GroupId)
+        public ActionResult DeleteGroup(int groupId)
         {
             try
             {
-                new Deleting().DeleteGroup(GroupId);
+                new Deleting().DeleteGroup(groupId);
                 TempData["Success"] = "Групу було успішно видалено!";
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteGroup Id = " + groupId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Groups");
         }
@@ -422,7 +495,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewStudent Name = " + model.Name + " Surname = " + model.Surname + " SpecialityId = "
+                    + model.SpecialityId + " GroupId = " + model.GroupId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Students");
         }
@@ -477,7 +554,7 @@ namespace TestingModule.Controllers
                         "2 - після заврешення редагування документу, збережіть його і завантажте на сайті в необхідну групу.";
                     filter = "B";
                 }
-                using (ExcelRange rng = ws.Cells["A1:"+filter+"2"])
+                using (ExcelRange rng = ws.Cells["A1:" + filter + "2"])
                 {
                     rng.Style.Font.Bold = true;
                     rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -491,7 +568,7 @@ namespace TestingModule.Controllers
                 ws.Cells[2, 2].Value = "Ім'я";
                 ws.Cells[1, 7].Value =
                     "1 - для того, щоб додати нового студента, введіть його ім'я та прізвище з нового рядка в колонка А та В";
-                
+
                 foreach (var stud in students)
                 {
                     var row = 3 + students.IndexOf(stud);
@@ -501,7 +578,7 @@ namespace TestingModule.Controllers
                     ws.Cells[row, 4].Value = account.FirstOrDefault(t => t.Id == stud.AccountId).Login;
                     ws.Cells[row, 5].Value = account.FirstOrDefault(t => t.Id == stud.AccountId).Password;
                 }
-                ws.Cells["A1:"+filter+"1"].Merge = true;
+                ws.Cells["A1:" + filter + "1"].Merge = true;
                 ws.Column(7).AutoFit();
                 ws.Cells.AutoFitColumns();
                 //Write it back to the client
@@ -529,7 +606,7 @@ namespace TestingModule.Controllers
             if (Request.Files.Count != 0)
             {
                 string ext = Path.GetExtension(Request.Files[0].FileName);
-                var validExtensions = new[] {".xlsx", ".xls", "csv"};
+                var validExtensions = new[] { ".xlsx", ".xls", "csv" };
                 if (!validExtensions.Contains(ext))
                 {
                     TempData["Fail"] =
@@ -593,7 +670,7 @@ namespace TestingModule.Controllers
                     TempData["Fail"] =
                         "Невірне оформлення документу! Будь ласка, завантажте шаблон і заповніть згідно вказаних праввил.";
                 }
-                
+
             }
             return RedirectToAction("Students");
         }
@@ -606,7 +683,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditStudent Name = " + model.Name + " Surname = " + model.Surname
+                    + " Login = " + model.Login + " Password = " + model.Password + " GroupId = " + model.GroupId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Students");
         }
@@ -619,7 +700,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteStudent ID = " + studentId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Students");
         }
@@ -653,7 +737,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewLector Name = " + model.Name + " Surname = " + model.Surname);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectors");
         }
@@ -666,7 +753,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
+                    + model.Surname + " Id = " + model.Id + " Login = " + model.Login + " Password = " + model.Password);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectors");
         }
@@ -679,7 +770,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteLector Id = " + lectorId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectors");
         }
@@ -739,7 +833,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewStudentConnetctions");
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("DisciplineStudents");
         }
