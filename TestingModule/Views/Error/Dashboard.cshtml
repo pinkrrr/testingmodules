@@ -28,12 +28,22 @@ else
                 <td class="table-item">@item.Description</td>
                 <td class="table-item">@item.Date</td>
                 <td class="table-item table-item_edit">
-                    <div data-remove="dashboard/@item.Id/Resolved" class="table-button table-remove-button">
-                        <i class='fa fa-trash' aria-hidden='true'></i>Resolved
-                    </div>
+                    <div data-remove="Dashboard/@item.Id/Resolved" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Resolved</div>
                 </td>
             </tr>
         }
 
     </table>
+
 }
+<div class="popup popup-remove">
+    <div class="popup-body">
+        <div class="popup-content">
+            <div class="popup-title">Really resolved <span></span>?</div>
+            <form>
+                <button class="btn popup-btn popup-remove-btn">Yes</button>
+                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Nope</button>
+            </form>
+        </div>
+    </div>
+</div>

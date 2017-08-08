@@ -169,7 +169,7 @@ namespace TestingModule
 
             routes.MapRoute(
                 name: "Resolved",
-                url: "dashboard/{exeptionId}/resolved",
+                url: "Error/Dashboard/{exeptionId}/Resolved",
                 defaults: new { controller = "Error", action = "Resolved" });
 
             routes.MapRoute(
