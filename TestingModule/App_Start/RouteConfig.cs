@@ -159,7 +159,7 @@ namespace TestingModule
 
             routes.MapRoute(
                 name: "NotFound",
-                url: "notfount",
+                url: "NotFound",
                 defaults: new { controller = "Error", action = "NotFound" });
 
             routes.MapRoute(
