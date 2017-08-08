@@ -52,26 +52,51 @@ namespace TestingModule.Additional
             specialityTable.Add(new Speciality() { Id = last, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewGroup(string name, int specialityId)
+        public void AddNewGroup(string name, int SpecialityId)
         {
             var last = _db.Groups.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var groupsTable = _db.Set<Group>();
-            groupsTable.Add(new Group() { Id = last, SpecialityId = specialityId, Name = name });
+            groupsTable.Add(new Group() { Id = last, SpecialityId = SpecialityId, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewStudent(string name, string surname, int groupId, int specialityId)
+        public void AddNewStudent(string name, string surname, int GroupId, int SpecialityId)
         {
             UsernameAndPassword usernameAndPassword = new UsernameAndPassword();
-            var username = usernameAndPassword.TranslitFileName(name.ToLower()) + "." +
+            var group = _db.Groups.FirstOrDefault(t => t.Id == GroupId).Name;
+            var shortName = "";
+            var numbers = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
+            foreach (var part in group.Split(' '))
+            {
+                if (numbers.Contains(part[0].ToString()))
+                {
+                    for (int i = 0; i < part.Length; i++)
+                    {
+                        if (numbers.Contains(part[i].ToString()))
+                        {
+                            shortName += part[i];
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    shortName += part.Substring(0, 1);
+                }
+            }
+            var username = usernameAndPassword.TranslitFileName(shortName.ToLower()) + "."
+                + usernameAndPassword.TranslitFileName(name.ToLower()) + "." +
                            usernameAndPassword.TranslitFileName(surname.ToLower());
             var password = usernameAndPassword.Password();
             var accountsTable = _db.Set<Account>();
             accountsTable.Add(new Account() { Login = username, Password = password, RoleId = 2 });
             _db.SaveChanges();
 
-            var last = _db.Accounts.FirstOrDefault(t => t.Login == username);
+            var last = _db.Accounts.FirstOrDefault(t => t.Login == username && t.Password == password);
             var studentsTable = _db.Set<Student>();
-            studentsTable.Add(new Student() { SpecialityId = specialityId, GroupId = groupId, Name = name, Surname = surname, AccountId = last.Id });
+            studentsTable.Add(new Student() { SpecialityId = SpecialityId, GroupId = GroupId, Name = name, Surname = surname, AccountId = last.Id });
             _db.SaveChanges();
         }
 
@@ -123,6 +148,13 @@ namespace TestingModule.Additional
             {
 
             }
+        }
+
+        public void AddNewError(string url, string description)
+        {
+            var errorTable = _db.Set<ExeptionLog>();
+            errorTable.Add(new ExeptionLog() { Url = url, Description = description, Date = DateTime.Now.ToString("MM_dd_yyyy_H_mm_ss"), Resolved = false });
+            _db.SaveChanges();
         }
     }
 }

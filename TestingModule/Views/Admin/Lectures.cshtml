@@ -1,9 +1,26 @@
 ﻿@model TestingModule.ViewModels.ReasignViewModel
 
 @{
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Лекції";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
 
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
 
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
 @if (!Model.Lectures.Any())
@@ -47,7 +64,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нову дисципліну</div>
-            @using (Html.BeginForm("NewLecture", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewLecture", "admin", FormMethod.Post))
             {
                 <form>
                     <div>
@@ -57,11 +74,11 @@ else
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, new { @class = "input-text" , @placeholder = "Введіть назву лекції", @required = "required" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, name.Name = "", new { @class = "input-text" , @placeholder = "Введіть назву лекції", @required = "required" })
                         }
                     </div>
                     <div>
@@ -77,11 +94,11 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditLecture", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditLecture", "admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.Lectures.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Lectures.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву лекції", @required = "required" })
                     <div>
                         @Html.DropDownListFor(model => model.Lectures.FirstOrDefault().DisciplineId, new SelectList(Model.Disciplines, "Id", "Name", new {@id = "disciplineId"}), "Оберіть дисципліну")
                     </div>

@@ -8,6 +8,7 @@ using TestingModule.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System.Web.Routing;
 
 namespace TestingModule.Controllers
 {
@@ -57,25 +58,29 @@ namespace TestingModule.Controllers
         }
 
         //~Account/Login
-
+        [AllowAnonymous]
         public ActionResult Login()
         {
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToHome();
+            }
             var loginForm = new Account();
             return View("Login", loginForm);
         }
-        
+
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        
         public ActionResult LoginAttempt(Account account)
         {
             var loginForm = new Account();
-            if (AccountValid(account.Login,account.Password))
+            if (AccountValid(account.Login, account.Password))
             {
                 //var accounts = _context.Accounts.ToList();
                 var roles = _context.Roles.ToList();
                 account = _context.Accounts.SingleOrDefault(a => a.Login == account.Login && a.Password == account.Password);
-                if (account.RoleId != _context.Roles.Where(r => r.Name == "Student").Select(r => r.Id).SingleOrDefault())
+                if (account.RoleId != _context.Roles.Where(r => r.Name == RoleName.Student).Select(r => r.Id).SingleOrDefault())
                 {
                     var ident = new ClaimsIdentity(
                         new[]
@@ -88,13 +93,14 @@ namespace TestingModule.Controllers
                         DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
                     new AuthenticationProperties { IsPersistent = false }, ident);
+                    return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
-                    Student student = _context.Students.SingleOrDefault(s=>s.AccountId==account.Id);
+                    Student student = _context.Students.SingleOrDefault(s => s.AccountId == account.Id);
                     var ident = new ClaimsIdentity(
                     new[]
-                        { 
+                        {
                             new Claim(ClaimTypes.NameIdentifier, account.Login),
                             new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
                             new Claim(ClaimTypes.Name,student.Name),
@@ -106,8 +112,9 @@ namespace TestingModule.Controllers
                         DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
                     new AuthenticationProperties { IsPersistent = false }, ident);
+                    return RedirectToAction("Index", "Student");
                 }
-                return RedirectToAction("Index", "Admin");
+
             }
             // invalid username or password
             ModelState.AddModelError("", "invalid username or password");
@@ -119,10 +126,40 @@ namespace TestingModule.Controllers
             return accounts.Any(a => a.Login == username && a.Password == password);
         }
 
+        public ActionResult RedirectToHome()
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            var role = claimsIdentity.FindFirst(ClaimTypes.Role).Value.ToString();
+            if(role==RoleName.Student)
+            {
+                return RedirectToAction("Index", "Student");
+            }
+            return RedirectToAction("Index", "Admin");
+        }
+
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return RedirectToAction("Index", "Admin");
+            return RedirectToAction("Login", "Account");
+        }
+    }
+    public class CustomAuthorize : AuthorizeAttribute
+    {
+        public CustomAuthorize(params string[] roles) : base()
+        {
+            Roles = string.Join(",", roles);
+        }
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
+            {
+                base.HandleUnauthorizedRequest(filterContext);
+            }
+            else
+            {
+                filterContext.Result = new RedirectToRouteResult(new
+                RouteValueDictionary(new { controller = "Error", action = "NotFound" }));
+            }
         }
     }
 }

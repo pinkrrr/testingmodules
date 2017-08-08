@@ -1,7 +1,23 @@
 ﻿@model TestingModule.ViewModels.ReasignViewModel
 @{
-    ViewBag.Title = "Groups";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Групи";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
+}
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
 }
 
 
@@ -48,13 +64,13 @@ else
 <div class="popup popup-edit">
     <div class="popup-body">
         <div class="popup-content">
-            @using (Html.BeginForm("EditGroup", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditGroup", "admin", FormMethod.Post))
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.Groups.FirstOrDefault().Name, new { @class = "input-text" })
+                    @Html.TextBoxFor(model => model.Groups.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required" })
                     <div>
-                        @Html.DropDownListFor(model => model.Groups.FirstOrDefault().SpecialityId, new SelectList(Model.Specialities, "Id", "Name", new { @id = "specialityId" }), "Оберіть спеціальність")
+                        @Html.DropDownListFor(model => model.Groups.FirstOrDefault().SpecialityId, new SelectList(Model.Specialities, "Id", "Name", new { @id = "SpecialityId" }), "Оберіть спеціальність")
                     </div>
                     @Html.HiddenFor(model => model.Groups.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
@@ -69,7 +85,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Додати нову групу</div>
-            @using (Html.BeginForm("NewGroup", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("NewGroup", "admin", FormMethod.Post))
             {
                 <form>
                     <div>
@@ -79,11 +95,11 @@ else
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required", })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required" })
                         }
                     </div>
                     <div>

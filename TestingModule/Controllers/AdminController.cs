@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using Antlr.Runtime.Misc;
-using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using TestingModule.Additional;
 using TestingModule.Models;
 using TestingModule.ViewModels;
@@ -13,7 +16,8 @@ using Module = TestingModule.Models.Module;
 
 namespace TestingModule.Controllers
 {
-    public class AdminController : Controller
+    [CustomAuthorize(RoleName.Administrator,RoleName.Lecturer)]
+    public class adminController : Controller
     {
         public ActionResult Index()
         {
@@ -52,6 +56,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewDiscipline Name = " + model.Name + " LectorId = " + model.LectorId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
 
             return RedirectToAction("Disciplines");
@@ -60,15 +68,15 @@ namespace TestingModule.Controllers
         {
             try
             {
-                if (model.LectorId != null)
-                {
-                    new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
-                    TempData["Success"] = "Зміни було успішно збережено";
-                }
+                new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
+                TempData["Success"] = "Зміни було успішно збережено";
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditDiscipline Name = " + model.Name + " LectorId = " + model.LectorId + " Id = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Disciplines");
         }
@@ -81,9 +89,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteDiscipline ID = " + disciplineId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
-
             return RedirectToAction("Disciplines");
         }
 
@@ -105,7 +115,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewLecture Name = " + model.Name + " DisciplineId = " + model.DisciplineId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectures");
         }
@@ -118,7 +131,10 @@ namespace TestingModule.Controllers
             }
             catch
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditLecture Name = " + model.Name + " DiciplineId = " + model.DisciplineId + " LectureId = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectures");
         }
@@ -131,7 +147,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteLecture Id = " + lectureId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectures");
         }
@@ -157,7 +176,11 @@ namespace TestingModule.Controllers
             }
             catch
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewModule Name = " + model.Name + " LectureId = " + model.LectureId
+                    + " DisciplineId = " + model.DisciplineId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
         }
@@ -170,7 +193,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditModule Name = " + model.Name + " LectureId = " + model.LectureId + " Id = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
         }
@@ -183,7 +209,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteModule Id = " + moduleId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
         }
@@ -225,7 +254,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewQuestion Name = " + model.Question + " LectureId = "
+                    + model.LectureId + " DiscpilineId = " + model.DisciplineId + " ModuleId = " + model.ModuleId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -238,6 +271,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditQuestion Name = " + model.Question + " ModuleId = "
+                    + model.ModuleId + " Id = " + model.QuestionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -250,6 +288,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteQuestion Id = " + questionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -262,6 +304,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewAnswer Name = " + model.Answer + " QuestionId = " + model.QuestionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -275,13 +321,21 @@ namespace TestingModule.Controllers
                     {
                         new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
                     }
-                    new Editing().EditQuestion(model.FirstOrDefault().QuestionId, model.FirstOrDefault().Question.TrimEnd().TrimStart()
-                        , model.FirstOrDefault().ModuleId);
+                    var firstOrDefault = model.FirstOrDefault();
+                    if (firstOrDefault != null)
+                        new Editing().EditQuestion(firstOrDefault.QuestionId,
+                            firstOrDefault.Question.TrimEnd().TrimStart()
+                            , firstOrDefault.ModuleId);
                 }
                 TempData["Success"] = "Модуль був успішно видалений!";
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditAnswer Answers = " + model.FirstOrDefault().Answer + " AnswerId = "
+                    + model.FirstOrDefault().AnswerId + " Question = " + model.FirstOrDefault().Question + " QuestionId = " + model.FirstOrDefault().QuestionId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -294,6 +348,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteAnswer Id = " + answerId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Questions");
         }
@@ -313,7 +371,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
-
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewSpeciality Name = " + model.Name);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Specialities");
         }
@@ -326,6 +387,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditSpeciality Name = " + model.Name + " Id = " + model.Id);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Specialities");
         }
@@ -338,6 +403,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteSpeciality Id = " + specialityId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Specialities");
         }
@@ -362,7 +431,10 @@ namespace TestingModule.Controllers
             }
             catch
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewGroup Name = " + model.Name + " SpecialityId = " + model.SpecialityId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Groups");
         }
@@ -373,8 +445,12 @@ namespace TestingModule.Controllers
                 new Editing().EditGroup(model.Id, model.Name.TrimEnd().TrimStart(), model.SpecialityId);
                 TempData["Success"] = "Зміни було успішно збережено!";
             }
-            catch (Exception )
+            catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditGroup Name = " + model.Name + " GroupId = " + model.Id + " SpecialityId = " + model.SpecialityId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Groups");
         }
@@ -387,17 +463,21 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteGroup Id = " + groupId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Groups");
         }
 
         //Students
-        public ActionResult Students(int groupId)
+        public ActionResult Students(int GroupId)
         {
             var db = new testingDbEntities();
-            var specId = db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
+            var specId = db.Groups.FirstOrDefault(t => t.Id == GroupId).SpecialityId;
             List<int> accList = new List<int>();
-            IEnumerable<Student> std = db.Students.Where(t => t.GroupId == groupId).ToList();
+            IEnumerable<Student> std = db.Students.Where(t => t.GroupId == GroupId).ToList();
             foreach (var student in std)
             {
                 accList.Add(student.AccountId);
@@ -412,140 +492,186 @@ namespace TestingModule.Controllers
             try
             {
                 new Adding().AddNewStudent(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.GroupId, model.SpecialityId);
-                TempData["Success"] = "Студент - \"" + model.Name.TrimEnd().TrimStart() +" " + model.Surname.TrimEnd().TrimStart() + "\" був успішно доданий!";
+                TempData["Success"] = "Студент - \"" + model.Name.TrimEnd().TrimStart() + " " + model.Surname.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch (Exception)
             {
-                // ignored
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewStudent Name = " + model.Name + " Surname = " + model.Surname + " SpecialityId = "
+                    + model.SpecialityId + " GroupId = " + model.GroupId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Students");
         }
-        public ActionResult DownloadStudentExcel(int groupId)
-        {
-            try
-            {
-                System.IO.DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Temp");
-                foreach (FileInfo item in di.GetFiles())
-                {
-                    item.Delete();
-                }
-            }
-            catch (Exception e)
-            {
 
-            }
+        public ActionResult DownloadStudentExcel(int GroupId)
+        {
             var db = new testingDbEntities();
-            var group = db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
-            var students = db.Students.Where(t => t.GroupId == groupId).ToList();
+            var group = db.Groups.FirstOrDefault(t => t.Id == GroupId).Name;
+            var students = db.Students.Where(t => t.GroupId == GroupId).ToList();
             var account = db.Accounts.ToList();
-            var name = group + ".xls";
-            var path = AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"Temp\" + name;
-            var file = File(path, System.Net.Mime.MediaTypeNames.Application.Octet, name);
-            Application Inte;
-            _Workbook intbook;
-            _Worksheet intsheet;
-            Inte = new Application();
-            intbook = Inte.Workbooks.Open(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Templates\studentsTemplate.xlsx");
-            try
-            {
-                intsheet = (_Worksheet)Inte.ActiveSheet;
-                intsheet.Name = DateTime.Now.ToString(group);
-                intsheet.Cells[1, 1] = group;
-                foreach (var student in students)
-                {
-                    intsheet.Cells[3 + students.IndexOf(student), 1] = student.Name;
-                    intsheet.Cells[3 + students.IndexOf(student), 2] = student.Surname;
-                    intsheet.Cells[3 + students.IndexOf(student), 3] = student.Id;
-                    intsheet.Cells[3 + students.IndexOf(student), 4] = account.FirstOrDefault(t => t.Id == student.AccountId).Login;
-                    intsheet.Cells[3 + students.IndexOf(student), 5] = account.FirstOrDefault(t => t.Id == student.AccountId).Password;
-                }
-                intsheet.Columns.AutoFit();
-                intsheet.SaveAs(path);
-                intbook.Close();
-            }
-            catch (Exception)
-            {
-                intbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
-                Inte.Quit();
-            }
-            return File(path, System.Net.Mime.MediaTypeNames.Application.Octet, name);
-        }
-        [HttpPost]
-        public ActionResult UploadStudentExcel(int groupId, int specialityId)
-        {
-            try
-            {
-                System.IO.DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin\Debug", "") + @"\Temp");
-                foreach (FileInfo item in di.GetFiles())
-                {
-                    item.Delete();
-                }
-            }
-            catch (Exception)
-            {
-            }
 
-            if (Request.Files.Count > 0)
+            using (ExcelPackage pck = new ExcelPackage())
             {
-                var file = Request.Files[0];
-
-                if (file != null && file.ContentLength > 0)
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add(group);
+                var filter = "";
+                if (students.Count != 0)
                 {
-                    var fileName = Path.GetFileName(file.FileName.Replace(".xls", "").Replace(".xlsx", "") + DateTime.Now.ToString("MM_dd_yyyy_H_mm_ss") + ".xls");
-                    var path = Path.Combine(Server.MapPath("~/Temp/"), fileName);
-                    file.SaveAs(path);
-                    Application Inte;
-                    _Workbook intbook;
-                    _Worksheet intsheet;
-                    Inte = new Application();
-                    intbook = Inte.Workbooks.Open(path);
-                    intsheet = (_Worksheet)Inte.ActiveSheet;
-                    try
+                    using (ExcelRange rng = ws.Cells["G1:G4"])
                     {
-                        var count = intsheet.Cells[1, 8].Value;
-                        var students = new testingDbEntities().Students.Where(t => t.GroupId == groupId && t.SpecialityId == specialityId).ToList();
-                        var accounts = new testingDbEntities().Accounts.ToList();
-                        List<int?> ids = new ListStack<int?>();
-                        for (int i = 0; i < count; i++)
+                        rng.Style.Font.Size = 12;
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rng.Style.Fill.BackgroundColor.SetColor(Color.Black);
+                        rng.Style.Font.Color.SetColor(Color.White);
+                        rng.Style.Border.BorderAround(ExcelBorderStyle.Thin, System.Drawing.Color.White);
+                        rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    }
+                    ws.Cells[2, 3].Value = "StudentId";
+                    ws.Cells[2, 4].Value = "Обліковий запис";
+                    ws.Cells[2, 5].Value = "Пароль";
+                    ws.Cells[2, 7].Value =
+                        "2 - для того, щоб редагувати ім'я, прізвище, обліковий запис, або пароль студента, змініть необхідні дані на його рядку в колонках рядка в колонка A, B, D, або E";
+                    ws.Cells[3, 7].Value =
+                        "3 - для того, щоб видалити студента, видаліть рядок студента повністю за допомогою виділення рядка, та його видалення. Важливо, щоб між рядками студентів не було порожних рядків!";
+                    ws.Cells[4, 7].Value =
+                        "4 - після заврешення редагування документу, збережіть його і завантажте на сайті в необхідну групу.";
+                    filter = "E";
+                }
+                else
+                {
+                    using (ExcelRange rng = ws.Cells["G1:G2"])
+                    {
+                        rng.Style.Font.Size = 12;
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rng.Style.Fill.BackgroundColor.SetColor(Color.Black);
+                        rng.Style.Font.Color.SetColor(Color.White);
+                        rng.Style.Border.BorderAround(ExcelBorderStyle.Thin, System.Drawing.Color.White);
+                        rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    }
+                    ws.Cells[2, 7].Value =
+                        "2 - після заврешення редагування документу, збережіть його і завантажте на сайті в необхідну групу.";
+                    filter = "B";
+                }
+                using (ExcelRange rng = ws.Cells["A1:" + filter + "2"])
+                {
+                    rng.Style.Font.Bold = true;
+                    rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    rng.Style.Fill.BackgroundColor.SetColor(Color.Black);
+                    rng.Style.Font.Color.SetColor(Color.White);
+                    rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+                ws.Cells[1, 1].Value = group;
+                ws.Cells[1, 1].Style.Font.Size = 14;
+                ws.Cells[2, 1].Value = "Прізвище";
+                ws.Cells[2, 2].Value = "Ім'я";
+                ws.Cells[1, 7].Value =
+                    "1 - для того, щоб додати нового студента, введіть його ім'я та прізвище з нового рядка в колонка А та В";
+
+                foreach (var stud in students)
+                {
+                    var row = 3 + students.IndexOf(stud);
+                    ws.Cells[row, 1].Value = stud.Surname;
+                    ws.Cells[row, 2].Value = stud.Name;
+                    ws.Cells[row, 3].Value = stud.Id;
+                    ws.Cells[row, 4].Value = account.FirstOrDefault(t => t.Id == stud.AccountId).Login;
+                    ws.Cells[row, 5].Value = account.FirstOrDefault(t => t.Id == stud.AccountId).Password;
+                }
+                ws.Cells["A1:" + filter + "1"].Merge = true;
+                ws.Column(7).AutoFit();
+                ws.Cells.AutoFitColumns();
+                //Write it back to the client
+                using (var memoryStream = new MemoryStream())
+                {
+                    var fileName = group;
+                    Encoding encoding = Encoding.UTF8;
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.Charset = encoding.EncodingName;
+                    Response.ContentEncoding = Encoding.Unicode;
+                    Response.AddHeader("content-disposition", "attachment; filename=\"" + HttpUtility.UrlEncode(fileName, Encoding.UTF8) + ".xlsx\"");
+                    pck.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                pck.Dispose();
+            }
+            return null;
+        }
+
+        [HttpPost]
+        public ActionResult UploadStudentExcel(int groupId)
+        {
+            if (Request.Files.Count != 0)
+            {
+                string ext = Path.GetExtension(Request.Files[0].FileName);
+                var validExtensions = new[] { ".xlsx", ".xls", "csv" };
+                if (!validExtensions.Contains(ext))
+                {
+                    TempData["Fail"] =
+                        "Невірний формат файлу! Тільки файли створенні за допомогою Excel підтримуються (.xlsx ; .xls)";
+                }
+                var file = Request.Files[0];
+                MemoryStream mem = new MemoryStream();
+                mem.SetLength((int)file.ContentLength);
+                file.InputStream.Read(mem.GetBuffer(), 0, (int)file.ContentLength);
+                try
+                {
+                    using (ExcelPackage p = new ExcelPackage(mem))
+                    {
                         {
-                            var name = intsheet.Cells[3 + i, 1].Value.ToString();
-                            var surname = intsheet.Cells[3 + i, 2].Value.ToString();
-                            int? studId = (int?)intsheet.Cells[3 + i, 3].Value;
-                            String login = intsheet.Cells[3 + i, 4].Value;
-                            String password = intsheet.Cells[3 + i, 5].Value;
-                            ids.Add(studId);
-                            if (!students.Any(t => t.Id == studId))
+                            ExcelWorksheet ws = p.Workbook.Worksheets[1];
+                            var specialityId = new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
+                            var students = new testingDbEntities().Students.Where(t => t.GroupId == groupId && t.SpecialityId == specialityId).ToList();
+                            var accounts = new testingDbEntities().Accounts.ToList();
+                            List<int> ids = new ListStack<int>();
+                            for (int i = 0; i < 100; i++)
                             {
-                                new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
-                            }
-                            else
-                            {
-                                var stud = students.FirstOrDefault(t => t.Id == studId);
-                                var acc = accounts.FirstOrDefault(t => t.Id == stud.AccountId);
-                                if (stud.Name != name || stud.Surname != surname || acc.Login == login || acc.Password == password)
+                                if (ws.Cells[3 + i, 1].Value == null)
                                 {
-                                    new Editing().EditStudent((int)studId, name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), login, password, groupId);
+                                    break;
+                                }
+                                var name = ws.Cells[3 + i, 1].Value.ToString();
+                                var surname = ws.Cells[3 + i, 2].Value.ToString();
+                                var studId = Convert.ToInt32(ws.Cells[3 + i, 3].Value);
+                                var login = Convert.ToString(ws.Cells[3 + i, 4].Value);
+                                var password = Convert.ToString(ws.Cells[3 + i, 5].Value);
+                                ids.Add(studId);
+                                if (!students.Any(t => t.Id == studId))
+                                {
+                                    new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
+                                }
+                                else
+                                {
+                                    var stud = students.FirstOrDefault(t => t.Id == studId);
+                                    var acc = accounts.FirstOrDefault(t => t.Id == stud.AccountId);
+                                    if (stud.Name != name || stud.Surname != surname || acc.Login == login || acc.Password == password)
+                                    {
+                                        new Editing().EditStudent((int)studId, name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), login, password, groupId);
+                                    }
                                 }
                             }
-                        }
-                        intbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
-                        Inte.Quit();
-                        foreach (var student in students)
-                        {
-                            if (!ids.Contains(student.Id))
+                            foreach (var student in students)
                             {
-                                new Deleting().DeleteStudent(student.Id);
+                                if (!ids.Contains(student.Id))
+                                {
+                                    new Deleting().DeleteStudent(student.Id);
+                                }
                             }
+                            TempData["Success"] = "Зміни по студентах групи - \"" + new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).Name + "\" було успішно збережено!";
+                            p.Dispose();
                         }
-                        TempData["Success"] = "Зміни по студентах групи - \""+new testingDbEntities().Groups.FirstOrDefault(t => t.Id == groupId).Name+"\" було успішно збережено!";
-                    }
-                    catch (Exception e)
-                    {
-                        var error = e;
-                        intbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
-                        Inte.Quit();
+
                     }
                 }
+                catch (Exception)
+                {
+                    TempData["Fail"] =
+                        "Невірне оформлення документу! Будь ласка, завантажте шаблон і заповніть згідно вказаних праввил.";
+                }
+
             }
             return RedirectToAction("Students");
         }
@@ -558,6 +684,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditStudent Name = " + model.Name + " Surname = " + model.Surname
+                    + " Login = " + model.Login + " Password = " + model.Password + " GroupId = " + model.GroupId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Students");
         }
@@ -570,6 +701,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteStudent ID = " + studentId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Students");
         }
@@ -599,10 +734,14 @@ namespace TestingModule.Controllers
             try
             {
                 new Adding().AddNewLector(model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart());
-                TempData["Success"] = "Лектор - "+ model.Name.TrimEnd().TrimStart()+" "+ model.Surname.TrimEnd().TrimStart() + " успішно доданий!";
+                TempData["Success"] = "Лектор - " + model.Name.TrimEnd().TrimStart() + " " + model.Surname.TrimEnd().TrimStart() + " успішно доданий!";
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewLector Name = " + model.Name + " Surname = " + model.Surname);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectors");
         }
@@ -615,6 +754,11 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
+                    + model.Surname + " Id = " + model.Id + " Login = " + model.Login + " Password = " + model.Password);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectors");
         }
@@ -627,6 +771,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "DeleteLector Id = " + lectorId);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Lectors");
         }
@@ -686,6 +834,10 @@ namespace TestingModule.Controllers
             }
             catch (Exception)
             {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "NewStudentConnetctions");
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("DisciplineStudents");
         }

@@ -10,17 +10,19 @@ namespace TestingModule.Additional
         public void EditDiscipline(int disciplineId, string name, int? lectorId)
         {
             var disc = _db.Disciplines.FirstOrDefault(t => t.Id == disciplineId);
-            if (_db.LectorDisciplines.Any(t => t.DisciplineId == disciplineId))
+            if (lectorId != null)
             {
-                var connect = _db.LectorDisciplines.FirstOrDefault(t => t.DisciplineId == disciplineId);
-                if (connect != null) connect.LectorId = Convert.ToInt32(lectorId);
-                _db.SaveChanges();
-            }
-            else
-            {
-                var lecturesTable = _db.Set<LectorDiscipline>();
-
-                lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
+                if (_db.LectorDisciplines.Any(t => t.DisciplineId == disciplineId))
+                {
+                    var connect = _db.LectorDisciplines.FirstOrDefault(t => t.DisciplineId == disciplineId);
+                    if (connect != null) connect.LectorId = Convert.ToInt32(lectorId);
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    var lecturesTable = _db.Set<LectorDiscipline>();
+                    lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
+                }
             }
             if (disc != null) disc.Name = name;
             _db.SaveChanges();
@@ -67,33 +69,33 @@ namespace TestingModule.Additional
             _db.SaveChanges();
         }
 
-        public void EditSpeciality(int specialityId, string name)
+        public void EditSpeciality(int SpecialityId, string name)
         {
-            var spc = _db.Specialities.FirstOrDefault(t => t.Id == specialityId);
+            var spc = _db.Specialities.FirstOrDefault(t => t.Id == SpecialityId);
             spc.Name = name;
             _db.SaveChanges();
         }
-        public void EditGroup(int groupId, string name, int specialityId)
+        public void EditGroup(int GroupId, string name, int SpecialityId)
         {
-            var grp = _db.Groups.FirstOrDefault(t => t.Id == groupId);
-            if (specialityId != _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId && specialityId != 0)
+            var grp = _db.Groups.FirstOrDefault(t => t.Id == GroupId);
+            if (SpecialityId != _db.Groups.FirstOrDefault(t => t.Id == GroupId).SpecialityId && SpecialityId != 0)
             {
-                grp.SpecialityId = specialityId;
+                grp.SpecialityId = SpecialityId;
             }
             grp.Name = name;
             _db.SaveChanges();
         }
-        public void EditStudent(int studentId, string name, string surname, String username, String pass, int groupId)
+        public void EditStudent(int studentId, string name, string surname, String username, String pass, int GroupId)
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
             var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
-            if (groupId != _db.Students.FirstOrDefault(t => t.Id == studentId).SpecialityId && groupId != 0)
+            if (GroupId != _db.Students.FirstOrDefault(t => t.Id == studentId).SpecialityId && GroupId != 0)
             {
-                std.GroupId = groupId;
+                std.GroupId = GroupId;
             }
             std.Name = name;
             std.Surname = surname;
-            if (username != null && pass != null)
+            if (username != null && pass != null && username != "" && pass != "")
             {
                 ac.Login = username;
                 ac.Password = pass;
@@ -108,6 +110,12 @@ namespace TestingModule.Additional
             lct.Surname = surname;
             ac.Login = username;
             ac.Password = pass;
+            _db.SaveChanges();
+        }
+        public void EditExeption(int exeptionId)
+        {
+            var exl = _db.ExeptionLogs.FirstOrDefault(t => t.Id == exeptionId);
+            exl.Resolved = true;
             _db.SaveChanges();
         }
     }

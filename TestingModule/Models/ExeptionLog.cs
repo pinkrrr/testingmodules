@@ -12,12 +12,12 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Respons
+    public partial class ExeptionLog
     {
         public int Id { get; set; }
-        public int QuestionId { get; set; }
-        public int AnswerId { get; set; }
-        public int StudentId { get; set; }
-        public Nullable<int> TimeToPass { get; set; }
+        public string Url { get; set; }
+        public string Description { get; set; }
+        public string Date { get; set; }
+        public Nullable<bool> Resolved { get; set; }
     }
 }
