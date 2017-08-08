@@ -10,10 +10,6 @@ li {
     float: left;
 }
 
-h2 {
-    margin-top: 20px;
-    margin-left: 30px;
-}
     li a {
         display: block;
         color: white;
@@ -21,6 +17,7 @@ h2 {
         padding: 14px 16px;
         text-decoration: none;
     }
+
     li span {
         display: block;
         color: white;
@@ -30,12 +27,13 @@ h2 {
         font-weight: bold;
     }
 
-        li a:hover:not(.active) {
-            background-color: #111;
-        }
-li a:hover.active {
-    background-color: #007f05;
-}
+    li a:hover:not(.active) {
+        background-color: #111;
+    }
+
+    li a:hover.active {
+        background-color: #007f05;
+    }
 
 .active {
     background-color: #00b207;

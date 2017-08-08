@@ -267,6 +267,7 @@
     <Content Include="Content\styles\404.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\normalize.css" />
+    <Content Include="Content\styles\accordeonDisciplinesStudents.css" />
     <Content Include="Content\styles\jquery-ui.css" />
     <Content Include="Content\styles\login.css" />
     <Content Include="Content\styles\navbar.css" />
