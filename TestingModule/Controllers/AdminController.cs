@@ -668,7 +668,7 @@ namespace TestingModule.Controllers
                 }
                 catch (Exception)
                 {
-                    TempData["Fail"] =
+                    TempData["FailUpload"] =
                         "Невірне оформлення документу! Будь ласка, завантажте шаблон і заповніть згідно вказаних праввил.";
                 }
 
@@ -785,7 +785,7 @@ namespace TestingModule.Controllers
             var db = new testingDbEntities();
             IEnumerable<Group> grp = db.Groups.ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
-            IEnumerable<Student> std = db.Students.OrderBy(t => t.GroupId).ToList();
+            IEnumerable<Student> std = db.Students.OrderBy(t => t.GroupId).ThenBy(n => n.Surname).ToList();
             IList<StudentDiscipline> studDisc = db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId).ToList();
             IEnumerable<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
             foreach (var stdc in std)

@@ -23,7 +23,7 @@ namespace TestingModule.Controllers
         public ActionResult Dashboard()
         {
             var test = new List<ExeptionLog>();
-            test = new testingDbEntities().ExeptionLogs.ToList();
+            test = new testingDbEntities().ExeptionLogs.Where(t => t.Resolved == false).ToList();
             return View(test);
         }
         public ActionResult Resolved(int exeptionId)

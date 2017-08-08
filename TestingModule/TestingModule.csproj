@@ -264,6 +264,7 @@
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\classRoom.jpeg" />
     <Content Include="Content\styles\404.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\normalize.css" />
