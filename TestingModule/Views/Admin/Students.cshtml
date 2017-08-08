@@ -141,8 +141,9 @@ else
                     @Html.TextBoxFor(model => model.Students.FirstOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Login, new { @class = "input-text" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Password, new { @class = "input-text" })
-                    <div>
-                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "GroupId" }), "Оберіть групу")
+                    <div class="selectmenu">
+                        <div class="selectmenu_title">Оберіть групу</div>
+                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "GroupId" }))
                     </div>
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
