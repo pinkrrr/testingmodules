@@ -28,19 +28,43 @@ namespace TestingModule.Controllers
         public ActionResult Disciplines()
         {
             var db = new testingDbEntities();
+            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
+            var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
+            var lector = 0;
+            var lectorId = 0;
+            var lectorsDisciplines = new List<int>();
+            
             ViewBag.Message = "All disciplines";
             IEnumerable<Lector> lectors = db.Lectors.ToList();
-            List<DiscLecotorViewModel> viewModels = db.Disciplines.Select(d => new DiscLecotorViewModel
+            List<DiscLecotorViewModel> viewModels = new List<DiscLecotorViewModel>();
+            if (role == "Lecturer")
             {
-                Id = d.Id,
-                Name = d.Name
+                 lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
+                 lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
+                 lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                    .ToList();
+                viewModels = db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
+                    {
+                        Id = d.Id,
+                        Name = d.Name
+                    }
+                ).ToList();
             }
-            ).ToList();
-            foreach (var model in viewModels)
+            else
             {
-                model.Lectors = lectors;
-                model.LectorId = db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
-                    .FirstOrDefault();
+                viewModels = db.Disciplines.Select(d => new DiscLecotorViewModel
+                    {
+                        Id = d.Id,
+                        Name = d.Name
+                    }
+                ).ToList();
+                foreach (var model in viewModels)
+                {
+                    model.Lectors = lectors;
+                    model.LectorId = db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
+                        .FirstOrDefault();
+                }
             }
             return View(viewModels);
         }
