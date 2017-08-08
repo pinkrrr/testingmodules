@@ -4,7 +4,7 @@
         var _$editBtn = $('.table-edit-button');
         var _$removeBtn = $('.table-remove-button');
         var _$addBtn = $('.addNewItem-btn');
-        var inputText = '';
+        var $inputTexts;
         var $popup = {
             edit: $('.popup.popup-edit'),
             add: $('.popup.popup-add'),
@@ -16,8 +16,8 @@
 
         function initShowEditPopup() {
             _$editBtn.on('click', function () {
-                inputText = $(this).closest('.table-row').find('.table-item_name_text').text();
-                showPopupEdit(inputText);
+                $inputTexts = $(this).closest('.table-row').find('[data-editable]');
+                showPopupEdit($inputTexts);
                 var $table = $(this).parent().prev();
                 var nameId = $(this).closest('.table-row').find('.table-item_name_text').attr('data-id');
                 $('#id').val(nameId);
@@ -29,9 +29,13 @@
             });
         }
 
-        function showPopupEdit(inputText) {
+        function showPopupEdit($inputTexts) {
             $popup.edit.addClass('popup-active');
-            $popup.edit.find('.input-text').val(inputText);
+
+            $inputTexts.each(function (i) {
+                $popup.edit.find('.input-text').eq(i).val($(this).text());
+            });
+            
         }
 
         function initSaveData() {
@@ -105,8 +109,8 @@
         function initShowRemovePopup() {
             _$removeBtn.on('click', function () {
                 var removeLink = $(this).attr('data-remove');
-                var removeName = $(this).closest('.table-row').find('.table-item_name_text').text();
-                var removeSurname = $(this).closest('.table-row').find('.table-item_surname_text').text();
+                var removeName = $(this).closest('.table-row').find('.table-item_name').text();
+                var removeSurname = $(this).closest('.table-row').find('.table-item_surname').text();
                 showRemovePopup(removeName, removeSurname);
                 initRemoveData(removeLink);
             });
