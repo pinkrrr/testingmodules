@@ -37,7 +37,7 @@
 }
 else
 {
-    <h2>Студенти  групи <u>@Model.Groups.FirstOrDefault(t => t.Id == Model.Students.FirstOrDefault().GroupId).Name</u></h2>
+    <h2>Студенти групи <span class="groupName">@Model.Groups.FirstOrDefault(t => t.Id == Model.Students.FirstOrDefault().GroupId).Name</span></h2>
 
     <table class="table" border="1">
         <tr class="table-row table-header-row">
@@ -50,10 +50,10 @@ else
         @foreach (var item in Model.Students.OrderBy(t => t.Surname))
         {
             <tr class="table-row">
-                <td class="table-item table-item_surname_text">@item.Surname</td>
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
-                <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Login</td>
-                <td class="table-item">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Password</td>
+                <td data-editable class="table-item table-item_surname">@item.Surname</td>
+                <td data-editable class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
+                <td data-editable class="table-item table-item_username">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Login</td>
+                <td data-editable class="table-item table-item_password">@Model.Accounts.FirstOrDefault(t => t.Id == item.AccountId).Password</td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button">
                         <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
@@ -141,8 +141,9 @@ else
                     @Html.TextBoxFor(model => model.Students.FirstOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Login, new { @class = "input-text" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Password, new { @class = "input-text" })
-                    <div>
-                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "GroupId" }), "Оберіть групу")
+                    <div class="selectmenu">
+                        <div class="selectmenu_title">Оберіть групу</div>
+                        @Html.DropDownListFor(model => model.Students.FirstOrDefault().GroupId, new SelectList(Model.Groups, "Id", "Name", new { @id = "GroupId" }))
                     </div>
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
