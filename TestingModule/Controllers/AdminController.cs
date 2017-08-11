@@ -778,19 +778,23 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditLector(UserViewModel model)
         {
-            try
+            if (model.Surname != null && model.Login != null && model.Password != null)
             {
-                new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
-                TempData["Success"] = "Зміни було успішно збережено!";
+                try
+                {
+                    new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
+                    TempData["Success"] = "Зміни було успішно збережено!";
+                }
+                catch (Exception)
+                {
+                    HttpContext con = System.Web.HttpContext.Current;
+                    var url = con.Request.Url.ToString();
+                    new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
+                                                  + model.Surname + " Id = " + model.Id + " Login = " + model.Login + " Password = " + model.Password);
+                    TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                }
             }
-            catch (Exception)
-            {
-                HttpContext con = System.Web.HttpContext.Current;
-                var url = con.Request.Url.ToString();
-                new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
-                    + model.Surname + " Id = " + model.Id + " Login = " + model.Login + " Password = " + model.Password);
-                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
-            }
+            
             return RedirectToAction("Lectors");
         }
         public ActionResult DeleteLector(int lectorId)

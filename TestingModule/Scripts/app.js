@@ -71,7 +71,11 @@
 
                 var data = {
                     name: inputText.val(),
+                    surname: inputText.val(),
+                    login: inputText.val(),
+                    password: inputText.val(),
                     id: $('#id').val(),
+                    accountId: $('#accountId').val(),
                     lectorId: $('#lectorId').val(),
                     disciplineId: $('#disciplineId').val(),
                     lectureId: $('#lectureId').val(),
