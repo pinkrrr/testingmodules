@@ -16,7 +16,7 @@ using Module = TestingModule.Models.Module;
 
 namespace TestingModule.Controllers
 {
-    [CustomAuthorize(RoleName.Administrator,RoleName.Lecturer)]
+    [CustomAuthorize(RoleName.Administrator, RoleName.Lecturer)]
     public class adminController : Controller
     {
         public ActionResult Index()
@@ -34,30 +34,30 @@ namespace TestingModule.Controllers
             var lector = 0;
             var lectorId = 0;
             var lectorsDisciplines = new List<int>();
-            
+
             ViewBag.Message = "All disciplines";
             IEnumerable<Lector> lectors = db.Lectors.ToList();
             List<DiscLecotorViewModel> viewModels = new List<DiscLecotorViewModel>();
             if (role == "Lecturer")
             {
-                 lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-                 lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-                 lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
-                    .ToList();
+                lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
+                lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
+                lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                   .ToList();
                 viewModels = db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
-                    {
-                        Id = d.Id,
-                        Name = d.Name
-                    }
+                {
+                    Id = d.Id,
+                    Name = d.Name
+                }
                 ).ToList();
             }
             else
             {
                 viewModels = db.Disciplines.Select(d => new DiscLecotorViewModel
-                    {
-                        Id = d.Id,
-                        Name = d.Name
-                    }
+                {
+                    Id = d.Id,
+                    Name = d.Name
+                }
                 ).ToList();
                 foreach (var model in viewModels)
                 {
@@ -337,30 +337,37 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditAnswer(List<QueAns> model)
         {
-            try
+            if (model != null)
             {
-                if (model != null)
+                try
                 {
-                    foreach (var item in model)
+                    var modelIndex = 0;
+                    foreach (var item in model.Where(t => t.Answer != null))
                     {
+                        if (item.ModuleId != null && item.ModuleId != 0)
+                        {
+                            modelIndex = model.IndexOf(item);
+                        }
                         new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
                     }
-                    var firstOrDefault = model.FirstOrDefault();
+                    var firstOrDefault = model[modelIndex];
                     if (firstOrDefault != null)
                         new Editing().EditQuestion(firstOrDefault.QuestionId,
                             firstOrDefault.Question.TrimEnd().TrimStart()
                             , firstOrDefault.ModuleId);
+                    TempData["Success"] = "Зміни по запитаннях та відповідях було успішно збережено!";
                 }
-                TempData["Success"] = "Модуль був успішно видалений!";
+                catch (Exception)
+                {
+                    HttpContext con = System.Web.HttpContext.Current;
+                    var url = con.Request.Url.ToString();
+                    new Adding().AddNewError(url, "EditAnswer Answers = " + model.FirstOrDefault().Answer + " AnswerId = "
+                                                  + model.FirstOrDefault().AnswerId + " Question = " + model.FirstOrDefault().Question + " QuestionId = " + model.FirstOrDefault().QuestionId);
+                    TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                }
             }
-            catch (Exception)
-            {
-                HttpContext con = System.Web.HttpContext.Current;
-                var url = con.Request.Url.ToString();
-                new Adding().AddNewError(url, "EditAnswer Answers = " + model.FirstOrDefault().Answer + " AnswerId = "
-                    + model.FirstOrDefault().AnswerId + " Question = " + model.FirstOrDefault().Question + " QuestionId = " + model.FirstOrDefault().QuestionId);
-                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
-            }
+
+
             return RedirectToAction("Questions");
         }
         public ActionResult DeleteAnswer(int answerId)
