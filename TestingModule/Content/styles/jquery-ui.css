@@ -19,3 +19,11 @@
 .ui-menu .ui-state-focus, .ui-menu .ui-state-active {
     margin: 0;
 }
+
+.ui-button.ui-state-active:hover{
+    border: 0;
+}
+
+.ui-selectmenu-text{
+    font-size: 16px;
+}

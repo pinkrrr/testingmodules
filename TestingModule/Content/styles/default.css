@@ -84,6 +84,10 @@ input[type="text"]:focus{
     overflow: auto;
 }
 
+.body-content__admin{
+
+}
+
 .main-container__default .body-content{
     width: 100%;
 }
@@ -138,3 +142,4 @@ i.fa{
     font-size: 24px;
     font-weight: bold;
 }
+
