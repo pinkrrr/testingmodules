@@ -643,6 +643,7 @@ namespace TestingModule.Controllers
                 {
                     TempData["Fail"] =
                         "Невірний формат файлу! Тільки файли створенні за допомогою Excel підтримуються (.xlsx ; .xls)";
+                    return null;
                 }
                 var file = Request.Files[0];
                 MemoryStream mem = new MemoryStream();
