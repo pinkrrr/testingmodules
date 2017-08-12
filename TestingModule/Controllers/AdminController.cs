@@ -664,13 +664,13 @@ namespace TestingModule.Controllers
                                 {
                                     break;
                                 }
-                                var name = ws.Cells[3 + i, 1].Value.ToString();
-                                var surname = ws.Cells[3 + i, 2].Value.ToString();
+                                var name = ws.Cells[3 + i, 2].Value.ToString();
+                                var surname = ws.Cells[3 + i, 1].Value.ToString();
                                 var studId = Convert.ToInt32(ws.Cells[3 + i, 3].Value);
                                 var login = Convert.ToString(ws.Cells[3 + i, 4].Value);
                                 var password = Convert.ToString(ws.Cells[3 + i, 5].Value);
                                 ids.Add(studId);
-                                if (!students.Any(t => t.Id == studId))
+                                if (!students.Any(t => t.Id == studId) && studId == 0)
                                 {
                                     new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
                                 }
