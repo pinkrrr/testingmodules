@@ -22,19 +22,21 @@
 }
 
 
-<button onclick="location.href='students/download'" class="excel-btn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel шаблон</button>
-@using (Html.BeginForm("UploadStudentExcel", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.HiddenFor(t => t.Students.FirstOrDefault().SpecialityId)
-    @Html.HiddenFor(t => t.Students.FirstOrDefault().GroupId)
+<div class="excel">
+    <button onclick="location.href='students/download'" class="excel-btn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel шаблон</button>
+    @using (Html.BeginForm("UploadStudentExcel", "admin", FormMethod.Post, new { enctype = "multipart/form-data", @class="excelUploadForm" }))
+    {
+        @Html.HiddenFor(t => t.Students.FirstOrDefault().SpecialityId)
+        @Html.HiddenFor(t => t.Students.FirstOrDefault().GroupId)
 
-    <label class="myLabel">
-        <input type="file" name="Upload"/>
-        <span><i class="fa fa-upload" aria-hidden="true"></i> Завантажте відредагований шаблон</span>
-    </label>
-    <button type="submit" name="Submit" id="Submit" class="saveFile-btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> Зберегти</button>
+        <label class="uploadExcel_btn_label">
+            <input type="file" name="Upload" />
+            <span class="uploadExcel_btn"><i class="fa fa-upload" aria-hidden="true"></i> Завантажте відредагований шаблон</span>
+        </label>
+        <button type="submit" name="Submit" id="Submit" class="saveFile-btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> Зберегти</button>
 
-}
+    }
+</div>
 
 @if (!Model.Students.Any())
 {
