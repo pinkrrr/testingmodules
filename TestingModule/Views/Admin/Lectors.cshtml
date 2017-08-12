@@ -20,7 +20,7 @@
     </div>
 }
 
-<h2>Лектори!</h2>
+<h2>Лектори</h2>
 @if (!Model.Any())
 {
     <h3>Немає жодного лектора...</h3>
@@ -40,10 +40,10 @@ else
         @foreach (var item in Model.OrderBy(t => t.Surname))
         {
             <tr class="table-row">
-                <td class="table-item table-item_surname_text" data-id ="@item.Id">@item.Surname</td>
-                <td class="table-item table-item_name_text">@item.Name</td>
-                <td class="table-item">@item.Login</td>
-                <td class="table-item">@item.Password</td>
+                <td class="table-item table-item_surname_text" data-id ="@item.Id" data-editable>@item.Surname</td>
+                <td class="table-item table-item_name_text" data-editable>@item.Name</td>
+                <td class="table-item" data-editable>@item.Login</td>
+                <td class="table-item" data-editable>@item.Password</td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
                     </div>
