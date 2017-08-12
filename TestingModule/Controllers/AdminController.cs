@@ -641,7 +641,7 @@ namespace TestingModule.Controllers
                 var validExtensions = new[] { ".xlsx", ".xls", "csv" };
                 if (!validExtensions.Contains(ext))
                 {
-                    TempData["Fail"] =
+                    TempData["FailUpload"] =
                         "Невірний формат файлу! Тільки файли створенні за допомогою Excel підтримуються (.xlsx ; .xls)";
                     return RedirectToAction("Students");
                 }
