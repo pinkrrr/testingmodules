@@ -47,28 +47,6 @@
                 //e.preventDefault();
                 var inputText = $popup.edit.find('.input-text');
 
-                //if (inputText.parent('.answer_item')){
-                //    $popup.edit.find('.answer_item').each(function (item) {
-                //        data.push({
-                //            answer: $(this).find('.input-text').val(),
-                //            answerId: $(this).attr('data-id'),
-                //            question: $(this).closest('form').find('.input-text.question').val(),
-                //            questionId: $(this).closest('form').find('.input-text.question').attr('data-id'),
-                //        });
-                //    });
-                //    data = JSON.stringify(data);
-                //    console.log(data);
-                //} else {
-                //    data = {
-                //        name: inputText.val(),
-                //        id: $('#id').val(),
-                //        answer: inputText.val(),
-                //        answerId: $('#id').val(),
-                //        question: inputText.val(),
-                //        questionId: $('#id').val(),
-                //    };
-                //}
-
                 var data = {
                     name: inputText.val(),
                     surname: inputText.val(),

@@ -34,7 +34,7 @@ else
         @foreach (var item in Model.Groups.OrderBy(t => t.Name))
         {
             <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text">@item.Name</a></td>
+                <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text" data-editable>@item.Name</a></td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="groups/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
