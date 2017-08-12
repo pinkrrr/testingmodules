@@ -24,7 +24,23 @@
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати новий модуль</button>
 @if (!Model.Modules.Any())
 {
-    <h3>Немає жодного модуля...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодного модуля...
+                    </h2>
+                    <div class="error-details">
+                        Створіть студентів за допомогою кнопки "Додати новий модуль".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {

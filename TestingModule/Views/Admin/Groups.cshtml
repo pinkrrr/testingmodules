@@ -23,7 +23,23 @@
 
 @if (!Model.Groups.Any())
 {
-    <h3>Немає жодної групи...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодної групи...
+                    </h2>
+                    <div class="error-details">
+                        Створіть групи за допомогою кнопки "Додати новову групу".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {

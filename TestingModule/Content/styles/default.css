@@ -1,4 +1,4 @@
-﻿html, body{
+﻿html, body {
     width: 100%;
     height: 100%;
 }
@@ -11,18 +11,18 @@ body {
     color: #000000;
 }
 
-body *{
-    box-sizing: border-box;
-}
+    body * {
+        box-sizing: border-box;
+    }
 
-h1, h2, h3, h4, h5, h6{
+h1, h2, h3, h4, h5, h6 {
     padding: 0;
     margin-top: 0;
 }
 
-h2 .groupName{
-    text-decoration: underline;
-}
+    h2 .groupName {
+        text-decoration: underline;
+    }
 
 .main-container {
     font-size: 0;
@@ -36,7 +36,7 @@ h2 .groupName{
     min-width: 800px;
 }
 
-.navbar, .body-content{
+.navbar, .body-content {
     vertical-align: top;
     height: 100%;
     position: relative;
@@ -45,24 +45,24 @@ h2 .groupName{
     white-space: normal;
 }
 
-button{
+button {
     cursor: pointer;
     border: 0;
     transition: color .2s, background .2s;
     outline: none;
 }
 
-input[type="text"]{
+input[type="text"] {
     outline: none;
     transition: border .2s;
     border: 1px solid #bababa;
 }
 
-input[type="text"]:focus{
-    border-color: #4cacff;
-}
+    input[type="text"]:focus {
+        border-color: #4cacff;
+    }
 
-.input-text{
+.input-text {
     display: block;
     width: 360px;
     position: relative;
@@ -84,15 +84,14 @@ input[type="text"]:focus{
     overflow: auto;
 }
 
-.body-content__admin{
-
+.body-content__admin {
 }
 
-.main-container__default .body-content{
+.main-container__default .body-content {
     width: 100%;
 }
 
-i.fa{
+i.fa {
     margin-right: 10px;
     text-align: center;
 }
@@ -110,31 +109,87 @@ i.fa{
     transition: color .2s, background .2s;
 }
 
-.addNewItem-btn:hover{
-    background-color: #72beff;
+    .addNewItem-btn:hover {
+        background-color: #72beff;
+    }
+
+.excel-btn {
+    text-align: left;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #207347;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
 }
 
-.addNewItem-btn i{
+    .excel-btn:hover {
+        background-color: #039b03;
+        border: #ffffff;
+        color: #ffffff
+    }
+
+label.myLabel input[type="file"] {
+    position: fixed;
+    top: -1000px;
+}
+.myLabel {
+    top: 20px;
+    margin-left: 155px;
+    padding: 10px;
+    font-size: 16px;
+    background: #ffa100;
+    color: #ffffff;
+    display: inline-block;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
+}
+
+    .myLabel:hover {
+        background: #bf7800;
+        color: #ffffff;
+    }
+.saveFile-btn {
+    text-align: left;
+    top: 20px;
+    background-color: #207347;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
+}
+
+    .saveFile-btn:hover {
+        background-color: #039b03;
+        color: #ffffff
+    }
+
+
+.addNewItem-btn i {
     margin-right: 5px;
 }
 
-.selectmenu{
+.selectmenu {
     width: 100%;
     font-size: 16px;
 }
 
-.selectmenu_title{
+.selectmenu_title {
     font-size: 22px;
     text-align: left;
     margin-bottom: 10px;
 }
 
-.form-title{
+.form-title {
     font-size: 32px;
     margin-bottom: 20px;
 }
 
-.loginBtn{
+.loginBtn {
     width: 100%;
     padding: 15px 0;
     color: #ffffff;
@@ -142,4 +197,3 @@ i.fa{
     font-size: 24px;
     font-weight: bold;
 }
-

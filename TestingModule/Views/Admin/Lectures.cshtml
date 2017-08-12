@@ -25,7 +25,23 @@
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
 @if (!Model.Lectures.Any())
 {
-    <h3>Немає жодної лекції...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодної лекції...
+                    </h2>
+                    <div class="error-details">
+                        Створіть лецції за допомогою кнопки "Додати нову лекцію".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {

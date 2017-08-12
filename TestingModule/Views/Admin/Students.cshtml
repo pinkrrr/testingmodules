@@ -22,18 +22,39 @@
 }
 
 
-<a href="students/download">Excel шаблон</a>
+<button onclick="location.href='students/download'" class="excel-btn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel шаблон</button>
 @using (Html.BeginForm("UploadStudentExcel", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.HiddenFor(t => t.Students.FirstOrDefault().SpecialityId)
     @Html.HiddenFor(t => t.Students.FirstOrDefault().GroupId)
-    <input type="file" name="Upload" value="Завантажте відредагований шаблон" />
-    <input type="submit" name="Submit" id="Submit" value="Зберегти" />
+
+    <label class="myLabel">
+        <input type="file" name="Upload"/>
+        <span><i class="fa fa-upload" aria-hidden="true"></i> Завантажте відредагований шаблон</span>
+    </label>
+    <button type="submit" name="Submit" id="Submit" class="saveFile-btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> Зберегти</button>
+
 }
 
 @if (!Model.Students.Any())
 {
-    <h3>Немає жодного студента...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодного студента...
+                    </h2>
+                    <div class="error-details">
+                        Створіть студентів за допомогою кнопки "Додати нового студента", або за скачайте Excel шаблон, заповніть його та завантажте на сайт.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -77,30 +98,27 @@ else
             {
                 <form>
                     <div>
-                        @Html.Label("Введіть ім'я студента");
                         @{
                             var name = Model.Students.LastOrDefault();
+                            var surname = Model.Students.LastOrDefault();
                         }
-                        @if (name == null)
+                        @if (surname == null)
                         {
-                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
+                            @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
                         }
+
                     </div>
-                    @Html.Label("Введіть прізвище студента");
-                    @{
-                        var surname = Model.Students.LastOrDefault();
-                    }
-                    @if (surname == null)
+                    @if (name == null)
                     {
-                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
+                        @Html.TextBoxFor(model => model.Students.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
                     }
                     <div>
                         @Html.HiddenFor(model => model.Students.LastOrDefault().GroupId)
@@ -111,7 +129,7 @@ else
                         <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                     </div>
                 </form>
-                        }
+                            }
         </div>
     </div>
 </div>
@@ -137,8 +155,8 @@ else
                 <div class="popup-title">Редагування</div>
                 <form>
                     @Html.HiddenFor(model => model.Students.FirstOrDefault().Id, new { @id = "id" })
-                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
                     @Html.TextBoxFor(model => model.Students.FirstOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище студента", @required = "required" })
+                    @Html.TextBoxFor(model => model.Students.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я студента", @required = "required" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Login, new { @class = "input-text" })
                     @Html.TextBoxFor(model => model.Accounts.FirstOrDefault().Password, new { @class = "input-text" })
                     <div class="selectmenu">

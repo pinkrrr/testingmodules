@@ -212,8 +212,12 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
-                TempData["Success"] = "Зміни було успіщно збережено!";
+                if (model.Id != null && model.Name != null)
+                {
+                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
+                    TempData["Success"] = "Зміни було успіщно збережено!";
+                }
+                
             }
             catch (Exception)
             {
@@ -711,8 +715,11 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
-                TempData["Success"] = "Зміни було успішно збережено!";
+                if (model.Name != model.Surname && model.Name != model.Login)
+                {
+                    new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
+                    TempData["Success"] = "Зміни було успішно збережено!";
+                }
             }
             catch (Exception)
             {
@@ -781,21 +788,26 @@ namespace TestingModule.Controllers
         {
             if (model.Surname != null && model.Login != null && model.Password != null)
             {
-                try
+                if (model.Name != model.Surname && model.Name != model.Login)
                 {
-                    new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
-                    TempData["Success"] = "Зміни було успішно збережено!";
-                }
-                catch (Exception)
-                {
-                    HttpContext con = System.Web.HttpContext.Current;
-                    var url = con.Request.Url.ToString();
-                    new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
-                                                  + model.Surname + " Id = " + model.Id + " Login = " + model.Login + " Password = " + model.Password);
-                    TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                    try
+                    {
+                        new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(),
+                            model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
+                        TempData["Success"] = "Зміни було успішно збережено!";
+                    }
+                    catch (Exception)
+                    {
+                        HttpContext con = System.Web.HttpContext.Current;
+                        var url = con.Request.Url.ToString();
+                        new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
+                                                      + model.Surname + " Id = " + model.Id + " Login = " +
+                                                      model.Login + " Password = " + model.Password);
+                        TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                    }
                 }
             }
-            
+
             return RedirectToAction("Lectors");
         }
         public ActionResult DeleteLector(int lectorId)

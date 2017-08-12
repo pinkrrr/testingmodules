@@ -23,7 +23,23 @@
 
 @if (!Model.Any())
 {
-    <h3>Немає жодного питання...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодного питання...
+                    </h2>
+                    <div class="error-details">
+                        Створіть студентів за допомогою кнопки "Додати нове питання".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
