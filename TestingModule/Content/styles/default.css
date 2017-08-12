@@ -75,7 +75,7 @@ input[type="text"] {
 .body-content {
     display: inline-block;
     width: 80%;
-    min-width: 800px;
+    min-width: 1100px;
     min-height: 100vh;
     user-select: text;
     right: 0;
@@ -109,62 +109,76 @@ i.fa {
     transition: color .2s, background .2s;
 }
 
-    .addNewItem-btn:hover {
-        background-color: #72beff;
-    }
+.addNewItem-btn:hover {
+    background-color: #72beff;
+}
+
+.excel{
+    text-align: right;
+    padding-right: 225px;
+    font-size: 0;
+    margin-bottom: 20px;
+}
+
+.excel *{
+    vertical-align: top;
+    position: relative;
+}
+
+.excelUploadForm{
+    display: inline-block;
+}
 
 .excel-btn {
+    display: inline-block;
     text-align: left;
-    position: absolute;
-    top: 20px;
-    left: 20px;
     background-color: #207347;
     padding: 10px;
     font-size: 16px;
     color: #ffffff;
     border-radius: 5px;
     transition: color .2s, background .2s;
+    margin-right: 5px;
 }
 
-    .excel-btn:hover {
-        background-color: #039b03;
-        border: #ffffff;
-        color: #ffffff
-    }
-
-label.myLabel input[type="file"] {
-    position: fixed;
-    top: -1000px;
+.excel-btn:hover {
+    background-color: #039b03;
+    color: #ffffff
 }
-.myLabel {
-    top: 20px;
-    margin-left: 155px;
-    padding: 10px;
+
+.uploadExcel_btn_label input[type="file"] {
+    display: none;
+}
+.uploadExcel_btn {
     font-size: 16px;
-    background: #ffa100;
+    background-color: #efa203;
     color: #ffffff;
     display: inline-block;
     border-radius: 5px;
     transition: color .2s, background .2s;
+    cursor: pointer;
+    margin: 0 5px;
+    padding: 8.5px;
 }
 
-    .myLabel:hover {
-        background: #bf7800;
-        color: #ffffff;
-    }
+.uploadExcel_btn:hover {
+    background-color: #feb319;
+    color: #ffffff;
+}
+
 .saveFile-btn {
-    text-align: left;
-    top: 20px;
-    background-color: #207347;
+    display: inline-block;
+    background-color: #31ac00;
     padding: 10px;
     font-size: 16px;
     color: #ffffff;
     border-radius: 5px;
     transition: color .2s, background .2s;
+    margin: 0 5px;
 }
 
     .saveFile-btn:hover {
-        background-color: #039b03;
+    background-color: #3ed800;
         color: #ffffff
     }
 
