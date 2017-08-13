@@ -34,6 +34,7 @@ namespace TestingModule.Additional
             var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
             QuizViewModel qnA = new QuizViewModel
             {
+                QuestionsList=questions,
                 Question = question,
                 Student = await new AccountCredentials().GetStudent(),
                 Answers = await GetAnswersList(question.Id),
@@ -41,6 +42,8 @@ namespace TestingModule.Additional
             };
             return qnA;
         }
+
+
 
     }
 }

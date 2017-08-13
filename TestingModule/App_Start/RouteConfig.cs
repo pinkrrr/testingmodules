@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
+
 namespace TestingModule
 {
     public class RouteConfig
@@ -8,6 +9,8 @@ namespace TestingModule
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            
 
             //lectors
             routes.MapRoute(
@@ -153,11 +156,6 @@ namespace TestingModule
                 defaults: new { controller = "admin", action = "Index"});
 
             routes.MapRoute(
-                name: "Quiz",
-                url: "quiz/{action}",
-                defaults: new { controller = "Quiz", action = "Index" });
-
-            routes.MapRoute(
                 name: "NotFound",
                 url: "notfound",
                 defaults: new { controller = "Error", action = "NotFound" });
@@ -188,9 +186,16 @@ namespace TestingModule
                 defaults: new { controller = "Account", action = "Login" });
 
             routes.MapRoute(
+                name: "Quiz",
+                url: "quiz/{moduleId}",
+                defaults: new { controller = "Quiz", action = "Index" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Account", action = "Login" , id=UrlParameter.Optional});
+
+            //routes.MapMvcAttributeRoutes();
 
         }
     }

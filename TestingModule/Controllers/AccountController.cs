@@ -131,8 +131,8 @@ namespace TestingModule.Controllers
 
         public ActionResult RedirectToHome()
         {
-            AccountCredentials aC=new AccountCredentials();
-            var role = aC.GetRole();
+
+            var role = new AccountCredentials().GetRole();
             if (role == RoleName.Student)
             {
                 return RedirectToAction("Index", "Student");

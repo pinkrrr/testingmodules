@@ -10,6 +10,7 @@ namespace TestingModule.ViewModels
     {
         public Student Student { get; set; }
         //public Module Module { get; set; }
+        public IEnumerable<Question> QuestionsList { get; set; }
         public Question Question { get; set; }
         public IEnumerable<Answer> Answers { get; set; }
         public Respons Response { get; set; }
