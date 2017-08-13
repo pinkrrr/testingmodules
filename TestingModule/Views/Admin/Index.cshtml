@@ -5,37 +5,23 @@
 @if (Request.IsAuthenticated)
 {
 
-
-    DateTime daysLeft = DateTime.Parse("08/15/2017 12:00:01 PM");
-    DateTime startDate = DateTime.Now;
-
-    //Calculate countdown timer.
-    TimeSpan t = daysLeft - startDate;
-    string countDown = string.Format("{0} days and {1} hours", t.Days, t.Hours);
-
-    if (startDate > daysLeft)
-    {
-        <h1 class="w3-jumbo w3-animate-top">Welcome</h1>
-    }
-    else
-    {
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="error-template">
-                        <h1>
-                            Welcome!
-                        </h1>
-                        <h2>
-                            Site will be able to test in
-                        </h2>
-                        <div class="error-details">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>@countDown
-                        </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Welcome!
+                    </h1>
+                    <h2>
+                        Site will be able to test in
+                    </h2>
+                    <div class="error-details">
+                        <p id="demo"></p>
                     </div>
                 </div>
             </div>
         </div>
-    }
+    </div>
 
+    @Scripts.Render("~/Scripts/Timer.js")
 }

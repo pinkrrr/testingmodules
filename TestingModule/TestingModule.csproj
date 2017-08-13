@@ -353,6 +353,7 @@
       <DependentUpon>TestingDb.edmx</DependentUpon>
       <LastGenOutput>TestingDb.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\Timer.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
