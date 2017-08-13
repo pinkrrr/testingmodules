@@ -53,13 +53,13 @@ else
                     <th class="table-item table-item_name">
                         @Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new
                    {
-                       @class = "input-text",
+                       @class = "input-text-Questions",
                        @placeholder = "Введіть текст запитання",
                        @required = "required"
                    })
                     </th>
-                    <th class="table-item table-item_edit"> Правильна відповідь </th>
-                    <th class="table-item table-item_edit">
+                    <th class="table-item table-item_correct"> Правильна відповідь </th>
+                    <th class="table-item table-item_correct">
                         <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
                     </th>
                 </tr>
@@ -76,17 +76,17 @@ else
 
                         <tr class="table-row">
                             <td class="table-item table-item_name">
-                                @Html.TextBoxFor(model => Model[Model.IndexOf(que)].Answer, new { @class = "input-text", @placeholder = "Введіть текст відповіді", @required = "required" })
+                                @Html.TextBoxFor(model => Model[Model.IndexOf(que)].Answer, new { @class = "input-text-Questions", @placeholder = "Введіть текст відповіді", @required = "required" })
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].AnswerId)
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].Question)
                                 @Html.HiddenFor(model => Model[Model.IndexOf(que)].QuestionId)
                             </td>
-                            <td class="table-item table-item_edit">
-                                <div class="table-button table-item_edit">
+                            <td class="table-item table-item_correct">
+                                <div class="table-button table-item_correct">
                                     @Html.RadioButtonFor(model => Model[Model.IndexOf(que)].IsCorrect, true)
                                 </div>
                             </td>
-                            <td class="table-item table-item_edit">
+                            <td class="table-item table-item_correct">
                                 <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
                                     <i class='fa fa-trash' aria-hidden='true'></i>Видалити
                                 </div>
@@ -114,21 +114,21 @@ else
                     @{
                         var name = item.LastOrDefault();
                     }
-                    <td>
+                    <td class="table-item table-item_new">
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text", @placeholder = "Введіть нову відповідь", @required = "required" })
+                            @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text-Questions", @placeholder = "Введіть нову відповідь", @required = "required" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text", @placeholder = "Введіть нову відповідь", @required = "required" })
+                            @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text-Questions", @placeholder = "Введіть нову відповідь", @required = "required" })
                         }
                         @Html.HiddenFor(model => item.FirstOrDefault().QuestionId)
                         @Html.HiddenFor(model => item.FirstOrDefault().DisciplineId)
                         @Html.HiddenFor(model => item.FirstOrDefault().LectureId)
                     </td>
-                    <td>
-                        <button type="submit">Додати відповідь</button>
+                    <td class="table-item table-item_new" colspan="2">
+                        <button type="submit" class="addAnsBtn"><i class="fa fa-plus" aria-hidden="true"></i>Додати відповідь</button>
                     </td>
                 </form>
                         }
