@@ -189,11 +189,22 @@ namespace TestingModule
                 name: "Quiz",
                 url: "quiz/{moduleId}",
                 defaults: new { controller = "Quiz", action = "Index" });
+            routes.MapRoute(
+                name: "StartModule",
+                url: "admin/StartModule/{moduleId}",
+                defaults: new { controller = "admin", action = "StartModule" });
+            routes.MapRoute(
+                name: "StopModule",
+                url: "admin/StopModule/{moduleId}",
+                defaults: new { controller = "admin", action = "StopModule" });
+
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Account", action = "Login" , id=UrlParameter.Optional});
+
+            
 
             //routes.MapMvcAttributeRoutes();
 

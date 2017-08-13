@@ -42,6 +42,7 @@ namespace TestingModule.Controllers
                 model.Groups = db.Groups.Where(t => groups.Contains(t.Id)).ToList();
                 model.LecturesHistories = db.LecturesHistories.Where(t => t.StartTime != null && t.EndTime == null)
                     .ToList();
+                model.ModuleHistories = db.ModuleHistories.ToList();
                 var startedLectures = db.LecturesHistories
                     .Where(t => lectorsDisciplines.Contains(t.Id) && t.EndTime == null).ToList();
                 if (startedLectures.Any())
@@ -75,7 +76,20 @@ namespace TestingModule.Controllers
             new LectureHistoryHelper().StopLecture(login);
             return RedirectToAction("Index");
         }
-
+        public ActionResult StartModule(int moduleId)
+        {
+            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
+            new LectureHistoryHelper().StartModule(moduleId,login);
+            return RedirectToAction("Index");
+        }
+        public ActionResult StopModule(int moduleId)
+        {
+            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
+            new LectureHistoryHelper().StopModule(moduleId, login);
+            return RedirectToAction("Index");
+        }
 
         //Discipline
         public ActionResult Disciplines()
@@ -239,7 +253,7 @@ namespace TestingModule.Controllers
         {
             var db = new testingDbEntities();
             var discId = db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
-            IEnumerable<Module> mod = db.Modules.Where(t => t.LectureId == lectureId).ToList();
+            IList<Module> mod = db.Modules.Where(t => t.LectureId == lectureId).ToList();
             IList<Lecture> lect = db.Lectures.Where(t => t.DisciplineId == discId).ToList();
             ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Modules = mod };
             return View(test);

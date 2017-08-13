@@ -24,7 +24,15 @@
                             @module.Name
                         </td>
                         <td>
-                            <button class="btnSave"><i class="fa fa-play" aria-hidden="true"></i> Розпочати модуль</button>
+                            @if (Model.ModuleHistories.FirstOrDefault(t => t.ModuleId == module.Id)==null)
+                            {
+                                <button class="btnSave" type="Submit" onclick="location.href='admin/StartModule/@module.Id'"><i class="fa fa-play" aria-hidden="true"></i> Розпочати модуль</button>
+                                 }
+                            else
+                            {
+                                <button class="btnStop" type="Submit" onclick="location.href='admin/StopModule/@module.Id'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити модуль</button>
+                                }
+                            
                         </td>
                     </tr>
                 }
@@ -49,7 +57,7 @@
                                 </div>
                                 <span>Виберіть лекцію</span>
                                 <div>
-                                    @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new {@Id = "LectureId"}), "Оберіть лекцію")
+                                    @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name",  "DisciplineId", new {@Id = "LectureId"}), "Оберіть лекцію")
                                 </div>
                                 <div>
                                     <span>Виберіть групи</span>

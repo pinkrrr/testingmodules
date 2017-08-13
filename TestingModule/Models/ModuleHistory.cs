@@ -12,11 +12,10 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class StudentDiscipline
+    public partial class ModuleHistory
     {
         public int Id { get; set; }
-        public int StudentId { get; set; }
-        public int DisciplineId { get; set; }
-        public bool IsSelected { get; set; }
+        public int LectureHistoryId { get; set; }
+        public int ModuleId { get; set; }
     }
 }
