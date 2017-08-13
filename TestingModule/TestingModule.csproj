@@ -178,6 +178,8 @@
   <ItemGroup>
     <Compile Include="Additional\Deleting.cs" />
     <Compile Include="Additional\Editing.cs" />
+    <Compile Include="Additional\QuizManager.cs" />
+    <Compile Include="Additional\AccountCredentials.cs" />
     <Compile Include="Additional\UsernameAndPassword.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -259,6 +261,7 @@
       <DependentUpon>TestingDb.edmx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\QuizViewModel.cs" />
     <Compile Include="ViewModels\ReasignViewModel.cs" />
     <Compile Include="ViewModels\RegistrationFormViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
