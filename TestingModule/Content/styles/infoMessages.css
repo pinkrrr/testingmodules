@@ -13,6 +13,7 @@
     animation: messageInfo 3s linear;
     animation-delay: .5s;
     transform: translateY(-100%);
+    z-index: 100;
 }
 
 @keyframes messageInfo{

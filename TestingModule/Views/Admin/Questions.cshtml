@@ -46,7 +46,7 @@ else
     <h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
-        <table class="table" border="1">
+        <table class="table table_questions" border="1">
             @using (Html.BeginForm("EditAnswer", "admin", FormMethod.Post))
             {
                 <tr class="table-row">
@@ -58,7 +58,7 @@ else
                        @required = "required"
                    })
                     </th>
-                    <th class="table-item table-item_edit"> Правильна відповідь </th>
+                    <th class="table-item table-item_edit">Правильна відповідь</th>
                     <th class="table-item table-item_edit">
                         <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
                     </th>
@@ -93,47 +93,21 @@ else
                             </td>
                         </tr>
                     }
-                    <tr>
-                        <div class="select">
-                            @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(Model.FirstOrDefault().Modules,
-                                "Id", "Name", new { @id = "moduleId" }), "Оберіть модуль")
-                        </div>
-                    </tr>
                     for (int i = 0; i < Model.Count; i++)
                     {
                         @Html.HiddenFor(model => Model[i].QuestionId)
                         @Html.HiddenFor(model => Model[i].Question)
                     }
                     //<input type="submit" value="Зберегти відповіді" />
-                    <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                 }
             }
-            @using (Html.BeginForm("NewAnswer", "admin", FormMethod.Post, new { @class = "addNewItem-form" }))
-            {
-                <form>
-                    @{
-                        var name = item.LastOrDefault();
-                    }
-                    <td>
-                        @if (name == null)
-                        {
-                            @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text", @placeholder = "Введіть нову відповідь", @required = "required" })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text", @placeholder = "Введіть нову відповідь", @required = "required" })
-                        }
-                        @Html.HiddenFor(model => item.FirstOrDefault().QuestionId)
-                        @Html.HiddenFor(model => item.FirstOrDefault().DisciplineId)
-                        @Html.HiddenFor(model => item.FirstOrDefault().LectureId)
-                    </td>
-                    <td>
-                        <button type="submit">Додати відповідь</button>
-                    </td>
-                </form>
-                        }
+           
         </table>
-        <br>
+        <div class="select">
+            @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(Model.FirstOrDefault().Modules,
+                                "Id", "Name", new { @id = "moduleId" }), "Оберіть модуль")
+        </div>
+        <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                             }
                         }
 
