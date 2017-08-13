@@ -21,8 +21,61 @@ namespace TestingModule.Controllers
     {
         public ActionResult Index()
         {
+            var db = new testingDbEntities();
+            ReasignViewModel model = new ReasignViewModel();
+            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
+            var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
+            
+            if (role == "Lecturer")
+            {
+                var lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
+                var lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
+                var lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                    .ToList();
+                var students = db.StudentDisciplines.Where(t => lectorsDisciplines.Contains(t.DisciplineId))
+                    .Select(t => t.StudentId).ToList();
+                var groups = db.Students.Where(t => students.Contains(t.Id)).Select(t => t.GroupId).ToList();
+                model.Disciplines = db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).ToList();
+                model.Modules = db.Modules.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToList();
+                model.Lectures = db.Lectures.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToList();
+                model.Groups = db.Groups.Where(t => groups.Contains(t.Id)).ToList();
+                model.LecturesHistories = db.LecturesHistories.Where(t => t.StartTime != null && t.EndTime == null)
+                    .ToList();
+                var startedLectures = db.LecturesHistories
+                    .Where(t => lectorsDisciplines.Contains(t.Id) && t.EndTime == null).ToList();
+                if (startedLectures.Any())
+                {
+                    model.LecturesHistories = startedLectures;
+                }
+                return View(model);
+            }
+
             return View();
         }
+        //LectureHistory
+        public ActionResult StartLecture(ReasignViewModel model)
+        {
+            if (model.Disciplines != null && model.Lectures != null && model.Groups != null)
+            {
+                new LectureHistoryHelper().StartLecture(model);
+            }
+            else
+            {
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+        }
+        public ActionResult StopLecture()
+        {
+            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
+            new LectureHistoryHelper().StopLecture(login);
+            return RedirectToAction("Index");
+        }
+
 
         //Discipline
         public ActionResult Disciplines()
@@ -125,8 +178,8 @@ namespace TestingModule.Controllers
         //Lecture
         public ActionResult Lectures(int disciplineId)
         {
-            IEnumerable<Lecture> lect = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
-            IEnumerable<Discipline> disc = new testingDbEntities().Disciplines.ToList();
+            IList<Lecture> lect = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
+            IList<Discipline> disc = new testingDbEntities().Disciplines.ToList();
             ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Disciplines = disc };
             return View(test);
         }
@@ -187,7 +240,7 @@ namespace TestingModule.Controllers
             var db = new testingDbEntities();
             var discId = db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
             IEnumerable<Module> mod = db.Modules.Where(t => t.LectureId == lectureId).ToList();
-            IEnumerable<Lecture> lect = db.Lectures.Where(t => t.DisciplineId == discId).ToList();
+            IList<Lecture> lect = db.Lectures.Where(t => t.DisciplineId == discId).ToList();
             ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Modules = mod };
             return View(test);
         }
@@ -217,7 +270,7 @@ namespace TestingModule.Controllers
                     new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
                     TempData["Success"] = "Зміни було успіщно збережено!";
                 }
-                
+
             }
             catch (Exception)
             {
@@ -452,7 +505,7 @@ namespace TestingModule.Controllers
         public ActionResult Groups(int specialityId)
         {
             var db = new testingDbEntities();
-            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
+            IList<Group> grp = db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
             ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc };
             return View(test);
@@ -518,7 +571,7 @@ namespace TestingModule.Controllers
                 accList.Add(student.AccountId);
             }
             IEnumerable<Account> acc = db.Accounts.Where(t => accList.Contains(t.Id)).ToList();
-            IEnumerable<Group> grp = db.Groups.Where(t => t.SpecialityId == specId).ToList();
+            IList<Group> grp = db.Groups.Where(t => t.SpecialityId == specId).ToList();
             ReasignViewModel test = new ReasignViewModel() { Groups = grp, Accounts = acc, Students = std };
             return View(test);
         }
@@ -831,11 +884,11 @@ namespace TestingModule.Controllers
         public ActionResult DisciplineStudents(int disciplineId)
         {
             var db = new testingDbEntities();
-            IEnumerable<Group> grp = db.Groups.ToList();
+            IList<Group> grp = db.Groups.ToList();
             IEnumerable<Speciality> spc = db.Specialities.ToList();
             IEnumerable<Student> std = db.Students.OrderBy(t => t.GroupId).ThenBy(n => n.Surname).ToList();
             IList<StudentDiscipline> studDisc = db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId).ToList();
-            IEnumerable<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
+            IList<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
             foreach (var stdc in std)
             {
                 if (studDisc.All(t => t.StudentId != stdc.Id))

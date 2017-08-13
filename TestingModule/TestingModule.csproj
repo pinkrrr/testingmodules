@@ -178,6 +178,7 @@
   <ItemGroup>
     <Compile Include="Additional\Deleting.cs" />
     <Compile Include="Additional\Editing.cs" />
+    <Compile Include="Additional\LectureHistoryHelper.cs" />
     <Compile Include="Additional\QuizManager.cs" />
     <Compile Include="Additional\AccountCredentials.cs" />
     <Compile Include="Additional\UsernameAndPassword.cs" />
@@ -203,6 +204,9 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LectorDiscipline.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LectureHistoryGroup.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RoleName.cs" />

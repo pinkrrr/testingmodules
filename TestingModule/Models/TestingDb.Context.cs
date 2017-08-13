@@ -41,5 +41,6 @@ namespace TestingModule.Models
         public virtual DbSet<LectorDiscipline> LectorDisciplines { get; set; }
         public virtual DbSet<StudentDiscipline> StudentDisciplines { get; set; }
         public virtual DbSet<ExeptionLog> ExeptionLogs { get; set; }
+        public virtual DbSet<LectureHistoryGroup> LectureHistoryGroups { get; set; }
     }
 }

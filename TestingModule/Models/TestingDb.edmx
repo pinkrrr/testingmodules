@@ -36,7 +36,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Url" Type="nvarchar" MaxLength="100" />
-          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
           <Property Name="Date" Type="nvarchar" MaxLength="20" />
           <Property Name="Resolved" Type="bit" />
         </EntityType>
@@ -65,6 +65,14 @@
           <Property Name="Surname" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AccountId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="LectureHistoryGroups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="LectureHistoryId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Lectures">
           <Key>
             <PropertyRef Name="Id" />
@@ -80,7 +88,6 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LectureId" Type="int" Nullable="false" />
           <Property Name="DisciplineId" Type="int" Nullable="false" />
-          <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="StartTime" Type="datetime" Nullable="false" />
           <Property Name="EndTime" Type="datetime" />
           <Property Name="ModulesPassed" Type="int" />
@@ -155,6 +162,7 @@
           <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LectorDisciplines" EntityType="Self.LectorDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lectors" EntityType="Self.Lectors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LectureHistoryGroups" EntityType="Self.LectureHistoryGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lectures" EntityType="Self.Lectures" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LecturesHistory" EntityType="Self.LecturesHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
@@ -186,6 +194,7 @@
           <EntitySet Name="LectorDisciplines" EntityType="testingDbModel.LectorDiscipline" />
           <EntitySet Name="StudentDisciplines" EntityType="testingDbModel.StudentDiscipline" />
           <EntitySet Name="ExeptionLogs" EntityType="testingDbModel.ExeptionLog" />
+          <EntitySet Name="LectureHistoryGroups" EntityType="testingDbModel.LectureHistoryGroup" />
         </EntityContainer>
         <EntityType Name="Answer">
           <Key>
@@ -226,7 +235,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
-          <Property Name="GroupId" Type="Int32" Nullable="false" />
           <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndTime" Type="DateTime" Precision="3" />
           <Property Name="ModulesPassed" Type="Int32" />
@@ -329,6 +337,14 @@
           <Property Name="Date" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Resolved" Type="Boolean" />
         </EntityType>
+        <EntityType Name="LectureHistoryGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -377,7 +393,6 @@
                 <ScalarProperty Name="ModulesPassed" ColumnName="ModulesPassed" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
                 <ScalarProperty Name="LectureId" ColumnName="LectureId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -489,6 +504,15 @@
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LectureHistoryGroups">
+            <EntityTypeMapping TypeName="testingDbModel.LectureHistoryGroup">
+              <MappingFragment StoreEntitySet="LectureHistoryGroups">
+                <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

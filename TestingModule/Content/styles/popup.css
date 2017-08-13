@@ -30,9 +30,16 @@
 }
 
 .popup .popup-content{
-    font-size: 0;
+    font-size: 16px;
+    font-weight: bold;
     white-space: nowrap;
+    padding: 2px;
 }
+.popupGroups {
+    background: rgba(107, 108, 109, 0.4);
+    padding: 2px;
+}
+
 
 .popup:before{
     content: '';
