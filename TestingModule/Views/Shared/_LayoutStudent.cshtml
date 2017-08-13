@@ -7,31 +7,38 @@
     @Styles.Render("~/Content/css")
 </head>
 <body>
-    @{
-        var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-        var surname = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Surname).Value;
-        <ul class="ulStud">
-            <li class="liStud"><a href="/Student">TestingModule</a></li>
 
-            <li class="liStud" style="float: right"><span>@User.Identity.Name @surname </span></li>
+    <div class="studentHomepage">
+        <div class="header">
+            @{
+                var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+                var surname = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Surname).Value;
+                <ul class="ulStud">
+                    <li class="liStud"><a href="/Student">TestingModule</a></li>
 
-            @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "active-user" }))
+                    <li class="liStud" style="float: right"><span>@User.Identity.Name @surname </span></li>
+
+                    @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "active-user" }))
             {
-                @Html.AntiForgeryToken()
-                <li class="liStud" style="float: right">
-                    <a class="Studactive" href="javascript:document.getElementById('logoutForm').submit()">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>Вийти
-                    </a>
-                </li>
+                        @Html.AntiForgeryToken()
+                        <li class="liStud" style="float: right">
+                            <a class="Studactive" href="javascript:document.getElementById('logoutForm').submit()">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i>Вийти
+                            </a>
+                        </li>
+                    }
+                </ul>
             }
-        </ul>
-    }
+        </div>
+        <div class="studentBody">
+            @RenderBody()
+        </div>
+    </div>
 
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
-    @RenderBody()
 </body>
 </html>

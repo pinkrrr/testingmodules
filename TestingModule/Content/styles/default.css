@@ -21,9 +21,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 10px;
 }
 
-    h2 .groupName {
-        text-decoration: underline;
-    }
+h2 .groupName {
+    text-decoration: underline;
+}
+
 .btnSave{
     background-color: #31ac00;
     color: #ffffff;
