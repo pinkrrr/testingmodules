@@ -1,4 +1,4 @@
-﻿html, body{
+﻿html, body {
     width: 100%;
     height: 100%;
 }
@@ -11,18 +11,19 @@ body {
     color: #000000;
 }
 
-body *{
-    box-sizing: border-box;
-}
+    body * {
+        box-sizing: border-box;
+    }
 
-h1, h2, h3, h4, h5, h6{
+h1, h2, h3, h4, h5, h6 {
     padding: 0;
-    margin-top: 0;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
-h2 .groupName{
-    text-decoration: underline;
-}
+    h2 .groupName {
+        text-decoration: underline;
+    }
 
 .main-container {
     font-size: 0;
@@ -36,7 +37,7 @@ h2 .groupName{
     min-width: 800px;
 }
 
-.navbar, .body-content{
+.navbar, .body-content {
     vertical-align: top;
     height: 100%;
     position: relative;
@@ -45,24 +46,24 @@ h2 .groupName{
     white-space: normal;
 }
 
-button{
+button {
     cursor: pointer;
     border: 0;
     transition: color .2s, background .2s;
     outline: none;
 }
 
-input[type="text"]{
+input[type="text"] {
     outline: none;
     transition: border .2s;
     border: 1px solid #bababa;
 }
 
-input[type="text"]:focus{
-    border-color: #4cacff;
-}
+    input[type="text"]:focus {
+        border-color: #4cacff;
+    }
 
-.input-text{
+.input-text {
     display: block;
     width: 360px;
     position: relative;
@@ -75,7 +76,7 @@ input[type="text"]:focus{
 .body-content {
     display: inline-block;
     width: 80%;
-    min-width: 800px;
+    min-width: 1100px;
     min-height: 100vh;
     user-select: text;
     right: 0;
@@ -84,15 +85,14 @@ input[type="text"]:focus{
     overflow: auto;
 }
 
-.body-content__admin{
-
+.body-content__admin {
 }
 
-.main-container__default .body-content{
+.main-container__default .body-content {
     width: 100%;
 }
 
-i.fa{
+i.fa {
     margin-right: 10px;
     text-align: center;
 }
@@ -110,31 +110,101 @@ i.fa{
     transition: color .2s, background .2s;
 }
 
-.addNewItem-btn:hover{
+.addNewItem-btn:hover {
     background-color: #72beff;
 }
 
-.addNewItem-btn i{
+.excel{
+    text-align: right;
+    padding-right: 225px;
+    font-size: 0;
+    margin-bottom: 20px;
+}
+
+.excel *{
+    vertical-align: top;
+    position: relative;
+}
+
+.excelUploadForm{
+    display: inline-block;
+}
+
+.excel-btn {
+    display: inline-block;
+    text-align: left;
+    background-color: #207347;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
     margin-right: 5px;
 }
 
-.selectmenu{
+.excel-btn:hover {
+    background-color: #039b03;
+    color: #ffffff
+}
+
+.uploadExcel_btn_label input[type="file"] {
+    display: none;
+}
+.uploadExcel_btn {
+    font-size: 16px;
+    background-color: #efa203;
+    color: #ffffff;
+    display: inline-block;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
+    cursor: pointer;
+    margin: 0 5px;
+    padding: 8.5px;
+}
+
+.uploadExcel_btn:hover {
+    background-color: #feb319;
+    color: #ffffff;
+}
+
+.saveFile-btn {
+    display: inline-block;
+    background-color: #31ac00;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: color .2s, background .2s;
+    margin: 0 5px;
+}
+
+    .saveFile-btn:hover {
+    background-color: #3ed800;
+        color: #ffffff
+    }
+
+
+.addNewItem-btn i {
+    margin-right: 5px;
+}
+
+.selectmenu {
     width: 100%;
     font-size: 16px;
 }
 
-.selectmenu_title{
+.selectmenu_title {
     font-size: 22px;
     text-align: left;
     margin-bottom: 10px;
 }
 
-.form-title{
+.form-title {
     font-size: 32px;
     margin-bottom: 20px;
 }
 
-.loginBtn{
+.loginBtn {
     width: 100%;
     padding: 15px 0;
     color: #ffffff;
@@ -142,4 +212,3 @@ i.fa{
     font-size: 24px;
     font-weight: bold;
 }
-

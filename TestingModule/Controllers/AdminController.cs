@@ -212,8 +212,12 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
-                TempData["Success"] = "Зміни було успіщно збережено!";
+                if (model.Id != null && model.Name != null)
+                {
+                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
+                    TempData["Success"] = "Зміни було успіщно збережено!";
+                }
+                
             }
             catch (Exception)
             {
@@ -641,8 +645,9 @@ namespace TestingModule.Controllers
                 var validExtensions = new[] { ".xlsx", ".xls", "csv" };
                 if (!validExtensions.Contains(ext))
                 {
-                    TempData["Fail"] =
+                    TempData["FailUpload"] =
                         "Невірний формат файлу! Тільки файли створенні за допомогою Excel підтримуються (.xlsx ; .xls)";
+                    return RedirectToAction("Students");
                 }
                 var file = Request.Files[0];
                 MemoryStream mem = new MemoryStream();
@@ -664,13 +669,13 @@ namespace TestingModule.Controllers
                                 {
                                     break;
                                 }
-                                var name = ws.Cells[3 + i, 1].Value.ToString();
-                                var surname = ws.Cells[3 + i, 2].Value.ToString();
+                                var name = ws.Cells[3 + i, 2].Value.ToString();
+                                var surname = ws.Cells[3 + i, 1].Value.ToString();
                                 var studId = Convert.ToInt32(ws.Cells[3 + i, 3].Value);
                                 var login = Convert.ToString(ws.Cells[3 + i, 4].Value);
                                 var password = Convert.ToString(ws.Cells[3 + i, 5].Value);
                                 ids.Add(studId);
-                                if (!students.Any(t => t.Id == studId))
+                                if (!students.Any(t => t.Id == studId) && studId == 0)
                                 {
                                     new Adding().AddNewStudent(name.TrimEnd().TrimStart(), surname.TrimEnd().TrimStart(), groupId, specialityId);
                                 }
@@ -710,8 +715,11 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
-                TempData["Success"] = "Зміни було успішно збережено!";
+                if (model.Name != model.Surname && model.Name != model.Login)
+                {
+                    new Editing().EditStudent(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password, model.GroupId);
+                    TempData["Success"] = "Зміни було успішно збережено!";
+                }
             }
             catch (Exception)
             {
@@ -780,21 +788,26 @@ namespace TestingModule.Controllers
         {
             if (model.Surname != null && model.Login != null && model.Password != null)
             {
-                try
+                if (model.Name != model.Surname && model.Name != model.Login)
                 {
-                    new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(), model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
-                    TempData["Success"] = "Зміни було успішно збережено!";
-                }
-                catch (Exception)
-                {
-                    HttpContext con = System.Web.HttpContext.Current;
-                    var url = con.Request.Url.ToString();
-                    new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
-                                                  + model.Surname + " Id = " + model.Id + " Login = " + model.Login + " Password = " + model.Password);
-                    TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                    try
+                    {
+                        new Editing().EditLector(model.Id, model.Name.TrimEnd().TrimStart(),
+                            model.Surname.TrimEnd().TrimStart(), model.Login, model.Password);
+                        TempData["Success"] = "Зміни було успішно збережено!";
+                    }
+                    catch (Exception)
+                    {
+                        HttpContext con = System.Web.HttpContext.Current;
+                        var url = con.Request.Url.ToString();
+                        new Adding().AddNewError(url, "EditLector Name = " + model.Name + " Surname = "
+                                                      + model.Surname + " Id = " + model.Id + " Login = " +
+                                                      model.Login + " Password = " + model.Password);
+                        TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+                    }
                 }
             }
-            
+
             return RedirectToAction("Lectors");
         }
         public ActionResult DeleteLector(int lectorId)

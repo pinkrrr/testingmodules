@@ -10,16 +10,16 @@
     @{
         var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
         var surname = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Surname).Value;
-        <ul>
-            <li><a href="/Student">TestingModule</a></li>
+        <ul class="ulStud">
+            <li class="liStud"><a href="/Student">TestingModule</a></li>
 
-            <li style="float: right"><span>@User.Identity.Name @surname</span></li>
+            <li class="liStud" style="float: right"><span>@User.Identity.Name @surname </span></li>
 
             @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "active-user" }))
             {
                 @Html.AntiForgeryToken()
-                <li style="float: right">
-                    <a class="active" href="javascript:document.getElementById('logoutForm').submit()">
+                <li class="liStud" style="float: right">
+                    <a class="Studactive" href="javascript:document.getElementById('logoutForm').submit()">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>Вийти
                     </a>
                 </li>

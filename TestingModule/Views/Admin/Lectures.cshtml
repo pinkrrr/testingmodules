@@ -25,7 +25,23 @@
 <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову лекцію</button>
 @if (!Model.Lectures.Any())
 {
-    <h3>Немає жодної лекції...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодної лекції...
+                    </h2>
+                    <div class="error-details">
+                        Створіть лекції за допомогою кнопки "Додати нову лекцію".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -36,7 +52,7 @@ else
         @foreach (var item in Model.Lectures.OrderBy(t => t.Name))
         {
             <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text">@item.Name</a></td>
+                <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text" data-editable>@item.Name</a></td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="lectures/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>

@@ -89,7 +89,7 @@ namespace TestingModule.Additional
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
             var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
-            if (GroupId != _db.Students.FirstOrDefault(t => t.Id == studentId).SpecialityId && GroupId != 0)
+            if (GroupId != _db.Students.FirstOrDefault(t => t.Id == studentId).GroupId && GroupId != 0)
             {
                 std.GroupId = GroupId;
             }

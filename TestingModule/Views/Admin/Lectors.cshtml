@@ -20,10 +20,26 @@
     </div>
 }
 
-<h2>Лектори!</h2>
+<h2>Лектори</h2>
 @if (!Model.Any())
 {
-    <h3>Немає жодного лектора...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодного лектора...
+                    </h2>
+                    <div class="error-details">
+                        Створіть лекторів за допомогою кнопки "Додати нового лектора".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -40,10 +56,10 @@ else
         @foreach (var item in Model.OrderBy(t => t.Surname))
         {
             <tr class="table-row">
-                <td class="table-item table-item_surname_text" data-id ="@item.Id">@item.Surname</td>
-                <td class="table-item table-item_name_text">@item.Name</td>
-                <td class="table-item">@item.Login</td>
-                <td class="table-item">@item.Password</td>
+                <td class="table-item table-item_surname" data-id="@item.Id" data-editable>@item.Surname</td>
+                <td class="table-item table-item_name" data-editable>@item.Name</td>
+                <td class="table-item" data-editable>@item.Login</td>
+                <td class="table-item" data-editable>@item.Password</td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
                     </div>
@@ -79,16 +95,6 @@ else
                 <form>
                     @{
                         var name = Model.LastOrDefault();
-                    }
-                    @if (name == null)
-                    {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім\'я лектора", @required = "required" })
-                    }
-                    else
-                    {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім\'я лектора", @required = "required" })
-                    }
-                    @{
                         var surname = Model.LastOrDefault();
                     }
                     @if (surname == null)
@@ -99,6 +105,15 @@ else
                     {
                         @Html.TextBoxFor(model => model.LastOrDefault().Surname, surname.Surname = "", new { @class = "input-text", @placeholder = "Введіть прізвище лектора", @required = "required" })
                     }
+                    @if (name == null)
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім\'я лектора", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть ім\'я лектора", @required = "required" })
+                    }
+                   
                     <div>
                         <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
                         <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
@@ -118,8 +133,8 @@ else
                 <form>
                     @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "Id" })
                     @Html.HiddenFor(model => model.FirstOrDefault().AccountId, new { @accountId = "AccountId" })
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я лектора", @required = "required" })
                     @Html.TextBoxFor(model => model.FirstOrDefault().Surname, new { @class = "input-text", @placeholder = "Введіть прізвище лектора", @required = "required" })
+                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть ім'я лектора", @required = "required" })
                     @Html.TextBoxFor(model => model.FirstOrDefault().Login, new { @class = "input-text" })
                     @Html.TextBoxFor(model => model.FirstOrDefault().Password, new { @class = "input-text" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>

@@ -35,6 +35,11 @@ namespace TestingModule.Additional
         }
         public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
         {
+            if (disciplineId == 0 || lectureId == 0)
+            {
+                lectureId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
+                disciplineId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).DisciplineId;
+            }
             var questionsTable = _db.Set<Question>();
             questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name });
             _db.SaveChanges();
@@ -52,17 +57,21 @@ namespace TestingModule.Additional
             specialityTable.Add(new Speciality() { Id = last, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewGroup(string name, int SpecialityId)
+        public void AddNewGroup(string name, int specialityId)
         {
             var last = _db.Groups.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var groupsTable = _db.Set<Group>();
-            groupsTable.Add(new Group() { Id = last, SpecialityId = SpecialityId, Name = name });
+            groupsTable.Add(new Group() { Id = last, SpecialityId = specialityId, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewStudent(string name, string surname, int GroupId, int SpecialityId)
+        public void AddNewStudent(string name, string surname, int groupId, int specialityId)
         {
+            if (specialityId == 0)
+            {
+                specialityId = _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
+            }
             UsernameAndPassword usernameAndPassword = new UsernameAndPassword();
-            var group = _db.Groups.FirstOrDefault(t => t.Id == GroupId).Name;
+            var group = _db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
             var shortName = "";
             var numbers = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             foreach (var part in group.Split(' '))
@@ -96,7 +105,7 @@ namespace TestingModule.Additional
 
             var last = _db.Accounts.FirstOrDefault(t => t.Login == username && t.Password == password);
             var studentsTable = _db.Set<Student>();
-            studentsTable.Add(new Student() { SpecialityId = SpecialityId, GroupId = GroupId, Name = name, Surname = surname, AccountId = last.Id });
+            studentsTable.Add(new Student() { SpecialityId = specialityId, GroupId = groupId, Name = name, Surname = surname, AccountId = last.Id });
             _db.SaveChanges();
         }
 
