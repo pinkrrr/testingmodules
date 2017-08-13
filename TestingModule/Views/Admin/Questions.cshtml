@@ -46,7 +46,7 @@ else
     <h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
-        <table class="table" border="1">
+        <table class="table table_questions" border="1">
             @using (Html.BeginForm("EditAnswer", "admin", FormMethod.Post))
             {
                 <tr class="table-row">
@@ -93,19 +93,12 @@ else
                             </td>
                         </tr>
                     }
-                    <tr>
-                        <div class="select">
-                            @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(Model.FirstOrDefault().Modules,
-                                "Id", "Name", new { @id = "moduleId" }), "Оберіть модуль")
-                        </div>
-                    </tr>
                     for (int i = 0; i < Model.Count; i++)
                     {
                         @Html.HiddenFor(model => Model[i].QuestionId)
                         @Html.HiddenFor(model => Model[i].Question)
                     }
                     //<input type="submit" value="Зберегти відповіді" />
-                    <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                 }
             }
             @using (Html.BeginForm("NewAnswer", "admin", FormMethod.Post, new { @class = "addNewItem-form" }))
@@ -133,7 +126,11 @@ else
                 </form>
                         }
         </table>
-        <br>
+        <div class="select">
+            @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(Model.FirstOrDefault().Modules,
+                                "Id", "Name", new { @id = "moduleId" }), "Оберіть модуль")
+        </div>
+        <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                             }
                         }
 
