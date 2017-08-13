@@ -109,8 +109,11 @@ input[type="text"] {
     overflow: auto;
 }
 
-.body-content__admin {
-}
+/*.body-content__admin {
+    background-image: url("/Content/classRoom.jpeg");
+    background-size: cover;
+    background-position: center center;
+}*/
 
 .main-container__default .body-content {
     width: 100%;
