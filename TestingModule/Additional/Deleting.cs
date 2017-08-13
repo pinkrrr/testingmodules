@@ -26,6 +26,8 @@ namespace TestingModule.Additional
                 }
                 _db.Modules.RemoveRange(_db.Modules.Where(t => t.LectureId == lecture));
             }
+            _db.LectorDisciplines.RemoveRange(_db.LectorDisciplines.Where(t => t.DisciplineId == disciplineId));
+            _db.StudentDisciplines.RemoveRange(_db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId));
             _db.Lectures.RemoveRange(_db.Lectures.Where(t => t.DisciplineId == disciplineId));
             var disc = new Discipline() { Id = disciplineId };
             _db.Entry(disc).State = EntityState.Deleted;
