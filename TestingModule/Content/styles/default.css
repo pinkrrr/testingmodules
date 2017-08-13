@@ -109,11 +109,38 @@ input[type="text"] {
     overflow: auto;
 }
 
-/*.body-content__admin {
-    background-image: url("/Content/classRoom.jpeg");
+.body-content__adminHomepage{
+    padding: 0;
+}
+
+.adminHomepage {
+    background-image: url("/Content/classroom.jpg");
     background-size: cover;
     background-position: center center;
-}*/
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.adminHomepage:before{
+    content: "";
+    height: 100%;
+}
+
+.adminHomepage_content, .adminHomepage:before{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.adminHomepage_content{
+    text-align: center;
+    color: #ffffff;
+    background-color: rgba(0,0,0,.5);
+    padding: 20px;
+    text-transform: uppercase;
+    width: 405px;
+}
 
 .main-container__default .body-content {
     width: 100%;
