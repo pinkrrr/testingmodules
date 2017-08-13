@@ -5,25 +5,37 @@
 @if (Request.IsAuthenticated)
 {
 
-        @*@{
-        DateTime daysLeft = DateTime.Parse("08/15/2017 12:00:01 PM");
-        DateTime startDate = DateTime.Now;
 
-        //Calculate countdown timer.
-        TimeSpan t = daysLeft - startDate;
-        string countDown = string.Format("{0} Days til demo.", t.Days);
-    }
-    @if (startDate > daysLeft)
+    DateTime daysLeft = DateTime.Parse("08/15/2017 12:00:01 PM");
+    DateTime startDate = DateTime.Now;
+
+    //Calculate countdown timer.
+    TimeSpan t = daysLeft - startDate;
+    string countDown = string.Format("{0} days and {1} hours", t.Days, t.Hours);
+
+    if (startDate > daysLeft)
     {
         <h1 class="w3-jumbo w3-animate-top">Welcome</h1>
     }
     else
     {
-        <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1>
-        <hr class="w3-border-grey" style="margin: auto; width: 40%">
-
-        <p class="w3-large w3-center">@countDown</p>
-        <p class="w3-small w3-center">Btw, need to remove padding:20px from this page :)</p>
-    }*@
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="error-template">
+                        <h1>
+                            Welcome!
+                        </h1>
+                        <h2>
+                            Site will be able to test in
+                        </h2>
+                        <div class="error-details">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>@countDown
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
 }
