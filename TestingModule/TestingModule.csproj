@@ -281,6 +281,7 @@
     <Content Include="Content\styles\login.css" />
     <Content Include="Content\styles\navbar.css" />
     <Content Include="Content\styles\popup.css" />
+    <Content Include="Content\styles\student.css" />
     <Content Include="Content\styles\studentsHeader.css" />
     <Content Include="Content\styles\table.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -400,6 +401,7 @@
     <Content Include="Views\Error\ServerError.cshtml" />
     <Content Include="Views\Error\Dashboard.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutAdminHomepage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
