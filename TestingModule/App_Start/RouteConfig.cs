@@ -9,8 +9,7 @@ namespace TestingModule
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            
+            routes.MapMvcAttributeRoutes();
 
             //lectors
             routes.MapRoute(
@@ -148,12 +147,12 @@ namespace TestingModule
             routes.MapRoute(
                 name: "Deletediscipline",
                 url: "admin/disciplines/{disciplineid}/Delete",
-                defaults: new { controller = "admin", action = "Deletediscipline" });          
+                defaults: new { controller = "admin", action = "Deletediscipline" });
 
             routes.MapRoute(
                 name: "admin",
                 url: "admin/{action}",
-                defaults: new { controller = "admin", action = "Index"});
+                defaults: new { controller = "admin", action = "Index" });
 
             routes.MapRoute(
                 name: "NotFound",
@@ -186,10 +185,6 @@ namespace TestingModule
                 defaults: new { controller = "Account", action = "Login" });
 
             routes.MapRoute(
-                name: "Quiz",
-                url: "quiz/{moduleId}",
-                defaults: new { controller = "Quiz", action = "Index" });
-            routes.MapRoute(
                 name: "StartModule",
                 url: "admin/StartModule/{moduleId}",
                 defaults: new { controller = "admin", action = "StartModule" });
@@ -198,15 +193,12 @@ namespace TestingModule
                 url: "admin/StopModule/{moduleId}",
                 defaults: new { controller = "admin", action = "StopModule" });
 
-
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Account", action = "Login" , id=UrlParameter.Optional});
+                defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional });
 
             
-
-            //routes.MapMvcAttributeRoutes();
 
         }
     }

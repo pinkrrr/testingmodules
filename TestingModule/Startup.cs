@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin;
@@ -18,6 +19,7 @@ namespace TestingModule
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login/")
             });
+            //AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
         }
     }

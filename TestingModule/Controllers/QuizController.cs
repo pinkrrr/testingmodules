@@ -15,7 +15,7 @@ namespace TestingModule.Controllers
         private testingDbEntities _context=new testingDbEntities();
 
         // GET: Quiz
-        [Route("{controller}/{action}/{moduleId}")]
+        [Route("quiz/{moduleId}")]
         public async Task<ActionResult> Index(int moduleId)
         {
             QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);

@@ -123,6 +123,7 @@ namespace TestingModule.Controllers
             ModelState.AddModelError("", "invalid username or password");
             return View("Login", loginForm);
         }
+
         private bool AccountValid(string username, string password)
         {
             var accounts = _context.Accounts;
@@ -145,8 +146,9 @@ namespace TestingModule.Controllers
             HttpContext.GetOwinContext().Authentication.SignOut();
             return RedirectToAction("Login", "Account");
         }
+
+        #endregion
     }
-    #endregion
 
     public class CustomAuthorize : AuthorizeAttribute
     {

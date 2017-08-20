@@ -48,7 +48,7 @@ namespace TestingModule.Controllers
                         .ModuleId;
                     if (activeModule != null)
                     {
-                        Response.Redirect("Quiz/"+activeModule);
+                        return RedirectToAction("/"+activeModule, "Quiz");
                     }
                 }
             }
