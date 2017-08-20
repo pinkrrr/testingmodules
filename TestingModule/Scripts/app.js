@@ -252,9 +252,28 @@
 
     }
 
+    function quiz() {
+        var $answerItems = $('.answers .answer');
+        var $nextQbtn = $('.nextQuestion');
+
+        initSelectAnswer();
+
+        function selectAnswer($answer) {
+            $answer.addClass('answer__active').siblings().removeClass('answer__active');
+        }
+
+        function initSelectAnswer() {
+            $answerItems.on('click', function () {
+                selectAnswer($(this));
+            })
+        }
+       
+    }
+
     popup();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
+    quiz();
 });

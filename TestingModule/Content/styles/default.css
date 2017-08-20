@@ -107,7 +107,7 @@ input[type="text"] {
 .body-content {
     display: inline-block;
     width: 80%;
-    min-width: 1100px;
+    min-width: 800px;
     min-height: 100vh;
     user-select: text;
     right: 0;
@@ -116,17 +116,19 @@ input[type="text"] {
     overflow: auto;
 }
 
-.body-content__adminHomepage{
+.body-content__adminHomepage, .body-content__LecturerHomepage{
     padding: 0;
+    background-position: center center;
+    background-repeat: repeat;
+    text-align: center;
 }
 
-.adminHomepage {
+.body-content__LecturerHomepage{
+    background-image: url("/Content/img/lectorBackground.jpg");
+}
+
+.body-content__adminHomepage {
     background-image: url("/Content/classroom.jpg");
-    background-size: cover;
-    background-position: center center;
-    height: 100%;
-    width: 100%;
-    text-align: center;
 }
 
 .adminHomepage:before{

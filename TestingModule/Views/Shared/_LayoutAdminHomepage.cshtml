@@ -8,7 +8,7 @@
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
-
+    
     <div class="main-container">
         <div class="navbar">
             @*@Html.ActionLink("Masters of masters", "Index", "admin", new { area = "" }, new { @class = "navbar-logo" })*@
@@ -40,11 +40,8 @@
             @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })*@
 
         </div>
-        <div class="body-content body-content__adminHomepage">
+        <div class="body-content body-content__@(new TestingModule.Additional.AccountCredentials().GetRole())Homepage">
             @RenderBody()
-            <footer>
-                <!-- <p>&copy; @DateTime.Now.Year - RBS</p> -->
-            </footer>
         </div>
     </div>
 

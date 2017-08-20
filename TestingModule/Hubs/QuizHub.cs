@@ -7,6 +7,7 @@ using Microsoft.AspNet.SignalR;
 using TestingModule.Additional;
 using TestingModule.Models;
 using TestingModule.ViewModels;
+using Newtonsoft.Json;
 
 namespace TestingModule.Hubs
 {
@@ -14,7 +15,7 @@ namespace TestingModule.Hubs
     {
         private testingDbEntities _context = new testingDbEntities();
 
-        public async void SaveResponse(QuizViewModel quizVM, int responseId)
+        public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
             Respons response = new Respons
             {
@@ -26,8 +27,13 @@ namespace TestingModule.Hubs
             await _context.SaveChangesAsync();
             Question questionToRemove = quizVM.QuestionsList.SingleOrDefault(ql => ql.Id == quizVM.Question.Id);
             quizVM.QuestionsList.Remove(questionToRemove);
-            //return quizVM;
-            Clients.Caller.SaveCallerResponse(quizVM);
+            return quizVM;
+            //Clients.All.saveCallerResponse(quizVM);
+        }
+        public class QuizViewModelJSON
+        {
+            [JsonProperty("model")]
+            public string model { get; set; }
         }
     }
 }

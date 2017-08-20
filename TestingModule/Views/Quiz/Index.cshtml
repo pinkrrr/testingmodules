@@ -4,21 +4,52 @@
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
-<table>
-    <tr>
-        <th>@Model.Question.Text</th>
-    </tr>
-    @foreach (var answer in Model.Answers)
-    {
-        <tr>
-            <td>
-                @answer.Text
-            </td>
-        </tr>
-    }
-    
-</table>
+<div class="questionBlock">
+    <div class="question" data-questionid="@Model.Question.Id">@Model.Question.Text</div>
 
-<scrypt>
-    function init()
-</scrypt>
+    <div class="answers">
+        @foreach (var answer in Model.Answers)
+        {
+            <div class="answer" data-answerid="@answer.Id">
+                <div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div>
+                <div class="answer_text">@answer.Text</div>
+            </div>
+        }
+    </div>
+
+    <button class="nextQuestion">Далі</button>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var $nextQbtn = $('.nextQuestion');
+        var quiz = $.connection.quizHub;
+        $.connection.hub.start().done(function () {
+            $nextQbtn.click(function () {
+                // Call the Send method on the hub.
+                @*quiz.server.saveResponse({ model: '@qVM', id: 222 });
+                quiz.client.saveCallerResponse = function (qVM) {
+                    console.log(qVM);
+                }
+                quiz.client.saveCallerResponse();*@
+
+                var model = @Html.Raw(Json.Encode(@Model));
+                console.log('Before:');
+                console.log(model);
+
+
+                quiz.server.saveResponse(model, 22).done(function (model) {
+                    console.log('After:');
+                    console.log(model);
+                }).fail(function (error) {
+                    console.log(error);
+                });
+
+            });
+        });
+    });
+
+
+
+</script>
