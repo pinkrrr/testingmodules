@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using TestingModule.Models;
@@ -28,7 +29,7 @@ namespace TestingModule.Additional
                 groupsLectsTable.Add(new LectureHistoryGroup() { LectureHistoryId = lectureHistoryId, GroupId = group.Id });
                 _db.SaveChanges();
             }
-           
+
         }
 
         public void StopLecture(string login)
@@ -39,12 +40,48 @@ namespace TestingModule.Additional
                 .ToList();
             var activeLectures = _db.LecturesHistories
                 .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).ToList();
+            var activeLecId = _db.LecturesHistories
+                .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).Select(t => t.Id).ToList();
+            _db.ModuleHistories.RemoveRange(_db.ModuleHistories.Where(t => activeLecId.Contains(t.LectureHistoryId)));
             foreach (var lec in activeLectures)
             {
                 lec.EndTime = DateTime.Now;
                 _db.SaveChanges();
             }
 
+        }
+
+        public void StartModule(int moduleId, string login)
+        {
+            var lector = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
+            var lectorId = _db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
+            var lectorsDisciplines = _db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                .ToList();
+            var activeLectures = _db.LecturesHistories
+                .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).FirstOrDefault().Id;
+            if (_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures).Any())
+            {
+               
+            }
+            else
+            {
+                var moduleHistTable = _db.Set<ModuleHistory>();
+                moduleHistTable.Add(new ModuleHistory() { ModuleId = moduleId, LectureHistoryId = activeLectures });
+                _db.SaveChanges();
+            }
+
+        }
+
+        public void StopModule(int moduleId, string login)
+        {
+            var lector = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
+            var lectorId = _db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
+            var lectorsDisciplines = _db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                .ToList();
+            var activeLectures = _db.LecturesHistories
+                .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).FirstOrDefault().Id;
+            _db.ModuleHistories.RemoveRange(_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures && t.ModuleId == moduleId));
+            _db.SaveChanges();
         }
 
     }

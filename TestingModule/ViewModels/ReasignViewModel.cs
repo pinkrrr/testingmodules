@@ -10,7 +10,7 @@ namespace TestingModule.ViewModels
     {
         public IList<Discipline> Disciplines { get; set; }
         public IList<Lecture> Lectures { get; set; }
-        public IEnumerable<Module> Modules { get; set; }
+        public IList<Module> Modules { get; set; }
         public IEnumerable<Question> Questions { get; set; }
         public IEnumerable<Answer> Answers { get; set; }
         public IEnumerable<Speciality> Specialities { get; set; }
@@ -18,6 +18,7 @@ namespace TestingModule.ViewModels
         public IEnumerable<Account> Accounts { get; set; }
         public IEnumerable<Student> Students { get; set; }
         public IEnumerable<LecturesHistory> LecturesHistories { get; set; }
+        public IList<ModuleHistory> ModuleHistories { get; set; }
         public IList<StudentDiscipline> StudentDisciplines { get; set; }
     }
 }
