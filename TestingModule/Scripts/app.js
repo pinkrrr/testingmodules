@@ -274,7 +274,7 @@
                 selectAnswer($(this));
             })
         }
-
+        
         function setQuestionData(model) {
             var _model = model || qModel;
             console.log(_model);
@@ -286,7 +286,7 @@
             })
             
         }
-
+        
         function showNextQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             console.log(selectedAnswerId);
@@ -303,7 +303,7 @@
                 return;
             }
         }
-
+        
         function initNextQuestion() {
             $nextQbtn.click(function () {
                 showNextQuestion();
