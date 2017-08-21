@@ -14,6 +14,7 @@ namespace TestingModule.Hubs
     public class QuizHub : Hub
     {
         private testingDbEntities _context = new testingDbEntities();
+        private QuizManager quizManager=new QuizManager();
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
@@ -25,8 +26,7 @@ namespace TestingModule.Hubs
             };
             _context.Responses.Add(response);
             await _context.SaveChangesAsync();
-            Question questionToRemove = quizVM.QuestionsList.SingleOrDefault(ql => ql.Id == quizVM.Question.Id);
-            quizVM.QuestionsList.Remove(questionToRemove);
+            await quizManager.UpdateQuizModel(quizVM);
             return quizVM;
             //Clients.All.saveCallerResponse(quizVM);
         }
