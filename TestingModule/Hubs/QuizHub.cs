@@ -14,7 +14,7 @@ namespace TestingModule.Hubs
     public class QuizHub : Hub
     {
         private testingDbEntities _context = new testingDbEntities();
-        private QuizManager quizManager=new QuizManager();
+        private QuizManager quizManager = new QuizManager();
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
@@ -29,11 +29,6 @@ namespace TestingModule.Hubs
             await quizManager.UpdateQuizModel(quizVM);
             return quizVM;
             //Clients.All.saveCallerResponse(quizVM);
-        }
-        public class QuizViewModelJSON
-        {
-            [JsonProperty("model")]
-            public string model { get; set; }
         }
     }
 }

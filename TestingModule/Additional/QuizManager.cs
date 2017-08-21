@@ -45,8 +45,6 @@ namespace TestingModule.Additional
             Question questionToRemove = quizVM.QuestionsList.SingleOrDefault(ql => ql.Id == quizVM.Question.Id);
             quizVM.QuestionsList.Remove(questionToRemove);
             quizVM.Question = quizVM.QuestionsList.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-            quizVM.QuestionsList.Remove(questionToRemove);
-            quizVM.Question = quizVM.QuestionsList.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
