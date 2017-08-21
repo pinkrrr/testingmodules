@@ -14,7 +14,7 @@ namespace TestingModule.Hubs
     public class QuizHub : Hub
     {
         private testingDbEntities _context = new testingDbEntities();
-        private QuizManager quizManager=new QuizManager();
+        private QuizManager quizManager = new QuizManager();
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
