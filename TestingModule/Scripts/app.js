@@ -323,5 +323,9 @@
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
-    quiz();
+
+    if ($('.questionBlock').length) {
+        quiz();
+    }
+    
 });

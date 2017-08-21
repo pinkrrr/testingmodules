@@ -30,10 +30,5 @@ namespace TestingModule.Hubs
             return quizVM;
             //Clients.All.saveCallerResponse(quizVM);
         }
-        public class QuizViewModelJSON
-        {
-            [JsonProperty("model")]
-            public string model { get; set; }
-        }
     }
 }
