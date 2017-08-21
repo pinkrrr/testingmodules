@@ -13,7 +13,8 @@
             @{
                 var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
                 var surname = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Surname).Value;
-                <div class="studentName"><a href="/Student">@User.Identity.Name @surname</a></div>
+
+                <a class="studentName" href="/Student">@User.Identity.Name @surname</a>
                 using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "logoutForm" }))
                 {
                     @Html.AntiForgeryToken()
@@ -31,7 +32,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
-    <script src="~/Scripts/app.js"></script>ок
+    <script src="~/Scripts/app.js"></script>
     <script src="~/signalr/hubs"></script>
     @RenderSection("scripts", required: false)
 </body>

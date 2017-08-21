@@ -1,37 +1,32 @@
-﻿.ulStud {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-    
+﻿.studentHomepage .header{
+    width: 100%;
+    display: block;
+    font-size: 0;
+    border-bottom: 1px solid #0094ff;
 }
 
-.liStud {
-    float: left;
+.studentName, .logoutForm{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    height: 100%;
 }
 
-    .liStud a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    .liStud span {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    .liStud a:hover:not(.active) {
-        background-color: #ea8400;
-    }
-
-.Studactive {
-    background-color: #4CAF50;
+.studentName{
+    width: 70%;
+    color: #ffffff;
+    background-color: #0094ff;
+    text-decoration: none;
 }
 
+.logoutForm{
+    width: 30%;
+}
+
+.logoutForm .logout{
+    color: #0094ff;
+    text-decoration: none;
+}
