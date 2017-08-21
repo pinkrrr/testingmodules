@@ -8,6 +8,7 @@
     outline: none;
     background-color: #ffffff;
     transition: background .2s;
+    border-radius: 5px;
 }
 
 .ui-selectmenu-button.ui-button:focus {

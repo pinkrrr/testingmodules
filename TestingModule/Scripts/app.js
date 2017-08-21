@@ -252,9 +252,59 @@
 
     }
 
+    function quiz() {
+        var $nextQbtn = $('.nextQuestion');
+
+        var $questionBlock = $('.questionBlock');
+        var $question = $questionBlock.find('.question');
+
+        var $answerList = $questionBlock.find('.answers');
+        var $answers = $answerList.find('.answer');
+
+        initSelectAnswer();
+        setQuestionData();
+
+        function selectAnswer($answer) {
+            $answer.addClass('answer__active').siblings().removeClass('answer__active');
+        }
+
+        function initSelectAnswer() {
+            $answerList.on('click', '.answer', function () {
+                selectAnswer($(this));
+            })
+        }
+
+        function setQuestionData(model) {
+            var model = model || qModel;
+            $question.attr('data-questionid', model.Question.Id);
+            $question.html(model.Question.Text);
+
+            model.Answers.forEach(function (item) {
+                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">'+item.Text+'</div></div>')
+            })
+            
+        }
+
+        //СУКА! НЕ ЧІПАТИ ЦЮ ХУЙНЮ, БО Я БЛЯ ПОВБИВАЮ!!!
+
+        //var quiz = $.connection.quizHub;
+        //$.connection.hub.start().done(function () {
+        //    $nextQbtn.click(function () {
+        //        quiz.server.saveResponse(qModel, 22).done(function (model) {
+        //            setQuestionData(model);
+        //        }).fail(function (error) {
+        //            console.log(error);
+        //        });
+
+        //    });
+        //});
+       
+    }
+
     popup();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
+    quiz();
 });

@@ -83,7 +83,7 @@ else
                             </td>
                             <td class="table-item table-item_correct">
                                 <div class="table-button table-item_correct">
-                                    @Html.RadioButtonFor(model => Model[Model.IndexOf(que)].IsCorrect,true)
+                                    @Html.RadioButtonFor(model => que, true, new { @class= "radioInput" })
                                 </div>
                             </td>
                             <td class="table-item table-item_correct">
