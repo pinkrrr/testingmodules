@@ -261,6 +261,8 @@
         var $answerList = $questionBlock.find('.answers');
         var $answers = $answerList.find('.answer');
 
+        var _model = qModel;
+
         function selectAnswer($answer) {
             $answer.addClass('answer__active').siblings().removeClass('answer__active');
         }
@@ -276,12 +278,10 @@
         }
         
         function setQuestionData(model) {
-            var _model = model || qModel;
-            console.log(_model);
-            $question.attr('data-questionid', _model.Question.Id);
-            $question.html(_model.Question.Text);
+            $question.attr('data-questionid', model.Question.Id);
+            $question.html(model.Question.Text);
             $answerList.html('');
-            _model.Answers.forEach(function (item) {
+            model.Answers.forEach(function (item) {
                 $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">'+item.Text+'</div></div>')
             })
             
@@ -289,16 +289,22 @@
         
         function showNextQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
-            console.log(selectedAnswerId);
             if (selectedAnswerId) {
                 var quiz = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quiz.server.saveResponse(qModel, selectedAnswerId).done(function (model) {
-                        setQuestionData(model);
-                    }).fail(function (error) {
-                        console.log(error);
+
+                if (_model.QuestionsList.length > 1) {
+                    $.connection.hub.start().done(function () {
+                        quiz.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                            _model = model;
+                            setQuestionData(_model);
+                        }).fail(function (error) {
+                            console.log(error);
+                        });
                     });
-                });
+                } else {
+                    quitQuiz();
+                }
+
             } else {
                 return;
             }
@@ -310,9 +316,17 @@
             });
         }
 
+        function quitQuiz() {
+            $questionBlock.remove();
+            $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
+            setTimeout(function () {
+                document.location.href = "/";
+            }, 1000);
+        }
+
 
         initSelectAnswer();
-        setQuestionData();
+        setQuestionData(_model);
         initNextQuestion();
         
        
