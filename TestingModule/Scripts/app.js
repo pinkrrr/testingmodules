@@ -165,6 +165,33 @@
 
     }
 
+    function questionsEdit() {
+
+        var $hiddenSaveBtns = $('.btnSave__hidden');
+        var $saveBtn = $('.btnSaveQuestions');
+
+        function addNewAnswer() {
+            
+        }
+
+        function initAddNewAnswer() {
+
+        }
+
+        //function saveQuestions() {
+        //    $('.btnSave__hidden').each(function (i) {
+        //        console.log(i);
+        //    });
+        //}
+
+        //function initSaveQuestions() {
+        //    $saveBtn.on('click', function () {
+        //        //saveQuestions();
+        //    })
+        //}
+
+    }
+
     function selectmenuInit() {
         $('select').selectmenu();
     }
@@ -333,6 +360,7 @@
     }
 
     popup();
+    questionsEdit();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
