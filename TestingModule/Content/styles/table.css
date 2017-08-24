@@ -164,3 +164,39 @@
     background-color: #e50d0d; 
     color: #ffffff;
 }
+
+.questionBlock{
+    margin-bottom: 200px;
+    position: relative;
+}
+
+.table_questions{
+    padding: 0;
+}
+
+.questionBlock .btnSave{
+    position: absolute;
+    right: -20px;
+    bottom: -90px;
+}
+
+.table_questions .ui-checkboxradio-label{
+    width: 50px;
+    height: 50px;
+    display: block;
+    margin: auto;
+}
+
+.table_questions .ui-checkboxradio-label{
+    transition: .3s;
+}
+
+.table_questions .ui-checkboxradio-label.ui-state-active{
+    border: 1px solid #1c7e00;
+    background: #3fc21a;
+}
+
+.table_questions .ui-checkboxradio-label.ui-button:active{
+    border: 1px solid #1c7e00;
+    background: #3fc21a;
+}
