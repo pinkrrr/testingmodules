@@ -21,5 +21,10 @@ namespace TestingModule.Controllers
             QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);
             return View(qvm);
         }
+
+        public ActionResult Statistics()
+        {
+            return View();
+        }
     }
 }
