@@ -48,5 +48,14 @@ namespace TestingModule.Additional
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
+
+        public async Task<bool> IsAnswerCorrect(int answerId)
+        {
+            if (await _context.Answers.Where(a => a.Id == answerId)
+                .Select(a => a.IsCorrect)
+                .SingleOrDefaultAsync() == true)
+                return true;
+            return false;
+        }
     }
 }

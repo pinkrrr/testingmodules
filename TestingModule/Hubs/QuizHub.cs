@@ -18,6 +18,7 @@ namespace TestingModule.Hubs
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
+            await OnConnected();
             Respons response = new Respons
             {
                 AnswerId = responseId,
@@ -27,8 +28,37 @@ namespace TestingModule.Hubs
             _context.Responses.Add(response);
             await _context.SaveChangesAsync();
             await quizManager.UpdateQuizModel(quizVM);
+            if (await quizManager.IsAnswerCorrect(response.AnswerId))
+            {
+                Clients.All.recieveStatistics(response.AnswerId, UserHandler.ConnectedIds.Count);
+            }
             return quizVM;
-            //Clients.All.saveCallerResponse(quizVM);
+
         }
+
+        public override Task OnConnected()
+        {
+            var role = new AccountCredentials().GetRole();
+            if (role == RoleName.Student)
+            {
+                UserHandler.ConnectedIds.Add(Context.ConnectionId);
+            }
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            var role = new AccountCredentials().GetRole();
+            if (role == RoleName.Student)
+            {
+                UserHandler.ConnectedIds.Remove(Context.ConnectionId);
+            }
+            return base.OnDisconnected(stopCalled);
+        }
+    }
+
+    public static class UserHandler
+    {
+        public static HashSet<string> ConnectedIds = new HashSet<string>();
     }
 }
