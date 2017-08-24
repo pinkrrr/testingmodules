@@ -4,21 +4,15 @@
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
-<table>
-    <tr>
-        <th>@Model.Question.Text</th>
-    </tr>
-    @foreach (var answer in Model.Answers)
-    {
-        <tr>
-            <td>
-                @answer.Text
-            </td>
-        </tr>
-    }
-    
-</table>
+<div class="questionBlock">
+    <div class="question" data-questionid=""></div>
 
-<scrypt>
-    function init()
-</scrypt>
+    <div class="answers">
+    </div>
+
+    <button class="nextQuestion">Далі</button>
+</div>
+
+<script>
+    var qModel = @Html.Raw(Json.Encode(@Model));
+</script>

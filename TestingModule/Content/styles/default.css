@@ -21,9 +21,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 10px;
 }
 
-    h2 .groupName {
-        text-decoration: underline;
-    }
+h2 .groupName {
+    text-decoration: underline;
+}
+
 .btnSave{
     background-color: #31ac00;
     color: #ffffff;
@@ -31,6 +32,10 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px 40px;
     border: 3px solid #31ac00;
     font-weight: bold;
+    margin: 0 20px 20px 0;
+    border-radius: 5px;
+
+
 }
 .btnStop {
     background-color: red;
@@ -72,6 +77,7 @@ input[type="text"] {
     outline: none;
     transition: border .2s;
     border: 1px solid #bababa;
+    border-radius: 5px;
 }
 
     input[type="text"]:focus {
@@ -95,12 +101,13 @@ input[type="text"] {
     margin-bottom: 20px;
     padding: 10px;
     color: #272727;
+    margin: 0;
 }
 
 .body-content {
     display: inline-block;
     width: 80%;
-    min-width: 1100px;
+    min-width: 800px;
     min-height: 100vh;
     user-select: text;
     right: 0;
@@ -109,7 +116,39 @@ input[type="text"] {
     overflow: auto;
 }
 
-.body-content__admin {
+.body-content__adminHomepage, .body-content__LecturerHomepage{
+    padding: 0;
+    background-position: center center;
+    background-repeat: repeat;
+    text-align: center;
+}
+
+.body-content__LecturerHomepage{
+    background-image: url("/Content/img/lectorBackground.jpg");
+}
+
+.body-content__adminHomepage {
+    background-image: url("/Content/classroom.jpg");
+}
+
+.adminHomepage:before{
+    content: "";
+    height: 100%;
+}
+
+.adminHomepage_content, .adminHomepage:before{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.adminHomepage_content{
+    text-align: center;
+    color: #ffffff;
+    background-color: rgba(0,0,0,.5);
+    padding: 20px;
+    text-transform: uppercase;
+    width: 405px;
 }
 
 .main-container__default .body-content {
@@ -209,15 +248,25 @@ i.fa {
 
 .addAnsBtn {
     background-color: #4CAF50;
-    border: none;
+    border: 3px solid #4CAF50;
     color: white;
-    padding: 15px 32px;
+    padding: 12px 29px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+    border-radius: 5px;
+
+}
+.addAnsBtn:hover{
+    background-color: white;
+    color: #4CAF50;
+    transition: 0.4s;
+    border: 3px solid #31ac00;
+    border-radius: 5px;
+
 }
 
 .addNewItem-btn i {

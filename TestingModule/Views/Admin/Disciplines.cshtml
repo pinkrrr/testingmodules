@@ -136,23 +136,18 @@ else
                                                     @using (Html.BeginForm("NewDiscipline", "admin", FormMethod.Post))
                             {
                                                         <form>
-                                                            <div>
-                                                                Введіть назву дисципліни:
-                                                                @{
-                                                                    var name = Model.LastOrDefault();
-                                                                }
-                                                                @if (name == null)
-                                                                {
-                                                                    @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
-                                                                }
-                                                                else
-                                                                {
-                                                                    @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву дицсипліни", @required = "required" })
-                                                                }
-                                                                <div>
-                                                                    @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"), "Оберіть лектора")
-                                                                </div>
-                                                            </div>
+                                                            @{
+                                                                var name = Model.LastOrDefault();
+                                                            }
+                                                            @if (name == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву дицсипліни", @required = "required" })
+                                                            }
+                                                            @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"), "Оберіть лектора")
                                                             <div>
                                                                 <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
                                                                 <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>

@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin;
 using Owin;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(TestingModule.Startup))]
 
@@ -19,6 +20,10 @@ namespace TestingModule
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login/")
             });
+            var hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableDetailedErrors = true;
+            app.MapSignalR(hubConfiguration);
+            //app.MapSignalR();
             //AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
         }

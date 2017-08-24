@@ -252,9 +252,94 @@
 
     }
 
+    function quiz() {
+        var $nextQbtn = $('.nextQuestion');
+
+        var $questionBlock = $('.questionBlock');
+        var $question = $questionBlock.find('.question');
+
+        var $answerList = $questionBlock.find('.answers');
+        var $answers = $answerList.find('.answer');
+
+        var _model = qModel;
+
+        function selectAnswer($answer) {
+            $answer.addClass('answer__active').siblings().removeClass('answer__active');
+        }
+
+        function getSelectedAnswerId() {
+            return $('.answer').filter('.answer__active').attr('data-answerid');
+        }
+
+        function initSelectAnswer() {
+            $answerList.on('click', '.answer', function () {
+                selectAnswer($(this));
+            })
+        }
+        
+        function setQuestionData(model) {
+            $question.attr('data-questionid', model.Question.Id);
+            $question.html(model.Question.Text);
+            $answerList.html('');
+            model.Answers.forEach(function (item) {
+                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">'+item.Text+'</div></div>')
+            })
+            
+        }
+        
+        function showNextQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quiz = $.connection.quizHub;
+
+                if (_model.QuestionsList.length > 1) {
+                    $.connection.hub.start().done(function () {
+                        quiz.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                            _model = model;
+                            setQuestionData(_model);
+                        }).fail(function (error) {
+                            console.log(error);
+                        });
+                    });
+                } else {
+                    quitQuiz();
+                }
+
+            } else {
+                return;
+            }
+        }
+        
+        function initNextQuestion() {
+            $nextQbtn.click(function () {
+                showNextQuestion();
+            });
+        }
+
+        function quitQuiz() {
+            $questionBlock.remove();
+            $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
+            setTimeout(function () {
+                document.location.href = "/";
+            }, 1000);
+        }
+
+
+        initSelectAnswer();
+        setQuestionData(_model);
+        initNextQuestion();
+        
+       
+    }
+
     popup();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
+
+    if ($('.questionBlock').length) {
+        quiz();
+    }
+    
 });
