@@ -35,7 +35,7 @@
             $inputTexts.each(function (i) {
                 $popup.edit.find('.input-text').eq(i).val($(this).text());
             });
-            
+
         }
 
         function initSaveData() {
@@ -171,7 +171,7 @@
         var $saveBtn = $('.btnSaveQuestions');
 
         function addNewAnswer() {
-            
+
         }
 
         function initAddNewAnswer() {
@@ -303,25 +303,25 @@
                 selectAnswer($(this));
             })
         }
-        
+
         function setQuestionData(model) {
             $question.attr('data-questionid', model.Question.Id);
             $question.html(model.Question.Text);
             $answerList.html('');
             model.Answers.forEach(function (item) {
-                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">'+item.Text+'</div></div>')
+                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
             })
-            
+
         }
-        
+
         function showNextQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quiz = $.connection.quizHub;
+                var quizHub = $.connection.quizHub;
 
                 if (_model.QuestionsList.length > 1) {
                     $.connection.hub.start().done(function () {
-                        quiz.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                        quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                             _model = model;
                             setQuestionData(_model);
                         }).fail(function (error) {
@@ -336,7 +336,7 @@
                 return;
             }
         }
-        
+
         function initNextQuestion() {
             $nextQbtn.click(function () {
                 showNextQuestion();
@@ -355,8 +355,96 @@
         initSelectAnswer();
         setQuestionData(_model);
         initNextQuestion();
-        
-       
+
+
+    }
+
+    function getChartData() {
+        var chartData = [
+            { answer: 50, y: 1, name: "123" },
+            { answer: 1, y: 2, name: "444" },
+            { answer: 30, y: 3, name: "Не визначено" },
+        ];
+        return chartData;
+    }
+
+    function progress(qNum, correctAnswersCount, studentsCount) {
+        var $qBlock = $('.questionBlock[data-qnum="' + qNum + '"]');
+        var progress = correctAnswersCount / studentsCount * 100;
+        $qBlock.find('.progressbar .progress').css('width', progress + '%');
+    }
+
+    function statistics() {
+
+        if ($('.body-content__statistics').length > 0) {
+            initializeModuleStatisticsPage();
+        }
+
+        if ($('.chartContainer').length > 0) {
+            createChart();
+        }
+
+        function initializeModuleStatisticsPage() {
+
+            var $questionList = $('.body-content__statistics .questions');
+            var questionList = [];
+
+            statisticsModel.forEach(function (item, i) {
+                questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
+            });
+
+            $questionList.html(questionList);
+
+        }
+
+        function createChart() {
+
+            var chartData = getChartData();
+
+            var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    title: {
+                        text: "How my time is spent in a week?",
+                        fontFamily: "arial black"
+                    },
+                    animationEnabled: true,
+                    legend: {
+                        verticalAlign: "bottom",
+                        horizontalAlign: "center"
+                    },
+                    theme: "theme3",
+                    data: [{
+                        type: "pie",
+                        indexLabelFontFamily: "Arial",
+                        indexLabelFontSize: 20,
+                        indexLabelFontWeight: "bold",
+                        startAngle: 0,
+                        indexLabelFontColor: "#ffffff",
+                        indexLabelLineColor: "#ff0000",
+                        indexLabelPlacement: "inside",
+                        toolTipContent: "Answer: {name}",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        dataPoints: chartData
+                    }]
+                });
+            chart.render();
+        }
+
+    }
+
+    function moduleStatisctics() {
+        var statisticsHub = $.connection.quizHub;
+
+        $.connection.hub.start().done(function () {
+            statisticsHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                _model = model;
+                setQuestionData(_model);
+            }).fail(function (error) {
+                console.log(error);
+            });
+        });
+
     }
 
     popup();
@@ -365,9 +453,10 @@
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
+    statistics();
 
-    if ($('.questionBlock').length) {
+    if ($('.questionBlock').length > 0) {
         quiz();
     }
-    
+
 });

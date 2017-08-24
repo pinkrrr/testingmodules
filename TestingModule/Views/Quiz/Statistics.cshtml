@@ -1,17 +1,22 @@
-﻿
+﻿@model IEnumerable<TestingModule.Models.Question>
 @{
-    Layout = null;
+    ViewBag.Title = "Statistics";
+    Layout = "~/Views/Shared/_LayoutStatistics.cshtml";
 }
 
-<!DOCTYPE html>
+<div class="questions">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Statistics</title>
-</head>
-<body>
-    <div> 
+</div>
+
+@*<div class="question" data-qnum="0">
+    <span class="question_title">1</span>
+    <div class="question_progressbar">
+        <div class="progress"></div>
     </div>
-</body>
-</html>
+</div>*@
+
+@*<div id="chartContainer" style="height: 360px; width: 100%;"></div>*@
+
+<script>
+    var statisticsModel = @Html.Raw(Json.Encode(@Model));
+</script>

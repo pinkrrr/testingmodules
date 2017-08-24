@@ -22,9 +22,12 @@ namespace TestingModule.Controllers
             return View(qvm);
         }
 
-        public ActionResult Statistics()
+        // GET: Statistic
+        [Route("quiz/statistics/{moduleId}")]
+        public async Task<ActionResult> Statistics(int moduleId)
         {
-            return View();
+            IEnumerable<Question> question = await new QuizManager().GetQuestionsList(moduleId);
+            return View(question);
         }
     }
 }

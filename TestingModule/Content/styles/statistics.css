@@ -1,0 +1,26 @@
+﻿.question_progressbar{
+  width: 500px;
+  height: 10px;
+  display: block;
+  position: relative;
+  margin: 20px 0;
+  border: 1px solid #000000;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+.progress{
+  background-color: blue;
+  transition: .2s;
+  width: 0;
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+.question_title{
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
