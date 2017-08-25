@@ -165,33 +165,6 @@
 
     }
 
-    function questionsEdit() {
-
-        var $hiddenSaveBtns = $('.btnSave__hidden');
-        var $saveBtn = $('.btnSaveQuestions');
-
-        function addNewAnswer() {
-
-        }
-
-        function initAddNewAnswer() {
-
-        }
-
-        //function saveQuestions() {
-        //    $('.btnSave__hidden').each(function (i) {
-        //        console.log(i);
-        //    });
-        //}
-
-        //function initSaveQuestions() {
-        //    $saveBtn.on('click', function () {
-        //        //saveQuestions();
-        //    })
-        //}
-
-    }
-
     function selectmenuInit() {
         $('select').selectmenu();
     }
@@ -427,13 +400,29 @@
 
     }
 
+    function startLectureValidation() {
+
+        var $startLecture = $('.popup-startLecture');
+        var $groupCheckbox = $('.groupItem input[type="checkbox"]')
+        var $startButton = $startLecture.find('.popup-start-btn');
+
+        $groupCheckbox.on('change', function () {
+            if ($groupCheckbox.is(':checked')) {
+                $startButton.removeAttr('disabled');
+            } else {
+                $startButton.attr('disabled', '');
+            }
+        })
+
+    }
+
     popup();
-    questionsEdit();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
     statistics();
+    startLectureValidation();
 
     if ($('.questionBlock').length > 0) {
         quiz();
