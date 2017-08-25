@@ -8,6 +8,10 @@
     border-collapse: collapse;
 }
 
+.table_questions{
+    margin-bottom: 10px;
+}
+
 .table-item_students{
     text-align: center;
 }
@@ -110,6 +114,23 @@
     width: 310px;
     white-space: nowrap;
 }
+.table-item_correct {
+    text-align: right;
+    font-size: 16px;
+    text-align: center;
+    user-select: none;
+    width: 90px;
+    white-space: nowrap;
+}
+.table-item_new {
+    text-align: right;
+    font-size: 16px;
+    text-align: center;
+    user-select: none;
+    width: 310px;
+    white-space: nowrap;
+    background: rgba(186, 187, 188,0.4)
+}
 
 .table-button {
     transition: background .2s, color .2s;
@@ -142,4 +163,40 @@
 .table-remove-button:hover{
     background-color: #e50d0d; 
     color: #ffffff;
+}
+
+.questionBlock{
+    /*margin-bottom: 200px;*/
+    position: relative;
+}
+
+.table_questions{
+    padding: 0;
+}
+
+.questionBlock .btnSave{
+    position: absolute;
+    right: -20px;
+    bottom: -90px;
+}
+
+.table_questions .ui-checkboxradio-label{
+    width: 50px;
+    height: 50px;
+    display: block;
+    margin: auto;
+}
+
+.table_questions .ui-checkboxradio-label{
+    transition: .3s;
+}
+
+.table_questions .ui-checkboxradio-label.ui-state-active{
+    border: 1px solid #1c7e00;
+    background: #3fc21a;
+}
+
+.table_questions .ui-checkboxradio-label.ui-button:active{
+    border: 1px solid #1c7e00;
+    background: #3fc21a;
 }

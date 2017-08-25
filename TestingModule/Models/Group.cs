@@ -17,5 +17,6 @@ namespace TestingModule.Models
         public int Id { get; set; }
         public int SpecialityId { get; set; }
         public string Name { get; set; }
+        public bool IsSelected { get; set; }
     }
 }

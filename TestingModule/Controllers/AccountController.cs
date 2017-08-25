@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web.Routing;
+using TestingModule.Additional;
 
 namespace TestingModule.Controllers
 {
@@ -16,8 +17,7 @@ namespace TestingModule.Controllers
     {
         private testingDbEntities _context = new testingDbEntities();
 
-        //~Account/Registration
-
+        #region Registration
         public ActionResult Registration()
         {
             var registrationForm = CreateRegistrationViewmodel();
@@ -56,8 +56,10 @@ namespace TestingModule.Controllers
             };
             return registrationForm;
         }
+        #endregion
 
-        //~Account/Login
+        #region Login
+
         [AllowAnonymous]
         public ActionResult Login()
         {
@@ -92,14 +94,14 @@ namespace TestingModule.Controllers
                         },
                         DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
-                    new AuthenticationProperties { IsPersistent = false }, ident);
+                        new AuthenticationProperties { IsPersistent = false }, ident);
                     return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
                     Student student = _context.Students.SingleOrDefault(s => s.AccountId == account.Id);
                     var ident = new ClaimsIdentity(
-                    new[]
+                        new[]
                         {
                             new Claim(ClaimTypes.NameIdentifier, account.Login),
                             new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
@@ -107,11 +109,12 @@ namespace TestingModule.Controllers
                             new Claim(ClaimTypes.Surname,student.Surname),
                             new Claim("Speciality", _context.Specialities.Where(sp=>sp.Id==student.SpecialityId).Select(sp=>sp.Name).SingleOrDefault()),
                             new Claim("Group",_context.Groups.Where(g=>g.Id==student.GroupId).Select(g=>g.Name).SingleOrDefault()),
-                            new Claim(ClaimTypes.Role,"Student")
+                            new Claim(ClaimTypes.Role,"Student"),
+                            new Claim("Id",student.AccountId.ToString())
                         },
                         DefaultAuthenticationTypes.ApplicationCookie);
                     HttpContext.GetOwinContext().Authentication.SignIn(
-                    new AuthenticationProperties { IsPersistent = false }, ident);
+                        new AuthenticationProperties { IsPersistent = false }, ident);
                     return RedirectToAction("Index", "Student");
                 }
 
@@ -120,6 +123,7 @@ namespace TestingModule.Controllers
             ModelState.AddModelError("", "invalid username or password");
             return View("Login", loginForm);
         }
+
         private bool AccountValid(string username, string password)
         {
             var accounts = _context.Accounts;
@@ -128,9 +132,9 @@ namespace TestingModule.Controllers
 
         public ActionResult RedirectToHome()
         {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            var role = claimsIdentity.FindFirst(ClaimTypes.Role).Value.ToString();
-            if(role==RoleName.Student)
+
+            var role = new AccountCredentials().GetRole();
+            if (role == RoleName.Student)
             {
                 return RedirectToAction("Index", "Student");
             }
@@ -142,7 +146,10 @@ namespace TestingModule.Controllers
             HttpContext.GetOwinContext().Authentication.SignOut();
             return RedirectToAction("Login", "Account");
         }
+
+        #endregion
     }
+
     public class CustomAuthorize : AuthorizeAttribute
     {
         public CustomAuthorize(params string[] roles) : base()
@@ -158,8 +165,11 @@ namespace TestingModule.Controllers
             else
             {
                 filterContext.Result = new RedirectToRouteResult(new
-                RouteValueDictionary(new { controller = "Error", action = "NotFound" }));
+                    RouteValueDictionary(new { controller = "Error", action = "NotFound" }));
             }
         }
     }
 }
+
+
+

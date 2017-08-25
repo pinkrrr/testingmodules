@@ -4,7 +4,7 @@
         var _$editBtn = $('.table-edit-button');
         var _$removeBtn = $('.table-remove-button');
         var _$addBtn = $('.addNewItem-btn');
-        var inputText = '';
+        var $inputTexts;
         var $popup = {
             edit: $('.popup.popup-edit'),
             add: $('.popup.popup-add'),
@@ -16,8 +16,8 @@
 
         function initShowEditPopup() {
             _$editBtn.on('click', function () {
-                inputText = $(this).closest('.table-row').find('.table-item_name_text').text();
-                showPopupEdit(inputText);
+                $inputTexts = $(this).closest('.table-row').find('[data-editable]');
+                showPopupEdit($inputTexts);
                 var $table = $(this).parent().prev();
                 var nameId = $(this).closest('.table-row').find('.table-item_name_text').attr('data-id');
                 $('#id').val(nameId);
@@ -29,9 +29,13 @@
             });
         }
 
-        function showPopupEdit(inputText) {
+        function showPopupEdit($inputTexts) {
             $popup.edit.addClass('popup-active');
-            $popup.edit.find('.input-text').val(inputText);
+
+            $inputTexts.each(function (i) {
+                $popup.edit.find('.input-text').eq(i).val($(this).text());
+            });
+
         }
 
         function initSaveData() {
@@ -43,31 +47,13 @@
                 //e.preventDefault();
                 var inputText = $popup.edit.find('.input-text');
 
-                //if (inputText.parent('.answer_item')){
-                //    $popup.edit.find('.answer_item').each(function (item) {
-                //        data.push({
-                //            answer: $(this).find('.input-text').val(),
-                //            answerId: $(this).attr('data-id'),
-                //            question: $(this).closest('form').find('.input-text.question').val(),
-                //            questionId: $(this).closest('form').find('.input-text.question').attr('data-id'),
-                //        });
-                //    });
-                //    data = JSON.stringify(data);
-                //    console.log(data);
-                //} else {
-                //    data = {
-                //        name: inputText.val(),
-                //        id: $('#id').val(),
-                //        answer: inputText.val(),
-                //        answerId: $('#id').val(),
-                //        question: inputText.val(),
-                //        questionId: $('#id').val(),
-                //    };
-                //}
-
                 var data = {
                     name: inputText.val(),
+                    surname: inputText.val(),
+                    login: inputText.val(),
+                    password: inputText.val(),
                     id: $('#id').val(),
+                    accountId: $('#accountId').val(),
                     lectorId: $('#lectorId').val(),
                     disciplineId: $('#disciplineId').val(),
                     lectureId: $('#lectureId').val(),
@@ -105,8 +91,8 @@
         function initShowRemovePopup() {
             _$removeBtn.on('click', function () {
                 var removeLink = $(this).attr('data-remove');
-                var removeName = $(this).closest('.table-row').find('.table-item_name_text').text();
-                var removeSurname = $(this).closest('.table-row').find('.table-item_surname_text').text();
+                var removeName = $(this).closest('.table-row').find('.table-item_name').text();
+                var removeSurname = $(this).closest('.table-row').find('.table-item_surname').text();
                 showRemovePopup(removeName, removeSurname);
                 initRemoveData(removeLink);
             });
@@ -176,6 +162,33 @@
         initShowAddPopup();
         closePopup();
         initSaveData();
+
+    }
+
+    function questionsEdit() {
+
+        var $hiddenSaveBtns = $('.btnSave__hidden');
+        var $saveBtn = $('.btnSaveQuestions');
+
+        function addNewAnswer() {
+
+        }
+
+        function initAddNewAnswer() {
+
+        }
+
+        //function saveQuestions() {
+        //    $('.btnSave__hidden').each(function (i) {
+        //        console.log(i);
+        //    });
+        //}
+
+        //function initSaveQuestions() {
+        //    $saveBtn.on('click', function () {
+        //        //saveQuestions();
+        //    })
+        //}
 
     }
 
@@ -266,9 +279,188 @@
 
     }
 
+    function quiz() {
+        var $nextQbtn = $('.nextQuestion');
+
+        var $questionBlock = $('.questionBlock');
+        var $question = $questionBlock.find('.question');
+
+        var $answerList = $questionBlock.find('.answers');
+        var $answers = $answerList.find('.answer');
+
+        var _model = qModel;
+
+        function selectAnswer($answer) {
+            $answer.addClass('answer__active').siblings().removeClass('answer__active');
+        }
+
+        function getSelectedAnswerId() {
+            return $('.answer').filter('.answer__active').attr('data-answerid');
+        }
+
+        function initSelectAnswer() {
+            $answerList.on('click', '.answer', function () {
+                selectAnswer($(this));
+            })
+        }
+
+        function setQuestionData(model) {
+            $question.attr('data-questionid', model.Question.Id);
+            $question.html(model.Question.Text);
+            $answerList.html('');
+            model.Answers.forEach(function (item) {
+                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
+            })
+
+        }
+
+        function showNextQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quizHub = $.connection.quizHub;
+
+                if (_model.QuestionsList.length > 1) {
+                    $.connection.hub.start().done(function () {
+                        quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                            _model = model;
+                            setQuestionData(_model);
+                        }).fail(function (error) {
+                            console.log(error);
+                        });
+                    });
+                } else {
+                    quitQuiz();
+                }
+
+            } else {
+                return;
+            }
+        }
+
+        function initNextQuestion() {
+            $nextQbtn.click(function () {
+                showNextQuestion();
+            });
+        }
+
+        function quitQuiz() {
+            $questionBlock.remove();
+            $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
+            setTimeout(function () {
+                document.location.href = "/";
+            }, 1000);
+        }
+
+
+        initSelectAnswer();
+        setQuestionData(_model);
+        initNextQuestion();
+
+
+    }
+
+    function getChartData() {
+        var chartData = [
+            { answer: 50, y: 1, name: "123" },
+            { answer: 1, y: 2, name: "444" },
+            { answer: 30, y: 3, name: "Не визначено" },
+        ];
+        return chartData;
+    }
+
+    function statistics() {
+
+        if ($('.body-content__statistics').length > 0) {
+            initializeModuleStatisticsPage();
+        }
+
+        if ($('.chartContainer').length > 0) {
+            createChart();
+        }
+
+        function initializeModuleStatisticsPage() {
+
+            var $questionList = $('.body-content__statistics .questions');
+            var questionList = [];
+
+            statisticsModel.forEach(function (item, i) {
+                questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
+            });
+
+            $questionList.html(questionList);
+
+        }
+
+        function createChart() {
+
+            var chartData = getChartData();
+
+            var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    title: {
+                        text: "How my time is spent in a week?",
+                        fontFamily: "arial black"
+                    },
+                    animationEnabled: true,
+                    legend: {
+                        verticalAlign: "bottom",
+                        horizontalAlign: "center"
+                    },
+                    theme: "theme3",
+                    data: [{
+                        type: "pie",
+                        indexLabelFontFamily: "Arial",
+                        indexLabelFontSize: 20,
+                        indexLabelFontWeight: "bold",
+                        startAngle: 0,
+                        indexLabelFontColor: "#ffffff",
+                        indexLabelLineColor: "#ff0000",
+                        indexLabelPlacement: "inside",
+                        toolTipContent: "Answer: {name}",
+                        showInLegend: true,
+                        indexLabel: "{y}",
+                        dataPoints: chartData
+                    }]
+                });
+            chart.render();
+        }
+
+    }
+
+    function moduleStatisctics() {
+
+
+        progress(119, 2, 5);
+
+
+        var statisticsHub = $.connection.quizHub;
+
+        $.connection.hub.start().done(function () {
+            statisticsHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                _model = model;
+                setQuestionData(_model);
+            }).fail(function (error) {
+                console.log(error);
+            });
+        });
+
+    }
+
     popup();
+    questionsEdit();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
+    statistics();
+
+    if ($('.questionBlock').length > 0) {
+        quiz();
+    }
+
 });
+
+function progress(qID, correctAnswersCount, studentsCount) {
+    var progress = correctAnswersCount / studentsCount * 100;
+    $('.body-content__statistics .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+}

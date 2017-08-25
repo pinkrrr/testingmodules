@@ -1,8 +1,84 @@
-﻿@{
-    ViewBag.Title = "admin";
-    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
+﻿@model TestingModule.ViewModels.ReasignViewModel
+@{
+    ViewBag.Title = "Домашня сторінка";
+    Layout = "~/Views/Shared/_LayoutAdminHomepage.cshtml";
 }
 @if (Request.IsAuthenticated)
 {
-    <h2>Hello </h2>
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
+    if (c.Value.ToString() == "Lecturer")
+    {
+
+        if (Model.LecturesHistories.Any())
+        {
+            var discipline = Model.LecturesHistories.FirstOrDefault().DisciplineId;
+            var lecture = Model.LecturesHistories.FirstOrDefault().LectureId;
+
+            <table border="1">
+                <tr><th colspan="2">Лекція з дисципліни @Model.Disciplines.SingleOrDefault(t => t.Id == discipline).Name була розпочата @Model.LecturesHistories.FirstOrDefault().StartTime</th></tr>
+                @foreach (var module in Model.Modules.Where(t => t.LectureId == lecture))
+                {
+                    <tr>
+                        <td>
+                            @module.Name
+                        </td>
+                        <td>
+                            @if (Model.ModuleHistories.FirstOrDefault(t => t.ModuleId == module.Id) == null)
+                            {
+                                <button class="btnSave" type="Submit" onclick="location.href='admin/StartModule/@module.Id'"><i class="fa fa-play" aria-hidden="true"></i> Розпочати модуль</button>
+                            }
+                            else
+                            {
+                                <button class="btnStop" type="Submit" onclick="location.href='admin/StopModule/@module.Id'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити модуль</button>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </table>
+            <button class="btnStop" onclick="location.href='@Url.Action("StopLecture", "admin")'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити лекцію</button>
+        }
+        else
+        {
+
+
+            <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Розпочати лекцію</button>
+                <div class="popup popup-add popup-startLecture">
+                    <div class="popup-body">
+                        <div class="popup-content">
+                            <div class="popup-title">Розпочату лекцію</div>
+                            @using (Html.BeginForm("StartLecture", "admin", FormMethod.Post))
+                        {
+                                <form>
+                                    <div class="popup-subtitle">Виберіть дисципліну</div>
+                                    @Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name", new { @Id = "DisciplineId" }), "Виберіть дисципліну")
+                                    <div class="popup-subtitle">Виберіть лекцію</div>
+                                    @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new { @Id = "LectureId" }), "Виберіть лекцію")
+                                    <div class="popup-subtitle">Виберіть групи</div>
+                                    <div class="groupItems">
+                                        @for (int i = 0; i < Model.Groups.Count(); i++)
+                                        {
+                                            <div class="groupItem">
+                                                <label for="@Model.Groups[i].Id">
+                                                    <span class="groupItem_title">@Model.Groups[i].Name </span>
+                                                    @Html.CheckBoxFor(r => Model.Groups[i].IsSelected, new { @id = Model.Groups[i].Id })
+                                                    @Html.HiddenFor(t => Model.Groups[i].Id)
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div>
+                                        <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
+                                        <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+        }
+    }
+
 }

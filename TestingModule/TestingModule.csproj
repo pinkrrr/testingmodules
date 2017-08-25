@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +72,12 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
@@ -178,6 +185,9 @@
   <ItemGroup>
     <Compile Include="Additional\Deleting.cs" />
     <Compile Include="Additional\Editing.cs" />
+    <Compile Include="Additional\LectureHistoryHelper.cs" />
+    <Compile Include="Additional\QuizManager.cs" />
+    <Compile Include="Additional\AccountCredentials.cs" />
     <Compile Include="Additional\UsernameAndPassword.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -191,6 +201,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Additional\Adding.cs" />
+    <Compile Include="Hubs\QuizHub.cs" />
     <Compile Include="Models\Account.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -201,6 +212,12 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LectorDiscipline.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LectureHistoryGroup.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ModuleHistory.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RoleName.cs" />
@@ -259,18 +276,26 @@
       <DependentUpon>TestingDb.edmx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\QuizViewModel.cs" />
     <Compile Include="ViewModels\ReasignViewModel.cs" />
     <Compile Include="ViewModels\RegistrationFormViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\classRoom.jpeg" />
+    <Content Include="Content\img\lectorBackground.jpg" />
     <Content Include="Content\styles\404.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\normalize.css" />
+    <Content Include="Content\styles\accordeonDisciplinesStudents.css" />
+    <Content Include="Content\styles\infoMessages.css" />
     <Content Include="Content\styles\jquery-ui.css" />
     <Content Include="Content\styles\login.css" />
     <Content Include="Content\styles\navbar.css" />
     <Content Include="Content\styles\popup.css" />
+    <Content Include="Content\styles\quiz.css" />
+    <Content Include="Content\styles\statistics.css" />
+    <Content Include="Content\styles\student.css" />
     <Content Include="Content\styles\studentsHeader.css" />
     <Content Include="Content\styles\table.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -319,27 +344,21 @@
     <Content Include="Content\styles\default.css" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\fontawesome-webfont.woff" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\canvas.lib.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
     <Content Include="Models\TestingDb.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TestingDb.edmx</DependentUpon>
@@ -389,6 +408,9 @@
     <Content Include="Views\Error\ServerError.cshtml" />
     <Content Include="Views\Error\Dashboard.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutAdminHomepage.cshtml" />
+    <Content Include="Views\Quiz\Statistics.cshtml" />
+    <Content Include="Views\Shared\_LayoutStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

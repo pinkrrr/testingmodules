@@ -1,0 +1,17 @@
+﻿@model IEnumerable<TestingModule.Models.Question>
+@{
+    ViewBag.Title = "Statistics";
+    Layout = "~/Views/Shared/_LayoutStatistics.cshtml";
+}
+
+<div class="statistics_moduleName">Викторина "Выеби себя в жьопу в реальном времени"</div>
+
+<div class="questions">
+
+</div>
+
+@*<div id="chartContainer" style="height: 360px; width: 100%;"></div>*@
+
+<script>
+    var statisticsModel = @Html.Raw(Json.Encode(@Model));
+</script>

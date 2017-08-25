@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
+
 namespace TestingModule
 {
     public class RouteConfig
@@ -8,6 +9,7 @@ namespace TestingModule
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.MapMvcAttributeRoutes();
 
             //lectors
             routes.MapRoute(
@@ -34,7 +36,7 @@ namespace TestingModule
                 defaults: new { controller = "admin", action = "NewStudent" });
             routes.MapRoute(
                 name: "EditStudent",
-                url: "admin/specialities/{SpecialityId}/groups/{GroupId}/students/NewStudent",
+                url: "admin/specialities/{SpecialityId}/groups/{GroupId}/students/EditStudent",
                 defaults: new { controller = "admin", action = "EditStudent" });
             routes.MapRoute(
                 name: "DeleteStudent",
@@ -145,17 +147,18 @@ namespace TestingModule
             routes.MapRoute(
                 name: "Deletediscipline",
                 url: "admin/disciplines/{disciplineid}/Delete",
-                defaults: new { controller = "admin", action = "Deletediscipline" });          
+                defaults: new { controller = "admin", action = "Deletediscipline" });
 
             routes.MapRoute(
-                name: "Quiz",
-                url: "quiz/{action}",
-                defaults: new { controller = "Quiz", action = "Index" });
+                name: "admin",
+                url: "admin/{action}",
+                defaults: new { controller = "admin", action = "Index" });
 
             routes.MapRoute(
                 name: "NotFound",
-                url: "notfount",
+                url: "notfound",
                 defaults: new { controller = "Error", action = "NotFound" });
+
             routes.MapRoute(
                 name: "ServerError",
                 url: "servererror",
@@ -163,7 +166,7 @@ namespace TestingModule
 
             routes.MapRoute(
                 name: "Resolved",
-                url: "dashboard/{exeptionId}/resolved",
+                url: "Error/Dashboard/{exeptionId}/Resolved",
                 defaults: new { controller = "Error", action = "Resolved" });
 
             routes.MapRoute(
@@ -173,18 +176,30 @@ namespace TestingModule
 
             routes.MapRoute(
                 name: "StudentIndex",
-                url: "index",
+                url: "student/{action}",
                 defaults: new { controller = "Student", action = "Index" });
 
             routes.MapRoute(
-                name: "Default",
-                url: "{action}",
-                defaults: new { controller = "account", action = "login" });
+                name: "Login",
+                url: "login",
+                defaults: new { controller = "Account", action = "Login" });
 
             routes.MapRoute(
-                name: "admin",
+                name: "StartModule",
+                url: "admin/StartModule/{moduleId}",
+                defaults: new { controller = "admin", action = "StartModule" });
+            routes.MapRoute(
+                name: "StopModule",
+                url: "admin/StopModule/{moduleId}",
+                defaults: new { controller = "admin", action = "StopModule" });
+
+            routes.MapRoute(
+                name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "admin", action = "Index", id = UrlParameter.Optional });
+                defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional });
+
+            
+
         }
     }
 }

@@ -1,5 +1,18 @@
-﻿@{
+﻿@model TestingModule.ViewModels.QuizViewModel
+@{
     ViewBag.Title = "Quiz";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
-<h1>HELLO BASTARDS!!!</h1>
+<div class="questionBlock">
+    <div class="question" data-questionid=""></div>
+
+    <div class="answers">
+    </div>
+
+    <button class="nextQuestion">Далі</button>
+</div>
+
+<script>
+    var qModel = @Html.Raw(Json.Encode(@Model));
+</script>
