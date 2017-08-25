@@ -291,19 +291,15 @@
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
                 var quizHub = $.connection.quizHub;
-
-                if (_model.QuestionsList.length > 1) {
+                console.log(_model);
                     $.connection.hub.start().done(function () {
                         quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                             _model = model;
                             setQuestionData(_model);
-                        }).fail(function (error) {
-                            console.log(error);
+                        }).fail(function () {
+                            quitQuiz();
                         });
                     });
-                } else {
-                    quitQuiz();
-                }
 
             } else {
                 return;
@@ -319,9 +315,6 @@
         function quitQuiz() {
             $questionBlock.remove();
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
-            setTimeout(function () {
-                document.location.href = "/";
-            }, 1000);
         }
 
 
