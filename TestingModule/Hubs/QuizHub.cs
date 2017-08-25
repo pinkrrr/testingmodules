@@ -30,7 +30,7 @@ namespace TestingModule.Hubs
             await quizManager.UpdateQuizModel(quizVM);
             if (await quizManager.IsAnswerCorrect(response.AnswerId))
             {
-                Clients.All.recieveStatistics(response.AnswerId, UserHandler.ConnectedIds.Count);
+                Clients.All.recieveStatistics(response.QuestionId, UserHandler.ConnectedIds.Count);
             }
             return quizVM;
 

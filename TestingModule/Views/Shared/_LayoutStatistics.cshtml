@@ -37,20 +37,52 @@
                     }
                 }
             </nav>
-            @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })*@
 
         </div>
         <div class="body-content body-content__statistics">
             @RenderBody()
-            <footer>
-                <!-- <p>&copy; @DateTime.Now.Year - RBS</p> -->
-            </footer>
         </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
+    <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
+
+    <script>
+
+        var statisticsHub = $.connection.quizHub;
+        var totalCorrectAnswers = 1;
+
+        var statisticsDynamicData = [];
+
+        statisticsModel.forEach(function (item, i) {
+            statisticsDynamicData[i] = {
+                questionId: item.Id,
+                totalAnswersCount: 0
+            }
+        })
+
+        console.log(statisticsDynamicData);
+
+        $.connection.hub.start().done(function () {
+            console.log('hub connected');
+        }).fail(function (error) {
+            console.log(error);
+        });
+
+        statisticsHub.client.recieveStatistics = function (questionId, studentsCount) {
+            statisticsDynamicData.forEach(function (item) {
+                if (item.questionId == questionId) {
+                    item.totalAnswersCount++;
+                }
+                progress(item.questionId, item.totalAnswersCount, studentsCount);
+            })
+        };
+
+    </script>
+
+
 </body>
 </html>

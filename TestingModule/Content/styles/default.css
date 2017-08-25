@@ -27,17 +27,19 @@ h2 .groupName {
 
 .btnSave{
     background-color: #31ac00;
+    border: 3px solid #31ac00;
     color: #ffffff;
     font-size: 18px;
     padding: 10px 40px;
-    border: 3px solid #31ac00;
     font-weight: bold;
     margin: 0 20px 20px 0;
-    border-radius: 5px;
 }
 
-.btnSave__hidden{
-    display: none;
+.btnSave[disabled]{
+    background-color: #9b9b9b;
+    border: 3px solid #9b9b9b;
+    color: #ffffff;
+    cursor: not-allowed;
 }
 
 .btnStop {
@@ -48,6 +50,15 @@ h2 .groupName {
     border: 3px solid red;
     font-weight: bold;
 }
+
+.btnStop[disabled]{
+    background-color: #9b9b9b;
+    border: 3px solid #9b9b9b;
+    color: #ffffff;
+    cursor: not-allowed;
+}
+
+
 .main-container {
     font-size: 0;
     white-space: nowrap;
