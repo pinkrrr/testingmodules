@@ -427,25 +427,6 @@
 
     }
 
-    function moduleStatisctics() {
-
-
-        progress(119, 2, 5);
-
-
-        var statisticsHub = $.connection.quizHub;
-
-        $.connection.hub.start().done(function () {
-            statisticsHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
-                _model = model;
-                setQuestionData(_model);
-            }).fail(function (error) {
-                console.log(error);
-            });
-        });
-
-    }
-
     popup();
     questionsEdit();
     selectmenuInit();
