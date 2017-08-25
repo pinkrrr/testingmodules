@@ -1,9 +1,13 @@
-﻿.question_progressbar{
-  width: 500px;
-  height: 10px;
+﻿.statistics_moduleName{
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.question_progressbar{
+  width: 58%;
+  height: 30px;
   display: block;
   position: relative;
-  margin: 20px 0;
   border: 1px solid #000000;
   display: inline-block;
   vertical-align: middle;
@@ -11,7 +15,7 @@
 }
 
 .progress{
-  background-color: blue;
+  background-color: #0094ff;
   transition: .2s;
   width: 0;
   height: 100%;
@@ -23,4 +27,7 @@
   display: inline-block;
   vertical-align: middle;
   position: relative;
+  font-size: 18px;
+  width: 40%;
+  margin-right: 2%;
 }

@@ -368,12 +368,6 @@
         return chartData;
     }
 
-    function progress(qNum, correctAnswersCount, studentsCount) {
-        var $qBlock = $('.questionBlock[data-qnum="' + qNum + '"]');
-        var progress = correctAnswersCount / studentsCount * 100;
-        $qBlock.find('.progressbar .progress').css('width', progress + '%');
-    }
-
     function statistics() {
 
         if ($('.body-content__statistics').length > 0) {
@@ -434,6 +428,11 @@
     }
 
     function moduleStatisctics() {
+
+
+        progress(119, 2, 5);
+
+
         var statisticsHub = $.connection.quizHub;
 
         $.connection.hub.start().done(function () {
@@ -460,3 +459,8 @@
     }
 
 });
+
+function progress(qID, correctAnswersCount, studentsCount) {
+    var progress = correctAnswersCount / studentsCount * 100;
+    $('.body-content__statistics .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+}
