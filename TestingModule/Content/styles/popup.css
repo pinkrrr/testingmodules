@@ -171,3 +171,15 @@
 .popup .popup-remove-btn:hover{
     background-color: #ff3737;
 }
+
+.popup-start-btn{
+    background-color: #31ac00;
+    border: 1px solid #31ac00;
+}
+
+.popup-start-btn[disabled]{
+    background-color: #9b9b9b;
+    border-color: #9b9b9b;
+    color: #ffffff;
+    cursor: not-allowed;
+}

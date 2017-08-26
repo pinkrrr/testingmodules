@@ -413,12 +413,13 @@ namespace TestingModule.Controllers
                 try
                 {
                     var modelIndex = 0;
+                    foreach (var item in model.Where(t => t.ModuleId != null && t.ModuleId != 0))
+                    {
+                        modelIndex = model.IndexOf(item);
+                        break;
+                    }
                     foreach (var item in model.Where(t => t.Answer != null))
                     {
-                        if (item.ModuleId != null && item.ModuleId != 0)
-                        {
-                            modelIndex = model.IndexOf(item);
-                        }
                         new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
                     }
                     var firstOrDefault = model[modelIndex];

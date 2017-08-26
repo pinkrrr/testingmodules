@@ -27,11 +27,11 @@ namespace TestingModule.Hubs
             };
             _context.Responses.Add(response);
             await _context.SaveChangesAsync();
-            await quizManager.UpdateQuizModel(quizVM);
             if (await quizManager.IsAnswerCorrect(response.AnswerId))
             {
                 Clients.All.recieveStatistics(response.QuestionId, UserHandler.ConnectedIds.Count);
             }
+            await quizManager.UpdateQuizModel(quizVM);
             return quizVM;
 
         }

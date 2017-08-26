@@ -52,9 +52,11 @@
                         {
                                 <form>
                                     <div class="popup-subtitle">Виберіть дисципліну</div>
-                                    @Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name", new { @Id = "DisciplineId" }), "Виберіть дисципліну")
+                                    @*@Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name", new { @Id = "DisciplineId" }), "Виберіть дисципліну")*@
+                                    @Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name"), new { @class = "startLecture_selectDiscipline" })
                                     <div class="popup-subtitle">Виберіть лекцію</div>
-                                    @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new { @Id = "LectureId" }), "Виберіть лекцію")
+                                    @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new { @Id = "LectureId" }), "Виберіть лекцію")*@
+                                    @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new { @class = "startLecture_selectLecture" })
                                     <div class="popup-subtitle">Виберіть групи</div>
                                     <div class="groupItems">
                                         @for (int i = 0; i < Model.Groups.Count(); i++)
@@ -62,7 +64,7 @@
                                             <div class="groupItem">
                                                 <label for="@Model.Groups[i].Id">
                                                     <span class="groupItem_title">@Model.Groups[i].Name </span>
-                                                    @Html.CheckBoxFor(r => Model.Groups[i].IsSelected, new { @id = Model.Groups[i].Id })
+                                                    @Html.CheckBoxFor(r => Model.Groups[i].IsSelected, new { @id = Model.Groups[i].Id, @class="startLecture_disciplineSelect" })
                                                     @Html.HiddenFor(t => Model.Groups[i].Id)
                                                 </label>
                                             </div>
@@ -70,7 +72,7 @@
                                     </div>
 
                                     <div>
-                                        <button class="btn popup-btn popup-create-btn" type="submit">Розпочати</button>
+                                        <button class="btn popup-btn popup-start-btn" type="submit" disabled>Розпочати</button>
                                         <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                                     </div>
                                 </form>
