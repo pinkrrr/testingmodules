@@ -409,6 +409,17 @@
 
     }
 
+    function quiestionsEditChecked() {
+        var $checkButton = $('.table_questions .table-item_correct label');
+
+        $checkButton.on('click', function() {
+            $(this).closest('tbody').find('.table-item label input').each(function (i, item) {
+                $(item).prop('checked', false)
+            })
+            $(this).prop('checked', true);
+        })
+    }
+
     popup();
     selectmenuInit();
     checkboxradioInit();
@@ -416,6 +427,7 @@
     selectAllorNobody();
     statistics();
     startLectureValidation();
+    //quiestionsEditChecked();
 
     if ($('.questionBlock').length > 0) {
         quiz();
