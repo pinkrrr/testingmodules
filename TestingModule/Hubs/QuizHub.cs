@@ -22,10 +22,10 @@ namespace TestingModule.Hubs
             Respons response = new Respons
             {
                 AnswerId = responseId,
-                LectureId = quizVM.Question.LectureId,
+                LectureHistoryId = quizVM.Question.LectureId,
                 QuestionId = quizVM.Question.Id
             };
-            _context.Responses.Add(response);
+            _context.Respons.Add(response);
             await _context.SaveChangesAsync();
             if (await quizManager.IsAnswerCorrect(response.AnswerId))
             {

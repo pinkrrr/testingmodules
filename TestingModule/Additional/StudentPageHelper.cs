@@ -59,8 +59,8 @@ namespace TestingModule.Additional
                         var moduleQuestions = _db.Questions.Where(t => t.ModuleId == activeModule.ModuleId).Select(t => t.Id)
                             .ToList();
                         var studentResponses =
-                            _db.Responses.Where(t => t.StudentId == student &&
-                                                     t.LectureId == activeModule.LectureHistoryId &&
+                            _db.Respons.Where(t => t.StudentId == student &&
+                                                     t.LectureHistoryId == activeModule.LectureHistoryId &&
                                                      moduleQuestions.Contains(t.QuestionId)).ToList();
                         if (studentResponses.Count != moduleQuestions.Count)
                         {
