@@ -103,6 +103,7 @@
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -183,11 +184,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additional\AdminPageHelper.cs" />
     <Compile Include="Additional\Deleting.cs" />
     <Compile Include="Additional\Editing.cs" />
     <Compile Include="Additional\LectureHistoryHelper.cs" />
     <Compile Include="Additional\QuizManager.cs" />
     <Compile Include="Additional\AccountCredentials.cs" />
+    <Compile Include="Additional\StudentPageHelper.cs" />
     <Compile Include="Additional\UsernameAndPassword.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

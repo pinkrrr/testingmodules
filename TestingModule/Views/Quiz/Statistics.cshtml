@@ -8,8 +8,9 @@
 
 <div class="questions"></div>
 
-@*<div id="chartContainer" style="height: 360px; width: 100%;"></div>*@
+@Html.ActionLink("Stop module", "StopModule", "admin", new { moduleId = Model.FirstOrDefault().ModuleId }, null)
+    @*<div id="chartContainer" style="height: 360px; width: 100%;"></div>*@
 
-<script>
+    <script>
     var statisticsModel = @Html.Raw(Json.Encode(@Model));
-</script>
+    </script>
