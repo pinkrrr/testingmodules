@@ -223,6 +223,9 @@
     <Compile Include="Models\ModuleHistory.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Respons.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RoleName.cs" />
     <Compile Include="Models\StudentDiscipline.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
@@ -252,9 +255,6 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Question.cs">
-      <DependentUpon>TestingDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Respons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Speciality.cs">

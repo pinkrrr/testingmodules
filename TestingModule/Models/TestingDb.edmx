@@ -128,7 +128,7 @@
           <Property Name="AnswerId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
           <Property Name="TimeToPass" Type="int" />
-          <Property Name="LectureId" Type="int" Nullable="false" />
+          <Property Name="LectureHistoryId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -195,7 +195,6 @@
           <EntitySet Name="LecturesHistories" EntityType="testingDbModel.LecturesHistory" />
           <EntitySet Name="Modules" EntityType="testingDbModel.Module" />
           <EntitySet Name="Questions" EntityType="testingDbModel.Question" />
-          <EntitySet Name="Responses" EntityType="testingDbModel.Respons" />
           <EntitySet Name="Roles" EntityType="testingDbModel.Role" />
           <EntitySet Name="Specialities" EntityType="testingDbModel.Speciality" />
           <EntitySet Name="Accounts" EntityType="testingDbModel.Account" />
@@ -206,6 +205,7 @@
           <EntitySet Name="ExeptionLogs" EntityType="testingDbModel.ExeptionLog" />
           <EntitySet Name="LectureHistoryGroups" EntityType="testingDbModel.LectureHistoryGroup" />
           <EntitySet Name="ModuleHistories" EntityType="testingDbModel.ModuleHistory" />
+          <EntitySet Name="Respons" EntityType="testingDbModel.Respons" />
         </EntityContainer>
         <EntityType Name="Answer">
           <Key>
@@ -268,17 +268,6 @@
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
           <Property Name="Text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Respons">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuestionId" Type="Int32" Nullable="false" />
-          <Property Name="AnswerId" Type="Int32" Nullable="false" />
-          <Property Name="StudentId" Type="Int32" Nullable="false" />
-          <Property Name="TimeToPass" Type="Int32" />
-          <Property Name="LectureId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -365,6 +354,17 @@
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="Respons">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="AnswerId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="TimeToPass" Type="Int32" />
+          <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -436,18 +436,6 @@
                 <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
                 <ScalarProperty Name="LectureId" ColumnName="LectureId" />
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Responses">
-            <EntityTypeMapping TypeName="testingDbModel.Respons">
-              <MappingFragment StoreEntitySet="Responses">
-                <ScalarProperty Name="LectureId" ColumnName="LectureId" />
-                <ScalarProperty Name="TimeToPass" ColumnName="TimeToPass" />
-                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
-                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
-                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -543,6 +531,18 @@
               <MappingFragment StoreEntitySet="ModuleHistory">
                 <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
                 <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Respons">
+            <EntityTypeMapping TypeName="testingDbModel.Respons">
+              <MappingFragment StoreEntitySet="Responses">
+                <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
+                <ScalarProperty Name="TimeToPass" ColumnName="TimeToPass" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

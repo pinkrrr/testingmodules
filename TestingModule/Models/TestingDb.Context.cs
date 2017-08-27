@@ -32,7 +32,6 @@ namespace TestingModule.Models
         public virtual DbSet<LecturesHistory> LecturesHistories { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
-        public virtual DbSet<Respons> Responses { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Speciality> Specialities { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
@@ -43,5 +42,6 @@ namespace TestingModule.Models
         public virtual DbSet<ExeptionLog> ExeptionLogs { get; set; }
         public virtual DbSet<LectureHistoryGroup> LectureHistoryGroups { get; set; }
         public virtual DbSet<ModuleHistory> ModuleHistories { get; set; }
+        public virtual DbSet<Respons> Respons { get; set; }
     }
 }
