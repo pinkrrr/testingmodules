@@ -54,11 +54,11 @@ namespace TestingModule.Hubs
 
             if ((bool)quizVM.Answers.Where(a => a.Id == responseId).Select(a => a.IsCorrect).SingleOrDefault())
             {
-                Clients.All.recieveStatistics(response.QuestionId, UserHandler.ConnectedIds.Count);
+                Clients.All.RecieveStatistics(response.QuestionId, UserHandler.ConnectedIds.Count);
             }
             else
             {
-                Clients.All.recieveStatistics(null, UserHandler.ConnectedIds.Count);
+                Clients.All.RecieveStatistics(null, UserHandler.ConnectedIds.Count);
             }
             await quizManager.UpdateQuizModel(quizVM);
             return quizVM;
@@ -73,10 +73,11 @@ namespace TestingModule.Hubs
             Clients.All.RecieveEnquire(accountId,Context.ConnectionId);
         }
 
-        public async Task<void> Sendqvm(int moduleId, string connectionId)
+        public async Task SendQVM(int moduleId, string connectionId)
         {
             QuizViewModel qvm = await new Additional.QuizManager().GetQnA(moduleId);
             Clients.Client(connectionId).ReciveQVM(qvm);
+            //return qvm;
         }
 
     }
