@@ -17,8 +17,22 @@
     <script>
         var statisticsModel = @Html.Raw(Json.Encode(@Model));
         var quiz = $.connection.quizHub;
+        var moduleId = @Model.FirstOrDefault().ModuleId;
+
         $.connection.hub.start().done(function() {
             console.log("connected");
+            quiz.server.sendqvm(12, "sending out of interval");
         });
+
+        
+
+        //quiz.client.recieveEnquire = function (accountId, connectionId) {
+            
+        //    console.log(moduleId, accountId, connectionId);
+        //    //console.log(quiz.server); 
+        //    quiz.server.sendQVM(moduleId, connectionId);
+        //}
+       
+
     </script>
 }

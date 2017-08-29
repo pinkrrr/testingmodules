@@ -73,6 +73,12 @@ namespace TestingModule.Hubs
             Clients.All.RecieveEnquire(accountId,Context.ConnectionId);
         }
 
+        public async Task<void> Sendqvm(int moduleId, string connectionId)
+        {
+            QuizViewModel qvm = await new Additional.QuizManager().GetQnA(moduleId);
+            Clients.Client(connectionId).ReciveQVM(qvm);
+        }
+
     }
 
     public static class UserHandler
