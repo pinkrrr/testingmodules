@@ -24,18 +24,17 @@ namespace TestingModule.Additional
             return identity.Claims.Where(c => c.Type == ClaimTypes.Role)
                    .Select(c => c.Value)
                    .SingleOrDefault();
-           // return claimsIdentity.FindFirst(ClaimTypes.Role).Value;
-         }
+            // return claimsIdentity.FindFirst(ClaimTypes.Role).Value;
+        }
 
         public async Task<Student> GetStudent()
         {
-            testingDbEntities _context=new testingDbEntities();
+            testingDbEntities _context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            var claimList = claimsIdentity.Claims.Select(c => c.Type).ToList();
             int accountId = Int32.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id")
-                   .Select(c => c.Value)
-                   .SingleOrDefault());
-            Student student= await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+                    .Select(c => c.Value)
+                    .SingleOrDefault());
+            Student student = await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
             return student;
         }
     }

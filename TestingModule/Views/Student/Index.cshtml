@@ -1,64 +1,78 @@
 ﻿@model IEnumerable<TestingModule.ViewModels.DiscLecotorViewModel>
-    @{
-        ViewBag.Title = "TestingModule";
-        Layout = "~/Views/Shared/_LayoutStudent.cshtml";
-    }
+@{
+    ViewBag.Title = "TestingModule";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+}
 
 
-    @if (@TempData["Success"] != null)
-    {
-        <div class="isa_success">
-            <i class="fa fa-check"></i>
-            @TempData["Success"]
-        </div>
-    }
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
 
 
-    @if (TempData["Fail"] != null)
-    {
-        <div class="isa_error">
-            <i class="fa fa-times-circle"></i>
-            @TempData["Fail"]
-        </div>
-    }
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
 
-    <h2>Ви прослуховуєте наступні дисципліни:</h2>
-    @if (!Model.Any())
-    {
-        <h3>У Вас немає жодної дисципліни. Будь ласка, зверніться до Вашого куратора.</h3>
-    }
-    else
-    {
-        <table class="table" border="1">
-            <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Лектор</th></tr>
+<h2>Ви прослуховуєте наступні дисципліни:</h2>
+@if (!Model.Any())
+{
+    <h3>У Вас немає жодної дисципліни. Будь ласка, зверніться до Вашого куратора.</h3>
+}
+else
+{
+    <table class="table" border="1">
+        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Лектор</th></tr>
 
-            @foreach (var item in Model.OrderBy(t => t.Name))
-            {
-                <tr class="table-row">
-                    <td class="table-item table-item_name">
-                        @item.Name
-                    </td>
-                    <td class="table-item table-item_name">
+        @foreach (var item in Model.OrderBy(t => t.Name))
+        {
+            <tr class="table-row">
+                <td class="table-item table-item_name">
+                    @item.Name
+                </td>
+                <td class="table-item table-item_name">
 
-                        @{
-                            var name = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                    @{
+                        var name = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                    }
+                    @if (name != null)
+                    {
+                        @name.Name
+                    }
+
+                    @{
+                        var surname = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                    }
+                    @if (surname != null)
+                    {
+                        @surname.Surname
+                    }
+                </td>
+
+            </tr>
                         }
-                        @if (name != null)
-                        {
-                            @name.Name
+
+    </table>
                         }
 
-                        @{
-                            var surname = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
-                        }
-                        @if (surname != null)
-                        {
-                            @surname.Surname
-                        }
-                    </td>
-
-                </tr>
-            }
-
-        </table>
-    }
+@section scripts
+{
+    <script>
+        var quiz = $.connection.quizHub;
+        function ModuleEnquire() {
+            quiz.server.moduleEnquire().done(console.log("success!!!"));
+        }
+        var interval = setInterval(ModuleEnquire, 6000);
+        $.connection.hub.start().done(function () {
+            setInterval(interval); 
+        });
+    </script>
+}
