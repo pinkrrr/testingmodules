@@ -31,3 +31,19 @@
   width: 40%;
   margin-right: 2%;
 }
+
+.stopModule{
+    color: #ffffff;
+    background-color: #de1414;
+    border: 3px solid #de1414;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    transition: .3s;
+    font-weight: 600;
+}
+
+.stopModule:hover{
+    background-color: #ffffff;
+    color: #de1414;
+}
