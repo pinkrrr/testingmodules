@@ -21,7 +21,7 @@
         $.connection.hub.start();
         quiz.client.recieveEnquire = function (accountId, connectionId) {
             console.log(moduleId, accountId, connectionId);
-            quiz.server.sendQVM(moduleId, connectionId);
+            quiz.server.sendQVM(moduleId, connectionId, accountId);
         }
     </script>
 }

@@ -26,7 +26,7 @@ namespace TestingModule.Additional
             return answersList;
         }
 
-        public async Task<QuizViewModel> GetQnA(int moduleId)
+        public async Task<QuizViewModel> GetQnA(int moduleId, int accountId)
         {
             ICollection<Question> questions = await GetQuestionsList(moduleId);
             var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
@@ -34,7 +34,7 @@ namespace TestingModule.Additional
             {
                 QuestionsList = questions,
                 Question = question,
-                Student = await new AccountCredentials().GetStudent(),
+                Student = await new AccountCredentials().GetStudent(accountId),
                 Answers = await GetAnswersList(question.Id)
             };
             return qnA;

@@ -67,16 +67,16 @@ else
 {
     <script>
         var quiz = $.connection.quizHub;
-        var intervalTime = 3000;
+        var intervalTime = 20000;
 
         $.connection.hub.start().done(function () {
-            setInterval(function () {
+            quiz.server.moduleEnquire().done(console.log("success!!!"));
+            /*setInterval(function () {
                 quiz.server.moduleEnquire().done(console.log("success!!!"));
-            }, intervalTime);
+            }, intervalTime);*/
         });
-
         quiz.client.reciveQVM = function (qvm) {
-            console.log('qvm');
+            console.log(qvm);
         }
 
     </script>
