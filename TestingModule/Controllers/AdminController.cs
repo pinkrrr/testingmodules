@@ -391,15 +391,20 @@ namespace TestingModule.Controllers
             {
                 try
                 {
+                    var correctAnswer = 0;
                     var modelIndex = 0;
                     foreach (var item in model.Where(t => t.ModuleId != null && t.ModuleId != 0))
                     {
+                        if (item.CorrectAnswerId != 0)
+                        {
+                            correctAnswer = item.CorrectAnswerId;
+                        }
                         modelIndex = model.IndexOf(item);
                         break;
                     }
                     foreach (var item in model.Where(t => t.Answer != null))
                     {
-                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
+                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect, correctAnswer);
                     }
                     var firstOrDefault = model[modelIndex];
                     if (firstOrDefault != null)

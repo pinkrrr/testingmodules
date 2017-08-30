@@ -20,7 +20,7 @@
         @TempData["Fail"]
     </div>
 }
-
+<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання</button>
 @if (!Model.Any())
 {
     <div class="container">
@@ -43,7 +43,6 @@
 }
 else
 {
-    <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання</button>
     <h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
@@ -54,11 +53,11 @@ else
                     <tr class="table-row">
                         <th class="table-item table-item_name">
                             @Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new
-                      {
-                          @class = "input-text-Questions",
-                          @placeholder = "Введіть текст запитання",
-                          @required = "required"
-                      })
+                       {
+                           @class = "input-text-Questions",
+                           @placeholder = "Введіть текст запитання",
+                           @required = "required"
+                       })
                         </th>
                         <th class="table-item table-item_correct"> Правильна відповідь </th>
                         <th class="table-item table-item_correct">
@@ -84,11 +83,22 @@ else
                                     @Html.HiddenFor(model => Model[Model.IndexOf(que)].QuestionId)
                                     @Html.HiddenFor(model => Model[Model.IndexOf(que)].ModuleId)
                                 </td>
-                                <td class="table-item table-item_correct">
-                                    <label>
-                                        @Html.RadioButtonFor(model => Model[Model.IndexOf(que)].IsCorrect,(bool?) true, new { @class = "radioInput"})
-                                    </label>
-                                </td>
+                                @if (que.IsCorrect == true)
+                                {
+                                    <td class="table-item table-item_correct" bgcolor="#2ECC71" title="Правильна відповідь!">
+                                        <label>
+                                            @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", @checked = "checked"})
+                                        </label>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="table-item table-item_correct" bgcolor="#C0392B" title="Неправильна відповідь!">
+                                        <label>
+                                            @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput" , required="required"})
+                                        </label>
+                                    </td>
+                                }
                                 <td class="table-item table-item_correct">
                                     <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
                                         <i class='fa fa-trash' aria-hidden='true'></i>Видалити

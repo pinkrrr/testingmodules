@@ -57,9 +57,17 @@ namespace TestingModule.Additional
             qs.Text = text;
             _db.SaveChanges();
         }
-        public void EditAnswer(int? answerId, string text, bool? isCorrect)
+        public void EditAnswer(int? answerId, string text, bool? isCorrect, int correctAnswerId)
         {
-            if (isCorrect == null)
+            if (correctAnswerId != 0)
+            {
+                _db.Answers.FirstOrDefault(t => t.Id == correctAnswerId).IsCorrect = true;
+            }
+            if (answerId == correctAnswerId)
+            {
+                isCorrect = true;
+            }
+            else
             {
                 isCorrect = false;
             }

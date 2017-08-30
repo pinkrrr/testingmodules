@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TestingModule.Models
 {
     using System;
@@ -17,6 +19,7 @@ namespace TestingModule.Models
         public int Id { get; set; }
         public int SpecialityId { get; set; }
         public string Name { get; set; }
+        [NotMapped]
         public bool IsSelected { get; set; }
     }
 }
