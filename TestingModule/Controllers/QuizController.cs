@@ -37,5 +37,11 @@ namespace TestingModule.Controllers
             IEnumerable<Question> question = await new QuizManager().GetQuestionsList(moduleId);
             return View(question);
         }
+
+        [Route("quiz/totalstatistics/lectureId")]
+        public ActionResult TotalStatistics(int lectureId)
+        {
+            return View();
+        }
     }
 }

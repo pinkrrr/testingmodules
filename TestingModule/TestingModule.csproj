@@ -414,6 +414,7 @@
     <Content Include="Views\Shared\_LayoutAdminHomepage.cshtml" />
     <Content Include="Views\Quiz\Statistics.cshtml" />
     <Content Include="Views\Shared\_LayoutStatistics.cshtml" />
+    <Content Include="Views\Quiz\TotalStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
