@@ -17,10 +17,10 @@ namespace TestingModule.Controllers
         // GET: Quiz
 
         [Route("quiz/{moduleId}")]
-        public async Task<ActionResult> Index(int moduleId)
+        public async Task<ActionResult> Index()
         {
-            QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);
-            return View(qvm);
+            //QuizViewModel qvm = await new QuizManager().GetQnA(moduleId,studentId);
+            return View();
         }
 
         [HttpPost]

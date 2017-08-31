@@ -67,7 +67,7 @@ else
 {
     <script>
         var quiz = $.connection.quizHub;
-        var intervalTime = 20000;
+        var intervalTime = 3000;
 
         $.connection.hub.start().done(function () {
             quiz.server.moduleEnquire().done(function() {

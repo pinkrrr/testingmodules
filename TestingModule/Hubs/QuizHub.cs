@@ -18,7 +18,7 @@ namespace TestingModule.Hubs
     public class QuizHub : Hub
     {
         private testingDbEntities _context = new testingDbEntities();
-        private QuizManager quizManager = new QuizManager();
+        private QuizManager _quizManager = new QuizManager();
 
         public override Task OnConnected()
         {
@@ -60,7 +60,7 @@ namespace TestingModule.Hubs
             {
                 Clients.All.RecieveStatistics(null, UserHandler.ConnectedIds.Count);
             }
-            await quizManager.UpdateQuizModel(quizVM);
+            await _quizManager.UpdateQuizModel(quizVM);
             return quizVM;
         }
 
@@ -70,7 +70,7 @@ namespace TestingModule.Hubs
             int accountId = Int32.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id")
                 .Select(c => c.Value)
                 .SingleOrDefault());
-            Clients.All.RecieveEnquire(accountId,Context.ConnectionId);
+            Clients.All.RecieveEnquire(accountId, Context.ConnectionId);
         }
 
         public void SendQVM(int moduleId, string connectionId)
