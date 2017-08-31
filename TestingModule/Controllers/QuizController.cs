@@ -38,7 +38,7 @@ namespace TestingModule.Controllers
             return View(question);
         }
 
-        [Route("quiz/totalstatistics/lectureId")]
+        [Route("quiz/totalstatistics/{lectureId}/{groupId}")]
         public ActionResult TotalStatistics(int lectureId)
         {
             return View();
