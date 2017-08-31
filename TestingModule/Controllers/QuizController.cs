@@ -31,11 +31,17 @@ namespace TestingModule.Controllers
         }
 
         // GET: Statistic
-        [Route("quiz/statistics/{moduleId}")]
-        public async Task<ActionResult> Statistics(int moduleId)
+        [Route("quiz/modulestatistics/{moduleId}")]
+        public async Task<ActionResult> ModuleStatistics(int moduleId)
         {
             IEnumerable<Question> question = await new QuizManager().GetQuestionsList(moduleId);
             return View(question);
+        }
+
+        [Route("quiz/totalstatistics/{lectureId}/{groupId}")]
+        public ActionResult TotalStatistics(int lectureId)
+        {
+            return View();
         }
     }
 }
