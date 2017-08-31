@@ -26,7 +26,7 @@ namespace TestingModule.Controllers
             {
                 if (checkIfLector.ModuleHistories.Any())
                 {
-                    return RedirectToAction("/statistics/" + checkIfLector.ModuleHistories.FirstOrDefault().ModuleId, "Quiz");
+                    return RedirectToAction("/modulestatistics/" + checkIfLector.ModuleHistories.FirstOrDefault().ModuleId, "quiz");
                 }
                 return View(checkIfLector);
             }

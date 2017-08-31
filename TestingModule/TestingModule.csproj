@@ -412,7 +412,7 @@
     <Content Include="Views\Error\Dashboard.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutAdminHomepage.cshtml" />
-    <Content Include="Views\Quiz\Statistics.cshtml" />
+    <Content Include="Views\Quiz\ModuleStatistics.cshtml" />
     <Content Include="Views\Shared\_LayoutStatistics.cshtml" />
     <Content Include="Views\Quiz\TotalStatistics.cshtml" />
   </ItemGroup>
