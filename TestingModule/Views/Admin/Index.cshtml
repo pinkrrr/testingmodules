@@ -15,7 +15,7 @@
             var discipline = Model.LecturesHistories.FirstOrDefault().DisciplineId;
             var lecture = Model.LecturesHistories.FirstOrDefault().LectureId;
 
-            <table border="1">
+            @*<table border="1">
                 <tr><th colspan="2">Лекція з дисципліни @Model.Disciplines.SingleOrDefault(t => t.Id == discipline).Name була розпочата @Model.LecturesHistories.FirstOrDefault().StartTime</th></tr>
                 @foreach (var module in Model.Modules.Where(t => t.LectureId == lecture))
                 {
@@ -37,7 +37,33 @@
                     </tr>
                 }
             </table>
-            <button class="btnStop" onclick="location.href='@Url.Action("StopLecture", "admin")'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити лекцію</button>
+            <button class="btnStop" onclick="location.href='@Url.Action("StopLecture", "admin")'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити лекцію</button>*@
+
+            
+            <div class="modulesBlock">
+                <div class="title">Лекція з дисципліни <span>@Model.Disciplines.SingleOrDefault(t => t.Id == discipline).Name</span> була розпочата <span>@Model.LecturesHistories.FirstOrDefault().StartTime</span></div>
+                <div class="modulesList">
+                    @foreach (var module in Model.Modules.Where(t => t.LectureId == lecture))
+                    {
+                    <div class="module">
+                        <div class="module_name">@module.Name</div>
+                        <div class="module_control">
+                            @if (Model.ModuleHistories.FirstOrDefault(t => t.ModuleId == module.Id) == null)
+                            {
+                                <button class="btnSave" type="Submit" onclick="location.href='admin/StartModule/@module.Id'"><i class="fa fa-play" aria-hidden="true"></i> Розпочати модуль</button>
+                            }
+                            else
+                            {
+                                <button class="btnStop" type="Submit" onclick="location.href='admin/StopModule/@module.Id'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити модуль</button>
+                            }
+                        </div>
+                    </div>
+                    }
+                </div>            
+                <button class="btnStop" onclick="location.href='@Url.Action("StopLecture", "admin")'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити лекцію</button>
+            </div>
+
+
         }
         else
         {
