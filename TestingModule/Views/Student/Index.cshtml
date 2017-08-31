@@ -67,17 +67,18 @@ else
 {
     <script>
         var quiz = $.connection.quizHub;
-        var intervalTime = 3000;
+        var intervalTime = 20000;
 
         $.connection.hub.start().done(function () {
-            setInterval(function () {
-                quiz.server.moduleEnquire().done(console.log("success!!!"));
-            }, intervalTime);
+            quiz.server.moduleEnquire().done(function() {
+                setInterval(function () {
+                    quiz.server.moduleEnquire();
+                }, intervalTime); 
+            });
         });
-
-        quiz.client.reciveQVM = function (qvm) {
-            console.log('qvm');
-        }
-
+        quiz.client.reciveModuleId = function (moduleId) {
+            console.log(moduleId);
+            window.location.href = '/quiz/' + moduleId;
+        };
     </script>
 }
