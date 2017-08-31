@@ -6,6 +6,7 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestingModule.Models
 {
@@ -19,5 +20,8 @@ namespace TestingModule.Models
         public int LectureId { get; set; }
         public int ModuleId { get; set; }
         public string Text { get; set; }
+
+        [NotMapped]
+        public int CorrectAnswerId { get; set; }
     }
 }

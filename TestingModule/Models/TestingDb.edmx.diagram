@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="testingDbModel.LecturesHistory" Width="1.5" PointX="4.75" PointY="3.75" />
         <EntityTypeShape EntityType="testingDbModel.Module" Width="1.5" PointX="6.75" PointY="0.75" />
         <EntityTypeShape EntityType="testingDbModel.Question" Width="1.5" PointX="0.75" PointY="6.75" />
-        <EntityTypeShape EntityType="testingDbModel.Respons" Width="1.5" PointX="6.75" PointY="3.75" />
         <EntityTypeShape EntityType="testingDbModel.Role" Width="1.5" PointX="6.75" PointY="6.75" />
         <EntityTypeShape EntityType="testingDbModel.Speciality" Width="1.5" PointX="2.75" PointY="7.75" />
         <EntityTypeShape EntityType="testingDbModel.Account" Width="1.5" PointX="0.875" PointY="0.875" />
@@ -23,6 +22,7 @@
         <EntityTypeShape EntityType="testingDbModel.ExeptionLog" Width="1.5" PointX="9.375" PointY="9.75" />
         <EntityTypeShape EntityType="testingDbModel.LectureHistoryGroup" Width="3.375" PointX="0.75" PointY="10.75" />
         <EntityTypeShape EntityType="testingDbModel.ModuleHistory" Width="1.5" PointX="11.375" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Respons" Width="1.5" PointX="7.125" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

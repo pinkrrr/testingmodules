@@ -8,8 +8,20 @@
 
 <div class="questions"></div>
 
+@Html.ActionLink("Зупинити модуль", "StopModule", "admin", new { moduleId = Model.FirstOrDefault().ModuleId }, new { @class="stopModule" })
 @*<div id="chartContainer" style="height: 360px; width: 100%;"></div>*@
 
-<script>
-    var statisticsModel = @Html.Raw(Json.Encode(@Model));
-</script>
+
+@section scripts
+{
+    <script>
+        var statisticsModel = @Html.Raw(Json.Encode(@Model));
+        var quiz = $.connection.quizHub;
+        moduleId = @Model.FirstOrDefault().ModuleId;
+        $.connection.hub.start();
+        quiz.client.recieveEnquire = function (accountId, connectionId) {
+            console.log(moduleId, accountId, connectionId);
+            quiz.server.sendQVM(moduleId, connectionId, accountId);
+        }
+    </script>
+}

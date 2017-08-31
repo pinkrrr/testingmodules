@@ -309,3 +309,10 @@ i.fa {
     font-size: 24px;
     font-weight: bold;
 }
+
+
+.table_questions .table-item label input{
+    clip: initial;
+    width: 20px;
+    height: 20px;
+}

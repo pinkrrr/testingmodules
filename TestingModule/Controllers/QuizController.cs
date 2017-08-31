@@ -15,11 +15,19 @@ namespace TestingModule.Controllers
         private testingDbEntities _context=new testingDbEntities();
 
         // GET: Quiz
+
         [Route("quiz/{moduleId}")]
-        public async Task<ActionResult> Index(int moduleId)
+        public async Task<ActionResult> Index()
         {
-            QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);
-            return View(qvm);
+            //QuizViewModel qvm = await new QuizManager().GetQnA(moduleId,studentId);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RedirectToQuiz(QuizViewModel quizViewModel)
+        {
+            var redirectUrl=new UrlHelper(Request.RequestContext).Action("Index","Quiz",quizViewModel);
+            return Json(new {Url=redirectUrl});
         }
 
         // GET: Statistic

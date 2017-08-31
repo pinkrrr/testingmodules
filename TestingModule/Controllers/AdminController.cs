@@ -21,37 +21,16 @@ namespace TestingModule.Controllers
     {
         public ActionResult Index()
         {
-            var db = new testingDbEntities();
-            ReasignViewModel model = new ReasignViewModel();
-            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
-            
-            if (role == "Lecturer")
+            var checkIfLector = new AdminPageHelper().LecturesIndexPage(User.Identity as System.Security.Claims.ClaimsIdentity);
+            if (checkIfLector != null)
             {
-                var lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-                var lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-                var lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
-                    .ToList();
-                var students = db.StudentDisciplines.Where(t => lectorsDisciplines.Contains(t.DisciplineId))
-                    .Select(t => t.StudentId).ToList();
-                var groups = db.Students.Where(t => students.Contains(t.Id)).Select(t => t.GroupId).ToList();
-                model.Disciplines = db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).ToList();
-                model.Modules = db.Modules.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToList();
-                model.Lectures = db.Lectures.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToList();
-                model.Groups = db.Groups.Where(t => groups.Contains(t.Id)).ToList();
-                model.LecturesHistories = db.LecturesHistories.Where(t => t.StartTime != null && t.EndTime == null)
-                    .ToList();
-                model.ModuleHistories = db.ModuleHistories.ToList();
-                var startedLectures = db.LecturesHistories
-                    .Where(t => lectorsDisciplines.Contains(t.Id) && t.EndTime == null).ToList();
-                if (startedLectures.Any())
+                if (checkIfLector.ModuleHistories.Any())
                 {
-                    model.LecturesHistories = startedLectures;
+                    return RedirectToAction("/statistics/" + checkIfLector.ModuleHistories.FirstOrDefault().ModuleId, "Quiz");
                 }
-                return View(model);
+                return View(checkIfLector);
             }
-
+            //If admin
             return View();
         }
         //LectureHistory
@@ -80,7 +59,7 @@ namespace TestingModule.Controllers
         {
             var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
             var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            new LectureHistoryHelper().StartModule(moduleId,login);
+            new LectureHistoryHelper().StartModule(moduleId, login);
             return RedirectToAction("Index");
         }
         public ActionResult StopModule(int moduleId)
@@ -412,14 +391,20 @@ namespace TestingModule.Controllers
             {
                 try
                 {
+                    var correctAnswer = 0;
                     var modelIndex = 0;
+                    foreach (var item in model.Where(t => t.ModuleId != null && t.ModuleId != 0))
+                    {
+                        if (item.CorrectAnswerId != 0)
+                        {
+                            correctAnswer = item.CorrectAnswerId;
+                        }
+                        modelIndex = model.IndexOf(item);
+                        break;
+                    }
                     foreach (var item in model.Where(t => t.Answer != null))
                     {
-                        if (item.ModuleId != null && item.ModuleId != 0)
-                        {
-                            modelIndex = model.IndexOf(item);
-                        }
-                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect);
+                        new Editing().EditAnswer(item.AnswerId, item.Answer.TrimEnd().TrimStart(), item.IsCorrect, correctAnswer);
                     }
                     var firstOrDefault = model[modelIndex];
                     if (firstOrDefault != null)
@@ -607,11 +592,11 @@ namespace TestingModule.Controllers
             return RedirectToAction("Students");
         }
 
-        public ActionResult DownloadStudentExcel(int GroupId)
+        public ActionResult DownloadStudentExcel(int groupId)
         {
             var db = new testingDbEntities();
-            var group = db.Groups.FirstOrDefault(t => t.Id == GroupId).Name;
-            var students = db.Students.Where(t => t.GroupId == GroupId).ToList();
+            var group = db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
+            var students = db.Students.Where(t => t.GroupId == groupId).OrderBy(t => t.Surname).ToList();
             var account = db.Accounts.ToList();
 
             using (ExcelPackage pck = new ExcelPackage())

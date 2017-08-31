@@ -57,12 +57,12 @@
 
         var statisticsDynamicData = [];
 
-        statisticsModel.forEach(function (item, i) {
+        statisticsModel.forEach(function(item, i) {
             statisticsDynamicData[i] = {
                 questionId: item.Id,
                 totalAnswersCount: 0
             }
-        })
+        });
 
         console.log(statisticsDynamicData);
 
@@ -74,11 +74,11 @@
 
         statisticsHub.client.recieveStatistics = function (questionId, studentsCount) {
             statisticsDynamicData.forEach(function (item) {
-                if (item.questionId == questionId) {
+                if (item.questionId === questionId) {
                     item.totalAnswersCount++;
                 }
                 progress(item.questionId, item.totalAnswersCount, studentsCount);
-            })
+            });
         };
 
     </script>

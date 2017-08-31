@@ -165,33 +165,6 @@
 
     }
 
-    function questionsEdit() {
-
-        var $hiddenSaveBtns = $('.btnSave__hidden');
-        var $saveBtn = $('.btnSaveQuestions');
-
-        function addNewAnswer() {
-
-        }
-
-        function initAddNewAnswer() {
-
-        }
-
-        //function saveQuestions() {
-        //    $('.btnSave__hidden').each(function (i) {
-        //        console.log(i);
-        //    });
-        //}
-
-        //function initSaveQuestions() {
-        //    $saveBtn.on('click', function () {
-        //        //saveQuestions();
-        //    })
-        //}
-
-    }
-
     function selectmenuInit() {
         $('select').selectmenu();
     }
@@ -318,19 +291,15 @@
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
                 var quizHub = $.connection.quizHub;
-
-                if (_model.QuestionsList.length > 1) {
+                console.log(_model);
                     $.connection.hub.start().done(function () {
                         quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                             _model = model;
                             setQuestionData(_model);
-                        }).fail(function (error) {
-                            console.log(error);
+                        }).fail(function () {
+                            quitQuiz();
                         });
                     });
-                } else {
-                    quitQuiz();
-                }
 
             } else {
                 return;
@@ -346,9 +315,6 @@
         function quitQuiz() {
             $questionBlock.remove();
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
-            setTimeout(function () {
-                document.location.href = "/";
-            }, 1000);
         }
 
 
@@ -427,13 +393,41 @@
 
     }
 
+    function startLectureValidation() {
+
+        var $startLecture = $('.popup-startLecture');
+        var $groupCheckbox = $('.groupItem input[type="checkbox"]')
+        var $startButton = $startLecture.find('.popup-start-btn');
+
+        $groupCheckbox.on('change', function () {
+            if ($groupCheckbox.is(':checked')) {
+                $startButton.removeAttr('disabled');
+            } else {
+                $startButton.attr('disabled', '');
+            }
+        })
+
+    }
+
+    function quiestionsEditChecked() {
+        var $checkButton = $('.table_questions .table-item_correct label');
+
+        $checkButton.on('click', function() {
+            $(this).closest('tbody').find('.table-item label input').each(function (i, item) {
+                $(item).prop('checked', false)
+            })
+            $(this).prop('checked', true);
+        })
+    }
+
     popup();
-    questionsEdit();
     selectmenuInit();
     checkboxradioInit();
     specialitiesStudentsAccordion();
     selectAllorNobody();
     statistics();
+    startLectureValidation();
+    //quiestionsEditChecked();
 
     if ($('.questionBlock').length > 0) {
         quiz();
