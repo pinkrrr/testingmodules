@@ -32,11 +32,7 @@ namespace TestingModule.Hubs
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            var role = new AccountCredentials().GetRole();
-            if (role == RoleName.Student)
-            {
-                UserHandler.ConnectedIds.Remove(Context.ConnectionId);
-            }
+            UserHandler.ConnectedIds.Remove(Context.ConnectionId);
             return base.OnDisconnected(stopCalled);
         }
 
