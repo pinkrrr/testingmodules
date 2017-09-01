@@ -43,12 +43,17 @@ h2 .groupName {
 }
 
 .btnStop {
-    background-color: red;
+    background-color: #ff0000;
     color: #ffffff;
     font-size: 18px;
     padding: 10px 40px;
     border: 3px solid red;
     font-weight: bold;
+}
+
+.btnStop:hover{
+    background-color: #ffffff;
+    color: #ff0000;
 }
 
 .btnStop[disabled]{
@@ -137,6 +142,7 @@ input[type="text"] {
 
 .body-content__LecturerHomepage{
     background-image: url("/Content/img/lectorBackground.jpg");
+    overflow-x: hidden;
 }
 
 .body-content__adminHomepage {
