@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using TestingModule.Models;
 using System.Threading.Tasks;
 using TestingModule.ViewModels;
@@ -28,15 +29,25 @@ namespace TestingModule.Additional
 
         public async Task<QuizViewModel> GetQnA(int moduleId)
         {
-            ICollection<Question> questions = await GetQuestionsList(moduleId);
-            var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-            QuizViewModel qnA = new QuizViewModel
+            var student = await new AccountCredentials().GetStudent();
+            var answeredQuestions = new StudentPageHelper().CheckActiveQuiz(student.Id);
+            ICollection<Question> questions = new List<Question>();
+            QuizViewModel qnA = new QuizViewModel { };
+            if (answeredQuestions != null)
             {
-                QuestionsList = questions,
-                Question = question,
-                Student = await new AccountCredentials().GetStudent(),
-                Answers = await GetAnswersList(question.Id)
-            };
+                questions = await GetQuestionsList(moduleId);
+                questions = questions.Where(t => !answeredQuestions.Contains(t.Id)).ToList();
+                var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+                qnA = new QuizViewModel
+                {
+                    QuestionsList = questions,
+                    Question = question,
+                    Student = student,
+                    Answers = await GetAnswersList(question.Id)
+                };
+            }
+            //ICollection<Question> questions = await GetQuestionsList(moduleId);
+
             return qnA;
         }
 
@@ -49,13 +60,17 @@ namespace TestingModule.Additional
             return quizVM;
         }
 
-        public async Task<bool> IsAnswerCorrect(int answerId)
+        public async Task<int> GetLectureHistoryId(QuizViewModel qVM)
         {
-            if (await _context.Answers.Where(a => a.Id == answerId)
-                .Select(a => a.IsCorrect)
-                .SingleOrDefaultAsync() == true)
-                return true;
-            return false;
+            var lect = await _context.LecturesHistories
+                .Join(_context.LectureHistoryGroups, lh => lh.Id, lhg => lhg.LectureHistoryId,
+                    (lh, lhg) => new { LecturesHistory = lh, LectureHistoryGroup = lhg })
+                .Where(t => t.LecturesHistory.LectureId == qVM.Question.LectureId &&
+                            t.LecturesHistory.EndTime == null && t.LectureHistoryGroup.GroupId == qVM.Student.GroupId)
+                .Select(t => t.LecturesHistory.Id).FirstOrDefaultAsync();
+            return lect;
         }
+
+
     }
 }
