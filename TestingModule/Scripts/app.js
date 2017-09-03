@@ -163,11 +163,52 @@
             $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
         }
 
+
+        function getLecture() {
+            var $dropdownDiscipline = $('#ddldiscipline');
+            var $dropdownLection = $('#ddllecture');
+            var disciplineId = null;
+
+            console.log(lecByDiscURL);
+
+            $dropdownDiscipline.on('selectmenuselect', function (e, ui) {
+                setLectionsListByDisciplines(ui.item.value);
+            });
+
+        }
+
+        function setLectionsListByDisciplines(disciplineId) {
+            var url = "/admin/GetLecturesByDiscipline/";
+            var $lectureSelect = $("#ddllecture");
+
+            disciplineId = parseInt(disciplineId);
+
+            $.ajax({
+                url: lecByDiscURL,
+                type: 'POST',
+                data: { disciplineId: disciplineId },
+                success: function (data) {
+                    var optionsHTML = '';
+                    for (var x = 0; x < data.length; x++) {
+                        optionsHTML += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                    }
+                    $lectureSelect.html(optionsHTML);
+                    $lectureSelect.selectmenu("refresh");
+                }
+            })
+
+        }
+
+        var defaultLectureId = parseInt($('#ddldiscipline').find('option').first().attr('value'));
+
+
         initShowEditPopup();
         initShowRemovePopup();
         initShowAddPopup();
         closePopup();
         initSaveData();
+        getLecture();
+        setLectionsListByDisciplines(defaultLectureId);
 
     }
 
