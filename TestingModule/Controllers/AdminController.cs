@@ -57,6 +57,7 @@ namespace TestingModule.Controllers
         }
 
         [HttpPost]
+        //[Route ("/admin/getlecturesbydiscipline")]
         public ActionResult GetLecturesByDiscipline(int disciplineId)
         {
             var db = new testingDbEntities();

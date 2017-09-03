@@ -3,34 +3,6 @@
     ViewBag.Title = "Домашня сторінка";
     Layout = "~/Views/Shared/_LayoutAdminHomepage.cshtml";
 }
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script language="javascript" type="text/javascript">
-    function GetLecture(_disciplineId) {
-
-        var procemessage = "<option value='0'> Please wait...</option>";
-        $("#ddllecture").html(procemessage).show();
-        var url = "/admin/GetLecturesByDiscipline/";
-
-        $.ajax({
-            url: url,
-            data: { disciplineId: _disciplineId },
-            cache: false,
-            type: "POST",
-            success: function (data) {
-                var markup = "<option value='0'>Select Discipline</option>";
-                for (var x = 0; x < data.length; x++) {
-                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
-                }
-                $("#ddllecture").html(markup).show();
-            }
-            ,
-            error: function (reponse) {
-                alert("error : " + reponse);
-            }
-        });
-
-    }
-</script>
 
 @if (Request.IsAuthenticated)
 {
@@ -88,7 +60,7 @@
                            {
                                @class = "startLecture_selectDiscipline",
                                id = "ddldiscipline",
-                               @onchange = "javascript:GetLecture(this.value);",
+                               //@onchange = "javascript:GetLecture(this.value);",
                                AutoPostBack = "True"
                            })
                                 <div class="popup-subtitle">Виберіть лекцію</div>
@@ -128,3 +100,7 @@
     }
 
 }
+
+<script>
+    var lecByDiscURL = '@Url.Action("GetLecturesByDiscipline", "admin")';
+</script>
