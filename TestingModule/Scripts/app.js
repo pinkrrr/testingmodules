@@ -70,6 +70,12 @@
 
             });
         }
+        function getDisciplineOption() {
+            var ddlReport = document.getElementByXpath("<%=DropDownListReports.ClientID%>");
+
+            var Text = ddlReport.options[ddlReport.selectedIndex].text;
+            var Value = ddlReport.options[ddlReport.selectedIndex].value;
+        }
 
         function closePopup(closeButton) {
             $('.closePopupBtn').on('click', function (e) {
