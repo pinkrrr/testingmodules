@@ -31,22 +31,9 @@
 
 
     @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/jquery-ui")
-        <script src="~/signalr/hubs"></script>
+    @Scripts.Render("~/bundles/jquery-ui")
+    <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
-
-
-
-
-    <script>
-    var quiz = $.connection.quizHub;
-    $.connection.hub.start();
-    quiz.client.reciveStopModule = function () {
-        window.location.href = "/";
-    }
-    </script>
-
-
 </body>
 </html>

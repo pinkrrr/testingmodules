@@ -13,6 +13,16 @@
     <button class="nextQuestion">Далі</button>
 </div>
 
-<script>
-    var qModel = @Html.Raw(Json.Encode(@Model));
-</script>
+
+@section scripts
+{
+    <script>
+        var qModel = @Html.Raw(Json.Encode(@Model));
+
+        var quiz = $.connection.quizHub;
+        $.connection.hub.start();
+        quiz.client.reciveStopModule = function () {
+            window.location.href = "/";
+        }
+    </script>
+}
