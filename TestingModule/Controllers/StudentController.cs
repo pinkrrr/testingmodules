@@ -17,11 +17,11 @@ namespace TestingModule.Controllers
         {
             var studePageHelper = new StudentPageHelper();
             //Check for active quiz
-            /*var active = studePageHelper.CheckActiveQuiz(User.Identity as System.Security.Claims.ClaimsIdentity);
-            if (active != null)
-            {
-                return RedirectToAction("/" + active, "Quiz");
-            }*/
+            //var active = studePageHelper.CheckActiveQuiz(User.Identity as System.Security.Claims.ClaimsIdentity);
+            //if (active != null)
+            //{
+            //    return RedirectToAction("/" + active, "Quiz");
+            //}
             //If no active quiz, or already answered
             var viewModels =
                 studePageHelper.StudentsDisciplinesList(User.Identity as System.Security.Claims.ClaimsIdentity);

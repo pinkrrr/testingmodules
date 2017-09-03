@@ -185,6 +185,15 @@ namespace TestingModule
                 defaults: new { controller = "Account", action = "Login" });
 
             routes.MapRoute(
+                name: "Logout",
+                url: "logout",
+                defaults: new { controller = "Account", action = "Logout" });
+
+            routes.MapRoute(
+                name: "GetLecturesByDiscipline",
+                url: "admin/GetLecturesByDiscipline",
+                defaults: new { controller = "admin", action = "GetLecturesByDiscipline" });
+            routes.MapRoute(
                 name: "StartModule",
                 url: "admin/StartModule/{moduleId}",
                 defaults: new { controller = "admin", action = "StartModule" });

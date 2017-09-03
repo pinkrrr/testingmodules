@@ -42,8 +42,9 @@ namespace TestingModule.Hubs
             Respons response = new Respons
             {
                 AnswerId = responseId,
-                LectureHistoryId = quizVM.Question.LectureId,
-                QuestionId = quizVM.Question.Id
+                LectureHistoryId = await _quizManager.GetLectureHistoryId(quizVM),
+                QuestionId = quizVM.Question.Id,
+                StudentId = quizVM.Student.Id
             };
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();
@@ -72,7 +73,6 @@ namespace TestingModule.Hubs
         public void SendQVM(int moduleId, string connectionId)
         {
             Clients.Client(connectionId).ReciveModuleId(moduleId);
-            //return qvm;
         }
 
     }

@@ -37,12 +37,8 @@ namespace TestingModule.Additional
             return (viewModels);
         }
 
-        public int? CheckActiveQuiz(ClaimsIdentity claimsIdentity)
+        public List<int> CheckActiveQuiz(int student)
         {
-            var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-            var login = c.Value.ToString();
-            var account = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-            var student = _db.Students.FirstOrDefault(t => t.AccountId == account).Id;
             var connect = _db.StudentDisciplines.Where(t => t.StudentId == student).Select(t => t.DisciplineId).ToList();
             var group = _db.Students.FirstOrDefault(t => t.Id == student).GroupId;
             var active = _db.LecturesHistories.Where(t => connect.Contains(t.DisciplineId) && t.EndTime == null).Select(t => t.Id)
@@ -61,10 +57,10 @@ namespace TestingModule.Additional
                         var studentResponses =
                             _db.Respons.Where(t => t.StudentId == student &&
                                                      t.LectureHistoryId == activeModule.LectureHistoryId &&
-                                                     moduleQuestions.Contains(t.QuestionId)).ToList();
+                                                     moduleQuestions.Contains(t.QuestionId)).Select(t => t.QuestionId).ToList();
                         if (studentResponses.Count != moduleQuestions.Count)
                         {
-                            return activeModule.ModuleId;
+                            return studentResponses;
                         }
 
                     }

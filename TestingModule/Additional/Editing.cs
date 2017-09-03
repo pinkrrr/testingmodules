@@ -33,6 +33,16 @@ namespace TestingModule.Additional
             if (disciplineId != _db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId && disciplineId != 0)
             {
                 lct.DisciplineId = disciplineId;
+                var modules = _db.Modules.Where(t => t.LectureId == lectureId);
+                var questions = _db.Questions.Where(t => t.LectureId == lectureId);
+                foreach (var module in modules)
+                {
+                    module.DisciplineId = disciplineId;
+                }
+                foreach (var question in questions)
+                {
+                    question.DisciplineId = disciplineId;
+                }
             }
             lct.Name = name;
             _db.SaveChanges();
@@ -43,6 +53,11 @@ namespace TestingModule.Additional
             if (lectureId != _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId && lectureId != 0)
             {
                 mdl.LectureId = lectureId;
+                var questions = _db.Questions.Where(t => t.ModuleId == moduleId);
+                foreach (var question in questions)
+                {
+                    question.LectureId = lectureId;
+                }
             }
             mdl.Name = name;
             _db.SaveChanges();
@@ -77,29 +92,34 @@ namespace TestingModule.Additional
             _db.SaveChanges();
         }
 
-        public void EditSpeciality(int SpecialityId, string name)
+        public void EditSpeciality(int specialityId, string name)
         {
-            var spc = _db.Specialities.FirstOrDefault(t => t.Id == SpecialityId);
+            var spc = _db.Specialities.FirstOrDefault(t => t.Id == specialityId);
             spc.Name = name;
             _db.SaveChanges();
         }
-        public void EditGroup(int GroupId, string name, int SpecialityId)
+        public void EditGroup(int groupId, string name, int specialityId)
         {
-            var grp = _db.Groups.FirstOrDefault(t => t.Id == GroupId);
-            if (SpecialityId != _db.Groups.FirstOrDefault(t => t.Id == GroupId).SpecialityId && SpecialityId != 0)
+            var grp = _db.Groups.FirstOrDefault(t => t.Id == groupId);
+            if (specialityId != _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId && specialityId != 0)
             {
-                grp.SpecialityId = SpecialityId;
+                grp.SpecialityId = specialityId;
+                var students = _db.Students.Where(t => t.GroupId == groupId);
+                foreach (var student in students)
+                {
+                    student.SpecialityId = specialityId;
+                }
             }
             grp.Name = name;
             _db.SaveChanges();
         }
-        public void EditStudent(int studentId, string name, string surname, String username, String pass, int GroupId)
+        public void EditStudent(int studentId, string name, string surname, String username, String pass, int groupId)
         {
             var std = _db.Students.FirstOrDefault(t => t.Id == studentId);
             var ac = _db.Accounts.FirstOrDefault(t => t.Id == std.AccountId);
-            if (GroupId != _db.Students.FirstOrDefault(t => t.Id == studentId).GroupId && GroupId != 0)
+            if (groupId != _db.Students.FirstOrDefault(t => t.Id == studentId).GroupId && groupId != 0)
             {
-                std.GroupId = GroupId;
+                std.GroupId = groupId;
             }
             std.Name = name;
             std.Surname = surname;

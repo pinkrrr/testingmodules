@@ -55,6 +55,15 @@ namespace TestingModule.Controllers
             new LectureHistoryHelper().StopLecture(login);
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public ActionResult GetLecturesByDiscipline(int disciplineId)
+        {
+            var db = new testingDbEntities();
+            var lectures = db.Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
+            SelectList obgcity = new SelectList(lectures, "Id", "Name", 0);
+            return Json(obgcity);
+        }
         public ActionResult StartModule(int moduleId)
         {
             var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;

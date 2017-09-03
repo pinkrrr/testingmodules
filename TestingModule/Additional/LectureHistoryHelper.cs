@@ -78,9 +78,9 @@ namespace TestingModule.Additional
             var lectorId = _db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
             var lectorsDisciplines = _db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
                 .ToList();
-            var activeLectures = _db.LecturesHistories
-                .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).FirstOrDefault().Id;
-            _db.ModuleHistories.RemoveRange(_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures && t.ModuleId == moduleId));
+            var activeLectures = _db.LecturesHistories.FirstOrDefault(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null);
+            activeLectures.ModulesPassed += 1;
+            _db.ModuleHistories.RemoveRange(_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures.Id && t.ModuleId == moduleId));
             _db.SaveChanges();
         }
 

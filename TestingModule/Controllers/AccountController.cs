@@ -71,6 +71,7 @@ namespace TestingModule.Controllers
             return View("Login", loginForm);
         }
 
+      
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -120,7 +121,8 @@ namespace TestingModule.Controllers
 
             }
             // invalid username or password
-            ModelState.AddModelError("", "invalid username or password");
+            TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
+            //ModelState.AddModelError("", "invalid username or password");
             return View("Login", loginForm);
         }
 
