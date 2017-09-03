@@ -169,8 +169,6 @@
             var $dropdownLection = $('#ddllecture');
             var disciplineId = null;
 
-            console.log(lecByDiscURL);
-
             $dropdownDiscipline.on('selectmenuselect', function (e, ui) {
                 setLectionsListByDisciplines(ui.item.value);
             });
@@ -184,7 +182,7 @@
             disciplineId = parseInt(disciplineId);
 
             $.ajax({
-                url: lecByDiscURL,
+                url: url,
                 type: 'POST',
                 data: { disciplineId: disciplineId },
                 success: function (data) {
@@ -208,7 +206,10 @@
         closePopup();
         initSaveData();
         getLecture();
-        setLectionsListByDisciplines(defaultLectureId);
+        if ($("#ddllecture").length) {
+            setLectionsListByDisciplines(defaultLectureId);
+        }
+        
 
     }
 
@@ -338,7 +339,6 @@
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
                 var quizHub = $.connection.quizHub;
-                console.log(_model);
                     $.connection.hub.start().done(function () {
                         quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                             _model = model;
@@ -486,3 +486,14 @@ function progress(qID, correctAnswersCount, studentsCount) {
     var progress = correctAnswersCount / studentsCount * 100;
     $('.body-content__statistics .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
 }
+
+function stopModule() {
+    var $stopModuleBtn = $('#stopModuleButton');
+    var quiz = $.connection.quizHub;
+    $.connection.hub.start();
+    $(document).on("click", "a#stopModuleButton", function () {
+        quiz.server.stopModule();
+    });
+}
+
+stopModule();

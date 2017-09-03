@@ -75,6 +75,11 @@ namespace TestingModule.Hubs
             Clients.Client(connectionId).ReciveModuleId(moduleId);
         }
 
+        public void StopModule()
+        {
+            Clients.All.reciveStopModule();
+        }
+
     }
 
     public static class UserHandler
@@ -82,4 +87,5 @@ namespace TestingModule.Hubs
         public static HashSet<string> ConnectedIds = new HashSet<string>();
         public static string GroupName { get; set; }
     }
+
 }
