@@ -11,7 +11,8 @@ namespace TestingModule.ViewModels
         public Lector Lector { get; set; }
         public IEnumerable<Discipline> Disciplines { get; set; }
         public IEnumerable<Lecture> Lectures { get; set; }
-        public IEnumerable<Module> Modules { get; set; }
-        public IEnumerable<Group> Groups { get; set; }
+        public IEnumerable<LecturesHistory> Histories { get; set; }
+        //public IEnumerable<Module> Modules { get; set; }
+        //public IEnumerable<Group> Groups { get; set; }
     }
 }

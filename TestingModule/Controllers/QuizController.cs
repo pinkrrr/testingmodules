@@ -45,10 +45,10 @@ namespace TestingModule.Controllers
             return View(await new QuizManager().GetModulesForLector());
         }
 
-        /*[Route("quiz/totalstatistics/{lectureId}/{groupId}")]
-        public ActionResult TotalStatistics(int lectureId)
+        [Route("quiz/totalstatistics/history/{lectureHistoryId}")]
+        public ActionResult HistoryStatistics(int lectureHistoryId)
         {
             return View();
-        }*/
+        }
     }
 }

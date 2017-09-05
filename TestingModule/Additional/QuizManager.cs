@@ -84,16 +84,16 @@ namespace TestingModule.Additional
                 from d in disciplines
                 join l in _context.Lectures on d.Id equals l.DisciplineId
                 select l;
-            IEnumerable<Module> modules =
-                from l in lectures
-                join m in _context.Modules on l.Id equals m.LectureId
-                select m;
+            IEnumerable<LecturesHistory> histories =
+               from l in lectures
+               join h in _context.LecturesHistories on l.Id equals h.LectureId
+               select h;
             TotalStatisticsViewModel totalStatistics = new TotalStatisticsViewModel
             {
                 Lector = lector,
                 Disciplines = disciplines,
                 Lectures = lectures,
-                Modules = modules
+                Histories = histories
             };
             return totalStatistics;
         }

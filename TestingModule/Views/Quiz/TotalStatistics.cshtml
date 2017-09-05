@@ -6,3 +6,27 @@
 
 <h2>TotalStatistics</h2>
 
+@model TestingModule.ViewModels.TotalStatisticsViewModel
+
+@{foreach (var discipline in Model.Disciplines)
+    {
+        <div class="disciplineName">@discipline.Name</div>
+
+        foreach (var lecture in Model.Lectures.Where(l => l.DisciplineId == discipline.Id))
+        {
+            <div class="lectureName">@lecture.Name</div>
+            <div class="lecturesDates">
+                @foreach (var lectureDate in Model.Histories.Where(h => h.LectureId == lecture.Id))
+                {
+                    <a href="@Url.Action("HistoryStatistics", "Quiz", new { lectureHistoryId = lectureDate.Id})" target="_blank" class="lectureDate">@lectureDate.StartTime</a>
+                }
+            </div>
+        }
+
+    } }
+
+<script>
+    var totalStatisticsModel = @Html.Raw(Json.Encode(@Model));
+</script>
+
+
