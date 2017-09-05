@@ -68,62 +68,54 @@ namespace TestingModule.Controllers
                 return RedirectToHome();
             }
             var loginForm = new Account();
-            return View("Login", loginForm);
+            return View(loginForm);
         }
 
-      
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult LoginAttempt(Account account)
         {
-            var loginForm = new Account();
             if (AccountValid(account.Login, account.Password))
             {
-                //var accounts = _context.Accounts.ToList();
                 var roles = _context.Roles.ToList();
+                ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
                 account = _context.Accounts.SingleOrDefault(a => a.Login == account.Login && a.Password == account.Password);
-                if (account.RoleId != _context.Roles.Where(r => r.Name == RoleName.Student).Select(r => r.Id).SingleOrDefault())
+                identity.AddClaims(new[]
                 {
-                    var ident = new ClaimsIdentity(
-                        new[]
-                        {
-                            new Claim(ClaimTypes.NameIdentifier, account.Login),
-                            new Claim(ClaimTypes.Name, account.Login),
-                            new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
-                            new Claim(ClaimTypes.Role,roles.Where(r=>r.Id==account.RoleId).Select(r=>r.Name).SingleOrDefault())
-                        },
-                        DefaultAuthenticationTypes.ApplicationCookie);
-                    HttpContext.GetOwinContext().Authentication.SignIn(
-                        new AuthenticationProperties { IsPersistent = false }, ident);
-                    return RedirectToAction("Index", "Admin");
+                    new Claim(ClaimTypes.NameIdentifier, account.Login),
+                    new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
+                    new Claim(ClaimTypes.Role,roles.Where(r=>r.Id==account.RoleId).Select(r=>r.Name).SingleOrDefault()),
+                    new Claim("Id",account.Id.ToString())
+                });
+                if (account.RoleId == _context.Roles.Where(r => r.Name == RoleName.Lecturer).Select(r => r.Id).SingleOrDefault())
+                {
+                    Lector lector = _context.Lectors.SingleOrDefault(s => s.AccountId == account.Id);
+                    identity.AddClaims(new[]
+                    {
+                        new Claim(ClaimTypes.Name,lector.Name),
+                        new Claim(ClaimTypes.Surname,lector.Surname),
+                    });
                 }
-                else
+                if (account.RoleId == _context.Roles.Where(r => r.Name == RoleName.Student).Select(r => r.Id).SingleOrDefault())
                 {
                     Student student = _context.Students.SingleOrDefault(s => s.AccountId == account.Id);
-                    var ident = new ClaimsIdentity(
-                        new[]
-                        {
-                            new Claim(ClaimTypes.NameIdentifier, account.Login),
-                            new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"),
-                            new Claim(ClaimTypes.Name,student.Name),
-                            new Claim(ClaimTypes.Surname,student.Surname),
-                            new Claim("Speciality", _context.Specialities.Where(sp=>sp.Id==student.SpecialityId).Select(sp=>sp.Name).SingleOrDefault()),
-                            new Claim("Group",_context.Groups.Where(g=>g.Id==student.GroupId).Select(g=>g.Name).SingleOrDefault()),
-                            new Claim(ClaimTypes.Role,"Student"),
-                            new Claim("Id",student.AccountId.ToString())
-                        },
-                        DefaultAuthenticationTypes.ApplicationCookie);
-                    HttpContext.GetOwinContext().Authentication.SignIn(
-                        new AuthenticationProperties { IsPersistent = false }, ident);
-                    return RedirectToAction("Index", "Student");
+                    identity.AddClaims(new[]
+                    {
+                        new Claim(ClaimTypes.Name, student.Name),
+                        new Claim(ClaimTypes.Surname, student.Surname),
+                        new Claim("Speciality", _context.Specialities.Where(sp => sp.Id == student.SpecialityId).Select(sp => sp.Name).SingleOrDefault()),
+                        new Claim("Group", _context.Groups.Where(g => g.Id == student.GroupId).Select(g => g.Name).SingleOrDefault()),
+                    });
                 }
+                HttpContext.GetOwinContext().Authentication.SignIn(
+                    new AuthenticationProperties { IsPersistent = false }, identity);
+                return RedirectToAction("Login");
 
             }
-            // invalid username or password
             TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
-            //ModelState.AddModelError("", "invalid username or password");
-            return View("Login", loginForm);
+            return RedirectToAction("Login");
         }
 
         private bool AccountValid(string username, string password)
@@ -146,11 +138,10 @@ namespace TestingModule.Controllers
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("login", "account");
         }
-
-        #endregion
     }
+    #endregion
 
     public class CustomAuthorize : AuthorizeAttribute
     {

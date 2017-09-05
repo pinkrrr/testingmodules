@@ -24,12 +24,12 @@ namespace TestingModule.Controllers
             return View(qvm);
         }
 
-        [HttpPost]
-        public ActionResult RedirectToQuiz(QuizViewModel quizViewModel)
-        {
-            var redirectUrl=new UrlHelper(Request.RequestContext).Action("Index","Quiz",quizViewModel);
-            return Json(new {Url=redirectUrl});
-        }
+        //[HttpPost]
+        //public ActionResult RedirectToQuiz(QuizViewModel quizViewModel)
+        //{
+        //    var redirectUrl=new UrlHelper(Request.RequestContext).Action("Index","Quiz",quizViewModel);
+        //    return Json(new {Url=redirectUrl});
+        //}
 
         // GET: Statistic
         [Route("quiz/modulestatistics/{moduleId}")]
@@ -39,10 +39,16 @@ namespace TestingModule.Controllers
             return View(question);
         }
 
-        [Route("quiz/totalstatistics/{lectureId}/{groupId}")]
+        [Route("quiz/totalstatistics/")]
+        public async Task<ActionResult> TotalStatistics()
+        {
+            return View(await new QuizManager().GetModulesForLector());
+        }
+
+        /*[Route("quiz/totalstatistics/{lectureId}/{groupId}")]
         public ActionResult TotalStatistics(int lectureId)
         {
             return View();
-        }
+        }*/
     }
 }

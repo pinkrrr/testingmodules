@@ -282,6 +282,7 @@
     <Compile Include="ViewModels\QuizViewModel.cs" />
     <Compile Include="ViewModels\ReasignViewModel.cs" />
     <Compile Include="ViewModels\RegistrationFormViewModel.cs" />
+    <Compile Include="ViewModels\TotalStatisticsViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

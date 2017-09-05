@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -71,6 +72,30 @@ namespace TestingModule.Additional
             return lect;
         }
 
-
+        public async Task<TotalStatisticsViewModel> GetModulesForLector()
+        {
+            Lector lector = await new AccountCredentials().GetLector();
+            IEnumerable<Discipline> disciplines =
+                from ld in _context.LectorDisciplines
+                join d in _context.Disciplines on ld.DisciplineId equals d.Id
+                where ld.LectorId == lector.Id
+                select d;
+            IEnumerable<Lecture> lectures =
+                from d in disciplines
+                join l in _context.Lectures on d.Id equals l.DisciplineId
+                select l;
+            IEnumerable<Module> modules =
+                from l in lectures
+                join m in _context.Modules on l.Id equals m.LectureId
+                select m;
+            TotalStatisticsViewModel totalStatistics = new TotalStatisticsViewModel
+            {
+                Lector = lector,
+                Disciplines = disciplines,
+                Lectures = lectures,
+                Modules = modules
+            };
+            return totalStatistics;
+        }
     }
 }

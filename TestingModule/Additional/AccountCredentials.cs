@@ -31,9 +31,16 @@ namespace TestingModule.Additional
         {
             testingDbEntities _context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = Int32.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            Student student = await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
-            return student;
+            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
+            return await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+        }
+
+        public async Task<Lector> GetLector()
+        {
+            testingDbEntities _context = new testingDbEntities();
+            var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
+            return await _context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
         }
     }
 }
