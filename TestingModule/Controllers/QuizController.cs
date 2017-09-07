@@ -42,13 +42,13 @@ namespace TestingModule.Controllers
         [Route("quiz/totalstatistics/")]
         public async Task<ActionResult> TotalStatistics()
         {
-            return View(await new QuizManager().GetModulesForLector());
+            return View(await new QuizManager().GetHistorieForLector());
         }
 
         [Route("quiz/totalstatistics/history/{lectureHistoryId}")]
-        public ActionResult HistoryStatistics(int lectureHistoryId)
+        public async Task<ActionResult> HistoryStatistics(int lectureHistoryId)
         {
-            return View();
+            return View(await new QuizManager().GetModulesForLector(lectureHistoryId));
         }
     }
 }

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Security.Claims;
 using TestingModule.Models;
 using System.Threading.Tasks;
+using Microsoft.Owin;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
@@ -72,7 +74,7 @@ namespace TestingModule.Additional
             return lect;
         }
 
-        public async Task<TotalStatisticsViewModel> GetModulesForLector()
+        public async Task<TotalStatisticsViewModel> GetHistorieForLector()
         {
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<Discipline> disciplines =
@@ -97,5 +99,59 @@ namespace TestingModule.Additional
             };
             return totalStatistics;
         }
+
+        public async Task<IEnumerable<ResponseStatisticsViewModel>> GetModulesForLector(int lectureHistoryId)
+        {
+            Lector lector = await new AccountCredentials().GetLector();
+            IEnumerable<ResponseTable> tableResponses =
+                from rs in _context.Respons
+                join s in _context.Students on rs.StudentId equals s.Id
+                join lhg in _context.LectureHistoryGroups on rs.LectureHistoryId equals lhg.LectureHistoryId
+                join qs in _context.Questions on rs.QuestionId equals qs.Id
+                where rs.LectureHistoryId == lectureHistoryId && lhg.GroupId == s.GroupId
+                select new ResponseTable
+                {
+                    AnswerId = rs.AnswerId,
+                    LectureHistoryId = rs.LectureHistoryId,
+                    GroupId = lhg.GroupId,
+                    ModuleId = qs.ModuleId,
+                    QuestionId = rs.QuestionId,
+                    StudentId = rs.StudentId,
+                    ResponseId = rs.Id
+                };
+            IEnumerable<Group> groups = _context.Groups
+                .Join(tableResponses, gr => gr.Id, tr => tr.GroupId,
+                    (gr, tr) => new { Group = gr }).Select(gr => gr.Group).Distinct();
+            IEnumerable<Module> modules = _context.Modules
+                .Join(tableResponses, md => md.Id, tr => tr.ModuleId,
+                    (md, tr) => new { Module = md }).Select(md => md.Module).Distinct();
+            IEnumerable<Question> questions =
+                from q in _context.Questions
+                join m in modules on q.ModuleId equals m.Id
+                select q;
+            IEnumerable<Answer> answers =
+                from a in _context.Answers
+                join q in questions on a.QuestionId equals q.Id
+                select a;
+            IEnumerable<Respons> responses =
+                from r in _context.Respons
+                join tr in tableResponses on r.Id equals tr.ResponseId
+                select r;
+            ICollection<ResponseStatisticsViewModel> responseStatistics = new List<ResponseStatisticsViewModel>();
+            foreach (var responseRow in tableResponses)
+            {
+                responseStatistics.Add(new ResponseStatisticsViewModel
+                {
+                    ResponseTable = responseRow,
+                    Module = modules.SingleOrDefault(m => m.Id == responseRow.ModuleId),
+                    Group = groups.SingleOrDefault(g => g.Id == responseRow.GroupId),
+                    Question = questions.SingleOrDefault(q => q.Id == responseRow.QuestionId),
+                    Answers = answers.Where(a => a.QuestionId == responseRow.QuestionId),
+                    Response = responses.SingleOrDefault(r => r.Id == responseRow.ResponseId)
+                });
+            }
+            return responseStatistics;
+        }
+
     }
 }

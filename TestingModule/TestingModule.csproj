@@ -223,6 +223,7 @@
     <Compile Include="Models\ModuleHistory.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ResponseTable.cs" />
     <Compile Include="Models\Respons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -231,6 +232,7 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DiscLecotorViewModel.cs" />
+    <Compile Include="ViewModels\ResponseStatisticsViewModel.cs" />
     <Compile Include="ViewModels\QueAns.cs" />
     <Compile Include="Models\Role.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
