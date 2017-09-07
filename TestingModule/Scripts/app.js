@@ -209,7 +209,7 @@
         if ($("#ddllecture").length) {
             setLectionsListByDisciplines(defaultLectureId);
         }
-        
+
 
     }
 
@@ -339,14 +339,14 @@
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
                 var quizHub = $.connection.quizHub;
-                    $.connection.hub.start().done(function () {
-                        quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
-                            _model = model;
-                            setQuestionData(_model);
-                        }).fail(function () {
-                            quitQuiz();
-                        });
+                $.connection.hub.start().done(function () {
+                    quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                        _model = model;
+                        setQuestionData(_model);
+                    }).fail(function () {
+                        quitQuiz();
                     });
+                });
 
             } else {
                 return;
@@ -372,23 +372,12 @@
 
     }
 
-    function getChartData() {
-        var chartData = [
-            { answer: 50, y: 1, name: "123" },
-            { answer: 1, y: 2, name: "444" },
-            { answer: 30, y: 3, name: "Не визначено" },
-        ];
-        return chartData;
-    }
+    
 
     function statistics() {
 
         if ($('.body-content__statistics').length > 0) {
             initializeModuleStatisticsPage();
-        }
-
-        if ($('.chartContainer').length > 0) {
-            createChart();
         }
 
         function initializeModuleStatisticsPage() {
@@ -402,40 +391,6 @@
 
             $questionList.html(questionList);
 
-        }
-
-        function createChart() {
-
-            var chartData = getChartData();
-
-            var chart = new CanvasJS.Chart("chartContainer",
-                {
-                    title: {
-                        text: "How my time is spent in a week?",
-                        fontFamily: "arial black"
-                    },
-                    animationEnabled: true,
-                    legend: {
-                        verticalAlign: "bottom",
-                        horizontalAlign: "center"
-                    },
-                    theme: "theme3",
-                    data: [{
-                        type: "pie",
-                        indexLabelFontFamily: "Arial",
-                        indexLabelFontSize: 20,
-                        indexLabelFontWeight: "bold",
-                        startAngle: 0,
-                        indexLabelFontColor: "#ffffff",
-                        indexLabelLineColor: "#ff0000",
-                        indexLabelPlacement: "inside",
-                        toolTipContent: "Answer: {name}",
-                        showInLegend: true,
-                        indexLabel: "{y}",
-                        dataPoints: chartData
-                    }]
-                });
-            chart.render();
         }
 
     }
@@ -459,7 +414,7 @@
     function quiestionsEditChecked() {
         var $checkButton = $('.table_questions .table-item_correct label');
 
-        $checkButton.on('click', function() {
+        $checkButton.on('click', function () {
             $(this).closest('tbody').find('.table-item label input').each(function (i, item) {
                 $(item).prop('checked', false)
             })
@@ -497,3 +452,71 @@ function stopModule() {
 }
 
 stopModule();
+drawChart();
+
+
+function drawChart() {
+    historyStatisticsModel.forEach(function (item) {
+        $('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
+        createChart(item);
+    })
+}
+
+
+function getChartData(model) {
+    console.log(model);
+
+    var answersArray = [];
+
+    model.Answers.forEach(function (item, i) {
+        answersArray.push({
+            answer: 25,
+            y: i+1,
+            name: item.Text
+        })
+    })
+
+    var chartData = {
+        id: model.Question.Id,
+        question: model.Question.Text,
+        answers: answersArray
+    }
+    return chartData;
+}
+
+
+function createChart(model) {
+
+    var chartData = getChartData(model);
+
+    //console.log('chartData=', chartData);
+
+    var chart = new CanvasJS.Chart("chartContainer"+chartData.id,
+        {
+            title: {
+                text: chartData.question,
+                fontFamily: "arial black"
+            },
+            animationEnabled: true,
+            legend: {
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+            },
+            theme: "theme3",
+            data: [{
+                type: "pie",
+                indexLabelFontFamily: "Arial",
+                indexLabelFontSize: 20,
+                indexLabelFontWeight: "bold",
+                startAngle: 0,
+                indexLabelFontColor: "#ffffff",
+                indexLabelLineColor: "#ff0000",
+                indexLabelPlacement: "inside",
+                toolTipContent: "Відповідь: {name}",
+                showInLegend: true,
+                indexLabel: "{y}",
+                dataPoints: chartData.answers
+            }]
+        });
+    chart.render();
+}

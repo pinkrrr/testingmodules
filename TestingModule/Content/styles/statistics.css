@@ -47,3 +47,47 @@
     background-color: #ffffff;
     color: #de1414;
 }
+
+.statisticsItem{
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #000000;
+}
+
+.disciplineName{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.lecture{
+    padding: 10px 0;
+    margin-left: 10px;
+}
+
+.lecture_name{
+    font-size: 20px;
+}
+
+.lecture_date{
+    display: block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #0094ff;
+    font-weight: bold;
+    transition: background .2s;
+}
+
+.lecture_date:hover{
+    background-color: #e0e0e0;
+}
+
+.chartsWrapper{
+    text-align: center;
+    font-size: 0;
+}
+
+.pieChart{
+    display: inline-block;
+    background-color: transparent;
+    margin: 20px;
+}
