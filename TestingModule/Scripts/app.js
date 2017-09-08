@@ -452,8 +452,10 @@ function stopModule() {
 }
 
 stopModule();
-drawChart();
 
+if ($('.chartsWrapper').length===1) {
+    drawChart();
+}
 
 function drawChart() {
     historyStatisticsModel.forEach(function (item) {
@@ -470,8 +472,7 @@ function getChartData(model) {
 
     model.Answers.forEach(function (item, i) {
         answersArray.push({
-            answer: 25,
-            y: i+1,
+            y: model.AnswersCount[i].Count,
             name: item.Text
         })
     })
@@ -503,6 +504,7 @@ function createChart(model) {
                 horizontalAlign: "center"
             },
             theme: "theme3",
+            backgroundColor: "transparent",
             data: [{
                 type: "pie",
                 indexLabelFontFamily: "Arial",
