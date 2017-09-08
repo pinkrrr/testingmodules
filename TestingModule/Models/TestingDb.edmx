@@ -20,7 +20,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="QuestionId" Type="int" Nullable="false" />
-          <Property Name="Text" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="IsCorrect" Type="bit" />
         </EntityType>
         <EntityType Name="Disciplines">
@@ -117,7 +117,7 @@
           <Property Name="DisciplineId" Type="int" Nullable="false" />
           <Property Name="LectureId" Type="int" Nullable="false" />
           <Property Name="ModuleId" Type="int" Nullable="false" />
-          <Property Name="Text" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
         </EntityType>
         <EntityType Name="Responses">
           <Key>
@@ -129,6 +129,7 @@
           <Property Name="StudentId" Type="int" Nullable="false" />
           <Property Name="TimeToPass" Type="int" />
           <Property Name="LectureHistoryId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -213,7 +214,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="IsCorrect" Type="Boolean" />
         </EntityType>
         <EntityType Name="Discipline">
@@ -267,7 +268,7 @@
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -364,6 +365,7 @@
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="TimeToPass" Type="Int32" />
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -538,6 +540,7 @@
           <EntitySetMapping Name="Respons">
             <EntityTypeMapping TypeName="testingDbModel.Respons">
               <MappingFragment StoreEntitySet="Responses">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
                 <ScalarProperty Name="TimeToPass" ColumnName="TimeToPass" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />

@@ -44,7 +44,8 @@ namespace TestingModule.Hubs
                 AnswerId = responseId,
                 LectureHistoryId = await _quizManager.GetLectureHistoryId(quizVM),
                 QuestionId = quizVM.Question.Id,
-                StudentId = quizVM.Student.Id
+                StudentId = quizVM.Student.Id,
+                GroupId = quizVM.Student.GroupId
             };
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();

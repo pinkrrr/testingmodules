@@ -105,10 +105,9 @@ namespace TestingModule.Additional
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<ResponseTable> tableResponses =
                 from rs in _context.Respons
-                join s in _context.Students on rs.StudentId equals s.Id
                 join lhg in _context.LectureHistoryGroups on rs.LectureHistoryId equals lhg.LectureHistoryId
                 join qs in _context.Questions on rs.QuestionId equals qs.Id
-                where rs.LectureHistoryId == lectureHistoryId && lhg.GroupId == s.GroupId
+                where rs.LectureHistoryId == lectureHistoryId && lhg.GroupId == rs.GroupId
                 select new ResponseTable
                 {
                     AnswerId = rs.AnswerId,
