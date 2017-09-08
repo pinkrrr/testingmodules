@@ -137,17 +137,33 @@ namespace TestingModule.Additional
                 from r in _context.Respons
                 join tr in tableResponses on r.Id equals tr.ResponseId
                 select r;
+            ICollection<AnswersCount> answersCount = new List<AnswersCount>();
+            foreach (var answer in answers)
+            {
+                int tempAnswerCount=0;
+                foreach (var response in responses.Where(r => r.AnswerId == answer.Id))
+                {
+                    tempAnswerCount++;
+                }
+                answersCount.Add(new AnswersCount
+                {
+                    AnswerId = answer.Id,
+                    Count = tempAnswerCount
+                });
+            }
             ICollection<ResponseStatisticsViewModel> responseStatistics = new List<ResponseStatisticsViewModel>();
-            foreach (var responseRow in tableResponses)
+            foreach (var question in questions)
             {
                 responseStatistics.Add(new ResponseStatisticsViewModel
                 {
-                    ResponseTable = responseRow,
-                    Module = modules.SingleOrDefault(m => m.Id == responseRow.ModuleId),
-                    Group = groups.SingleOrDefault(g => g.Id == responseRow.GroupId),
-                    Question = questions.SingleOrDefault(q => q.Id == responseRow.QuestionId),
-                    Answers = answers.Where(a => a.QuestionId == responseRow.QuestionId),
-                    Response = responses.SingleOrDefault(r => r.Id == responseRow.ResponseId)
+                    //ResponseTable = responseRow,
+                    Module = modules.SingleOrDefault(m => m.Id == question.ModuleId),
+                    Groups = groups.Join(tableResponses, gr => gr.Id, tr => tr.GroupId, (gr, tr) => new { Group = gr, tableResponses = tr })
+                    .Where(tr => tr.tableResponses.QuestionId == question.Id).Select(gr => gr.Group).Distinct(),
+                    Question = question,
+                    Answers = answers.Where(a => a.QuestionId == question.Id),
+                    Responses = responses.Where(r => r.QuestionId == question.Id),
+                    AnswersCount = answersCount
                 });
             }
             return responseStatistics;

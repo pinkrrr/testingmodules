@@ -15,4 +15,10 @@ namespace TestingModule.Models
         public int GroupId { get; set; }
         public int ModuleId { get; set; }
     }
+
+    public class AnswersCount
+    {
+        public int AnswerId { get; set; }
+        public int Count { get; set; }
+    }
 }
