@@ -38,7 +38,7 @@ namespace TestingModule.Hubs
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
-            await OnConnected();
+            //await OnConnected();
             Respons response = new Respons
             {
                 AnswerId = responseId,

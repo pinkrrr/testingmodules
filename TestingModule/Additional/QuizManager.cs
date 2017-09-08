@@ -147,7 +147,8 @@ namespace TestingModule.Additional
                 answersCount.Add(new AnswersCount
                 {
                     AnswerId = answer.Id,
-                    Count = tempAnswerCount
+                    Count = tempAnswerCount,
+                    QuestionId = answer.QuestionId
                 });
             }
             ICollection<ResponseStatisticsViewModel> responseStatistics = new List<ResponseStatisticsViewModel>();
@@ -162,7 +163,7 @@ namespace TestingModule.Additional
                     Question = question,
                     Answers = answers.Where(a => a.QuestionId == question.Id),
                     Responses = responses.Where(r => r.QuestionId == question.Id),
-                    AnswersCount = answersCount
+                    AnswersCount = answersCount.Where(ac=>ac.QuestionId==question.Id)
                 });
             }
             return responseStatistics;

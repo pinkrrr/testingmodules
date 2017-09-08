@@ -18,6 +18,7 @@ namespace TestingModule.Models
 
     public class AnswersCount
     {
+        public int QuestionId { get; set; }
         public int AnswerId { get; set; }
         public int Count { get; set; }
     }
