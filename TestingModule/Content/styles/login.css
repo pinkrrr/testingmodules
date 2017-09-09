@@ -33,4 +33,10 @@
     display: inline-block;
     vertical-align: middle;
     position: relative;
+    width: 90%;
+    max-width: 400px;
+}
+
+.login-form .input-text {
+    width:100%
 }
