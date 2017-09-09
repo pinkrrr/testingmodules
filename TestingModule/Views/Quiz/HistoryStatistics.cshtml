@@ -6,12 +6,17 @@
 
 <h2>HistoryStatistics</h2>
 
-@model  ICollection<TestingModule.ViewModels.ResponseStatisticsViewModel>
+@model  TestingModule.ViewModels.ResponseStatisticsViewModel
 
 <div class="chartsWrapper">
-    
+
 </div>
 
-<script>
-    var historyStatisticsModel = @Html.Raw(Json.Encode(@Model));
-</script>
+@section scripts{
+
+
+    <script>
+        var historyStatisticsModel = @Html.Raw(Json.Encode(@Model));
+        console.log(historyStatisticsModel);
+    </script>
+}

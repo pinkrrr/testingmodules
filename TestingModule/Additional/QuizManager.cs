@@ -100,7 +100,7 @@ namespace TestingModule.Additional
             return totalStatistics;
         }
 
-        public async Task<IEnumerable<ResponseStatisticsViewModel>> GetModulesForLector(int lectureHistoryId)
+        public async Task<ResponseStatisticsViewModel> GetModulesForLector(int lectureHistoryId)
         {
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<ResponseTable> tableResponses =
@@ -136,38 +136,34 @@ namespace TestingModule.Additional
                 from r in _context.Respons
                 join tr in tableResponses on r.Id equals tr.ResponseId
                 select r;
-            ICollection<AnswersCount> answersCount = new List<AnswersCount>();
+            ICollection<AnswersForGroup> answersCount = new List<AnswersForGroup>();
             foreach (var answer in answers)
             {
-                int tempAnswerCount=0;
-                foreach (var response in responses.Where(r => r.AnswerId == answer.Id))
+                int tempAnswerCount = 0;
+                foreach (var group in groups)
                 {
-                    tempAnswerCount++;
+                    foreach (var response in responses.Where(r => r.AnswerId == answer.Id && r.GroupId == group.Id))
+                    {
+                        tempAnswerCount++;
+                    }
+                    answersCount.Add(new AnswersForGroup()
+                    {
+                        GroupId = group.Id,
+                        Text = answer.Text,
+                        Count = tempAnswerCount,
+                        QuestionId = answer.QuestionId
+                    });
                 }
-                answersCount.Add(new AnswersCount
-                {
-                    AnswerId = answer.Id,
-                    Count = tempAnswerCount,
-                    QuestionId = answer.QuestionId
-                });
             }
-            ICollection<ResponseStatisticsViewModel> responseStatistics = new List<ResponseStatisticsViewModel>();
-            foreach (var question in questions)
+            ResponseStatisticsViewModel responseStatistics = new ResponseStatisticsViewModel
             {
-                responseStatistics.Add(new ResponseStatisticsViewModel
-                {
-                    //ResponseTable = responseRow,
-                    Module = modules.SingleOrDefault(m => m.Id == question.ModuleId),
-                    Groups = groups.Join(tableResponses, gr => gr.Id, tr => tr.GroupId, (gr, tr) => new { Group = gr, tableResponses = tr })
-                    .Where(tr => tr.tableResponses.QuestionId == question.Id).Select(gr => gr.Group).Distinct(),
-                    Question = question,
-                    Answers = answers.Where(a => a.QuestionId == question.Id),
-                    Responses = responses.Where(r => r.QuestionId == question.Id),
-                    AnswersCount = answersCount.Where(ac=>ac.QuestionId==question.Id)
-                });
-            }
+                Modules = modules,
+                Groups = groups,
+                Questions = questions,
+                AnswersCount = answersCount
+            };
             return responseStatistics;
         }
 
-    }
+}
 }

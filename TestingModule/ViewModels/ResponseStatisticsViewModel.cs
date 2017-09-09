@@ -8,12 +8,12 @@ namespace TestingModule.ViewModels
 {
     public class ResponseStatisticsViewModel
     {
-        public Module Module { get; set; }
+        public IEnumerable<Module> Modules { get; set; }
         //public ResponseTable ResponseTable { get; set; }
-        public Question Question { get; set; }
-        public IEnumerable<Answer> Answers { get; set; }
+        public IEnumerable<Question> Questions { get; set; }
+        //public IEnumerable<Answer> Answers { get; set; }
         public IEnumerable<Group> Groups { get; set; }
-        public IEnumerable<Respons> Responses { get; set; }
-        public IEnumerable<AnswersCount> AnswersCount { get; set; }
+        //public IEnumerable<Respons> Responses { get; set; }
+        public IEnumerable<AnswersForGroup> AnswersCount { get; set; }
     }
 }
