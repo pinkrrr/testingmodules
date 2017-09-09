@@ -17,6 +17,10 @@
 
     <script>
         var historyStatisticsModel = @Html.Raw(Json.Encode(@Model));
-        console.log(historyStatisticsModel);
+        
+        if ($('.chartsWrapper').length === 1) {
+            //drawCharts(historyStatisticsModel);
+            getChartData(historyStatisticsModel);
+        }
     </script>
 }

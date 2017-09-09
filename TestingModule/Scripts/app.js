@@ -453,14 +453,48 @@ function stopModule() {
 
 stopModule();
 
-if ($('.chartsWrapper').length===1) {
-    drawChart();
-}
+var chartModel = {};
 
-function drawChart() {
-    historyStatisticsModel.forEach(function (item) {
-        $('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
-        createChart(item);
+//function 
+
+function drawCharts(model) {
+    console.log(model);
+    var moduleId = null;
+
+    getChartData();
+
+    model.Modules.forEach(function (module) {
+
+        //$('<div/>', {
+        //    class: 'module'
+        //}).appendTo('.chartsWrapper');
+
+        //$('<div/>', {
+        //    class: 'module_name',
+        //    html: module.Name
+        //}).appendTo('.chartsWrapper');
+
+        moduleId = module.Id;
+
+        model.Questions.forEach(function (question) {
+
+            if (question.ModuleId === moduleId){
+                //$('<div/>', {
+                //    class: 'question',
+                //    html: question.Text
+                //}).appendTo('.module');
+
+
+                chartModel = {
+
+                }
+
+            }
+
+        })
+
+        //$('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
+        //createChart(item);
     })
 }
 
@@ -468,12 +502,18 @@ function drawChart() {
 function getChartData(model) {
     console.log(model);
 
+
+
     var answersArray = [];
 
-    model.Answers.forEach(function (item, i) {
+    model.Questions.forEach(function (question) {
+        
+    })
+
+    model.AnswersCount.forEach(function (answer) {
         answersArray.push({
-            y: model.AnswersCount[i].Count,
-            name: item.Text
+            y: answer.Count,
+            name: answer.Text
         })
     })
 
