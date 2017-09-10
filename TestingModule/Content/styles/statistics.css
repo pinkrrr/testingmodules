@@ -47,3 +47,73 @@
     background-color: #ffffff;
     color: #de1414;
 }
+
+.statisticsItem{
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #000000;
+}
+
+.disciplineName{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.lecture{
+    padding: 10px 0;
+    margin-left: 10px;
+}
+
+.lecture_name{
+    font-size: 20px;
+}
+
+.lecture_date{
+    display: block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #0094ff;
+    font-weight: bold;
+    transition: background .2s;
+}
+
+.lecture_date:hover{
+    background-color: #e0e0e0;
+}
+
+.chartsWrapper{
+    text-align: center;
+    font-size: 0;
+}
+
+.chartsWrapper .pieChart{
+    display: inline-block;
+    background-color: transparent;
+    width: 300px;
+    height: 300px;
+}
+
+.chartsWrapper .module{
+    font-size: 0;
+}
+
+.chartsWrapper .module{
+    margin-bottom: 20px;
+}
+
+.chartsWrapper .module_name{
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.chartsWrapper .module .question{
+    text-align: center;
+    font-size: 16px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin: 10px;
+    padding: 20px;
+    border: 1px dashed #0094ff;
+    border-radius: 20px;
+}

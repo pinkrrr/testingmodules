@@ -3,6 +3,13 @@
     ViewBag.Title = "Авторизація";
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
+@if (TempData["FailLogin"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["FailLogin"]
+    </div>
+}
 
 @using (Html.BeginForm("LoginAttempt", "Account", FormMethod.Post, new { @class = "login-form" }))
 {

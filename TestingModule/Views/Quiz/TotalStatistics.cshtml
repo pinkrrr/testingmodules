@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "TotalStatistics";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="title">Загальна статистика</h2>
+
+@model TestingModule.ViewModels.TotalStatisticsViewModel
+
+
+@{foreach (var discipline in Model.Disciplines)
+    {
+        
+        <div class="statisticsItem">
+
+
+            <div class="disciplineName">@discipline.Name</div>
+
+            @foreach (var lecture in Model.Lectures.Where(l => l.DisciplineId == discipline.Id))
+            {
+            <div class="lecture">
+                <div class="lecture_name">@lecture.Name</div>
+                <div class="lectures_dates">
+                    @foreach (var lectureDate in Model.Histories.Where(h => h.LectureId == lecture.Id))
+                    {
+                        <a href="@Url.Action("HistoryStatistics", "Quiz", new { lectureHistoryId = lectureDate.Id})" target="_blank" class="lecture_date">@lectureDate.StartTime</a>
+                    }
+                </div>
+            </div>
+            }
+
+
+        </div>
+
+    } }
+
+<script>
+    var totalStatisticsModel = @Html.Raw(Json.Encode(@Model));
+</script>
+
+

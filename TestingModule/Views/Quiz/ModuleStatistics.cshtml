@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TestingModule.Models.Question>
+@{
+    ViewBag.Title = "ModuleStatistics";
+    Layout = "~/Views/Shared/_LayoutStatistics.cshtml";
+}
+
+<div class="statistics_moduleName">Викторина "в реальном времени"</div>
+
+<div class="questions"></div>
+
+@Html.ActionLink("Зупинити модуль", "StopModule", "admin", new { moduleId = Model.FirstOrDefault().ModuleId }, new { @class = "stopModule", @id = "stopModuleButton" })
+
+
+@section scripts
+{
+    <script>
+        var quiz = $.connection.quizHub;
+        $.connection.hub.start();
+
+        var statisticsModel = @Html.Raw(Json.Encode(@Model));
+        var totalCorrectAnswers = 1;
+        var statisticsDynamicData = [];
+        statisticsModel.forEach(function (item, i) {
+            statisticsDynamicData[i] = {
+                questionId: item.Id,
+                totalAnswersCount: 0
+            }
+        });
+
+        quiz.client.recieveStatistics = function (questionId, studentsCount) {
+            statisticsDynamicData.forEach(function (item) {
+                if (item.questionId === questionId) {
+                    item.totalAnswersCount++;
+                }
+                progress(item.questionId, item.totalAnswersCount, studentsCount);
+            });
+        };
+
+        moduleId = @Model.FirstOrDefault().ModuleId;
+        quiz.client.recieveEnquire = function (accountId, connectionId) {
+            console.log(moduleId, accountId, connectionId);
+            quiz.server.sendQVM(moduleId, connectionId);
+        }
+    </script>
+}

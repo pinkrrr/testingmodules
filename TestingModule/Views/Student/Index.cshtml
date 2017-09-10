@@ -70,11 +70,9 @@ else
         var intervalTime = 3000;
 
         $.connection.hub.start().done(function () {
-            quiz.server.moduleEnquire().done(function() {
-                setInterval(function () {
-                    quiz.server.moduleEnquire();
-                }, intervalTime); 
-            });
+            setInterval(function () {
+                quiz.server.moduleEnquire();
+            }, intervalTime); 
         });
         quiz.client.reciveModuleId = function (moduleId) {
             console.log(moduleId);

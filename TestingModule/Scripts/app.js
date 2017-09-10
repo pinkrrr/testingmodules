@@ -70,6 +70,12 @@
 
             });
         }
+        function getDisciplineOption() {
+            var ddlReport = document.getElementByXpath("<%=DropDownListReports.ClientID%>");
+
+            var Text = ddlReport.options[ddlReport.selectedIndex].text;
+            var Value = ddlReport.options[ddlReport.selectedIndex].value;
+        }
 
         function closePopup(closeButton) {
             $('.closePopupBtn').on('click', function (e) {
@@ -157,11 +163,53 @@
             $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
         }
 
+
+        function getLecture() {
+            var $dropdownDiscipline = $('#ddldiscipline');
+            var $dropdownLection = $('#ddllecture');
+            var disciplineId = null;
+
+            $dropdownDiscipline.on('selectmenuselect', function (e, ui) {
+                setLectionsListByDisciplines(ui.item.value);
+            });
+
+        }
+
+        function setLectionsListByDisciplines(disciplineId) {
+            var url = "/admin/GetLecturesByDiscipline/";
+            var $lectureSelect = $("#ddllecture");
+
+            disciplineId = parseInt(disciplineId);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { disciplineId: disciplineId },
+                success: function (data) {
+                    var optionsHTML = '';
+                    for (var x = 0; x < data.length; x++) {
+                        optionsHTML += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                    }
+                    $lectureSelect.html(optionsHTML);
+                    $lectureSelect.selectmenu("refresh");
+                }
+            })
+
+        }
+
+        var defaultLectureId = parseInt($('#ddldiscipline').find('option').first().attr('value'));
+
+
         initShowEditPopup();
         initShowRemovePopup();
         initShowAddPopup();
         closePopup();
         initSaveData();
+        getLecture();
+        if ($("#ddllecture").length) {
+            setLectionsListByDisciplines(defaultLectureId);
+        }
+
 
     }
 
@@ -291,15 +339,14 @@
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
                 var quizHub = $.connection.quizHub;
-                console.log(_model);
-                    $.connection.hub.start().done(function () {
-                        quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
-                            _model = model;
-                            setQuestionData(_model);
-                        }).fail(function () {
-                            quitQuiz();
-                        });
+                $.connection.hub.start().done(function () {
+                    quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                        _model = model;
+                        setQuestionData(_model);
+                    }).fail(function () {
+                        quitQuiz();
                     });
+                });
 
             } else {
                 return;
@@ -325,23 +372,12 @@
 
     }
 
-    function getChartData() {
-        var chartData = [
-            { answer: 50, y: 1, name: "123" },
-            { answer: 1, y: 2, name: "444" },
-            { answer: 30, y: 3, name: "Не визначено" },
-        ];
-        return chartData;
-    }
+    
 
     function statistics() {
 
         if ($('.body-content__statistics').length > 0) {
             initializeModuleStatisticsPage();
-        }
-
-        if ($('.chartContainer').length > 0) {
-            createChart();
         }
 
         function initializeModuleStatisticsPage() {
@@ -355,40 +391,6 @@
 
             $questionList.html(questionList);
 
-        }
-
-        function createChart() {
-
-            var chartData = getChartData();
-
-            var chart = new CanvasJS.Chart("chartContainer",
-                {
-                    title: {
-                        text: "How my time is spent in a week?",
-                        fontFamily: "arial black"
-                    },
-                    animationEnabled: true,
-                    legend: {
-                        verticalAlign: "bottom",
-                        horizontalAlign: "center"
-                    },
-                    theme: "theme3",
-                    data: [{
-                        type: "pie",
-                        indexLabelFontFamily: "Arial",
-                        indexLabelFontSize: 20,
-                        indexLabelFontWeight: "bold",
-                        startAngle: 0,
-                        indexLabelFontColor: "#ffffff",
-                        indexLabelLineColor: "#ff0000",
-                        indexLabelPlacement: "inside",
-                        toolTipContent: "Answer: {name}",
-                        showInLegend: true,
-                        indexLabel: "{y}",
-                        dataPoints: chartData
-                    }]
-                });
-            chart.render();
         }
 
     }
@@ -412,7 +414,7 @@
     function quiestionsEditChecked() {
         var $checkButton = $('.table_questions .table-item_correct label');
 
-        $checkButton.on('click', function() {
+        $checkButton.on('click', function () {
             $(this).closest('tbody').find('.table-item label input').each(function (i, item) {
                 $(item).prop('checked', false)
             })
@@ -439,3 +441,197 @@ function progress(qID, correctAnswersCount, studentsCount) {
     var progress = correctAnswersCount / studentsCount * 100;
     $('.body-content__statistics .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
 }
+
+function stopModule() {
+    var $stopModuleBtn = $('#stopModuleButton');
+    var quiz = $.connection.quizHub;
+    $.connection.hub.start();
+    $(document).on("click", "a#stopModuleButton", function () {
+        quiz.server.stopModule();
+    });
+}
+
+stopModule();
+
+function historyStatisticsPage(model) {
+
+    var chartDataObj = {
+        id: null,
+        answers: []
+    };
+
+    console.log(model);
+    createHistoryStatisticsPage();
+
+    function createHistoryStatisticsPage() {
+
+        var moduleId = null;
+
+        model.Modules.forEach(function (module) {
+
+            $('<div/>', {
+                class: 'module',
+                id: 'module'+module.Id
+            }).appendTo('.chartsWrapper');
+
+            $('<div/>', {
+                class: 'module_name',
+                html: module.Name
+            }).prependTo('#module' + module.Id);
+
+            model.Questions.forEach(function (question) {
+
+                if (question.ModuleId === module.Id) {
+
+                    //chartDataObj({
+                    //    answer: question.Id
+                    //});
+
+                    $('<div/>', {
+                        class: 'question',
+                        id: 'questionId' + question.Id
+                    }).appendTo('#module' + module.Id);
+
+                    $('<div/>', {
+                        class: 'question_text',
+                        html: question.Text
+                    }).appendTo('#questionId' + question.Id);
+
+                    //$('<div/>', {
+                    //    class: 'answers',
+                    //}).appendTo('#questionId' + question.Id);
+
+                    chartDataObj.id = question.Id;
+                    chartDataObj.answers = [];
+
+                    model.AnswersCount.forEach(function (answer) {
+
+                        if (question.Id === answer.QuestionId) {
+                            //$('<div/>', {
+                            //    class: 'answer',
+                            //    id: 'answer' + answer.Id,
+                            //    html: answer.Text
+                            //}).appendTo('#questionId' + question.Id + ' answers');
+
+                            chartDataObj.answers.push({
+                                y: answer.Count,
+                                name: answer.Text
+                            })
+
+                        }
+
+                    });
+
+                    $('<div/>', {
+                        class: 'pieChart',
+                        id: 'chartContainer' + question.Id
+                    }).appendTo('#questionId' + question.Id);
+
+                    renderChart(chartDataObj);
+
+                }
+
+            });
+
+        });
+    }
+
+    function renderChart(chartData) {
+
+        console.log(chartData.answers);
+
+        var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
+            {
+                title: {
+                    fontFamily: "arial black"
+                },
+                animationEnabled: true,
+                legend: {
+                    verticalAlign: "bottom",
+                    horizontalAlign: "center"
+                },
+                theme: "theme3",
+                backgroundColor: "transparent",
+                data: [{
+                    type: "pie",
+                    indexLabelFontFamily: "Arial",
+                    indexLabelFontSize: 20,
+                    indexLabelFontWeight: "bold",
+                    startAngle: 0,
+                    indexLabelFontColor: "#ffffff",
+                    indexLabelLineColor: "#ff0000",
+                    indexLabelPlacement: "inside",
+                    toolTipContent: "Відповідь: {name}",
+                    showInLegend: true,
+                    indexLabel: "{y}",
+                    dataPoints: chartData.answers
+                }]
+            });
+        chart.render();
+    }
+
+}
+
+//function drawCharts(model) {
+//    var moduleId = null;
+
+//    getChartData();
+
+//    model.Modules.forEach(function (module) {
+
+//        //$('<div/>', {
+//        //    class: 'module'
+//        //}).appendTo('.chartsWrapper');
+
+//        //$('<div/>', {
+//        //    class: 'module_name',
+//        //    html: module.Name
+//        //}).appendTo('.chartsWrapper');
+
+//        moduleId = module.Id;
+
+//        model.Questions.forEach(function (question) {
+
+//            if (question.ModuleId === moduleId){
+//                //$('<div/>', {
+//                //    class: 'question',
+//                //    html: question.Text
+//                //}).appendTo('.module');
+
+
+//                chartModel = {
+
+//                }
+
+//            }
+
+//        })
+
+//        //$('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
+//        //createChart(item);
+//    })
+//}
+
+
+//function getChartData(model) {
+
+//    var answersArray = [];
+
+//    model.Questions.forEach(function (question) {
+        
+//    })
+
+//    model.AnswersCount.forEach(function (answer) {
+//        answersArray.push({
+//            y: answer.Count,
+//            name: answer.Text
+//        })
+//    })
+
+//    var chartData = {
+//        id: model.Question.Id,
+//        question: model.Question.Text,
+//        answers: answersArray
+//    }
+//    return chartData;
+//}

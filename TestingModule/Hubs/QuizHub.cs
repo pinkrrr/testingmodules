@@ -32,11 +32,7 @@ namespace TestingModule.Hubs
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            var role = new AccountCredentials().GetRole();
-            if (role == RoleName.Student)
-            {
-                UserHandler.ConnectedIds.Remove(Context.ConnectionId);
-            }
+            UserHandler.ConnectedIds.Remove(Context.ConnectionId);
             return base.OnDisconnected(stopCalled);
         }
 
@@ -46,8 +42,10 @@ namespace TestingModule.Hubs
             Respons response = new Respons
             {
                 AnswerId = responseId,
-                LectureHistoryId = quizVM.Question.LectureId,
-                QuestionId = quizVM.Question.Id
+                LectureHistoryId = await _quizManager.GetLectureHistoryId(quizVM),
+                QuestionId = quizVM.Question.Id,
+                StudentId = quizVM.Student.Id,
+                GroupId = quizVM.Student.GroupId
             };
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();
@@ -76,7 +74,11 @@ namespace TestingModule.Hubs
         public void SendQVM(int moduleId, string connectionId)
         {
             Clients.Client(connectionId).ReciveModuleId(moduleId);
-            //return qvm;
+        }
+
+        public void StopModule()
+        {
+            Clients.All.reciveStopModule();
         }
 
     }
@@ -86,4 +88,5 @@ namespace TestingModule.Hubs
         public static HashSet<string> ConnectedIds = new HashSet<string>();
         public static string GroupName { get; set; }
     }
+
 }

@@ -26,7 +26,7 @@ namespace TestingModule.Controllers
             {
                 if (checkIfLector.ModuleHistories.Any())
                 {
-                    return RedirectToAction("/statistics/" + checkIfLector.ModuleHistories.FirstOrDefault().ModuleId, "Quiz");
+                    return RedirectToAction("/modulestatistics/" + checkIfLector.ModuleHistories.FirstOrDefault().ModuleId, "quiz");
                 }
                 return View(checkIfLector);
             }
@@ -54,6 +54,16 @@ namespace TestingModule.Controllers
             var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
             new LectureHistoryHelper().StopLecture(login);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        //[Route ("/admin/getlecturesbydiscipline")]
+        public ActionResult GetLecturesByDiscipline(int disciplineId)
+        {
+            var db = new testingDbEntities();
+            var lectures = db.Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
+            SelectList obgcity = new SelectList(lectures, "Id", "Name", 0);
+            return Json(obgcity);
         }
         public ActionResult StartModule(int moduleId)
         {

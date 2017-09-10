@@ -223,6 +223,7 @@
     <Compile Include="Models\ModuleHistory.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ResponseTable.cs" />
     <Compile Include="Models\Respons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -231,6 +232,7 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DiscLecotorViewModel.cs" />
+    <Compile Include="ViewModels\ResponseStatisticsViewModel.cs" />
     <Compile Include="ViewModels\QueAns.cs" />
     <Compile Include="Models\Role.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
@@ -282,6 +284,7 @@
     <Compile Include="ViewModels\QuizViewModel.cs" />
     <Compile Include="ViewModels\ReasignViewModel.cs" />
     <Compile Include="ViewModels\RegistrationFormViewModel.cs" />
+    <Compile Include="ViewModels\TotalStatisticsViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -293,6 +296,7 @@
     <Content Include="Content\styles\accordeonDisciplinesStudents.css" />
     <Content Include="Content\styles\infoMessages.css" />
     <Content Include="Content\styles\jquery-ui.css" />
+    <Content Include="Content\styles\lector_modulesControl.css" />
     <Content Include="Content\styles\login.css" />
     <Content Include="Content\styles\navbar.css" />
     <Content Include="Content\styles\popup.css" />
@@ -412,8 +416,10 @@
     <Content Include="Views\Error\Dashboard.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutAdminHomepage.cshtml" />
-    <Content Include="Views\Quiz\Statistics.cshtml" />
+    <Content Include="Views\Quiz\ModuleStatistics.cshtml" />
     <Content Include="Views\Shared\_LayoutStatistics.cshtml" />
+    <Content Include="Views\Quiz\TotalStatistics.cshtml" />
+    <Content Include="Views\Quiz\HistoryStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

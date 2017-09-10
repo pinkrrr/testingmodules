@@ -1590,7 +1590,7 @@
             this._dropdownMenu = document.createElement("div");
             this._dropdownMenu.setAttribute("tabindex", -1);
             this._dropdownMenu.style.cssText =
-                "position: absolute; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; cursor: pointer;right: 1px;top: 25px;min-width: 120px;outline: 0;border: 1px solid silver;font-size: 14px;font-family: Calibri, Verdana, sans-serif;padding: 5px 0px 5px 0px;text-align: left;background-color: #fff;line-height: 20px;box-shadow: 2px 2px 10px #888888;";
+                "position: absolute; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; cursor: pointer;right: 1px;top: 25px;min-width: 120px;outline: 0;border: 1px solid silver;font-size: 14px;font-family: Calibri, Verdana, sans-serif;padding: 5px 0px 5px 0px;text-align: left;background-color: transparent;line-height: 20px;box-shadow: 2px 2px 10px #888888;";
             a._dropdownMenu.style.display = "none";
             this._toolBar.appendChild(this._dropdownMenu);
             J(this._dropdownMenu, "blur", function() {

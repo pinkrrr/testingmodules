@@ -27,11 +27,20 @@ namespace TestingModule.Additional
             // return claimsIdentity.FindFirst(ClaimTypes.Role).Value;
         }
 
-        public async Task<Student> GetStudent(int accountId)
+        public async Task<Student> GetStudent()
         {
             testingDbEntities _context = new testingDbEntities();
-            Student student = await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
-            return student;
+            var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
+            return await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+        }
+
+        public async Task<Lector> GetLector()
+        {
+            testingDbEntities _context = new testingDbEntities();
+            var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
+            return await _context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
         }
     }
 }

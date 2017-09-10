@@ -6,6 +6,7 @@
     <title>TestingModule - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
+    
 </head>
 <body>
 
@@ -28,6 +29,7 @@
                         {
                             <!--<a href="@Url.Action("Index", "admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
                             <a href="@Url.Action("Disciplines", "admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
+                            <a href="@Url.Action("TotalStatistics", "Quiz")"><i class='fa fa-pie-chart' aria-hidden='true'></i>Статистика</a>
                         }
                         if (c.Value.ToString() != "Lecturer")
                         {
@@ -50,6 +52,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
+        <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
 </body>

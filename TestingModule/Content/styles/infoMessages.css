@@ -7,13 +7,14 @@
     right: 0;
     left: 0;
     margin: auto;
-    width: 400px;
+    width: 320px;
     text-align: center;
     padding: 10px;
     animation: messageInfo 3s linear;
     animation-delay: .5s;
     transform: translateY(-100%);
     z-index: 100;
+    font-size: 16px;
 }
 
 @keyframes messageInfo{
