@@ -483,10 +483,6 @@ function historyStatisticsPage(model) {
 
                 if (question.ModuleId === module.Id) {
 
-                    //chartDataObj({
-                    //    answer: question.Id
-                    //});
-
                     $('<div/>', {
                         class: 'question',
                         id: 'questionId' + question.Id
@@ -497,37 +493,43 @@ function historyStatisticsPage(model) {
                         html: question.Text
                     }).appendTo('#questionId' + question.Id);
 
-                    //$('<div/>', {
-                    //    class: 'answers',
-                    //}).appendTo('#questionId' + question.Id);
-
                     chartDataObj.id = question.Id;
-                    chartDataObj.answers = [];
 
-                    model.AnswersCount.forEach(function (answer) {
+                    model.Groups.forEach(function (group) {
 
-                        if (question.Id === answer.QuestionId) {
-                            //$('<div/>', {
-                            //    class: 'answer',
-                            //    id: 'answer' + answer.Id,
-                            //    html: answer.Text
-                            //}).appendTo('#questionId' + question.Id + ' answers');
+                        $('<div/>', {
+                            class: 'group',
+                            id: 'group' + group.Id
+                        }).appendTo('#questionId' + question.Id);
 
-                            chartDataObj.answers.push({
-                                y: answer.Count,
-                                name: answer.Text
-                            })
+                        $('<div/>', {
+                            class: 'group_name',
+                            html: group.Name
+                        }).prependTo('#questionId' + question.Id + ' #group' + group.Id);
 
-                        }
+                        $('<div/>', {
+                            class: 'pieChart',
+                            id: 'chartContainer' + question.Id
+                        }).appendTo('#questionId' + question.Id + ' #group' + group.Id);
 
-                    });
+                        model.AnswersCount.forEach(function (answer) {
 
-                    $('<div/>', {
-                        class: 'pieChart',
-                        id: 'chartContainer' + question.Id
-                    }).appendTo('#questionId' + question.Id);
+                            if (question.Id === answer.QuestionId && answer.GroupId === group.Id) {
 
-                    renderChart(chartDataObj);
+                                chartDataObj.answers.push({
+                                    y: answer.Count,
+                                    name: answer.Text
+                                })
+
+                            }
+
+                        });
+
+                        renderChart(chartDataObj);
+
+                        chartDataObj.answers = [];
+
+                    })
 
                 }
 
@@ -538,17 +540,14 @@ function historyStatisticsPage(model) {
 
     function renderChart(chartData) {
 
-        console.log(chartData.answers);
-
         var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
             {
-                title: {
-                    fontFamily: "arial black"
-                },
                 animationEnabled: true,
                 legend: {
                     verticalAlign: "bottom",
-                    horizontalAlign: "center"
+                    horizontalAlign: "left",
+                    fontSize: 16,
+                    fontFamily: "arial"
                 },
                 theme: "theme3",
                 backgroundColor: "transparent",
