@@ -453,112 +453,185 @@ function stopModule() {
 
 stopModule();
 
-var chartModel = {};
+function historyStatisticsPage(model) {
 
-//function 
+    var chartDataObj = {
+        id: null,
+        answers: []
+    };
 
-function drawCharts(model) {
     console.log(model);
-    var moduleId = null;
+    createHistoryStatisticsPage();
 
-    getChartData();
+    function createHistoryStatisticsPage() {
 
-    model.Modules.forEach(function (module) {
+        var moduleId = null;
 
-        //$('<div/>', {
-        //    class: 'module'
-        //}).appendTo('.chartsWrapper');
+        model.Modules.forEach(function (module) {
 
-        //$('<div/>', {
-        //    class: 'module_name',
-        //    html: module.Name
-        //}).appendTo('.chartsWrapper');
+            $('<div/>', {
+                class: 'module',
+                id: 'module'+module.Id
+            }).appendTo('.chartsWrapper');
 
-        moduleId = module.Id;
+            $('<div/>', {
+                class: 'module_name',
+                html: module.Name
+            }).prependTo('#module' + module.Id);
 
-        model.Questions.forEach(function (question) {
+            model.Questions.forEach(function (question) {
 
-            if (question.ModuleId === moduleId){
-                //$('<div/>', {
-                //    class: 'question',
-                //    html: question.Text
-                //}).appendTo('.module');
+                if (question.ModuleId === module.Id) {
 
+                    //chartDataObj({
+                    //    answer: question.Id
+                    //});
 
-                chartModel = {
+                    $('<div/>', {
+                        class: 'question',
+                        id: 'questionId' + question.Id
+                    }).appendTo('#module' + module.Id);
+
+                    $('<div/>', {
+                        class: 'question_text',
+                        html: question.Text
+                    }).appendTo('#questionId' + question.Id);
+
+                    //$('<div/>', {
+                    //    class: 'answers',
+                    //}).appendTo('#questionId' + question.Id);
+
+                    chartDataObj.id = question.Id;
+                    chartDataObj.answers = [];
+
+                    model.AnswersCount.forEach(function (answer) {
+
+                        if (question.Id === answer.QuestionId) {
+                            //$('<div/>', {
+                            //    class: 'answer',
+                            //    id: 'answer' + answer.Id,
+                            //    html: answer.Text
+                            //}).appendTo('#questionId' + question.Id + ' answers');
+
+                            chartDataObj.answers.push({
+                                y: answer.Count,
+                                name: answer.Text
+                            })
+
+                        }
+
+                    });
+
+                    $('<div/>', {
+                        class: 'pieChart',
+                        id: 'chartContainer' + question.Id
+                    }).appendTo('#questionId' + question.Id);
+
+                    renderChart(chartDataObj);
 
                 }
 
-            }
+            });
 
-        })
-
-        //$('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
-        //createChart(item);
-    })
-}
-
-
-function getChartData(model) {
-    console.log(model);
-
-
-
-    var answersArray = [];
-
-    model.Questions.forEach(function (question) {
-        
-    })
-
-    model.AnswersCount.forEach(function (answer) {
-        answersArray.push({
-            y: answer.Count,
-            name: answer.Text
-        })
-    })
-
-    var chartData = {
-        id: model.Question.Id,
-        question: model.Question.Text,
-        answers: answersArray
-    }
-    return chartData;
-}
-
-
-function createChart(model) {
-
-    var chartData = getChartData(model);
-
-    //console.log('chartData=', chartData);
-
-    var chart = new CanvasJS.Chart("chartContainer"+chartData.id,
-        {
-            title: {
-                text: chartData.question,
-                fontFamily: "arial black"
-            },
-            animationEnabled: true,
-            legend: {
-                verticalAlign: "bottom",
-                horizontalAlign: "center"
-            },
-            theme: "theme3",
-            backgroundColor: "transparent",
-            data: [{
-                type: "pie",
-                indexLabelFontFamily: "Arial",
-                indexLabelFontSize: 20,
-                indexLabelFontWeight: "bold",
-                startAngle: 0,
-                indexLabelFontColor: "#ffffff",
-                indexLabelLineColor: "#ff0000",
-                indexLabelPlacement: "inside",
-                toolTipContent: "Відповідь: {name}",
-                showInLegend: true,
-                indexLabel: "{y}",
-                dataPoints: chartData.answers
-            }]
         });
-    chart.render();
+    }
+
+    function renderChart(chartData) {
+
+        console.log(chartData.answers);
+
+        var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
+            {
+                title: {
+                    fontFamily: "arial black"
+                },
+                animationEnabled: true,
+                legend: {
+                    verticalAlign: "bottom",
+                    horizontalAlign: "center"
+                },
+                theme: "theme3",
+                backgroundColor: "transparent",
+                data: [{
+                    type: "pie",
+                    indexLabelFontFamily: "Arial",
+                    indexLabelFontSize: 20,
+                    indexLabelFontWeight: "bold",
+                    startAngle: 0,
+                    indexLabelFontColor: "#ffffff",
+                    indexLabelLineColor: "#ff0000",
+                    indexLabelPlacement: "inside",
+                    toolTipContent: "Відповідь: {name}",
+                    showInLegend: true,
+                    indexLabel: "{y}",
+                    dataPoints: chartData.answers
+                }]
+            });
+        chart.render();
+    }
+
 }
+
+//function drawCharts(model) {
+//    var moduleId = null;
+
+//    getChartData();
+
+//    model.Modules.forEach(function (module) {
+
+//        //$('<div/>', {
+//        //    class: 'module'
+//        //}).appendTo('.chartsWrapper');
+
+//        //$('<div/>', {
+//        //    class: 'module_name',
+//        //    html: module.Name
+//        //}).appendTo('.chartsWrapper');
+
+//        moduleId = module.Id;
+
+//        model.Questions.forEach(function (question) {
+
+//            if (question.ModuleId === moduleId){
+//                //$('<div/>', {
+//                //    class: 'question',
+//                //    html: question.Text
+//                //}).appendTo('.module');
+
+
+//                chartModel = {
+
+//                }
+
+//            }
+
+//        })
+
+//        //$('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
+//        //createChart(item);
+//    })
+//}
+
+
+//function getChartData(model) {
+
+//    var answersArray = [];
+
+//    model.Questions.forEach(function (question) {
+        
+//    })
+
+//    model.AnswersCount.forEach(function (answer) {
+//        answersArray.push({
+//            y: answer.Count,
+//            name: answer.Text
+//        })
+//    })
+
+//    var chartData = {
+//        id: model.Question.Id,
+//        question: model.Question.Text,
+//        answers: answersArray
+//    }
+//    return chartData;
+//}
