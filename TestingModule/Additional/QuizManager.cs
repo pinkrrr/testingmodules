@@ -78,18 +78,18 @@ namespace TestingModule.Additional
         {
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<Discipline> disciplines =
-                from ld in _context.LectorDisciplines
+                await (from ld in _context.LectorDisciplines
                 join d in _context.Disciplines on ld.DisciplineId equals d.Id
                 where ld.LectorId == lector.Id
-                select d;
+                select d).ToListAsync();
             IEnumerable<Lecture> lectures =
-                from d in disciplines
-                join l in _context.Lectures on d.Id equals l.DisciplineId
-                select l;
+                (from d in disciplines
+                join l in await _context.Lectures.ToListAsync() on d.Id equals l.DisciplineId
+                select l).ToList();
             IEnumerable<LecturesHistory> histories =
-               from l in lectures
-               join h in _context.LecturesHistories on l.Id equals h.LectureId
-               select h;
+               (from l in lectures
+                join h in await _context.LecturesHistories.ToListAsync() on l.Id equals h.LectureId
+                select h).ToList();
             TotalStatisticsViewModel totalStatistics = new TotalStatisticsViewModel
             {
                 Lector = lector,
@@ -99,7 +99,7 @@ namespace TestingModule.Additional
             };
             return totalStatistics;
         }
-        
+
         public async Task<ResponseStatisticsViewModel> GetModulesForLector(int lectureHistoryId)
         {
             IEnumerable<ResponseTable> tableResponses =
@@ -117,26 +117,36 @@ namespace TestingModule.Additional
                     StudentId = rs.StudentId,
                     ResponseId = rs.Id
                 };
-           IEnumerable<Group> groups = _context.Groups
-                .Join(tableResponses, gr => gr.Id, tr => tr.GroupId,
-                    (gr, tr) => new { Group = gr }).Select(gr => gr.Group).Distinct();
-            IEnumerable<Module> modules = _context.Modules
-                .Join(tableResponses, md => md.Id, tr => tr.ModuleId,
-                    (md, tr) => new { Module = md }).Select(md => md.Module).Distinct();
+
+            IEnumerable<Group> groups =
+                await (from g in _context.Groups
+                       join tr in tableResponses on g.Id equals tr.GroupId
+                       group g by g.Id into gj
+                       select gj.FirstOrDefault()).ToListAsync();
+
+            IEnumerable<Module> modules =
+                from m in _context.Modules
+                join tr in tableResponses on m.Id equals tr.ModuleId
+                group m by m.Id into gj
+                select gj.FirstOrDefault();
+
             IEnumerable<Question> questions =
                 from q in _context.Questions
                 join m in modules on q.ModuleId equals m.Id
                 select q;
+
             IEnumerable<Answer> answers =
-                await (from a in _context.Answers
-                join q in questions on a.QuestionId equals q.Id
-                select a).ToListAsync();
+                 await (from a in _context.Answers
+                        join q in questions on a.QuestionId equals q.Id
+                        select a).ToListAsync();
+
             IEnumerable<Respons> responses =
                 await (from r in _context.Respons
-                join tr in tableResponses on r.Id equals tr.ResponseId
-                select r).ToListAsync();
+                       join tr in tableResponses on r.Id equals tr.ResponseId
+                       select r).ToListAsync();
+
             IEnumerable<AnswersForGroup> answersCount =
-                from a in answers 
+                from a in answers
                 join r in responses on a.Id equals r.AnswerId into gj
                 from g in groups
                 from groupjoin in gj.DefaultIfEmpty()
