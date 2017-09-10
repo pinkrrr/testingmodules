@@ -99,10 +99,9 @@ namespace TestingModule.Additional
             };
             return totalStatistics;
         }
-
+        
         public async Task<ResponseStatisticsViewModel> GetModulesForLector(int lectureHistoryId)
         {
-            Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<ResponseTable> tableResponses =
                 from rs in _context.Respons
                 join lhg in _context.LectureHistoryGroups on rs.LectureHistoryId equals lhg.LectureHistoryId
@@ -118,7 +117,7 @@ namespace TestingModule.Additional
                     StudentId = rs.StudentId,
                     ResponseId = rs.Id
                 };
-            IEnumerable<Group> groups = _context.Groups
+           IEnumerable<Group> groups = _context.Groups
                 .Join(tableResponses, gr => gr.Id, tr => tr.GroupId,
                     (gr, tr) => new { Group = gr }).Select(gr => gr.Group).Distinct();
             IEnumerable<Module> modules = _context.Modules
@@ -129,32 +128,25 @@ namespace TestingModule.Additional
                 join m in modules on q.ModuleId equals m.Id
                 select q;
             IEnumerable<Answer> answers =
-                from a in _context.Answers
+                await (from a in _context.Answers
                 join q in questions on a.QuestionId equals q.Id
-                select a;
+                select a).ToListAsync();
             IEnumerable<Respons> responses =
-                from r in _context.Respons
+                await (from r in _context.Respons
                 join tr in tableResponses on r.Id equals tr.ResponseId
-                select r;
-            ICollection<AnswersForGroup> answersCount = new List<AnswersForGroup>();
-            foreach (var answer in answers)
-            {
-                int tempAnswerCount = 0;
-                foreach (var group in groups)
+                select r).ToListAsync();
+            IEnumerable<AnswersForGroup> answersCount =
+                from a in answers 
+                join r in responses on a.Id equals r.AnswerId into gj
+                from g in groups
+                from groupjoin in gj.DefaultIfEmpty()
+                select new AnswersForGroup
                 {
-                    foreach (var response in responses.Where(r => r.AnswerId == answer.Id && r.GroupId == group.Id))
-                    {
-                        tempAnswerCount++;
-                    }
-                    answersCount.Add(new AnswersForGroup()
-                    {
-                        GroupId = group.Id,
-                        Text = answer.Text,
-                        Count = tempAnswerCount,
-                        QuestionId = answer.QuestionId
-                    });
-                }
-            }
+                    GroupId = g.Id,
+                    Text = a.Text,
+                    Count = groupjoin == null ? 0 : responses.Count(r => r.AnswerId == a.Id && g.Id == groupjoin.GroupId),
+                    QuestionId = a.QuestionId
+                };
             ResponseStatisticsViewModel responseStatistics = new ResponseStatisticsViewModel
             {
                 Modules = modules,
@@ -165,5 +157,5 @@ namespace TestingModule.Additional
             return responseStatistics;
         }
 
-}
+    }
 }
