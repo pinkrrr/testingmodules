@@ -46,12 +46,30 @@ else
 {
     <h2>Модулі лекції <u>@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Name</u></h2>
     <table class="table" border="1">
-        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Дії</th></tr>
+        <tr class="table-row table-header-row">
+            <th class="table-header table-header_name">Назва</th>
+            <th class="table-header">Тривалість модуля (хв)</th>
+            <th class="table-header">Дії</th>
+        </tr>
 
         @foreach (var item in Model.Modules.OrderBy(t => t.Name))
         {
+            var first = new int[] {1, 21, 31, 41, 51, 61, 71, 81, 91, 101};
+            var second = new int[] {1, 2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54, 62, 63, 64, 72, 73, 74, 82, 83, 84, 92, 93, 94, 102, 103, 104};
+            var minutes = "хвилин";
+            if (first.Contains(item.MinutesToPass))
+            {
+                minutes = "хвилина";
+            }
+            else if (second.Contains(item.MinutesToPass))
+            {
+                minutes = "хвилини";
+            }
+
             <tr class="table-row">
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="modules/@item.Id/questions" class="table-item_name_text" data-editable>@item.Name</a></td>
+
+                <td class="table-item" align="center">@item.MinutesToPass  @minutes</td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="modules/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
@@ -90,12 +108,16 @@ else
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.Modules.LastOrDefault().Name, new { @class = "input-text" , @placeholder = "Введіть назву модуля", @required = "required" })
+                            @Html.TextBoxFor(model => model.Modules.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву модуля", @required = "required" })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.Modules.LastOrDefault().Name, name.Name = "", new { @class = "input-text" , @placeholder = "Введіть назву модуля", @required = "required" })
+                            @Html.TextBoxFor(model => model.Modules.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву модуля", @required = "required" })
                         }
+                    </div>
+                    <div>
+                        Тривалість модуля (хв):
+                        @Html.TextBoxFor(model => model.Modules.LastOrDefault().MinutesToPass, new { @class = "input-text", @placeholder = "Введіть тривалість модуля (хв)", @required = "required" })
                     </div>
                     <div>
                         <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
@@ -117,6 +139,9 @@ else
                     @Html.TextBoxFor(model => model.Modules.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву модуля", @required = "required" })
                     <div>
                         @Html.DropDownListFor(model => model.Modules.FirstOrDefault().LectureId, new SelectList(Model.Lectures, "Id", "Name", new { @id = "lectureId" }), "Оберіть лекцію")
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(model => model.Modules.LastOrDefault().MinutesToPass, new { @class = "input-text", @placeholder = "Введіть кількість хвилин для проходження модуля", @required = "required" })
                     </div>
                     @Html.HiddenFor(model => model.Modules.FirstOrDefault().Id, new { @id = "id" })
                     @Html.HiddenFor(model => model.Modules.FirstOrDefault().DisciplineId, new { @id = "id" })

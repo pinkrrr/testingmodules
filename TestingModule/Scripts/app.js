@@ -52,6 +52,7 @@
                     surname: inputText.val(),
                     login: inputText.val(),
                     password: inputText.val(),
+                    minutesToPass: inputText.val(),
                     id: $('#id').val(),
                     accountId: $('#accountId').val(),
                     lectorId: $('#lectorId').val(),

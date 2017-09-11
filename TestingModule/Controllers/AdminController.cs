@@ -251,7 +251,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId);
+                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass);
                 TempData["Success"] = "Модуль - \"" + model.Name.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch
@@ -259,7 +259,7 @@ namespace TestingModule.Controllers
                 HttpContext con = System.Web.HttpContext.Current;
                 var url = con.Request.Url.ToString();
                 new Adding().AddNewError(url, "NewModule Name = " + model.Name + " LectureId = " + model.LectureId
-                    + " DisciplineId = " + model.DisciplineId);
+                    + " DisciplineId = " + model.DisciplineId + " MinutesToPass = " + model.MinutesToPass);
                 TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Modules");
@@ -270,7 +270,7 @@ namespace TestingModule.Controllers
             {
                 if (model.Id != null && model.Name != null)
                 {
-                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId);
+                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId, model.MinutesToPass);
                     TempData["Success"] = "Зміни було успіщно збережено!";
                 }
 

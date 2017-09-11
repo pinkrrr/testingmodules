@@ -108,6 +108,7 @@
           <Property Name="DisciplineId" Type="int" Nullable="false" />
           <Property Name="LectureId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MinutesToPass" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Questions">
           <Key>
@@ -259,6 +260,7 @@
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MinutesToPass" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -424,6 +426,7 @@
           <EntitySetMapping Name="Modules">
             <EntityTypeMapping TypeName="testingDbModel.Module">
               <MappingFragment StoreEntitySet="Modules">
+                <ScalarProperty Name="MinutesToPass" ColumnName="MinutesToPass" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="LectureId" ColumnName="LectureId" />
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
