@@ -343,9 +343,14 @@
                 $.connection.hub.start().done(function () {
                     quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                         _model = model;
-                        setQuestionData(_model);
+                        console.log(_model);
+                        if (_model !== null){
+                            setQuestionData(_model);
+                        } else {
+                            quizFinished();
+                        }
                     }).fail(function () {
-                        quitQuiz();
+                        quizFinished();
                     });
                 });
 
@@ -360,14 +365,17 @@
             });
         }
 
-        function quitQuiz() {
+        function quizFinished() {
             $questionBlock.remove();
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
 
         initSelectAnswer();
-        setQuestionData(_model);
+        console.log(_model);
+        if (_model !== null) {
+            setQuestionData(_model);
+        }
         initNextQuestion();
 
 
@@ -385,6 +393,8 @@
 
             var $questionList = $('.body-content__statistics .questions');
             var questionList = [];
+
+            console.log(statisticsModel);
 
             statisticsModel.forEach(function (item, i) {
                 questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')

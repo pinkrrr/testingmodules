@@ -27,7 +27,7 @@
             }
         });
 
-        quiz.client.recieveStatistics = function (questionId, studentsCount) {
+        quiz.client.recieveStatistics = function (questionId, studentsCount, groupId) {
             statisticsDynamicData.forEach(function (item) {
                 if (item.questionId === questionId) {
                     item.totalAnswersCount++;
@@ -38,7 +38,6 @@
 
         moduleId = @Model.FirstOrDefault().ModuleId;
         quiz.client.recieveEnquire = function (accountId, connectionId) {
-            console.log(moduleId, accountId, connectionId);
             quiz.server.sendQVM(moduleId, connectionId);
         }
     </script>
