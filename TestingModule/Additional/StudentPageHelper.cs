@@ -58,10 +58,8 @@ namespace TestingModule.Additional
                             _db.Respons.Where(t => t.StudentId == student &&
                                                      t.LectureHistoryId == activeModule.LectureHistoryId &&
                                                      moduleQuestions.Contains(t.QuestionId)).Select(t => t.QuestionId).ToList();
-                        if (studentResponses.Count != moduleQuestions.Count)
-                        {
-                            return studentResponses;
-                        }
+                        return studentResponses;
+
 
                     }
                 }

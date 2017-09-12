@@ -34,24 +34,27 @@ namespace TestingModule.Additional
         {
             var student = await new AccountCredentials().GetStudent();
             var answeredQuestions = new StudentPageHelper().CheckActiveQuiz(student.Id);
-            ICollection<Question> questions = new List<Question>();
-            QuizViewModel qnA = new QuizViewModel { };
+            QuizViewModel qnA = new QuizViewModel();
             if (answeredQuestions != null)
             {
-                questions = await GetQuestionsList(moduleId);
+                ICollection<Question> questions = await GetQuestionsList(moduleId);
                 questions = questions.Where(t => !answeredQuestions.Contains(t.Id)).ToList();
-                var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-                qnA = new QuizViewModel
+                if (questions.Count != 0)
                 {
-                    QuestionsList = questions,
-                    Question = question,
-                    Student = student,
-                    Answers = await GetAnswersList(question.Id)
-                };
+                    var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+                    qnA = new QuizViewModel
+                    {
+                        QuestionsList = questions,
+                        Question = question,
+                        Student = student,
+                        Answers = await GetAnswersList(question.Id)
+                    };
+                }
+                return qnA;
             }
             //ICollection<Question> questions = await GetQuestionsList(moduleId);
 
-            return qnA;
+            return null;
         }
 
         public async Task<QuizViewModel> UpdateQuizModel(QuizViewModel quizVM)
@@ -79,13 +82,13 @@ namespace TestingModule.Additional
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<Discipline> disciplines =
                 await (from ld in _context.LectorDisciplines
-                join d in _context.Disciplines on ld.DisciplineId equals d.Id
-                where ld.LectorId == lector.Id
-                select d).ToListAsync();
+                       join d in _context.Disciplines on ld.DisciplineId equals d.Id
+                       where ld.LectorId == lector.Id
+                       select d).ToListAsync();
             IEnumerable<Lecture> lectures =
                 (from d in disciplines
-                join l in await _context.Lectures.ToListAsync() on d.Id equals l.DisciplineId
-                select l).ToList();
+                 join l in await _context.Lectures.ToListAsync() on d.Id equals l.DisciplineId
+                 select l).ToList();
             IEnumerable<LecturesHistory> histories =
                (from l in lectures
                 join h in await _context.LecturesHistories.ToListAsync() on l.Id equals h.LectureId

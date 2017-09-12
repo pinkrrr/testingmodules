@@ -12,7 +12,7 @@ namespace TestingModule.Controllers
 {
     public class QuizController : Controller
     {
-        private testingDbEntities _context=new testingDbEntities();
+        private testingDbEntities _context = new testingDbEntities();
 
 
         // GET: Quiz
@@ -21,6 +21,10 @@ namespace TestingModule.Controllers
         public async Task<ActionResult> Index(int moduleId)
         {
             QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);
+            if (qvm == null)
+                return RedirectToAction("Index", "Student");
+            if (qvm.Question == null)
+                return View();
             return View(qvm);
         }
 
