@@ -10,7 +10,7 @@
 }
 
 .body-content__statistics .questions .question:hover{
-    background-color: #0094ff;
+    background-color: #d3d3d3;
 }
 
 .body-content__statistics .questions .question .question_title{
@@ -18,7 +18,7 @@
 }
 
 .body-content__statistics .questions .question:hover .question_title{
-   color: #ffffff;
+   color: #000000;
 }
 
 .question_progressbar{

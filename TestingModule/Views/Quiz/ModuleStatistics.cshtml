@@ -20,7 +20,8 @@
         var statisticsModel = @Html.Raw(Json.Encode(@Model));
         var totalCorrectAnswers = 1;
         var statisticsDynamicData = [];
-        statisticsModel.forEach(function (item, i) {
+        
+        statisticsModel.Questions.forEach(function (item, i) {
             statisticsDynamicData[i] = {
                 questionId: item.Id,
                 totalAnswersCount: 0

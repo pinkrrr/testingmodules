@@ -327,12 +327,25 @@
         }
 
         function setQuestionData(model) {
-            $question.attr('data-questionid', model.Question.Id);
-            $question.html(model.Question.Text);
-            $answerList.html('');
-            model.Answers.forEach(function (item) {
-                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
-            })
+            
+
+            if (model != null) {
+
+
+                $question.attr('data-questionid', model.Question.Id);
+                $question.html(model.Question.Text);
+                $answerList.html('');
+                model.Answers.forEach(function (item) {
+                    $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
+                })
+
+
+
+            } else {
+                quizFinished();
+            }
+
+
 
         }
 
@@ -344,11 +357,7 @@
                     quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                         _model = model;
                         console.log(_model);
-                        if (_model !== null){
-                            setQuestionData(_model);
-                        } else {
-                            quizFinished();
-                        }
+                        setQuestionData(_model);
                     }).fail(function () {
                         quizFinished();
                     });
@@ -366,16 +375,13 @@
         }
 
         function quizFinished() {
-            $questionBlock.remove();
+            $('.questionBlock').remove();
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
 
         initSelectAnswer();
-        console.log(_model);
-        if (_model !== null) {
-            setQuestionData(_model);
-        }
+        setQuestionData(_model);
         initNextQuestion();
 
 
@@ -394,9 +400,7 @@
             var $questionList = $('.body-content__statistics .questions');
             var questionList = [];
 
-            console.log(statisticsModel);
-
-            statisticsModel.forEach(function (item, i) {
+            statisticsModel.Questions.forEach(function (item, i) {
                 questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
             });
 
