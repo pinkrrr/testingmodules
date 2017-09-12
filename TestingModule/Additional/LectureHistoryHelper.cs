@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using TestingModule.Models;
 using TestingModule.ViewModels;
@@ -11,13 +12,14 @@ namespace TestingModule.Additional
     public class LectureHistoryHelper
     {
         private readonly testingDbEntities _db = new testingDbEntities();
-        public void StartLecture(ReasignViewModel model)
+        public async Task StartLecture(ReasignViewModel model)
         {
             var disc = model.Disciplines[0].Id;
             var lect = model.Lectures[0].Id;
             var lecturesTable = _db.Set<LecturesHistory>();
             var date = DateTime.Now;
-            lecturesTable.Add(new LecturesHistory() { LectureId = lect, DisciplineId = disc, StartTime = date, ModulesPassed = 0 });
+            Lector lector = await new AccountCredentials().GetLector();
+            lecturesTable.Add(new LecturesHistory { LectureId = lect, DisciplineId = disc, StartTime = date, ModulesPassed = 0, LectorId = lector.Id });
             _db.SaveChanges();
 
 
@@ -61,7 +63,7 @@ namespace TestingModule.Additional
                 .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).FirstOrDefault().Id;
             if (_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures).Any())
             {
-               
+
             }
             else
             {

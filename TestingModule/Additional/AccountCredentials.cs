@@ -13,6 +13,7 @@ using System.Web.Routing;
 using TestingModule.Additional;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Ajax.Utilities;
 
 namespace TestingModule.Additional
 {
@@ -24,7 +25,6 @@ namespace TestingModule.Additional
             return identity.Claims.Where(c => c.Type == ClaimTypes.Role)
                    .Select(c => c.Value)
                    .SingleOrDefault();
-            // return claimsIdentity.FindFirst(ClaimTypes.Role).Value;
         }
 
         public async Task<Student> GetStudent()
@@ -37,10 +37,11 @@ namespace TestingModule.Additional
 
         public async Task<Lector> GetLector()
         {
-            testingDbEntities _context = new testingDbEntities();
+            testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            return await _context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            Lector lector = await context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            return lector;
         }
     }
 }

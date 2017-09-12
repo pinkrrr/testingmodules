@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Antlr.Runtime.Misc;
@@ -26,7 +27,7 @@ namespace TestingModule.Controllers
             {
                 if (checkIfLector.ModuleHistories.Any())
                 {
-                    return RedirectToAction("/modulestatistics/" + checkIfLector.ModuleHistories.FirstOrDefault().ModuleId, "quiz");
+                    return RedirectToAction("modulestatistics", "quiz");
                 }
                 return View(checkIfLector);
             }
@@ -34,11 +35,11 @@ namespace TestingModule.Controllers
             return View();
         }
         //LectureHistory
-        public ActionResult StartLecture(ReasignViewModel model)
+        public async Task<ActionResult> StartLecture(ReasignViewModel model)
         {
             if (model.Disciplines != null && model.Lectures != null && model.Groups != null)
             {
-                new LectureHistoryHelper().StartLecture(model);
+                await new LectureHistoryHelper().StartLecture(model);
             }
             else
             {

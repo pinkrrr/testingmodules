@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestingModule.Models.Question>
+﻿@model TestingModule.ViewModels.RealTimeStatisticsViewModel
 @{
     ViewBag.Title = "ModuleStatistics";
     Layout = "~/Views/Shared/_LayoutStatistics.cshtml";
@@ -8,7 +8,7 @@
 
 <div class="questions"></div>
 
-@Html.ActionLink("Зупинити модуль", "StopModule", "admin", new { moduleId = Model.FirstOrDefault().ModuleId }, new { @class = "stopModule", @id = "stopModuleButton" })
+@Html.ActionLink("Зупинити модуль", "StopModule", "admin", new { moduleId = Model.Module.Id }, new { @class = "stopModule", @id = "stopModuleButton" })
 
 
 @section scripts
@@ -36,7 +36,7 @@
             });
         };
 
-        moduleId = @Model.FirstOrDefault().ModuleId;
+        moduleId = @Model.Questions.Select(q => q.ModuleId).FirstOrDefault();
         quiz.client.recieveEnquire = function (accountId, connectionId) {
             quiz.server.sendQVM(moduleId, connectionId);
         }

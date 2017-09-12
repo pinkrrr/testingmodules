@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using TestingModule.Models;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using Microsoft.Owin;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using TestingModule.ViewModels;
@@ -52,8 +53,6 @@ namespace TestingModule.Additional
                 }
                 return qnA;
             }
-            //ICollection<Question> questions = await GetQuestionsList(moduleId);
-
             return null;
         }
 
@@ -77,7 +76,7 @@ namespace TestingModule.Additional
             return lect;
         }
 
-        public async Task<TotalStatisticsViewModel> GetHistorieForLector()
+        public async Task<StatisticsViewModel> GetHistorieForLector()
         {
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<Discipline> disciplines =
@@ -93,7 +92,7 @@ namespace TestingModule.Additional
                (from l in lectures
                 join h in await _context.LecturesHistories.ToListAsync() on l.Id equals h.LectureId
                 select h).ToList();
-            TotalStatisticsViewModel totalStatistics = new TotalStatisticsViewModel
+            StatisticsViewModel totalStatistics = new StatisticsViewModel
             {
                 Lector = lector,
                 Disciplines = disciplines,
@@ -170,5 +169,35 @@ namespace TestingModule.Additional
             return responseStatistics;
         }
 
+        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsModel()
+        {
+            Lector lector = await new AccountCredentials().GetLector();
+            LecturesHistory lecturesHistory = await _context.LecturesHistories
+                .SingleOrDefaultAsync(lh => lh.LectorId == lector.Id && lh.EndTime == null);
+            Module module =
+                await (from mh in _context.ModuleHistories
+                       where mh.LectureHistoryId == lecturesHistory.Id
+                       join m in _context.Modules on mh.ModuleId equals m.Id
+                       select m).SingleOrDefaultAsync();
+            IEnumerable<Question> questions =
+                await (from mh in _context.ModuleHistories
+                       where mh.LectureHistoryId == lecturesHistory.Id
+                       join q in _context.Questions on mh.ModuleId equals q.ModuleId
+                       select q).ToListAsync();
+            IEnumerable<Group> groups =
+                await (from lhg in _context.LectureHistoryGroups
+                       where lhg.LectureHistoryId == lecturesHistory.Id
+                       join g in _context.Groups on lhg.GroupId equals g.Id
+                       select g).ToListAsync();
+
+            RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
+            {
+                Groups = groups,
+                LecturesHistory = lecturesHistory,
+                Module = module,
+                Questions = questions
+            };
+            return realTimeStatistics;
+        }
     }
 }

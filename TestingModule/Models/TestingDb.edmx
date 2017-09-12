@@ -91,6 +91,7 @@
           <Property Name="StartTime" Type="datetime" Nullable="false" />
           <Property Name="EndTime" Type="datetime" />
           <Property Name="ModulesPassed" Type="int" />
+          <Property Name="LectorId" Type="int" />
         </EntityType>
         <EntityType Name="ModuleHistory">
           <Key>
@@ -251,6 +252,7 @@
           <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndTime" Type="DateTime" Precision="3" />
           <Property Name="ModulesPassed" Type="Int32" />
+          <Property Name="LectorId" Type="Int32" />
         </EntityType>
         <EntityType Name="Module">
           <Key>
@@ -414,6 +416,7 @@
           <EntitySetMapping Name="LecturesHistories">
             <EntityTypeMapping TypeName="testingDbModel.LecturesHistory">
               <MappingFragment StoreEntitySet="LecturesHistory">
+                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
                 <ScalarProperty Name="ModulesPassed" ColumnName="ModulesPassed" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
