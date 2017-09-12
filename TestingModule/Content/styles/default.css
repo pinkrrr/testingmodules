@@ -131,6 +131,7 @@ input[type="text"] {
     user-select: text;
     padding: 20px;
     overflow: auto;
+    z-index: 10;
 }
 
 .body-content__adminHomepage, .body-content__LecturerHomepage{
@@ -143,6 +144,7 @@ input[type="text"] {
 .body-content__LecturerHomepage{
     background-image: url("/Content/img/lectorBackground.jpg");
     overflow-x: hidden;
+    min-width: 768px;
 }
 
 .body-content__adminHomepage {
