@@ -12,26 +12,61 @@ namespace TestingModule.Additional
     public class LectureHistoryHelper
     {
         private readonly testingDbEntities _db = new testingDbEntities();
-        public async Task StartLecture(ReasignViewModel model)
+        public async Task<int> StartLecture(ReasignViewModel model)
         {
             var disc = model.Disciplines[0].Id;
             var lect = model.Lectures[0].Id;
-            var lecturesTable = _db.Set<LecturesHistory>();
-            var date = DateTime.Now;
+            var date = DateTime.UtcNow;
+            var lector = await new AccountCredentials().GetLector();
+            _db.LecturesHistories.Add(new LecturesHistory { LectureId = lect, DisciplineId = disc, StartTime = date, ModulesPassed = 0, LectorId = lector.Id });
+            await _db.SaveChangesAsync();
+
+            int lectureHistoryId = _db.LecturesHistories.Local.Where(lh => lh.StartTime == date).Select(lh => lh.Id)
+                .SingleOrDefault();
+
+            _db.ModuleHistories.AddRange(
+                from m in await _db.Modules.ToListAsync()
+                where m.LectureId == lect
+                select new ModuleHistory
+                {
+                    IsPassed = false,
+                    LectureHistoryId = lectureHistoryId,
+                    ModuleId = m.Id,
+                    StartTime = null
+                });
+
+            _db.LectureHistoryGroups.AddRange(
+                from g in model.Groups
+                where g.IsSelected
+                select new LectureHistoryGroup
+                {
+                    GroupId = g.Id,
+                    LectureHistoryId = lectureHistoryId
+                });
+
+            await _db.SaveChangesAsync();
+            return lectureHistoryId;
+        }
+
+        public async Task<ActiveLectureViewModel> GetActiveLecture(int lectureHistoryId)
+        {
             Lector lector = await new AccountCredentials().GetLector();
-            lecturesTable.Add(new LecturesHistory { LectureId = lect, DisciplineId = disc, StartTime = date, ModulesPassed = 0, LectorId = lector.Id });
-            _db.SaveChanges();
-
-
-            var groupsLectsTable = _db.Set<LectureHistoryGroup>();
-            var lects = _db.LecturesHistories.ToList();
-            int lectureHistoryId = lects.Where(t => t.StartTime == date).Select(t => t.Id).FirstOrDefault();
-            foreach (var group in model.Groups.Where(t => t.IsSelected))
+            LecturesHistory lecturesHistory = await _db.LecturesHistories.
+                SingleOrDefaultAsync(lh => lh.Id == lectureHistoryId);
+            Lecture lecture = await _db.Lectures.SingleOrDefaultAsync(l => l.Id == lecturesHistory.LectureId);
+            Discipline discipline = await _db.Disciplines.SingleOrDefaultAsync(d => d.Id == lecture.DisciplineId);
+            IEnumerable<Module> modules = await _db.Modules.Where(m => m.LectureId == lecture.Id).ToListAsync();
+            IEnumerable<ModuleHistory> moduleHistories = await _db.ModuleHistories
+                .Where(mh => mh.LectureHistoryId == lectureHistoryId).ToListAsync();
+            return new ActiveLectureViewModel
             {
-                groupsLectsTable.Add(new LectureHistoryGroup() { LectureHistoryId = lectureHistoryId, GroupId = group.Id });
-                _db.SaveChanges();
-            }
-
+                Lector = lector,
+                Discipline = discipline,
+                Lecture = lecture,
+                LecturesHistory = lecturesHistory,
+                ModuleHistories = moduleHistories,
+                Modules = modules
+            };
         }
 
         public void StopLecture(string login)
@@ -53,37 +88,33 @@ namespace TestingModule.Additional
 
         }
 
-        public void StartModule(int moduleId, string login)
+        public async Task StartModule(int moduleHistoryId)
         {
-            var lector = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-            var lectorId = _db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-            var lectorsDisciplines = _db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
-                .ToList();
-            var activeLectures = _db.LecturesHistories
-                .Where(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null).FirstOrDefault().Id;
-            if (_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures).Any())
+            ModuleHistory moduleHistory =
+                await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
+            if (moduleHistory.IsPassed)
             {
-
+                var responsesToDelete =
+                    from r in _db.Respons
+                    where r.LectureHistoryId == moduleHistory.LectureHistoryId
+                    join q in _db.Questions on r.QuestionId equals q.Id
+                    where q.ModuleId == moduleHistory.ModuleId
+                    select r;
+                _db.Respons.RemoveRange(responsesToDelete);
+                moduleHistory.IsPassed = false;
             }
-            else
-            {
-                var moduleHistTable = _db.Set<ModuleHistory>();
-                moduleHistTable.Add(new ModuleHistory() { ModuleId = moduleId, LectureHistoryId = activeLectures });
-                _db.SaveChanges();
-            }
-
+               
+            moduleHistory.StartTime=DateTime.UtcNow;
+            await _db.SaveChangesAsync();
         }
 
-        public void StopModule(int moduleId, string login)
+        public async Task<int> ModulePassed(int moduleHistoryId)
         {
-            var lector = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-            var lectorId = _db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-            var lectorsDisciplines = _db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
-                .ToList();
-            var activeLectures = _db.LecturesHistories.FirstOrDefault(t => lectorsDisciplines.Contains(t.DisciplineId) && t.EndTime == null);
-            activeLectures.ModulesPassed += 1;
-            _db.ModuleHistories.RemoveRange(_db.ModuleHistories.Where(t => t.LectureHistoryId == activeLectures.Id && t.ModuleId == moduleId));
-            _db.SaveChanges();
+            ModuleHistory moduleHistory =
+                await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
+            moduleHistory.IsPassed = true;
+            await _db.SaveChangesAsync();
+            return moduleHistory.LectureHistoryId;
         }
 
     }

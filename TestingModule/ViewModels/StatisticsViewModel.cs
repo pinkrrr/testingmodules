@@ -25,8 +25,9 @@ namespace TestingModule.ViewModels
     public class RealTimeStatisticsViewModel
     {
         public LecturesHistory LecturesHistory { get; set; }
+        public ModuleHistory ModuleHistory { get; set; }
         public Module Module { get; set; }
-        public IEnumerable<Question> Questions { get; set; } 
+        public IEnumerable<Question> Questions { get; set; }
         public IEnumerable<Group> Groups { get; set; }
     }
 }

@@ -231,6 +231,7 @@
     <Compile Include="Models\StudentDiscipline.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ActiveLectureViewModel.cs" />
     <Compile Include="ViewModels\DiscLecotorViewModel.cs" />
     <Compile Include="ViewModels\QueAns.cs" />
     <Compile Include="Models\Role.cs">
@@ -419,6 +420,7 @@
     <Content Include="Views\Shared\_LayoutStatistics.cshtml" />
     <Content Include="Views\Quiz\TotalStatistics.cshtml" />
     <Content Include="Views\Quiz\HistoryStatistics.cshtml" />
+    <Content Include="Views\Admin\ActiveLecture.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
