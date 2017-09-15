@@ -27,7 +27,10 @@ namespace TestingModule.Controllers
             {
                 if (checkIfLector.ModuleHistories.Any(mh => mh.StartTime != null && mh.IsPassed == false))
                 {
-                    return RedirectToAction("modulestatistics", "quiz");
+                    var moduleHistoryId = checkIfLector.ModuleHistories
+                        .Where(mh => mh.StartTime != null && mh.IsPassed == false).Select(mh => mh.Id)
+                        .SingleOrDefault();
+                    return RedirectToAction("modulestatistics", "quiz", new { moduleHistoryId });
                 }
                 return View(checkIfLector);
             }
@@ -51,6 +54,14 @@ namespace TestingModule.Controllers
         [Route("activelecture/{lectureHistoryId}")]
         public async Task<ActionResult> ActiveLecture(int lectureHistoryId)
         {
+            var getActiveLecture = await new LectureHistoryHelper().GetActiveLecture(lectureHistoryId);
+            if (getActiveLecture.ModuleHistories.Any(mh => mh.StartTime != null && mh.IsPassed == false))
+            {
+                var moduleHistoryId = getActiveLecture.ModuleHistories
+                    .Where(mh => mh.StartTime != null && mh.IsPassed == false).Select(mh => mh.Id)
+                    .SingleOrDefault();
+                return RedirectToAction("modulestatistics", "quiz", new { moduleHistoryId });
+            }
             return View(await new LectureHistoryHelper().GetActiveLecture(lectureHistoryId));
         }
 
@@ -77,7 +88,7 @@ namespace TestingModule.Controllers
         public async Task<ActionResult> StartModule(int moduleHistoryId)
         {
             await new LectureHistoryHelper().StartModule(moduleHistoryId);
-            return RedirectToAction("ModuleStatistics", "Quiz");
+            return RedirectToAction("ModuleStatistics", "Quiz", new { moduleHistoryId });
         }
 
         [CustomAuthorize(RoleName.Lecturer)]
