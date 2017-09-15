@@ -1,102 +1,91 @@
-﻿@model TestingModule.ViewModels.ReasignViewModel
+﻿@using TestingModule.Additional
+@using TestingModule.Models
+@model TestingModule.ViewModels.ReasignViewModel
 @{
     ViewBag.Title = "Домашня сторінка";
     Layout = "~/Views/Shared/_LayoutAdminHomepage.cshtml";
 }
 
-@if (Request.IsAuthenticated)
+@if (new AccountCredentials().GetRole() == RoleName.Lecturer)
 {
-    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-    var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
-    if (c.Value.ToString() == "Lecturer")
+
+
+
+    foreach (var discipline in
+        from d in Model.Disciplines
+        join lh in Model.LecturesHistories on d.Id equals lh.DisciplineId
+        group d by d.Id into dg
+        select dg.FirstOrDefault())
     {
-
-        if (Model.LecturesHistories.Any())
+        <div class="disciplineName">@discipline.Name</div>
+        foreach (var lecture in
+            from l in Model.Lectures
+            where l.DisciplineId==discipline.Id
+            join lh in Model.LecturesHistories on l.Id equals lh.LectureId
+            group l by l.Id into lj
+            select lj.FirstOrDefault())
         {
-            var discipline = Model.LecturesHistories.FirstOrDefault().DisciplineId;
-            var lecture = Model.LecturesHistories.FirstOrDefault().LectureId;
-
-            <div class="modulesBlock">
-                <div class="title">Лекція з дисципліни <span>@Model.Disciplines.SingleOrDefault(t => t.Id == discipline).Name</span> була розпочата <span>@Model.LecturesHistories.FirstOrDefault().StartTime</span></div>
-                <div class="modulesList">
-                    @foreach (var module in Model.Modules.Where(t => t.LectureId == lecture))
+            <div class="lecture">
+                <div class="lecture_name">@lecture.Name</div>
+                <div class="lectures_dates">
+                    @foreach (var lectureHistory in Model.LecturesHistories.Where(h => h.LectureId == lecture.Id))
                     {
-                        <div class="module">
-                            <div class="module_name">@module.Name</div>
-                            <div class="module_control">
-                                @if (Model.ModuleHistories.FirstOrDefault(t => t.ModuleId == module.Id) == null)
-                            {
-                                    <button class="btnSave" type="Submit" onclick="location.href='admin/StartModule/@module.Id'"><i class="fa fa-play" aria-hidden="true"></i> Розпочати модуль</button>
-                                }
-                                else
-                                {
-                                    <button class="btnStop" type="Submit" onclick="location.href='admin/StopModule/@module.Id'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити модуль</button>
-                                }
-                            </div>
-                        </div>
+                        <a href="@Url.Action("ActiveLecture", "admin", new { lectureHistoryId = lectureHistory.Id})" target="_blank" class="lecture_date">@lectureHistory.StartTime.ToLocalTime()</a>
                     }
-                </div>
-                <button class="btnStop" onclick="location.href='@Url.Action("StopLecture", "admin")'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити лекцію</button>
-            </div>
-
-
-        }
-        else
-        {
-
-
-            <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Розпочати лекцію</button>
-            <div class="popup popup-add popup-startLecture">
-                <div class="popup-body">
-                    <div class="popup-content">
-                        <div class="popup-title">Розпочату лекцію</div>
-                        @using (Html.BeginForm("StartLecture", "admin", FormMethod.Post))
-                        {
-                            <form>
-
-                                <div class="popup-subtitle">Виберіть дисципліну</div>
-                                @*@Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name", new { @Id = "DisciplineId" }), "Виберіть дисципліну")*@
-                                @Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name"), new
-                           {
-                               @class = "startLecture_selectDiscipline",
-                               id = "ddldiscipline",
-                               //@onchange = "javascript:GetLecture(this.value);",
-                               AutoPostBack = "True"
-                           })
-                                <div class="popup-subtitle">Виберіть лекцію</div>
-                                @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new
-                           {
-                               @id = "ddllecture",
-                               name = "ddllecture",
-                               @class = "startLecture_selectLecture"
-                           })
-
-                                @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new { @Id = "LectureId" }), "Виберіть лекцію")*@
-                                @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new { @class = "startLecture_selectLecture" })*@
-                                <div class="popup-subtitle">Виберіть групи</div>
-                                <div class="groupItems">
-                                    @for (int i = 0; i < Model.Groups.Count(); i++)
-                                    {
-                                        <div class="groupItem">
-                                            <label for="@Model.Groups[i].Id">
-                                                <span class="groupItem_title">@Model.Groups[i].Name </span>
-                                                @Html.CheckBoxFor(r => Model.Groups[i].IsSelected, new { @id = Model.Groups[i].Id, @class = "startLecture_disciplineSelect" })
-                                                @Html.HiddenFor(t => Model.Groups[i].Id)
-                                            </label>
-                                        </div>
-                                    }
-                                </div>
-
-                                <div>
-                                    <button class="btn popup-btn popup-start-btn" type="submit" disabled>Розпочати</button>
-                                    <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-                                </div>
-                            </form>
-                        }
-                    </div>
                 </div>
             </div>
         }
     }
 
+    <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Розпочати лекцію</button>
+    <div class="popup popup-add popup-startLecture">
+        <div class="popup-body">
+            <div class="popup-content">
+                <div class="popup-title">Розпочату лекцію</div>
+                @using (Html.BeginForm("StartLecture", "admin", FormMethod.Post))
+                {
+                    <form>
+
+                        <div class="popup-subtitle">Виберіть дисципліну</div>
+                        @*@Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name", new { @Id = "DisciplineId" }), "Виберіть дисципліну")*@
+                        @Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name"), new
+                   {
+                       @class = "startLecture_selectDiscipline",
+                       id = "ddldiscipline",
+                       //@onchange = "javascript:GetLecture(this.value);",
+                       AutoPostBack = "True"
+                   })
+                        <div class="popup-subtitle">Виберіть лекцію</div>
+                        @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new
+                   {
+                       @id = "ddllecture",
+                       name = "ddllecture",
+                       @class = "startLecture_selectLecture"
+                   })
+
+                        @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new { @Id = "LectureId" }), "Виберіть лекцію")*@
+                        @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new { @class = "startLecture_selectLecture" })*@
+                        <div class="popup-subtitle">Виберіть групи</div>
+                        <div class="groupItems">
+                            @for (int i = 0; i < Model.Groups.Count; i++)
+                            {
+                                <div class="groupItem">
+                                    <label for="@Model.Groups[i].Id">
+                                        <span class="groupItem_title">@Model.Groups[i].Name </span>
+                                        @Html.CheckBoxFor(r => Model.Groups[i].IsSelected, new { id = Model.Groups[i].Id, @class = "startLecture_disciplineSelect" })
+                                        @Html.HiddenFor(t => Model.Groups[i].Id)
+                                    </label>
+                                </div>
+                            }
+                        </div>
+
+                        <div>
+                            <button class="btn popup-btn popup-start-btn" type="submit" disabled>Розпочати</button>
+                            <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
 }

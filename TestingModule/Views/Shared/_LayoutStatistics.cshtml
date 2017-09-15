@@ -28,11 +28,13 @@
                         {
                             <!--<a href="@Url.Action("Index", "admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
                             <a href="@Url.Action("Disciplines", "admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
+                            <a href="@Url.Action("TotalStatistics", "Quiz")"><i class='fa fa-pie-chart' aria-hidden='true'></i>Статистика</a>
                         }
                         if (c.Value.ToString() != "Lecturer")
                         {
                             <a href="@Url.Action("Specialities", "admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
                             <a href="@Url.Action("Lectors", "admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
+
                         }
                     }
                 }

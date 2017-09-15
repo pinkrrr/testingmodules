@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -16,40 +18,41 @@ namespace TestingModule.Additional
 {
     public class AdminPageHelper : adminController
     {
-        public ReasignViewModel LecturesIndexPage(ClaimsIdentity claimsIdentity)
+        public async Task<ReasignViewModel> LecturesIndexPage()
         {
             var db = new testingDbEntities();
             ReasignViewModel model = new ReasignViewModel();
-            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
+            var role = new AccountCredentials().GetRole();
 
-            if (role == "Lecturer")
+            if (role == RoleName.Lecturer)
             {
-                var lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-                var lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-                var lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
-                    .ToList();
-                var students = db.StudentDisciplines.Where(t => lectorsDisciplines.Contains(t.DisciplineId))
-                    .Select(t => t.StudentId).ToList();
-                var groups = db.Students.Where(t => students.Contains(t.Id)).Select(t => t.GroupId).ToList();
-                model.Disciplines = db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).ToList();
-                model.Modules = db.Modules.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToList();
-                model.Lectures = db.Lectures.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToList();
-                model.Groups = db.Groups.Where(t => groups.Contains(t.Id)).ToList();
-                model.LecturesHistories = db.LecturesHistories.Where(t => t.StartTime != null && t.EndTime == null)
-                    .ToList();
-                model.ModuleHistories = db.ModuleHistories.ToList();
-                var startedLectures = db.LecturesHistories
+                model.Lector = await new AccountCredentials().GetLector();
+                var lectorsDisciplines = await db.LectorDisciplines.Where(t => t.LectorId == model.Lector.Id).Select(t => t.DisciplineId)
+                    .ToListAsync();
+                var students = await db.StudentDisciplines.Where(t => lectorsDisciplines.Contains(t.DisciplineId))
+                    .Select(t => t.StudentId).ToListAsync();
+                var groups = await db.Students.Where(t => students.Contains(t.Id)).Select(t => t.GroupId).ToListAsync();
+                model.Disciplines = await db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).ToListAsync();
+                model.Modules = await db.Modules.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToListAsync();
+                model.Lectures = await db.Lectures.Where(t => lectorsDisciplines.Contains(t.DisciplineId)).ToListAsync();
+                model.Groups = await db.Groups.Where(t => groups.Contains(t.Id)).ToListAsync();
+                model.LecturesHistories = await db.LecturesHistories.Where(t => t.EndTime == null && t.LectorId == model.Lector.Id)
+                    .ToListAsync();
+                model.ModuleHistories =
+                    (from mh in await db.ModuleHistories.ToListAsync()
+                     join lh in model.LecturesHistories on mh.LectureHistoryId equals lh.Id
+                     select mh).ToList();
+                /*var startedLectures = db.LecturesHistories
                     .Where(t => lectorsDisciplines.Contains(t.Id) && t.EndTime == null).ToList();
                 if (startedLectures.Any())
                 {
                     model.LecturesHistories = startedLectures;
-                }
+                }*/
                 return model;
             }
             return null;
         }
 
-        
+
     }
 }

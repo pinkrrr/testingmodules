@@ -52,6 +52,7 @@
                     surname: inputText.val(),
                     login: inputText.val(),
                     password: inputText.val(),
+                    minutesToPass: inputText.val(),
                     id: $('#id').val(),
                     accountId: $('#accountId').val(),
                     lectorId: $('#lectorId').val(),
@@ -326,12 +327,25 @@
         }
 
         function setQuestionData(model) {
-            $question.attr('data-questionid', model.Question.Id);
-            $question.html(model.Question.Text);
-            $answerList.html('');
-            model.Answers.forEach(function (item) {
-                $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
-            })
+            
+
+            if (model != null) {
+
+
+                $question.attr('data-questionid', model.Question.Id);
+                $question.html(model.Question.Text);
+                $answerList.html('');
+                model.Answers.forEach(function (item) {
+                    $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
+                })
+
+
+
+            } else {
+                quizFinished();
+            }
+
+
 
         }
 
@@ -342,9 +356,10 @@
                 $.connection.hub.start().done(function () {
                     quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
                         _model = model;
+                        console.log(_model);
                         setQuestionData(_model);
                     }).fail(function () {
-                        quitQuiz();
+                        quizFinished();
                     });
                 });
 
@@ -359,8 +374,8 @@
             });
         }
 
-        function quitQuiz() {
-            $questionBlock.remove();
+        function quizFinished() {
+            $('.questionBlock').remove();
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
@@ -385,7 +400,7 @@
             var $questionList = $('.body-content__statistics .questions');
             var questionList = [];
 
-            statisticsModel.forEach(function (item, i) {
+            statisticsModel.Questions.forEach(function (item, i) {
                 questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
             });
 
@@ -483,10 +498,6 @@ function historyStatisticsPage(model) {
 
                 if (question.ModuleId === module.Id) {
 
-                    //chartDataObj({
-                    //    answer: question.Id
-                    //});
-
                     $('<div/>', {
                         class: 'question',
                         id: 'questionId' + question.Id
@@ -497,37 +508,43 @@ function historyStatisticsPage(model) {
                         html: question.Text
                     }).appendTo('#questionId' + question.Id);
 
-                    //$('<div/>', {
-                    //    class: 'answers',
-                    //}).appendTo('#questionId' + question.Id);
-
                     chartDataObj.id = question.Id;
-                    chartDataObj.answers = [];
 
-                    model.AnswersCount.forEach(function (answer) {
+                    model.Groups.forEach(function (group) {
 
-                        if (question.Id === answer.QuestionId) {
-                            //$('<div/>', {
-                            //    class: 'answer',
-                            //    id: 'answer' + answer.Id,
-                            //    html: answer.Text
-                            //}).appendTo('#questionId' + question.Id + ' answers');
+                        $('<div/>', {
+                            class: 'group',
+                            id: 'group' + group.Id
+                        }).appendTo('#questionId' + question.Id);
 
-                            chartDataObj.answers.push({
-                                y: answer.Count,
-                                name: answer.Text
-                            })
+                        $('<div/>', {
+                            class: 'group_name',
+                            html: group.Name
+                        }).prependTo('#questionId' + question.Id + ' #group' + group.Id);
 
-                        }
+                        $('<div/>', {
+                            class: 'pieChart',
+                            id: 'chartContainer' + question.Id
+                        }).appendTo('#questionId' + question.Id + ' #group' + group.Id);
 
-                    });
+                        model.AnswersCount.forEach(function (answer) {
 
-                    $('<div/>', {
-                        class: 'pieChart',
-                        id: 'chartContainer' + question.Id
-                    }).appendTo('#questionId' + question.Id);
+                            if (question.Id === answer.QuestionId && answer.GroupId === group.Id) {
 
-                    renderChart(chartDataObj);
+                                chartDataObj.answers.push({
+                                    y: answer.Count,
+                                    name: answer.Text
+                                })
+
+                            }
+
+                        });
+
+                        renderChart(chartDataObj);
+
+                        chartDataObj.answers = [];
+
+                    })
 
                 }
 
@@ -538,17 +555,14 @@ function historyStatisticsPage(model) {
 
     function renderChart(chartData) {
 
-        console.log(chartData.answers);
-
         var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
             {
-                title: {
-                    fontFamily: "arial black"
-                },
                 animationEnabled: true,
                 legend: {
                     verticalAlign: "bottom",
-                    horizontalAlign: "center"
+                    horizontalAlign: "left",
+                    fontSize: 16,
+                    fontFamily: "arial"
                 },
                 theme: "theme3",
                 backgroundColor: "transparent",
@@ -572,66 +586,3 @@ function historyStatisticsPage(model) {
 
 }
 
-//function drawCharts(model) {
-//    var moduleId = null;
-
-//    getChartData();
-
-//    model.Modules.forEach(function (module) {
-
-//        //$('<div/>', {
-//        //    class: 'module'
-//        //}).appendTo('.chartsWrapper');
-
-//        //$('<div/>', {
-//        //    class: 'module_name',
-//        //    html: module.Name
-//        //}).appendTo('.chartsWrapper');
-
-//        moduleId = module.Id;
-
-//        model.Questions.forEach(function (question) {
-
-//            if (question.ModuleId === moduleId){
-//                //$('<div/>', {
-//                //    class: 'question',
-//                //    html: question.Text
-//                //}).appendTo('.module');
-
-
-//                chartModel = {
-
-//                }
-
-//            }
-
-//        })
-
-//        //$('<div class="pieChart" id="chartContainer' + item.Question.Id + '" style="height: 360px; width: 360px"></div>').appendTo('.chartsWrapper');
-//        //createChart(item);
-//    })
-//}
-
-
-//function getChartData(model) {
-
-//    var answersArray = [];
-
-//    model.Questions.forEach(function (question) {
-        
-//    })
-
-//    model.AnswersCount.forEach(function (answer) {
-//        answersArray.push({
-//            y: answer.Count,
-//            name: answer.Text
-//        })
-//    })
-
-//    var chartData = {
-//        id: model.Question.Id,
-//        question: model.Question.Text,
-//        answers: answersArray
-//    }
-//    return chartData;
-//}

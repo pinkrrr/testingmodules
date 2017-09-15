@@ -8,7 +8,7 @@
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
-    
+
     <div class="main-container">
         <div class="navbar">
             @*@Html.ActionLink("Masters of masters", "Index", "admin", new { area = "" }, new { @class = "navbar-logo" })*@
@@ -28,6 +28,9 @@
                         {
                             <!--<a href="@Url.Action("Index", "admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
                             <a href="@Url.Action("Disciplines", "admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
+                        }
+                        if (c.Value.ToString() == "Lecturer")
+                        {
                             <a href="@Url.Action("TotalStatistics", "Quiz")"><i class='fa fa-pie-chart' aria-hidden='true'></i>Статистика</a>
                         }
                         if (c.Value.ToString() != "Lecturer")
@@ -47,8 +50,8 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/jquery-ui")
-        <script src="~/signalr/hubs"></script>
+    @Scripts.Render("~/bundles/jquery-ui")
+    <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/app.js"></script>
     @RenderSection("scripts", required: false)
 </body>

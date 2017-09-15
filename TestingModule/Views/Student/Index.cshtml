@@ -72,7 +72,7 @@ else
         $.connection.hub.start().done(function () {
             setInterval(function () {
                 quiz.server.moduleEnquire();
-            }, intervalTime); 
+            }, intervalTime);
         });
         quiz.client.reciveModuleId = function (moduleId) {
             console.log(moduleId);

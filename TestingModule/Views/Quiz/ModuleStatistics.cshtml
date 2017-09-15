@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestingModule.Models.Question>
+﻿@model TestingModule.ViewModels.RealTimeStatisticsViewModel
 @{
     ViewBag.Title = "ModuleStatistics";
     Layout = "~/Views/Shared/_LayoutStatistics.cshtml";
@@ -8,7 +8,7 @@
 
 <div class="questions"></div>
 
-@Html.ActionLink("Зупинити модуль", "StopModule", "admin", new { moduleId = Model.FirstOrDefault().ModuleId }, new { @class = "stopModule", @id = "stopModuleButton" })
+@Html.ActionLink("Зупинити модуль", "stopmodule", "admin", new { moduleHistoryId = Model.ModuleHistory.Id }, new { @class = "stopModule", @id = "stopModuleButton" })
 
 
 @section scripts
@@ -20,14 +20,15 @@
         var statisticsModel = @Html.Raw(Json.Encode(@Model));
         var totalCorrectAnswers = 1;
         var statisticsDynamicData = [];
-        statisticsModel.forEach(function (item, i) {
+
+        statisticsModel.Questions.forEach(function (item, i) {
             statisticsDynamicData[i] = {
                 questionId: item.Id,
                 totalAnswersCount: 0
             }
         });
 
-        quiz.client.recieveStatistics = function (questionId, studentsCount) {
+        quiz.client.recieveStatistics = function (questionId, studentsCount, groupId) {
             statisticsDynamicData.forEach(function (item) {
                 if (item.questionId === questionId) {
                     item.totalAnswersCount++;
@@ -36,9 +37,8 @@
             });
         };
 
-        moduleId = @Model.FirstOrDefault().ModuleId;
+        moduleId = @Model.Questions.Select(q => q.ModuleId).FirstOrDefault();
         quiz.client.recieveEnquire = function (accountId, connectionId) {
-            console.log(moduleId, accountId, connectionId);
             quiz.server.sendQVM(moduleId, connectionId);
         }
     </script>

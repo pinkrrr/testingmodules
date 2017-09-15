@@ -3,6 +3,24 @@
     margin-bottom: 20px;
 }
 
+.body-content__statistics .questions .question{
+    transition: background .2s;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.body-content__statistics .questions .question:hover{
+    background-color: #d3d3d3;
+}
+
+.body-content__statistics .questions .question .question_title{
+    transition: all .2s;
+}
+
+.body-content__statistics .questions .question:hover .question_title{
+   color: #000000;
+}
+
 .question_progressbar{
   width: 58%;
   height: 30px;
@@ -12,6 +30,7 @@
   display: inline-block;
   vertical-align: middle;
   position: relative;
+  background-color: #ffffff;
 }
 
 .progress{
@@ -89,8 +108,10 @@
 .chartsWrapper .pieChart{
     display: inline-block;
     background-color: transparent;
-    width: 300px;
-    height: 300px;
+    width: 15vw;
+    height: 15vw;
+    min-width: 180px;
+    min-height: 180px;
 }
 
 .chartsWrapper .module{
@@ -106,14 +127,32 @@
     margin-bottom: 20px;
 }
 
-.chartsWrapper .module .question{
-    text-align: center;
-    font-size: 16px;
+.chartsWrapper .group{
+    margin-bottom: 20px;
     display: inline-block;
     vertical-align: top;
     position: relative;
-    margin: 10px;
+    padding: 20px;
+    background-color: #efefef;
+    border-radius: 20px;
+    margin: 0 10px 20px;
+}
+
+.chartsWrapper .group_name{
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.chartsWrapper .module .question{
+    display: block;
+    width: 100%;
+    margin: 0 auto 20px;
+    text-align: center;
+    font-size: 16px;
     padding: 20px;
     border: 1px dashed #0094ff;
     border-radius: 20px;
+}
+.chartsWrapper .module .question .question_text{
+    margin-bottom: 20px;
 }

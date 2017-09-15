@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,15 +13,16 @@ namespace TestingModule.Controllers
 {
     public class QuizController : Controller
     {
-        private testingDbEntities _context=new testingDbEntities();
-
-
-        // GET: Quiz
-
+        private testingDbEntities _context = new testingDbEntities();
+        
         [Route("quiz/{moduleId}")]
         public async Task<ActionResult> Index(int moduleId)
         {
             QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);
+            if (qvm == null)
+                return RedirectToAction("Index", "Student");
+            if (qvm.Question == null)
+                return View();
             return View(qvm);
         }
 
@@ -32,11 +34,11 @@ namespace TestingModule.Controllers
         //}
 
         // GET: Statistic
-        [Route("quiz/modulestatistics/{moduleId}")]
-        public async Task<ActionResult> ModuleStatistics(int moduleId)
+
+        [Route("quiz/modulestatistics/")]
+        public async Task<ActionResult> ModuleStatistics()
         {
-            IEnumerable<Question> question = await new QuizManager().GetQuestionsList(moduleId);
-            return View(question);
+            return View(await new QuizManager().GetRealTimeStatisticsModel());
         }
 
         [Route("quiz/totalstatistics/")]

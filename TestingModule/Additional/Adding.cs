@@ -21,16 +21,14 @@ namespace TestingModule.Additional
         }
         public void AddNewLecture(string name, int disciplineId)
         {
-            var last = _db.Lectures.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var lecturesTable = _db.Set<Lecture>();
-            lecturesTable.Add(new Lecture() { Id = last, DisciplineId = disciplineId, Name = name });
+            lecturesTable.Add(new Lecture() { DisciplineId = disciplineId, Name = name });
             _db.SaveChanges();
         }
-        public void AddNewModule(string name, int lectureId, int disciplineId)
+        public void AddNewModule(string name, int lectureId, int disciplineId, int minutes)
         {
-            var last = _db.Modules.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var lecturesTable = _db.Set<Module>();
-            lecturesTable.Add(new Module() { Id = last, DisciplineId = disciplineId, LectureId = lectureId, Name = name });
+            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes});
             _db.SaveChanges();
         }
         public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
@@ -52,16 +50,14 @@ namespace TestingModule.Additional
         }
         public void AddNewSpeciality(string name)
         {
-            var last = _db.Specialities.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var specialityTable = _db.Set<Speciality>();
-            specialityTable.Add(new Speciality() { Id = last, Name = name });
+            specialityTable.Add(new Speciality() { Name = name });
             _db.SaveChanges();
         }
         public void AddNewGroup(string name, int specialityId)
         {
-            var last = _db.Groups.OrderByDescending(t => t.Id).Select(t => t.Id).FirstOrDefault() + 1;
             var groupsTable = _db.Set<Group>();
-            groupsTable.Add(new Group() { Id = last, SpecialityId = specialityId, Name = name });
+            groupsTable.Add(new Group() { SpecialityId = specialityId, Name = name });
             _db.SaveChanges();
         }
         public void AddNewStudent(string name, string surname, int groupId, int specialityId)
