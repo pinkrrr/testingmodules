@@ -28,7 +28,7 @@ namespace TestingModule.Additional
         public void AddNewModule(string name, int lectureId, int disciplineId, int minutes)
         {
             var lecturesTable = _db.Set<Module>();
-            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes});
+            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes });
             _db.SaveChanges();
         }
         public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
@@ -41,11 +41,17 @@ namespace TestingModule.Additional
             var questionsTable = _db.Set<Question>();
             questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name });
             _db.SaveChanges();
+            var questionId = _db.Questions
+                .FirstOrDefault(t => t.DisciplineId == disciplineId && t.LectureId == lectureId &&
+                                    t.ModuleId == moduleId && t.Text == name).Id;
+            var answersTable = _db.Set<Answer>();
+            answersTable.Add(new Answer() { QuestionId = questionId, Text = "Не знаю відповіді", IsCorrect = false });
+            _db.SaveChanges();
         }
         public void AddNewAnswer(string name, int questionId)
         {
-            var questionsTable = _db.Set<Answer>();
-            questionsTable.Add(new Answer() { QuestionId = questionId, Text = name });
+            var answersTable = _db.Set<Answer>();
+            answersTable.Add(new Answer() { QuestionId = questionId, Text = name });
             _db.SaveChanges();
         }
         public void AddNewSpeciality(string name)
