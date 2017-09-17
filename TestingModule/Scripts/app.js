@@ -399,30 +399,32 @@
                 questionList.push('<div class="question" data-question-id="' + question.Id + '"><span class="question_title">' + question.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
             });
 
+            $('<div>', {
+                class: 'groups'
+            }).appendTo('.body-content__statistics');
+
             statisticsModel.Groups.forEach(function (group) {
+
+                console.log(questionList);
 
                 $('<div>', {
                     class: 'group',
                     id: 'group'+group.Id,
-                    html: $questionList.html(questionList)
-                }).appendTo('.body-content__statistics');
+                    html: questionList
+                }).appendTo('.groups');
 
                 $('<div>', {
                     class: 'group_name',
                     html: group.Name
                 }).prependTo('.body-content__statistics #group' + group.Id);
 
-                $('<a>', {
-                    href: '/admin/stopmodule?moduleHistoryId=' + statisticsModel.ModuleHistory.Id,
-                    class: 'stopModule',
-                    html: 'Зупинити модуль',
-                }).appendTo('.body-content__statistics #group' + group.Id);
-
             })
 
-            //console.log(statisticsModel);
-
-            //<a class="stopModule" href="/admin/stopmodule?moduleHistoryId=19" id="stopModuleButton">Зупинити модуль</a>
+            $('<a>', {
+                href: '/admin/stopmodule?moduleHistoryId=' + statisticsModel.ModuleHistory.Id,
+                class: 'stopModule',
+                html: 'Зупинити модуль',
+            }).appendTo('.body-content__statistics');
 
         }
 
