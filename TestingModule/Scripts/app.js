@@ -327,26 +327,16 @@
         }
 
         function setQuestionData(model) {
-            
-
             if (model != null) {
-
-
                 $question.attr('data-questionid', model.Question.Id);
                 $question.html(model.Question.Text);
                 $answerList.html('');
                 model.Answers.forEach(function (item) {
                     $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
                 })
-
-
-
             } else {
                 quizFinished();
             }
-
-
-
         }
 
         function showNextQuestion() {
@@ -379,7 +369,12 @@
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
+        function quizTimerForStudent() {
+            console.log(_model);
+        }
 
+
+        quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
         initNextQuestion();
@@ -585,4 +580,3 @@ function historyStatisticsPage(model) {
     }
 
 }
-
