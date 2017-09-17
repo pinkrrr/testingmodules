@@ -401,6 +401,12 @@ namespace TestingModule.Controllers
         {
             try
             {
+                var name = model.Answer.TrimEnd().TrimStart();
+                if (name == "Не знаю відповіді" || name == "Не знаю")
+                {
+                    TempData["Fail"] = "'Не знаю відповіді' - це системна відповідь, яка додається автоматично.";
+                    return RedirectToAction("Questions");
+                }
                 new Adding().AddNewAnswer(model.Answer.TrimEnd().TrimStart(), model.QuestionId);
                 TempData["Success"] = "Відповідь - \"" + model.Answer.TrimEnd().TrimStart() + "\" була успішно додана!";
             }
