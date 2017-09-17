@@ -17,5 +17,7 @@ namespace TestingModule.Models
         public int Id { get; set; }
         public int LectureHistoryId { get; set; }
         public int ModuleId { get; set; }
+        public Nullable<System.DateTime> StartTime { get; set; }
+        public bool IsPassed { get; set; }
     }
 }

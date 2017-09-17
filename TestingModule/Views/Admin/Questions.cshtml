@@ -74,6 +74,10 @@ else
                             {
                                 break;
                             }
+                            if (que.Answer == "Не знаю відповіді")
+                            {
+                                continue;
+                            }
 
                             <tr class="table-row">
                                 <td class="table-item table-item_name">
@@ -87,7 +91,7 @@ else
                                 {
                                     <td class="table-item table-item_correct" bgcolor="#2ECC71" title="Правильна відповідь!">
                                         <label>
-                                            @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", @checked = "checked"})
+                                            @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", @checked = "checked" })
                                         </label>
                                     </td>
                                 }
@@ -95,7 +99,7 @@ else
                                 {
                                     <td class="table-item table-item_correct" bgcolor="#C0392B" title="Неправильна відповідь!">
                                         <label>
-                                            @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput" , required="required"})
+                                            @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", required = "required" })
                                         </label>
                                     </td>
                                 }

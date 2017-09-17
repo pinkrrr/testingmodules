@@ -20,5 +20,6 @@ namespace TestingModule.ViewModels
         public IEnumerable<LecturesHistory> LecturesHistories { get; set; }
         public IList<ModuleHistory> ModuleHistories { get; set; }
         public IList<StudentDiscipline> StudentDisciplines { get; set; }
+        public Lector Lector { get; set; }
     }
 }

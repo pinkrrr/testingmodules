@@ -100,6 +100,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LectureHistoryId" Type="int" Nullable="false" />
           <Property Name="ModuleId" Type="int" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" />
+          <Property Name="IsPassed" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Modules">
           <Key>
@@ -358,6 +360,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Precision="3" />
+          <Property Name="IsPassed" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Respons">
           <Key>
@@ -537,6 +541,8 @@
           <EntitySetMapping Name="ModuleHistories">
             <EntityTypeMapping TypeName="testingDbModel.ModuleHistory">
               <MappingFragment StoreEntitySet="ModuleHistory">
+                <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
                 <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

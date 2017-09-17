@@ -20,14 +20,17 @@ namespace TestingModule.Controllers
     [CustomAuthorize(RoleName.Administrator, RoleName.Lecturer)]
     public class adminController : Controller
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var checkIfLector = new AdminPageHelper().LecturesIndexPage(User.Identity as System.Security.Claims.ClaimsIdentity);
+            var checkIfLector = await new AdminPageHelper().LecturesIndexPage();
             if (checkIfLector != null)
             {
-                if (checkIfLector.ModuleHistories.Any())
+                if (checkIfLector.ModuleHistories.Any(mh => mh.StartTime != null && mh.IsPassed == false))
                 {
-                    return RedirectToAction("modulestatistics", "quiz");
+                    var moduleHistoryId = checkIfLector.ModuleHistories
+                        .Where(mh => mh.StartTime != null && mh.IsPassed == false).Select(mh => mh.Id)
+                        .SingleOrDefault();
+                    return RedirectToAction("modulestatistics", "quiz", new { moduleHistoryId });
                 }
                 return View(checkIfLector);
             }
@@ -35,20 +38,34 @@ namespace TestingModule.Controllers
             return View();
         }
         //LectureHistory
+        [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StartLecture(ReasignViewModel model)
         {
             if (model.Disciplines != null && model.Lectures != null && model.Groups != null)
             {
-                await new LectureHistoryHelper().StartLecture(model);
+                int lectureHistoryId = await new LectureHistoryHelper().StartLecture(model);
+                return RedirectToAction("activelecture", "admin", new { lectureHistoryId });
             }
-            else
-            {
-                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
-                return RedirectToAction("Index");
-            }
-
+            TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             return RedirectToAction("Index");
         }
+
+        [CustomAuthorize(RoleName.Lecturer)]
+        [Route("activelecture/{lectureHistoryId}")]
+        public async Task<ActionResult> ActiveLecture(int lectureHistoryId)
+        {
+            var getActiveLecture = await new LectureHistoryHelper().GetActiveLecture(lectureHistoryId);
+            if (getActiveLecture.ModuleHistories.Any(mh => mh.StartTime != null && mh.IsPassed == false))
+            {
+                var moduleHistoryId = getActiveLecture.ModuleHistories
+                    .Where(mh => mh.StartTime != null && mh.IsPassed == false).Select(mh => mh.Id)
+                    .SingleOrDefault();
+                return RedirectToAction("modulestatistics", "quiz", new { moduleHistoryId });
+            }
+            return View(await new LectureHistoryHelper().GetActiveLecture(lectureHistoryId));
+        }
+
+        [CustomAuthorize(RoleName.Lecturer)]
         public ActionResult StopLecture()
         {
             var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
@@ -66,19 +83,19 @@ namespace TestingModule.Controllers
             SelectList obgcity = new SelectList(lectures, "Id", "Name", 0);
             return Json(obgcity);
         }
-        public ActionResult StartModule(int moduleId)
+
+        [CustomAuthorize(RoleName.Lecturer)]
+        public async Task<ActionResult> StartModule(int moduleHistoryId)
         {
-            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            new LectureHistoryHelper().StartModule(moduleId, login);
-            return RedirectToAction("Index");
+            await new LectureHistoryHelper().StartModule(moduleHistoryId);
+            return RedirectToAction("ModuleStatistics", "Quiz", new { moduleHistoryId });
         }
-        public ActionResult StopModule(int moduleId)
+
+        [CustomAuthorize(RoleName.Lecturer)]
+        public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
-            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            new LectureHistoryHelper().StopModule(moduleId, login);
-            return RedirectToAction("Index");
+            var lectureHistoryId = await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
+            return RedirectToAction("activelecture", "admin", new { lectureHistoryId });
         }
 
         //Discipline
@@ -384,6 +401,12 @@ namespace TestingModule.Controllers
         {
             try
             {
+                var name = model.Answer.TrimEnd().TrimStart();
+                if (name == "Не знаю відповіді" || name == "Не знаю")
+                {
+                    TempData["Fail"] = "'Не знаю відповіді' - це системна відповідь, яка додається автоматично.";
+                    return RedirectToAction("Questions");
+                }
                 new Adding().AddNewAnswer(model.Answer.TrimEnd().TrimStart(), model.QuestionId);
                 TempData["Success"] = "Відповідь - \"" + model.Answer.TrimEnd().TrimStart() + "\" була успішно додана!";
             }

@@ -35,10 +35,10 @@ namespace TestingModule.Controllers
 
         // GET: Statistic
 
-        [Route("quiz/modulestatistics/")]
-        public async Task<ActionResult> ModuleStatistics()
+        [Route("quiz/modulestatistics/{moduleHistoryId}")]
+        public async Task<ActionResult> ModuleStatistics(int moduleHistoryId)
         {
-            return View(await new QuizManager().GetRealTimeStatisticsModel());
+            return View(await new QuizManager().GetRealTimeStatisticsModel(moduleHistoryId));
         }
 
         [Route("quiz/totalstatistics/")]

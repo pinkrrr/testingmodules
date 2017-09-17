@@ -169,20 +169,21 @@ namespace TestingModule.Additional
             return responseStatistics;
         }
 
-        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsModel()
+        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsModel(int moduleHistoryId)
         {
-            Lector lector = await new AccountCredentials().GetLector();
-            LecturesHistory lecturesHistory = await _context.LecturesHistories
-                .SingleOrDefaultAsync(lh => lh.LectorId == lector.Id && lh.EndTime == null);
+            ModuleHistory moduleHistory =
+                await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
+            LecturesHistory lecturesHistory =
+                await _context.LecturesHistories
+                .SingleOrDefaultAsync(lh => lh.Id == moduleHistory.LectureHistoryId);
             Module module =
                 await (from mh in _context.ModuleHistories
-                       where mh.LectureHistoryId == lecturesHistory.Id
+                       where mh.LectureHistoryId == lecturesHistory.Id && mh.StartTime != null && mh.IsPassed == false
                        join m in _context.Modules on mh.ModuleId equals m.Id
                        select m).SingleOrDefaultAsync();
             IEnumerable<Question> questions =
-                await (from mh in _context.ModuleHistories
-                       where mh.LectureHistoryId == lecturesHistory.Id
-                       join q in _context.Questions on mh.ModuleId equals q.ModuleId
+                await (from q in _context.Questions
+                       where q.ModuleId == module.Id
                        select q).ToListAsync();
             IEnumerable<Group> groups =
                 await (from lhg in _context.LectureHistoryGroups
@@ -195,7 +196,8 @@ namespace TestingModule.Additional
                 Groups = groups,
                 LecturesHistory = lecturesHistory,
                 Module = module,
-                Questions = questions
+                Questions = questions,
+                ModuleHistory = moduleHistory
             };
             return realTimeStatistics;
         }

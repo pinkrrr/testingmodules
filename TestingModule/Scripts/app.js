@@ -395,11 +395,34 @@
             var $questionList = $('.body-content__statistics .questions');
             var questionList = [];
 
-            statisticsModel.Questions.forEach(function (item, i) {
-                questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
+            statisticsModel.Questions.forEach(function (question, i) {
+                questionList.push('<div class="question" data-question-id="' + question.Id + '"><span class="question_title">' + question.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
             });
 
-            $questionList.html(questionList);
+            statisticsModel.Groups.forEach(function (group) {
+
+                $('<div>', {
+                    class: 'group',
+                    id: 'group'+group.Id,
+                    html: $questionList.html(questionList)
+                }).appendTo('.body-content__statistics');
+
+                $('<div>', {
+                    class: 'group_name',
+                    html: group.Name
+                }).prependTo('.body-content__statistics #group' + group.Id);
+
+                $('<a>', {
+                    href: '/admin/stopmodule?moduleHistoryId=' + statisticsModel.ModuleHistory.Id,
+                    class: 'stopModule',
+                    html: 'Зупинити модуль',
+                }).appendTo('.body-content__statistics #group' + group.Id);
+
+            })
+
+            //console.log(statisticsModel);
+
+            //<a class="stopModule" href="/admin/stopmodule?moduleHistoryId=19" id="stopModuleButton">Зупинити модуль</a>
 
         }
 
@@ -421,7 +444,7 @@
 
     }
 
-    function quiestionsEditChecked() {
+    function questionsEditChecked() {
         var $checkButton = $('.table_questions .table-item_correct label');
 
         $checkButton.on('click', function () {
@@ -439,7 +462,7 @@
     selectAllorNobody();
     statistics();
     startLectureValidation();
-    //quiestionsEditChecked();
+    //questionsEditChecked();
 
     if ($('.questionBlock').length > 0) {
         quiz();
