@@ -48,7 +48,7 @@ else
     {
         <div class="questionBlock">
             <table class="table table_questions" border="1">
-                @using (Html.BeginForm("EditAnswer", "admin", FormMethod.Post))
+                @using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
                 {
                     <tr class="table-row">
                         <th class="table-item table-item_name">
@@ -118,7 +118,7 @@ else
                         <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                     }
                 }
-                @using (Html.BeginForm("NewAnswer", "admin", FormMethod.Post, new { @class = "addNewItem-form" }))
+                @using (Html.BeginForm("NewAnswer", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
                 {
                     <form>
                         @{
@@ -169,7 +169,7 @@ else
     <div class="popup-body">
         <div class="popup-content">
             <div class="popup-title">Створити нове питання</div>
-            @using (Html.BeginForm("NewQuestion", "admin", FormMethod.Post, new { @class = "addNewItem-form" }))
+            @using (Html.BeginForm("NewQuestion", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
             {
                 <form>
                     @{

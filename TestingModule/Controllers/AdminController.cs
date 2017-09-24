@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -18,68 +19,89 @@ using Module = TestingModule.Models.Module;
 namespace TestingModule.Controllers
 {
     [CustomAuthorize(RoleName.Administrator, RoleName.Lecturer)]
-    public class adminController : Controller
+    public class AdminController : Controller
     {
+        private testingDbEntities _db = new testingDbEntities();
+
         public async Task<ActionResult> Index()
         {
-            var checkIfLector = await new AdminPageHelper().LecturesIndexPage();
-            if (checkIfLector != null)
-            {
-                if (checkIfLector.ModuleHistories.Any(mh => mh.StartTime != null && mh.IsPassed == false))
-                {
-                    var moduleHistoryId = checkIfLector.ModuleHistories
-                        .Where(mh => mh.StartTime != null && mh.IsPassed == false).Select(mh => mh.Id)
-                        .SingleOrDefault();
-                    return RedirectToAction("modulestatistics", "quiz", new { moduleHistoryId });
-                }
-                return View(checkIfLector);
-            }
             //If admin
-            return View();
+            if (new AccountCredentials().GetRole() != RoleName.Lecturer) return View();
+            //If lector
+            Lector lector = await new AccountCredentials().GetLector();
+            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id&&lh.EndTime==null))
+            {
+                if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id))
+                {
+                    return RedirectToAction("modulestatistics", "quiz");
+                }
+                return RedirectToAction("activelecture", "admin");
+            }
+            var checkIfLector = await new AdminPageHelper().LecturesIndexPage(lector);
+            return View(checkIfLector);
+
         }
+
+
         //LectureHistory
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StartLecture(ReasignViewModel model)
         {
-            if (model.Disciplines != null && model.Lectures != null && model.Groups != null)
+            if (model != null)
             {
-                int lectureHistoryId = await new LectureHistoryHelper().StartLecture(model);
-                return RedirectToAction("activelecture", "admin", new { lectureHistoryId });
+                await new LectureHistoryHelper().StartLecture(model);
+                return RedirectToAction("activelecture", "admin");
             }
             TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             return RedirectToAction("Index");
         }
 
         [CustomAuthorize(RoleName.Lecturer)]
-        [Route("activelecture/{lectureHistoryId}")]
-        public async Task<ActionResult> ActiveLecture(int lectureHistoryId)
+        [Route("activelecture/")]
+        public async Task<ActionResult> ActiveLecture()
         {
-            var getActiveLecture = await new LectureHistoryHelper().GetActiveLecture(lectureHistoryId);
-            if (getActiveLecture.ModuleHistories.Any(mh => mh.StartTime != null && mh.IsPassed == false))
+            var lector = await new AccountCredentials().GetLector();
+            if (await _db.LecturesHistories.AnyAsync(lh => lh.EndTime == null
+                                                           && lh.IsFrozen == false
+                                                           && lh.LectorId == lector.Id))
             {
-                var moduleHistoryId = getActiveLecture.ModuleHistories
-                    .Where(mh => mh.StartTime != null && mh.IsPassed == false).Select(mh => mh.Id)
-                    .SingleOrDefault();
-                return RedirectToAction("modulestatistics", "quiz", new { moduleHistoryId });
+                if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null
+                                                             && mh.IsPassed == false
+                                                             && mh.LectorId == lector.Id))
+                {
+                    return RedirectToAction("modulestatistics", "quiz");
+                }
+                return View(await new LectureHistoryHelper().GetActiveLecture(lector));
             }
-            return View(await new LectureHistoryHelper().GetActiveLecture(lectureHistoryId));
+            return RedirectToAction("Index", "Admin");
+
         }
 
         [CustomAuthorize(RoleName.Lecturer)]
-        public ActionResult StopLecture()
+        public async Task<ActionResult> StopLecture(int lectureHistoryId)
         {
-            var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            new LectureHistoryHelper().StopLecture(login);
-            return RedirectToAction("Index");
+            await new LectureHistoryHelper().StopLecture(lectureHistoryId);
+            return RedirectToAction("index", "admin");
+        }
+
+        public async Task<ActionResult> FreezeLecture(int lectureHistoryId)
+        {
+            await new LectureHistoryHelper().SetLectureAsFrozen(lectureHistoryId);
+            return RedirectToAction("index", "admin");
+        }
+
+        public async Task<ActionResult> UnfreezeLecture(int lectureHistoryId)
+        {
+            await new LectureHistoryHelper().UnfreezeLecture(lectureHistoryId);
+            return RedirectToAction("activelecture", "admin");
         }
 
         [HttpPost]
         //[Route ("/admin/getlecturesbydiscipline")]
         public ActionResult GetLecturesByDiscipline(int disciplineId)
         {
-            var db = new testingDbEntities();
-            var lectures = db.Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
+
+            var lectures = _db.Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
             SelectList obgcity = new SelectList(lectures, "Id", "Name", 0);
             return Json(obgcity);
         }
@@ -88,20 +110,19 @@ namespace TestingModule.Controllers
         public async Task<ActionResult> StartModule(int moduleHistoryId)
         {
             await new LectureHistoryHelper().StartModule(moduleHistoryId);
-            return RedirectToAction("ModuleStatistics", "Quiz", new { moduleHistoryId });
+            return RedirectToAction("ModuleStatistics", "Quiz");
         }
 
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
             var lectureHistoryId = await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
-            return RedirectToAction("activelecture", "admin", new { lectureHistoryId });
+            return RedirectToAction("activelecture", "Admin");
         }
 
         //Discipline
         public ActionResult Disciplines()
         {
-            var db = new testingDbEntities();
             var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
             var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
             var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
@@ -110,15 +131,15 @@ namespace TestingModule.Controllers
             var lectorsDisciplines = new List<int>();
 
             ViewBag.Message = "All disciplines";
-            IEnumerable<Lector> lectors = db.Lectors.ToList();
+            IEnumerable<Lector> lectors = _db.Lectors.ToList();
             List<DiscLecotorViewModel> viewModels = new List<DiscLecotorViewModel>();
             if (role == "Lecturer")
             {
-                lector = db.Accounts.FirstOrDefault(t => t.Login == login).Id;
-                lectorId = db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-                lectorsDisciplines = db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                lector = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
+                lectorId = _db.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
+                lectorsDisciplines = _db.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
                    .ToList();
-                viewModels = db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
+                viewModels = _db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
                 {
                     Id = d.Id,
                     Name = d.Name
@@ -127,7 +148,7 @@ namespace TestingModule.Controllers
             }
             else
             {
-                viewModels = db.Disciplines.Select(d => new DiscLecotorViewModel
+                viewModels = _db.Disciplines.Select(d => new DiscLecotorViewModel
                 {
                     Id = d.Id,
                     Name = d.Name
@@ -136,7 +157,7 @@ namespace TestingModule.Controllers
                 foreach (var model in viewModels)
                 {
                     model.Lectors = lectors;
-                    model.LectorId = db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
+                    model.LectorId = _db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
                         .FirstOrDefault();
                 }
             }
@@ -258,10 +279,9 @@ namespace TestingModule.Controllers
         //Module
         public ActionResult Modules(int lectureId)
         {
-            var db = new testingDbEntities();
-            var discId = db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
-            IList<Module> mod = db.Modules.Where(t => t.LectureId == lectureId).ToList();
-            IList<Lecture> lect = db.Lectures.Where(t => t.DisciplineId == discId).ToList();
+            var discId = _db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
+            IList<Module> mod = _db.Modules.Where(t => t.LectureId == lectureId).ToList();
+            IList<Lecture> lect = _db.Lectures.Where(t => t.DisciplineId == discId).ToList();
             ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Modules = mod };
             return View(test);
         }
@@ -323,10 +343,8 @@ namespace TestingModule.Controllers
         //Question
         public ActionResult Questions(int? moduleId)
         {
-            testingDbEntities db = new testingDbEntities();
-
-            List<QueAns> viewModels = (from q in db.Questions
-                                       from a in db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
+            List<QueAns> viewModels = (from q in _db.Questions
+                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
                                        select new QueAns()
                                        {
                                            DisciplineId = q.DisciplineId,
@@ -338,8 +356,8 @@ namespace TestingModule.Controllers
                                            Answer = a.Text,
                                            IsCorrect = a.IsCorrect
                                        }).ToList();
-            var lectId = db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
-            IEnumerable<Module> mod = db.Modules.Where(t => t.LectureId == lectId).ToList();
+            var lectId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
+            IEnumerable<Module> mod = _db.Modules.Where(t => t.LectureId == lectId).ToList();
             foreach (var model in viewModels)
             {
                 model.Modules = mod;
@@ -537,9 +555,8 @@ namespace TestingModule.Controllers
         //Groups
         public ActionResult Groups(int specialityId)
         {
-            var db = new testingDbEntities();
-            IList<Group> grp = db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
-            IEnumerable<Speciality> spc = db.Specialities.ToList();
+            IList<Group> grp = _db.Groups.Where(t => t.SpecialityId == specialityId).ToList();
+            IEnumerable<Speciality> spc = _db.Specialities.ToList();
             ReasignViewModel test = new ReasignViewModel() { Groups = grp, Specialities = spc };
             return View(test);
         }
@@ -593,18 +610,17 @@ namespace TestingModule.Controllers
         }
 
         //Students
-        public ActionResult Students(int GroupId)
+        public ActionResult Students(int groupId)
         {
-            var db = new testingDbEntities();
-            var specId = db.Groups.FirstOrDefault(t => t.Id == GroupId).SpecialityId;
+            var specId = _db.Groups.FirstOrDefault(t => t.Id == groupId).SpecialityId;
             List<int> accList = new List<int>();
-            IEnumerable<Student> std = db.Students.Where(t => t.GroupId == GroupId).ToList();
+            IEnumerable<Student> std = _db.Students.Where(t => t.GroupId == groupId).ToList();
             foreach (var student in std)
             {
                 accList.Add(student.AccountId);
             }
-            IEnumerable<Account> acc = db.Accounts.Where(t => accList.Contains(t.Id)).ToList();
-            IList<Group> grp = db.Groups.Where(t => t.SpecialityId == specId).ToList();
+            IEnumerable<Account> acc = _db.Accounts.Where(t => accList.Contains(t.Id)).ToList();
+            IList<Group> grp = _db.Groups.Where(t => t.SpecialityId == specId).ToList();
             ReasignViewModel test = new ReasignViewModel() { Groups = grp, Accounts = acc, Students = std };
             return View(test);
         }
@@ -628,10 +644,9 @@ namespace TestingModule.Controllers
 
         public ActionResult DownloadStudentExcel(int groupId)
         {
-            var db = new testingDbEntities();
-            var group = db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
-            var students = db.Students.Where(t => t.GroupId == groupId).OrderBy(t => t.Surname).ToList();
-            var account = db.Accounts.ToList();
+            var group = _db.Groups.FirstOrDefault(t => t.Id == groupId).Name;
+            var students = _db.Students.Where(t => t.GroupId == groupId).OrderBy(t => t.Surname).ToList();
+            var account = _db.Accounts.ToList();
 
             using (ExcelPackage pck = new ExcelPackage())
             {
@@ -838,10 +853,8 @@ namespace TestingModule.Controllers
 
         public ActionResult Lectors()
         {
-            testingDbEntities db = new testingDbEntities();
-
-            var viewModels = (from l in db.Lectors
-                              join a in db.Accounts on l.AccountId equals a.Id
+            var viewModels = (from l in _db.Lectors
+                              join a in _db.Accounts on l.AccountId equals a.Id
                               select new UserViewModel()
                               {
                                   Id = l.Id,
@@ -916,12 +929,11 @@ namespace TestingModule.Controllers
         //DisciplineStudents
         public ActionResult DisciplineStudents(int disciplineId)
         {
-            var db = new testingDbEntities();
-            IList<Group> grp = db.Groups.ToList();
-            IEnumerable<Speciality> spc = db.Specialities.ToList();
-            IEnumerable<Student> std = db.Students.OrderBy(t => t.GroupId).ThenBy(n => n.Surname).ToList();
-            IList<StudentDiscipline> studDisc = db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId).ToList();
-            IList<Discipline> disc = db.Disciplines.Where(t => t.Id == disciplineId).ToList();
+            IList<Group> grp = _db.Groups.ToList();
+            IEnumerable<Speciality> spc = _db.Specialities.ToList();
+            IEnumerable<Student> std = _db.Students.OrderBy(t => t.GroupId).ThenBy(n => n.Surname).ToList();
+            IList<StudentDiscipline> studDisc = _db.StudentDisciplines.Where(t => t.DisciplineId == disciplineId).ToList();
+            IList<Discipline> disc = _db.Disciplines.Where(t => t.Id == disciplineId).ToList();
             foreach (var stdc in std)
             {
                 if (studDisc.All(t => t.StudentId != stdc.Id))

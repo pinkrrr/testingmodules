@@ -169,18 +169,14 @@ namespace TestingModule.Additional
             return responseStatistics;
         }
 
-        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsModel(int moduleHistoryId)
+        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsModel(Lector lector)
         {
             ModuleHistory moduleHistory =
-                await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
+                await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id);
             LecturesHistory lecturesHistory =
                 await _context.LecturesHistories
                 .SingleOrDefaultAsync(lh => lh.Id == moduleHistory.LectureHistoryId);
-            Module module =
-                await (from mh in _context.ModuleHistories
-                       where mh.LectureHistoryId == lecturesHistory.Id && mh.StartTime != null && mh.IsPassed == false
-                       join m in _context.Modules on mh.ModuleId equals m.Id
-                       select m).SingleOrDefaultAsync();
+            Module module = await _context.Modules.SingleOrDefaultAsync(m => m.Id == moduleHistory.ModuleId);
             IEnumerable<Question> questions =
                 await (from q in _context.Questions
                        where q.ModuleId == module.Id
@@ -193,6 +189,7 @@ namespace TestingModule.Additional
 
             RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
             {
+                Lector = lector,
                 Groups = groups,
                 LecturesHistory = lecturesHistory,
                 Module = module,

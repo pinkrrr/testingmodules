@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TestingModule.Models;
 using TestingModule.ViewModels;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web.Routing;
@@ -75,13 +77,13 @@ namespace TestingModule.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult LoginAttempt(Account account)
+        public async Task<ActionResult> LoginAttempt(Account account)
         {
-            if (AccountValid(account.Login, account.Password))
+            if (await AccountValid(account.Login, account.Password))
             {
-                var roles = _context.Roles.ToList();
+                var roles = await _context.Roles.ToListAsync();
                 ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
-                account = _context.Accounts.SingleOrDefault(a => a.Login == account.Login && a.Password == account.Password);
+                account = await _context.Accounts.SingleOrDefaultAsync(a => a.Login == account.Login && a.Password == account.Password);
                 identity.AddClaims(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, account.Login),
@@ -89,24 +91,24 @@ namespace TestingModule.Controllers
                     new Claim(ClaimTypes.Role,roles.Where(r=>r.Id==account.RoleId).Select(r=>r.Name).SingleOrDefault()),
                     new Claim("Id",account.Id.ToString())
                 });
-                if (account.RoleId == _context.Roles.Where(r => r.Name == RoleName.Lecturer).Select(r => r.Id).SingleOrDefault())
+                if (account.RoleId == RoleName.LecturerId)
                 {
-                    Lector lector = _context.Lectors.SingleOrDefault(s => s.AccountId == account.Id);
+                    Lector lector = await _context.Lectors.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                     identity.AddClaims(new[]
                     {
                         new Claim(ClaimTypes.Name,lector.Name),
                         new Claim(ClaimTypes.Surname,lector.Surname),
                     });
                 }
-                if (account.RoleId == _context.Roles.Where(r => r.Name == RoleName.Student).Select(r => r.Id).SingleOrDefault())
+                if (account.RoleId == RoleName.StudentId)
                 {
-                    Student student = _context.Students.SingleOrDefault(s => s.AccountId == account.Id);
+                    Student student =await _context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                     identity.AddClaims(new[]
                     {
                         new Claim(ClaimTypes.Name, student.Name),
                         new Claim(ClaimTypes.Surname, student.Surname),
-                        new Claim("Speciality", _context.Specialities.Where(sp => sp.Id == student.SpecialityId).Select(sp => sp.Name).SingleOrDefault()),
-                        new Claim("Group", _context.Groups.Where(g => g.Id == student.GroupId).Select(g => g.Name).SingleOrDefault()),
+                        new Claim("Speciality", await _context.Specialities.Where(sp => sp.Id == student.SpecialityId).Select(sp => sp.Name).SingleOrDefaultAsync()),
+                        new Claim("Group", await _context.Groups.Where(g => g.Id == student.GroupId).Select(g => g.Name).SingleOrDefaultAsync()),
                     });
                 }
                 HttpContext.GetOwinContext().Authentication.SignIn(
@@ -118,10 +120,9 @@ namespace TestingModule.Controllers
             return RedirectToAction("Login");
         }
 
-        private bool AccountValid(string username, string password)
+        private async Task<bool> AccountValid(string username, string password)
         {
-            var accounts = _context.Accounts;
-            return accounts.Any(a => a.Login == username && a.Password == password);
+            return await _context.Accounts.AnyAsync(a => a.Login == username && a.Password == password);
         }
 
         public ActionResult RedirectToHome()

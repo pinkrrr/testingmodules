@@ -29,10 +29,10 @@ namespace TestingModule.Additional
 
         public async Task<Student> GetStudent()
         {
-            testingDbEntities _context = new testingDbEntities();
+            testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            return await _context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            return await context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
         }
 
         public async Task<Lector> GetLector()
