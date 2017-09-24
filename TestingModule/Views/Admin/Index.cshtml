@@ -30,7 +30,7 @@
                 <div class="lectures_dates">
                     @foreach (var lectureHistory in Model.LecturesHistories.Where(h => h.LectureId == lecture.Id))
                     {
-                        <a href="@Url.Action("ActiveLecture", "admin", new { lectureHistoryId = lectureHistory.Id})" target="_blank" class="lecture_date">@lectureHistory.StartTime.ToLocalTime()</a>
+                        <a href="@Url.Action("unfreezelecture", "Admin", new { lectureHistoryId = lectureHistory.Id})" class="lecture_date">@lectureHistory.StartTime.ToLocalTime()</a>
                     }
                 </div>
             </div>
@@ -42,7 +42,7 @@
         <div class="popup-body">
             <div class="popup-content">
                 <div class="popup-title">Розпочату лекцію</div>
-                @using (Html.BeginForm("StartLecture", "admin", FormMethod.Post))
+                @using (Html.BeginForm("StartLecture", "Admin", FormMethod.Post))
                 {
                     <form>
 

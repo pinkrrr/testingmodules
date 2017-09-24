@@ -12,7 +12,7 @@
     <div class="main-container">
         <div class="navbar">
             @*@Html.ActionLink("Masters of masters", "Index", "admin", new { area = "" }, new { @class = "navbar-logo" })*@
-            <a href="@Url.Action("Index", "admin")" class="navbar-logo"><i class='fa fa-globe' aria-hidden='true'></i>Домашня сторінка</a>
+            <a href="@Url.Action("Index", "Admin")" class="navbar-logo"><i class='fa fa-globe' aria-hidden='true'></i>Домашня сторінка</a>
 
             <div class="navbar-login">
                 @Html.Partial("_LoginPartial")
@@ -26,8 +26,8 @@
                     {
                         if (c.Value.ToString() != "Student")
                         {
-                            <!--<a href="@Url.Action("Index", "admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
-                            <a href="@Url.Action("Disciplines", "admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
+                            <!--<a href="@Url.Action("Index", "Admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
+                            <a href="@Url.Action("Disciplines", "Admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
                         }
                         if (c.Value.ToString() == "Lecturer")
                         {
@@ -35,8 +35,8 @@
                         }
                         if (c.Value.ToString() != "Lecturer")
                         {
-                            <a href="@Url.Action("Specialities", "admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
-                            <a href="@Url.Action("Lectors", "admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
+                            <a href="@Url.Action("Specialities", "Admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
+                            <a href="@Url.Action("Lectors", "Admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
                         }
                     }
                 }

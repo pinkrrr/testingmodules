@@ -90,8 +90,8 @@
           <Property Name="DisciplineId" Type="int" Nullable="false" />
           <Property Name="StartTime" Type="datetime" Nullable="false" />
           <Property Name="EndTime" Type="datetime" />
-          <Property Name="ModulesPassed" Type="int" />
-          <Property Name="LectorId" Type="int" />
+          <Property Name="IsFrozen" Type="bit" Nullable="false" />
+          <Property Name="LectorId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ModuleHistory">
           <Key>
@@ -102,6 +102,7 @@
           <Property Name="ModuleId" Type="int" Nullable="false" />
           <Property Name="StartTime" Type="datetime" />
           <Property Name="IsPassed" Type="bit" Nullable="false" />
+          <Property Name="LectorId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Modules">
           <Key>
@@ -253,8 +254,8 @@
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
           <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndTime" Type="DateTime" Precision="3" />
-          <Property Name="ModulesPassed" Type="Int32" />
-          <Property Name="LectorId" Type="Int32" />
+          <Property Name="LectorId" Type="Int32" Nullable="false" />
+          <Property Name="IsFrozen" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Module">
           <Key>
@@ -362,6 +363,7 @@
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
           <Property Name="StartTime" Type="DateTime" Precision="3" />
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
+          <Property Name="LectorId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Respons">
           <Key>
@@ -420,8 +422,8 @@
           <EntitySetMapping Name="LecturesHistories">
             <EntityTypeMapping TypeName="testingDbModel.LecturesHistory">
               <MappingFragment StoreEntitySet="LecturesHistory">
+                <ScalarProperty Name="IsFrozen" ColumnName="IsFrozen" />
                 <ScalarProperty Name="LectorId" ColumnName="LectorId" />
-                <ScalarProperty Name="ModulesPassed" ColumnName="ModulesPassed" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
@@ -541,6 +543,7 @@
           <EntitySetMapping Name="ModuleHistories">
             <EntityTypeMapping TypeName="testingDbModel.ModuleHistory">
               <MappingFragment StoreEntitySet="ModuleHistory">
+                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
                 <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />

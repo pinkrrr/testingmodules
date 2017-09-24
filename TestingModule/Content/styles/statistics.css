@@ -156,3 +156,22 @@
 .chartsWrapper .module .question .question_text{
     margin-bottom: 20px;
 }
+
+.body-content__statistics .group{
+    padding: 20px 0;
+    border-bottom: 1px solid #000000;
+}
+
+.body-content__statistics .group:first-child{
+    border-top: 1px solid #000000;
+}
+
+.body-content__statistics .group:last-child{
+    margin-bottom: 20px;
+}
+
+.body-content__statistics .group .group_name{
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}

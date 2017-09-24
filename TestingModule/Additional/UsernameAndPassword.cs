@@ -6,7 +6,7 @@ namespace TestingModule.Additional
 {
     public class UsernameAndPassword
     {
-        Dictionary<string, string> dictionaryChar = new Dictionary<string, string>()
+        Dictionary<string, string> _dictionaryChar = new Dictionary<string, string>()
             {
                 {"'",""},
                 {"а","a"},
@@ -107,7 +107,7 @@ namespace TestingModule.Additional
                     }
                     else
                     {
-                        if (dictionaryChar.TryGetValue(ch.ToString(), out ss))
+                        if (_dictionaryChar.TryGetValue(ch.ToString(), out ss))
                         {
                             result += ss;
                         }

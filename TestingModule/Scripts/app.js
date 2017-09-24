@@ -327,26 +327,16 @@
         }
 
         function setQuestionData(model) {
-            
-
             if (model != null) {
-
-
                 $question.attr('data-questionid', model.Question.Id);
                 $question.html(model.Question.Text);
                 $answerList.html('');
                 model.Answers.forEach(function (item) {
                     $answerList.append('<div class="answer" data-answerid="' + item.Id + '"><div class="answer_icon"><i class="fa fa-check-circle-o" aria-hidden="true"></i></div><div class="answer_text">' + item.Text + '</div></div>')
                 })
-
-
-
             } else {
                 quizFinished();
             }
-
-
-
         }
 
         function showNextQuestion() {
@@ -379,7 +369,12 @@
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
+        function quizTimerForStudent() {
+            console.log(_model);
+        }
 
+
+        quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
         initNextQuestion();
@@ -400,11 +395,36 @@
             var $questionList = $('.body-content__statistics .questions');
             var questionList = [];
 
-            statisticsModel.Questions.forEach(function (item, i) {
-                questionList.push('<div class="question" data-question-id="' + item.Id + '"><span class="question_title">' + item.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
+            statisticsModel.Questions.forEach(function (question, i) {
+                questionList.push('<div class="question" data-question-id="' + question.Id + '"><span class="question_title">' + question.Text + '</span><div class="question_progressbar"><div class="progress"></div></div></div>')
             });
 
-            $questionList.html(questionList);
+            $('<div>', {
+                class: 'groups'
+            }).appendTo('.body-content__statistics');
+
+            statisticsModel.Groups.forEach(function (group) {
+
+                console.log(questionList);
+
+                $('<div>', {
+                    class: 'group',
+                    id: 'group'+group.Id,
+                    html: questionList
+                }).appendTo('.groups');
+
+                $('<div>', {
+                    class: 'group_name',
+                    html: group.Name
+                }).prependTo('.body-content__statistics #group' + group.Id);
+
+            })
+
+            $('<a>', {
+                href: '/admin/stopmodule?moduleHistoryId=' + statisticsModel.ModuleHistory.Id,
+                class: 'stopModule',
+                html: 'Зупинити модуль',
+            }).appendTo('.body-content__statistics');
 
         }
 
@@ -426,7 +446,7 @@
 
     }
 
-    function quiestionsEditChecked() {
+    function questionsEditChecked() {
         var $checkButton = $('.table_questions .table-item_correct label');
 
         $checkButton.on('click', function () {
@@ -444,7 +464,7 @@
     selectAllorNobody();
     statistics();
     startLectureValidation();
-    //quiestionsEditChecked();
+    //questionsEditChecked();
 
     if ($('.questionBlock').length > 0) {
         quiz();
@@ -585,4 +605,3 @@ function historyStatisticsPage(model) {
     }
 
 }
-

@@ -14,7 +14,7 @@ namespace TestingModule.Controllers
     public class QuizController : Controller
     {
         private testingDbEntities _context = new testingDbEntities();
-        
+
         [Route("quiz/{moduleId}")]
         public async Task<ActionResult> Index(int moduleId)
         {
@@ -35,10 +35,19 @@ namespace TestingModule.Controllers
 
         // GET: Statistic
 
+        [CustomAuthorize(Roles = RoleName.Lecturer)]
         [Route("quiz/modulestatistics/")]
         public async Task<ActionResult> ModuleStatistics()
         {
-            return View(await new QuizManager().GetRealTimeStatisticsModel());
+            Lector lector = await new AccountCredentials().GetLector();
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.StartTime != null
+                                                         && mh.IsPassed == false
+                                                         && mh.LectorId == lector.Id))
+            {
+                return View(await new QuizManager().GetRealTimeStatisticsModel(lector));
+            }
+            return RedirectToAction("index", "admin");
+
         }
 
         [Route("quiz/totalstatistics/")]
