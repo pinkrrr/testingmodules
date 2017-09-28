@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using Microsoft.Owin;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
@@ -43,12 +44,18 @@ namespace TestingModule.Additional
                 if (questions.Count != 0)
                 {
                     var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+                    int lectureHistoryId = await GetLectureHistoryId(question.LectureId, student.GroupId);
+                    int moduleHistoryId = await _context.ModuleHistories
+                        .Where(mh => mh.LectureHistoryId == lectureHistoryId && mh.StartTime != null &&
+                                     mh.IsPassed == false).Select(mh => mh.Id).SingleOrDefaultAsync();
                     qnA = new QuizViewModel
                     {
                         QuestionsList = questions,
                         Question = question,
                         Student = student,
-                        Answers = await GetAnswersList(question.Id)
+                        Answers = await GetAnswersList(question.Id),
+                        LectureHistoryId = lectureHistoryId,
+                        ModuleHistoryId = moduleHistoryId
                     };
                 }
                 return qnA;
@@ -65,13 +72,13 @@ namespace TestingModule.Additional
             return quizVM;
         }
 
-        public async Task<int> GetLectureHistoryId(QuizViewModel qVM)
+        public async Task<int> GetLectureHistoryId(int lectureId, int studentGroupId)
         {
             var lect = await _context.LecturesHistories
                 .Join(_context.LectureHistoryGroups, lh => lh.Id, lhg => lhg.LectureHistoryId,
                     (lh, lhg) => new { LecturesHistory = lh, LectureHistoryGroup = lhg })
-                .Where(t => t.LecturesHistory.LectureId == qVM.Question.LectureId &&
-                            t.LecturesHistory.EndTime == null && t.LectureHistoryGroup.GroupId == qVM.Student.GroupId)
+                .Where(t => t.LecturesHistory.LectureId == lectureId &&
+                            t.LecturesHistory.EndTime == null && t.LectureHistoryGroup.GroupId == studentGroupId)
                 .Select(t => t.LecturesHistory.Id).FirstOrDefaultAsync();
             return lect;
         }
@@ -169,7 +176,7 @@ namespace TestingModule.Additional
             return responseStatistics;
         }
 
-        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsModel(Lector lector)
+        public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsViewModel(Lector lector)
         {
             ModuleHistory moduleHistory =
                 await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id);
@@ -196,6 +203,31 @@ namespace TestingModule.Additional
                 Questions = questions,
                 ModuleHistory = moduleHistory
             };
+            return realTimeStatistics;
+        }
+
+        public async Task<IEnumerable<RealTimeStatistics>> GetRealTimeStatistics(RealTimeStatisticsViewModel rtsVM)
+        {
+            IEnumerable<Answer> answers =
+                (from a in await _context.Answers.ToListAsync()
+                 join q in rtsVM.Questions on a.QuestionId equals q.Id
+                 select a).ToList();
+            IEnumerable<Respons> responses =
+                (from r in await _context.Respons.ToListAsync()
+                 where r.ModuleHistoryId == rtsVM.ModuleHistory.Id
+                 select r).ToList();
+            IEnumerable<RealTimeStatistics> realTimeStatistics =
+                (from q in rtsVM.Questions
+                 join r in responses on q.Id equals r.QuestionId into gj
+                 from groupjoin in gj.DefaultIfEmpty()
+                 from g in rtsVM.Groups
+                 select new RealTimeStatistics
+                 {
+                     GroupId = g.Id,
+                     QuestionId = q.Id,
+                     TotalAnswers = groupjoin == null ? 0 : responses.Count(r => r.QuestionId == q.Id && g.Id == groupjoin.GroupId),
+                     CorrectAnswers = groupjoin == null ? 0 : responses.Count(r => r.QuestionId == q.Id && g.Id == groupjoin.GroupId && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true)
+                 }).ToList();
             return realTimeStatistics;
         }
     }

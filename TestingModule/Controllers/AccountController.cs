@@ -40,7 +40,7 @@ namespace TestingModule.Controllers
             _context.Students.Add(student);
             _context.Accounts.Add(account);
             _context.SaveChanges();
-            return View("Index", "Admin");
+            return RedirectToHome();
         }
 
         private RegistrationFormViewModel CreateRegistrationViewmodel()

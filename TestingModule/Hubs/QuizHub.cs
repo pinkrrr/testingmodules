@@ -42,24 +42,28 @@ namespace TestingModule.Hubs
             Respons response = new Respons
             {
                 AnswerId = responseId,
-                LectureHistoryId = await _quizManager.GetLectureHistoryId(quizVM),
+                LectureHistoryId = quizVM.LectureHistoryId,
+                ModuleHistoryId = quizVM.ModuleHistoryId,
                 QuestionId = quizVM.Question.Id,
                 StudentId = quizVM.Student.Id,
                 GroupId = quizVM.Student.GroupId
             };
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();
-
-            if (quizVM.Answers.Where(a => a.Id == responseId).Select(a => a.IsCorrect).SingleOrDefault()==true)
-            {
-                Clients.All.RecieveStatistics(response.QuestionId, UserHandler.ConnectedIds.Count);
-            }
-            else
-            {
-                Clients.All.RecieveStatistics(null, UserHandler.ConnectedIds.Count);
-            }
+            Clients.All.ResponseRecieved();
             await _quizManager.UpdateQuizModel(quizVM);
             return quizVM;
+        }
+
+        public async Task<IEnumerable<RealTimeStatistics>> QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM)
+        {
+            if (realTimeStatisticsVM != null)
+            {
+                await Task.Delay(5000);
+                return await _quizManager.GetRealTimeStatistics(realTimeStatisticsVM);
+            }
+            return null;
+
         }
 
         public void ModuleEnquire()

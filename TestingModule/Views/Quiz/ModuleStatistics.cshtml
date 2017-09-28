@@ -42,5 +42,11 @@
         quiz.client.recieveEnquire = function (accountId, connectionId) {
             quiz.server.sendQVM(moduleId, connectionId);
         }
+
+        quiz.client.responseRecieved=function() {
+            quiz.server.queryRealTimeStats(statisticsModel).done(function(realTimeStats) {
+                console.log(realTimeStats);
+            });
+        }
     </script>
 }

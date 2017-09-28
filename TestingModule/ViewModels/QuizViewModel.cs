@@ -12,5 +12,7 @@ namespace TestingModule.ViewModels
         public ICollection<Question> QuestionsList { get; set; }
         public Question Question { get; set; }
         public IEnumerable<Answer> Answers { get; set; }
+        public int LectureHistoryId { get; set; }
+        public int ModuleHistoryId { get; set; }
     }
 }

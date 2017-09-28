@@ -21,5 +21,6 @@ namespace TestingModule.Models
         public Nullable<int> TimeToPass { get; set; }
         public int LectureHistoryId { get; set; }
         public int GroupId { get; set; }
+        public int ModuleHistoryId { get; set; }
     }
 }
