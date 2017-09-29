@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.EnterpriseServices;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -55,16 +56,20 @@ namespace TestingModule.Hubs
             return quizVM;
         }
 
-        public async Task<IEnumerable<RealTimeStatistics>> QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM)
+        private static bool _locked;
+        public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM,bool immediateCheck)
         {
-            if (realTimeStatisticsVM != null)
+            if (!_locked)
             {
-                await Task.Delay(5000);
-                return await _quizManager.GetRealTimeStatistics(realTimeStatisticsVM);
+                _locked = true;
+                if(!immediateCheck) await Task.Delay(5000);
+                IEnumerable<RealTimeStatistics> realTimeStatistics =
+                    _quizManager.GetRealTimeStatistics(realTimeStatisticsVM).ToList();
+                Clients.Caller.RecieveRealTimeStatistics(realTimeStatistics);
+                _locked = false;
+                }
             }
-            return null;
 
-        }
 
         public void ModuleEnquire()
         {

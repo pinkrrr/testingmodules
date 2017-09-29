@@ -206,14 +206,14 @@ namespace TestingModule.Additional
             return realTimeStatistics;
         }
 
-        public async Task<IEnumerable<RealTimeStatistics>> GetRealTimeStatistics(RealTimeStatisticsViewModel rtsVM)
+        public IEnumerable<RealTimeStatistics> GetRealTimeStatistics(RealTimeStatisticsViewModel rtsVM)
         {
             IEnumerable<Answer> answers =
-                (from a in await _context.Answers.ToListAsync()
+                (from a in _context.Answers.ToList()
                  join q in rtsVM.Questions on a.QuestionId equals q.Id
                  select a).ToList();
             IEnumerable<Respons> responses =
-                (from r in await _context.Respons.ToListAsync()
+                (from r in _context.Respons.ToList()
                  where r.ModuleHistoryId == rtsVM.ModuleHistory.Id
                  select r).ToList();
             IEnumerable<RealTimeStatistics> realTimeStatistics =
