@@ -17,11 +17,19 @@ namespace TestingModule.Models
         public int ModuleId { get; set; }
     }
 
-        public class AnswersForGroup
+    public class AnswersForGroup
     {
         public string Text { get; set; }
         public int GroupId { get; set; }
         public int QuestionId { get; set; }
-       public int Count { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class RealTimeStatistics
+    {
+        public int QuestionId { get; set; }
+        public int TotalAnswers { get; set; }
+        public int CorrectAnswers { get; set; }
+        public int GroupId { get; set; }
     }
 }

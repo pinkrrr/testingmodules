@@ -15,11 +15,18 @@
 {
     <script>
         var quiz = $.connection.quizHub;
-        $.connection.hub.start();
-
+        var intervalTime = 10000;
         var statisticsModel = @Html.Raw(Json.Encode(@Model));
         var totalCorrectAnswers = 1;
         var statisticsDynamicData = [];
+
+        $.connection.hub.start().done(function () {
+            quiz.server.queryRealTimeStats(statisticsModel, true).done(function() {
+                setInterval(function ()
+                { quiz.server.queryRealTimeStats(statisticsModel, true) },
+                    intervalTime);
+            });
+        });
 
         statisticsModel.Questions.forEach(function (item, i) {
             statisticsDynamicData[i] = {
@@ -41,6 +48,16 @@
         moduleId = @Model.Questions.Select(q => q.ModuleId).FirstOrDefault();
         quiz.client.recieveEnquire = function (accountId, connectionId) {
             quiz.server.sendQVM(moduleId, connectionId);
+        }
+
+
+
+        quiz.client.responseRecieved = function () {
+            quiz.server.queryRealTimeStats(statisticsModel, false);
+        };
+
+        quiz.client.recieveRealTimeStatistics = function (realTimeStatistics) {
+            console.log(realTimeStatistics);
         }
     </script>
 }

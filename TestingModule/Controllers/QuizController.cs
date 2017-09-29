@@ -44,7 +44,7 @@ namespace TestingModule.Controllers
                                                          && mh.IsPassed == false
                                                          && mh.LectorId == lector.Id))
             {
-                return View(await new QuizManager().GetRealTimeStatisticsModel(lector));
+                return View(await new QuizManager().GetRealTimeStatisticsViewModel(lector));
             }
             return RedirectToAction("index", "admin");
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.EnterpriseServices;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -42,25 +43,33 @@ namespace TestingModule.Hubs
             Respons response = new Respons
             {
                 AnswerId = responseId,
-                LectureHistoryId = await _quizManager.GetLectureHistoryId(quizVM),
+                LectureHistoryId = quizVM.LectureHistoryId,
+                ModuleHistoryId = quizVM.ModuleHistoryId,
                 QuestionId = quizVM.Question.Id,
                 StudentId = quizVM.Student.Id,
                 GroupId = quizVM.Student.GroupId
             };
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();
-
-            if (quizVM.Answers.Where(a => a.Id == responseId).Select(a => a.IsCorrect).SingleOrDefault()==true)
-            {
-                Clients.All.RecieveStatistics(response.QuestionId, UserHandler.ConnectedIds.Count);
-            }
-            else
-            {
-                Clients.All.RecieveStatistics(null, UserHandler.ConnectedIds.Count);
-            }
+            Clients.All.ResponseRecieved();
             await _quizManager.UpdateQuizModel(quizVM);
             return quizVM;
         }
+
+        private static bool _locked;
+        public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM,bool immediateCheck)
+        {
+            if (!_locked)
+            {
+                _locked = true;
+                if(!immediateCheck) await Task.Delay(5000);
+                IEnumerable<RealTimeStatistics> realTimeStatistics =
+                    _quizManager.GetRealTimeStatistics(realTimeStatisticsVM).ToList();
+                Clients.Caller.RecieveRealTimeStatistics(realTimeStatistics);
+                _locked = false;
+                }
+            }
+
 
         public void ModuleEnquire()
         {

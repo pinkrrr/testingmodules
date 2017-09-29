@@ -126,8 +126,8 @@ namespace TestingModule.Controllers
             var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
             var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
             var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
-            var lector = 0;
-            var lectorId = 0;
+            int lector;
+            int lectorId;
             var lectorsDisciplines = new List<int>();
 
             ViewBag.Message = "All disciplines";
@@ -404,7 +404,7 @@ namespace TestingModule.Controllers
             try
             {
                 new Deleting().DeleteQuestion(questionId);
-                TempData["Success"] = "Модуль був успішно видалений!";
+                TempData["Success"] = "Питання було успішно видалено!";
             }
             catch (Exception)
             {

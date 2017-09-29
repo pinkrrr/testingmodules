@@ -135,6 +135,7 @@
           <Property Name="TimeToPass" Type="int" />
           <Property Name="LectureHistoryId" Type="int" Nullable="false" />
           <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="ModuleHistoryId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -376,6 +377,7 @@
           <Property Name="TimeToPass" Type="Int32" />
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
           <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -555,6 +557,7 @@
           <EntitySetMapping Name="Respons">
             <EntityTypeMapping TypeName="testingDbModel.Respons">
               <MappingFragment StoreEntitySet="Responses">
+                <ScalarProperty Name="ModuleHistoryId" ColumnName="ModuleHistoryId" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
                 <ScalarProperty Name="TimeToPass" ColumnName="TimeToPass" />
