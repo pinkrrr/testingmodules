@@ -46,7 +46,10 @@
         <div class="accordion_body">
 
             @foreach (var group in Model.Groups.Where(t => t.SpecialityId == spec.Id).OrderBy(t => t.Name))
-                {
+            {
+                if (!Model.Students.Where(t => t.GroupId == group.Id).Any())
+                { continue;}
+
                 <div class="accordion_header group_header">@group.Name</div>
                 <div class="accordion_body">
                         @using (Html.BeginForm("NewStudentConnections", "Admin", FormMethod.Post))
