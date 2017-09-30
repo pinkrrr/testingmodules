@@ -885,7 +885,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditLector(UserViewModel model)
         {
-            if (model.Surname != null && model.Login != null && model.Password != null)
+            if (model.Surname != null && model.Login != null && model.Password != null && model.Id != 0)
             {
                 if (model.Name != model.Surname && model.Name != model.Login)
                 {
