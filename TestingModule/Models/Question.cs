@@ -11,7 +11,7 @@ namespace TestingModule.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Question
     {
         public int Id { get; set; }

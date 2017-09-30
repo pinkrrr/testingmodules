@@ -344,7 +344,7 @@ namespace TestingModule.Controllers
         public ActionResult Questions(int? moduleId)
         {
             List<QueAns> viewModels = (from q in _db.Questions
-                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
+                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
                                        select new QueAns()
                                        {
                                            DisciplineId = q.DisciplineId,

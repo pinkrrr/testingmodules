@@ -51,7 +51,14 @@ namespace TestingModule.Additional
         public void AddNewAnswer(string name, int questionId)
         {
             var answersTable = _db.Set<Answer>();
-            answersTable.Add(new Answer() { QuestionId = questionId, Text = name });
+            if (answersTable.Count(t => t.QuestionId == questionId) == 1)
+            {
+                answersTable.Add(new Answer() { QuestionId = questionId, Text = name, IsCorrect = true });
+            }
+            else
+            {
+                answersTable.Add(new Answer() { QuestionId = questionId, Text = name, IsCorrect = false });
+            }
             _db.SaveChanges();
         }
         public void AddNewSpeciality(string name)
