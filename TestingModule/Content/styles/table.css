@@ -122,6 +122,9 @@
     width: 90px;
     white-space: nowrap;
 }
+.table-item_correct radioInput {
+    display: none;
+}
 .table-item_new {
     text-align: right;
     font-size: 16px;
@@ -199,4 +202,8 @@
 .table_questions .ui-checkboxradio-label.ui-button:active{
     border: 1px solid #1c7e00;
     background: #3fc21a;
+}
+
+textarea.input-text-Questions{
+    resize: none;
 }

@@ -52,7 +52,7 @@ else
                 {
                     <tr class="table-row">
                         <th class="table-item table-item_name">
-                            @Html.TextBoxFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new
+                            @Html.TextAreaFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new
                        {
                            @class = "input-text-Questions",
                            @placeholder = "Введіть текст запитання",

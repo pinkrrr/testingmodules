@@ -12,14 +12,31 @@
 <div class="statistic-list">
     @{foreach (var discipline in Model.Disciplines)
         {
-
+            // Check if lectures present in discipline
+            if (!Model.Lectures.Where(l => l.DisciplineId == discipline.Id).Any())
+            { continue; }
+            var history = false;
+            // Check if completed lecture histories present in lectures
+            foreach(var lecture in Model.Lectures.Where(l => l.DisciplineId == discipline.Id))
+            {
+                if (Model.Histories.Where(h => h.LectureId == lecture.Id).Any())
+                {
+                    history = true;
+                    break; }
+            }
+            if (history == false)
+            {
+                continue;
+            }
             <div class="statisticsItem accordion">
 
                 <div class="disciplineName accordion_header">@discipline.Name</div>
 
                 <div class="discipline-list">
                     @foreach (var lecture in Model.Lectures.Where(l => l.DisciplineId == discipline.Id))
-                {
+                    {
+                        if (!Model.Histories.Where(h => h.LectureId == lecture.Id).Any())
+                        { continue; }
                         <div class="lecture">
                             <div class="lecture_name accordion_header">@lecture.Name</div>
                             <div class="lectures_dates">

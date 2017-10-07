@@ -37,7 +37,6 @@
 
         quiz.client.recieveStatistics = function (questionId, studentsCount, groupId) {
             statisticsDynamicData.forEach(function (item) {
-                console.log(item);
                 if (item.questionId === questionId) {
                     item.totalAnswersCount++;
                 }
@@ -57,7 +56,9 @@
         };
 
         quiz.client.recieveRealTimeStatistics = function (realTimeStatistics) {
-            console.log(realTimeStatistics);
+            realTimeStatistics.forEach(function (item) {
+                progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
+            })
         }
     </script>
 }
