@@ -8,9 +8,6 @@
 
 @if (new AccountCredentials().GetRole() == RoleName.Lecturer)
 {
-
-
-
     foreach (var discipline in
         from d in Model.Disciplines
         join lh in Model.LecturesHistories on d.Id equals lh.DisciplineId
@@ -36,7 +33,6 @@
             </div>
         }
     }
-
     <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Розпочати лекцію</button>
     <div class="popup popup-add popup-startLecture">
         <div class="popup-body">
@@ -88,4 +84,18 @@
             </div>
         </div>
     </div>
+}
+else
+{
+    <table>
+        <tr><td>Дисциплін</td><td>@Model.Disciplines.Count()</td></tr>
+        <tr><td>Лекцій</td><td>@Model.Lectures.Count()</td></tr>
+        <tr><td>Модулів</td><td>@Model.Modules.Count()</td></tr>
+        <tr><td>Питань</td><td>@Model.Questions.Count()</td></tr>
+        <tr><td>Відповідей</td><td>@Model.Answers.Count()</td></tr>
+        <tr><td>Спеціальностей</td><td>@Model.Specialities.Count()</td></tr>
+        <tr><td>Груп</td><td>@Model.Groups.Count()</td></tr>
+        <tr><td>Студентів</td><td>@Model.Students.Count()</td></tr>
+        <tr><td>Лекторів</td><td>@Model.Lectors.Count()</td></tr>
+    </table>
 }

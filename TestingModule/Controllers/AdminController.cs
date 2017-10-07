@@ -26,7 +26,20 @@ namespace TestingModule.Controllers
         public async Task<ActionResult> Index()
         {
             //If admin
-            if (new AccountCredentials().GetRole() != RoleName.Lecturer) return View();
+            if (new AccountCredentials().GetRole() != RoleName.Lecturer)
+            {
+                var adminModel = new ReasignViewModel();
+                adminModel.Disciplines = _db.Disciplines.ToList();
+                adminModel.Lectures = _db.Lectures.ToList();
+                adminModel.Modules = _db.Modules.ToList();
+                adminModel.Questions = _db.Questions.ToList();
+                adminModel.Answers = _db.Answers.ToList();
+                adminModel.Specialities = _db.Specialities.ToList();
+                adminModel.Groups = _db.Groups.ToList();
+                adminModel.Students = _db.Students.ToList();
+                adminModel.Lectors = _db.Lectors.ToList();
+                return View(adminModel);
+            }
             //If lector
             Lector lector = await new AccountCredentials().GetLector();
             if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id&&lh.EndTime==null))
