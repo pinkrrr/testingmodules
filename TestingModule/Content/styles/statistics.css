@@ -70,7 +70,6 @@
 .statisticsItem{
     margin-bottom: 20px;
     padding-bottom: 20px;
-    border-bottom: 3px solid #000000;
 }
 
 .disciplineName{
@@ -80,7 +79,6 @@
 
 .lecture{
     padding: 10px 0;
-    margin-left: 10px;
 }
 
 .lecture_name{
@@ -89,7 +87,7 @@
 
 .lecture_date{
     display: block;
-    padding: 5px 10px;
+    padding: 5px 0px;
     text-decoration: none;
     color: #0094ff;
     font-weight: bold;
