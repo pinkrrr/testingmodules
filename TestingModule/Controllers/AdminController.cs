@@ -402,7 +402,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
+                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Зміни було збережено!";
             }
             catch (Exception)
@@ -478,7 +478,7 @@ namespace TestingModule.Controllers
                     if (firstOrDefault != null)
                         new Editing().EditQuestion(firstOrDefault.QuestionId,
                             firstOrDefault.Question.TrimEnd().TrimStart()
-                            , firstOrDefault.ModuleId);
+                            , firstOrDefault.ModuleId, firstOrDefault.QuestionType);
                     TempData["Success"] = "Зміни по запитаннях та відповідях було успішно збережено!";
                 }
                 catch (Exception)

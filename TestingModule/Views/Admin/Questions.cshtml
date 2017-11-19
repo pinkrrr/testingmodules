@@ -57,7 +57,8 @@ else
     {
         <div class="description">@Model.FirstOrDefault().Modules.FirstOrDefault().Description</div>
     }
-    foreach (var type in Model.GroupBy(t => t.QuestionType))
+    <hr>
+    foreach (var type in Model.OrderBy(t => t.QuestionType).GroupBy(t => t.QuestionType))
     {
         if (type.FirstOrDefault().QuestionType == 1)
         {
@@ -73,6 +74,7 @@ else
         }
         else
         {
+            <hr>
             <h2>Індивідуальні питання модуля</h2>
             if (!Model.Any(t => t.QuestionType == 2))
             {
@@ -83,7 +85,7 @@ else
                 </div>
             }
         }
-        foreach (var item in type.GroupBy(t => t.QuestionId))
+        foreach (var item in type.OrderBy(t => t.QuestionId).GroupBy(t => t.QuestionId))
         {
 
             <div class="questionBlock">
@@ -156,6 +158,10 @@ else
                                 @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(item.FirstOrDefault().Modules,
                                     "Id", "Name", new { @moduleId = "moduleId" }), "Оберіть новий модуль")
                             </div>
+                            <div>
+                                <label>Лекційне питання @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].QuestionType, 1, "Lect")</label>
+                                <label>@Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].QuestionType, 2, "Ind") Індивідуальне питання</label>
+                            </div>
                             <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
                         }
                     }
@@ -189,7 +195,7 @@ else
 
                                     }
                                 }
-                                
+
 
                                 <div class="popup popup-remove">
                                     <div class="popup-body">
