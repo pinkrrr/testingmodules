@@ -176,8 +176,16 @@ namespace TestingModule
 
             routes.MapRoute(
                 name: "StudentIndex",
-                url: "student/{action}",
+                url: "Student",
                 defaults: new { controller = "Student", action = "Index" });
+            routes.MapRoute(
+                name: "StudentLectures",
+                url: "Student/{disciplineid}/lectures",
+                defaults: new { controller = "student", action = "StudentLectures" });
+            routes.MapRoute(
+                name: "StudentModules",
+                url: "Student/{disciplineid}/lectures/{lectureId}/modules",
+                defaults: new { controller = "student", action = "StudentModules" });
 
             routes.MapRoute(
                 name: "Login",

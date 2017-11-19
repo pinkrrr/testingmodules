@@ -53,7 +53,7 @@ else
     }
     else
     {
-        <div>@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Description</div>
+        <div class="description">@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Description</div>
     }
     <h2>Модулі лекції</h2>
     <table class="table" border="1">
@@ -151,7 +151,7 @@ else
                 <form>
                     @Html.TextBoxFor(model => model.Modules.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву модуля", @required = "required" })
                     <div>
-                        @Html.DropDownListFor(model => model.Modules.FirstOrDefault().LectureId, new SelectList(Model.Lectures, "Id", "Name", new { @id = "lectureId" }), "Оберіть лекцію")
+                        @Html.DropDownListFor(model => model.Modules.FirstOrDefault().LectureId, new SelectList(Model.Lectures, "Id", "Name", new { @lectureId = "lectureId" }), "Оберіть лекцію")
                     </div>
                     <div>
                         @Html.TextBoxFor(model => model.Modules.LastOrDefault().MinutesToPass, new { @class = "input-text", @placeholder = "Введіть кількість хвилин для проходження модуля", @required = "required" })

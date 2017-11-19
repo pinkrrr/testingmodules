@@ -31,7 +31,7 @@ namespace TestingModule.Additional
             lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes, Description = description});
             _db.SaveChanges();
         }
-        public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
+        public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId, int questionType)
         {
             if (disciplineId == 0 || lectureId == 0)
             {
@@ -39,7 +39,7 @@ namespace TestingModule.Additional
                 disciplineId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).DisciplineId;
             }
             var questionsTable = _db.Set<Question>();
-            questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name });
+            questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name, QuestionType = questionType});
             _db.SaveChanges();
             var questionId = _db.Questions
                 .FirstOrDefault(t => t.DisciplineId == disciplineId && t.LectureId == lectureId &&
