@@ -73,13 +73,13 @@ else
                 <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
             </form>
         </div>
-    </div>
+    </div>Z
 </div>
 
 <div class="popup popup-add">
     <div class="popup-body">
         <div class="popup-content">
-            <div class="popup-title">Додати нову дисципліну</div>
+            <div class="popup-title">Додати нову лекцію</div>
             @using (Html.BeginForm("NewLecture", "Admin", FormMethod.Post))
             {
                 <form>
@@ -91,10 +91,12 @@ else
                         @if (name == null)
                         {
                             @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, new { @class = "input-text" , @placeholder = "Введіть назву лекції", @required = "required" })
+                            @Html.TextAreaFor(model => model.Lectures.LastOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис лекції", @required = "required" })
                         }
                         else
                         {
                             @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, name.Name = "", new { @class = "input-text" , @placeholder = "Введіть назву лекції", @required = "required" })
+                            @Html.TextAreaFor(model => model.Lectures.LastOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис лекції", @required = "required" })
                         }
                     </div>
                     <div>

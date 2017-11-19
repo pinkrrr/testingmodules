@@ -43,7 +43,17 @@
 }
 else
 {
-    <h2>Питання модуля <u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h2>
+    <h1><u>@Model.FirstOrDefault().Modules.FirstOrDefault().Name</u></h1>
+    <h2>Матеріали лекції</h2>
+    if (Model.FirstOrDefault().Modules.FirstOrDefault().Description == null)
+    {
+        <div>Немає матеріалів лекції...Бажаєте додати? <i class="fa fa-pencil" aria-hidden="true"></i></div>
+    }
+    else
+    {
+        <div>@Model.FirstOrDefault().Modules.FirstOrDefault().Description</div>
+    }
+    <h2>Питання модуля</h2>
     foreach (var item in Model.GroupBy(t => t.QuestionId))
     {
         <div class="questionBlock">

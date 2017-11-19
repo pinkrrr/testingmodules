@@ -242,7 +242,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId, model.Description);
                 TempData["Success"] = "Лекція - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
             }
             catch (Exception)
@@ -302,7 +302,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass);
+                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass, model.Description);
                 TempData["Success"] = "Модуль - \"" + model.Name.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch

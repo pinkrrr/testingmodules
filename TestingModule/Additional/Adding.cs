@@ -19,16 +19,16 @@ namespace TestingModule.Additional
             lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
             _db.SaveChanges();
         }
-        public void AddNewLecture(string name, int disciplineId)
+        public void AddNewLecture(string name, int disciplineId, string description)
         {
             var lecturesTable = _db.Set<Lecture>();
-            lecturesTable.Add(new Lecture() { DisciplineId = disciplineId, Name = name });
+            lecturesTable.Add(new Lecture() { DisciplineId = disciplineId, Name = name , Description = description});
             _db.SaveChanges();
         }
-        public void AddNewModule(string name, int lectureId, int disciplineId, int minutes)
+        public void AddNewModule(string name, int lectureId, int disciplineId, int minutes, string description)
         {
             var lecturesTable = _db.Set<Module>();
-            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes });
+            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes, Description = description});
             _db.SaveChanges();
         }
         public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
