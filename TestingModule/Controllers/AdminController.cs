@@ -42,7 +42,7 @@ namespace TestingModule.Controllers
             }
             //If lector
             Lector lector = await new AccountCredentials().GetLector();
-            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id&&lh.EndTime==null))
+            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id && lh.EndTime == null))
             {
                 if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id))
                 {
@@ -242,7 +242,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId, model.Description);
                 TempData["Success"] = "Лекція - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
             }
             catch (Exception)
@@ -302,7 +302,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass);
+                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass, model.Description);
                 TempData["Success"] = "Модуль - \"" + model.Name.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch
@@ -356,6 +356,7 @@ namespace TestingModule.Controllers
         //Question
         public ActionResult Questions(int? moduleId)
         {
+            var description = _db.Modules.FirstOrDefault(t => t.Id == moduleId).Description;
             List<QueAns> viewModels = (from q in _db.Questions
                                        from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
                                        select new QueAns()
@@ -365,9 +366,11 @@ namespace TestingModule.Controllers
                                            ModuleId = q.ModuleId,
                                            QuestionId = q.Id,
                                            Question = q.Text,
+                                           QuestionType = q.QuestionType,
                                            AnswerId = a.Id,
                                            Answer = a.Text,
-                                           IsCorrect = a.IsCorrect
+                                           IsCorrect = a.IsCorrect,
+                                           Description = description
                                        }).ToList();
             var lectId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
             IEnumerable<Module> mod = _db.Modules.Where(t => t.LectureId == lectId).ToList();
@@ -382,7 +385,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId);
+                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Питання - \"" + model.Question.TrimEnd().TrimStart() + "\" було успішно додано!";
             }
             catch (Exception)
@@ -399,7 +402,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
+                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Зміни було збережено!";
             }
             catch (Exception)
@@ -458,7 +461,7 @@ namespace TestingModule.Controllers
                 {
                     var correctAnswer = 0;
                     var modelIndex = 0;
-                    foreach (var item in model.Where(t => t.ModuleId != null && t.ModuleId != 0))
+                    foreach (var item in model.Where(t => t.CorrectAnswerId != 0))
                     {
                         if (item.CorrectAnswerId != 0)
                         {
@@ -475,7 +478,7 @@ namespace TestingModule.Controllers
                     if (firstOrDefault != null)
                         new Editing().EditQuestion(firstOrDefault.QuestionId,
                             firstOrDefault.Question.TrimEnd().TrimStart()
-                            , firstOrDefault.ModuleId);
+                            , firstOrDefault.ModuleId, firstOrDefault.QuestionType);
                     TempData["Success"] = "Зміни по запитаннях та відповідях було успішно збережено!";
                 }
                 catch (Exception)

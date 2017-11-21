@@ -64,7 +64,7 @@
                     answer: inputText.val(),
                     answerId: $('#id').val(),
                     question: inputText.val(),
-                    questionId: $('#id').val(),
+                    questionId: $('#questionId').val(),
                 };
 
                 sendData(data, url, method);

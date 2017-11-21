@@ -11,7 +11,7 @@ namespace TestingModule.Models
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class Question
     {
         public int Id { get; set; }
@@ -19,5 +19,6 @@ namespace TestingModule.Models
         public int LectureId { get; set; }
         public int ModuleId { get; set; }
         public string Text { get; set; }
+        public int QuestionType { get; set; }
     }
 }
