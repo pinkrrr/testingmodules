@@ -18,25 +18,9 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private testingDbEntities _context = new testingDbEntities();
-        private QuizManager _quizManager = new QuizManager();
-
-        public override Task OnConnected()
-        {
-            var role = new AccountCredentials().GetRole();
-            if (role == RoleName.Student)
-            {
-                UserHandler.ConnectedIds.Add(Context.ConnectionId);
-            }
-            return base.OnConnected();
-        }
-
-        public override Task OnDisconnected(bool stopCalled)
-        {
-            UserHandler.ConnectedIds.Remove(Context.ConnectionId);
-            return base.OnDisconnected(stopCalled);
-        }
-
+        private readonly testingDbEntities _context = new testingDbEntities();
+        private readonly QuizManager _quizManager = new QuizManager();
+        
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
             //await OnConnected();
@@ -57,19 +41,18 @@ namespace TestingModule.Hubs
         }
 
         private static bool _locked;
-        public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM,bool immediateCheck)
+        public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM, bool immediateCheck)
         {
             if (!_locked)
             {
                 _locked = true;
-                if(!immediateCheck) await Task.Delay(5000);
+                if (!immediateCheck) await Task.Delay(5000);
                 IEnumerable<RealTimeStatistics> realTimeStatistics =
                     _quizManager.GetRealTimeStatistics(realTimeStatisticsVM).ToList();
                 Clients.Caller.RecieveRealTimeStatistics(realTimeStatistics);
                 _locked = false;
-                }
             }
-
+        }
 
         public void ModuleEnquire()
         {
@@ -89,13 +72,5 @@ namespace TestingModule.Hubs
         {
             Clients.All.reciveStopModule();
         }
-
     }
-
-    public static class UserHandler
-    {
-        public static HashSet<string> ConnectedIds = new HashSet<string>();
-        public static string GroupName { get; set; }
-    }
-
 }
