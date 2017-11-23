@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.ModelBinding;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.SignalR;
 using TestingModule.Additional;
 using TestingModule.Models;
@@ -18,9 +19,15 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private readonly testingDbEntities _context = new testingDbEntities();
-        private readonly QuizManager _quizManager = new QuizManager();
-        
+        private readonly testingDbEntities _context;
+        private readonly QuizManager _quizManager;
+
+        public QuizHub()
+        {
+            _context = new testingDbEntities();
+            _quizManager = new QuizManager();
+        }
+
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
             //await OnConnected();

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -115,9 +117,23 @@ namespace TestingModule.Additional
                 _db.Respons.RemoveRange(responsesToDelete);
                 moduleHistory.IsPassed = false;
             }
-
             moduleHistory.StartTime = DateTime.UtcNow;
+            TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
+                .Select(m => m.MinutesToPass).SingleOrDefaultAsync()) ;
+            StartModuleTimer(moduleHistoryId,minutesToPass);
             await _db.SaveChangesAsync();
+        }
+
+        IList<Timer> _moduleTimers =new List<Timer>();
+        public void StartModuleTimer(int moduleHistoryId, TimeSpan minutesToPass)
+        {
+            new Timer(StopModuleOnTimer, moduleHistoryId, minutesToPass, TimeSpan.Zero);
+        }
+
+        private async void StopModuleOnTimer(object timer)
+        {
+            int moduleHistoryId = (int)timer;
+            await ModulePassed(moduleHistoryId);
         }
 
         public async Task<int> ModulePassed(int moduleHistoryId)
@@ -128,6 +144,8 @@ namespace TestingModule.Additional
             await _db.SaveChangesAsync();
             return moduleHistory.LectureHistoryId;
         }
+
+       
 
     }
 }

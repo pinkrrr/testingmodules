@@ -13,7 +13,21 @@ namespace TestingModule.Controllers
 {
     public class QuizController : Controller
     {
-        private testingDbEntities _context = new testingDbEntities();
+        private readonly testingDbEntities _context;
+
+        public QuizController()
+        {
+            _context = new testingDbEntities();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         [Route("quiz/{moduleId}")]
         public async Task<ActionResult> Index(int moduleId)
