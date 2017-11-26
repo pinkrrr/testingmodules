@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.EnterpriseServices;
 using System.Linq;
 using System.Security.Claims;
@@ -30,7 +31,8 @@ namespace TestingModule.Hubs
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
-            //await OnConnected();
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
+                return null;
             Respons response = new Respons
             {
                 AnswerId = responseId,
@@ -43,8 +45,7 @@ namespace TestingModule.Hubs
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();
             Clients.All.ResponseRecieved();
-            await _quizManager.UpdateQuizModel(quizVM);
-            return quizVM;
+            return await _quizManager.UpdateQuizModel(quizVM);
         }
 
         private static bool _locked;

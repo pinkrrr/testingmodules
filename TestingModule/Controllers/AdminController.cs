@@ -21,23 +21,39 @@ namespace TestingModule.Controllers
     [CustomAuthorize(RoleName.Administrator, RoleName.Lecturer)]
     public class AdminController : Controller
     {
-        private testingDbEntities _db = new testingDbEntities();
+        private testingDbEntities _db;
+
+        public AdminController()
+        {
+            _db = new testingDbEntities();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         public async Task<ActionResult> Index()
         {
             //If admin
             if (new AccountCredentials().GetRole() != RoleName.Lecturer)
             {
-                var adminModel = new ReasignViewModel();
-                adminModel.Disciplines = _db.Disciplines.ToList();
-                adminModel.Lectures = _db.Lectures.ToList();
-                adminModel.Modules = _db.Modules.ToList();
-                adminModel.Questions = _db.Questions.ToList();
-                adminModel.Answers = _db.Answers.ToList();
-                adminModel.Specialities = _db.Specialities.ToList();
-                adminModel.Groups = _db.Groups.ToList();
-                adminModel.Students = _db.Students.ToList();
-                adminModel.Lectors = _db.Lectors.ToList();
+                var adminModel = new ReasignViewModel
+                {
+                    Disciplines = await _db.Disciplines.ToListAsync(),
+                    Lectures = await _db.Lectures.ToListAsync(),
+                    Modules = await _db.Modules.ToListAsync(),
+                    Questions = await _db.Questions.ToListAsync(),
+                    Answers = await _db.Answers.ToListAsync(),
+                    Specialities = await _db.Specialities.ToListAsync(),
+                    Groups = await _db.Groups.ToListAsync(),
+                    Students = await _db.Students.ToListAsync(),
+                    Lectors = await _db.Lectors.ToListAsync()
+                };
                 return View(adminModel);
             }
             //If lector
@@ -129,7 +145,7 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
-            var lectureHistoryId = await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
+            await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
             return RedirectToAction("activelecture", "Admin");
         }
 

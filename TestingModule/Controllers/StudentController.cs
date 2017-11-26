@@ -12,7 +12,22 @@ namespace TestingModule.Controllers
 {
     public class StudentController : Controller
     {
-        private testingDbEntities _db = new testingDbEntities();
+        private testingDbEntities _db;
+
+        public StudentController()
+        {
+            _db = new testingDbEntities();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
         // GET: Student
         public ActionResult Index()
         {
