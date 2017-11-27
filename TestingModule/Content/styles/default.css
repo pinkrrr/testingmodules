@@ -67,12 +67,16 @@ h2 .groupName {
 .main-container {
     font-size: 0;
     white-space: nowrap;
-    background-color: #f7f7f7;
     width: 100%;
     height: 100%;
     display: block;
     position: relative;
     padding-left: 200px;
+    background-color: #ffffff;
+    background-image: url('../img/bg-right-bottom.jpg');
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-size: 500px;
 }
 
 .navbar, .body-content {
@@ -169,6 +173,27 @@ input[type="text"] {
     padding: 20px;
     text-transform: uppercase;
     width: 405px;
+}
+
+.admin-info-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.admin-info{
+    padding: 10px;
+    flex-grow: 3;
+}
+
+.admin-info .name, .admin-info .count, .admin-info .icon {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+} 
+
+.admin-info .icon{
+    height: 20px;
 }
 
 .main-container__default .body-content {

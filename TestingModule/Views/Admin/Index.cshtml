@@ -87,7 +87,64 @@
 }
 else
 {
-    <table>
+    <div class="admin-info-list">
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-disciplines.jpg" class="icon" />
+            <div class="name">Дисциплін</div>
+            <div class="count">@Model.Disciplines.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-lecture.jpg" class="icon"  />
+            <div class="name">Лекцій</div>
+            <div class="count">@Model.Lectures.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-module.jpg" class="icon"  />
+            <div class="name">Модулів</div>
+            <div class="count">@Model.Modules.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-questions.jpg" class="icon"  />
+            <div class="name">Питань</div>
+            <div class="count">@Model.Questions.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-answers.jpg" class="icon"  />
+            <div class="name">Відповідей</div>
+            <div class="count">@Model.Answers.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-specialities.jpg" class="icon"  />
+            <div class="name">Спеціальностей</div>
+            <div class="count">@Model.Specialities.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-group.jpg" class="icon"  />
+            <div class="name">Груп</div>
+            <div class="count">@Model.Groups.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-students.jpg" class="icon"  />
+            <div class="name">Студентів</div>
+            <div class="count">@Model.Students.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-lector.jpg" class="icon" />
+            <div class="name">Лекторів</div>
+            <div class="count">@Model.Lectors.Count()</div>
+        </div>
+
+    </div>
+    @*<table>
         <tr><td>Дисциплін</td><td>@Model.Disciplines.Count()</td></tr>
         <tr><td>Лекцій</td><td>@Model.Lectures.Count()</td></tr>
         <tr><td>Модулів</td><td>@Model.Modules.Count()</td></tr>
@@ -97,5 +154,5 @@ else
         <tr><td>Груп</td><td>@Model.Groups.Count()</td></tr>
         <tr><td>Студентів</td><td>@Model.Students.Count()</td></tr>
         <tr><td>Лекторів</td><td>@Model.Lectors.Count()</td></tr>
-    </table>
+    </table>*@
 }

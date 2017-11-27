@@ -289,6 +289,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\classRoom.jpeg" />
+    <Content Include="Content\img\admin-icons\admin-icon-answers.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-disciplines.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-group.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-lector.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-lecture.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-module.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-questions.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-specialities.jpg" />
+    <Content Include="Content\img\admin-icons\admin-icon-students.jpg" />
+    <Content Include="Content\img\bg-right-bottom.jpg" />
     <Content Include="Content\img\lectorBackground.jpg" />
     <Content Include="Content\styles\404.css" />
     <Content Include="Content\font-awesome.css" />
