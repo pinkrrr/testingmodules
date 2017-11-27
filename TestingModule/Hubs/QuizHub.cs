@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.EnterpriseServices;
 using System.Linq;
 using System.Security.Claims;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.ModelBinding;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.SignalR;
 using TestingModule.Additional;
 using TestingModule.Models;
@@ -18,28 +20,19 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private testingDbEntities _context = new testingDbEntities();
-        private QuizManager _quizManager = new QuizManager();
+        private readonly testingDbEntities _context;
+        private readonly QuizManager _quizManager;
 
-        public override Task OnConnected()
+        public QuizHub()
         {
-            var role = new AccountCredentials().GetRole();
-            if (role == RoleName.Student)
-            {
-                UserHandler.ConnectedIds.Add(Context.ConnectionId);
-            }
-            return base.OnConnected();
-        }
-
-        public override Task OnDisconnected(bool stopCalled)
-        {
-            UserHandler.ConnectedIds.Remove(Context.ConnectionId);
-            return base.OnDisconnected(stopCalled);
+            _context = new testingDbEntities();
+            _quizManager = new QuizManager();
         }
 
         public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
         {
-            //await OnConnected();
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
+                return null;
             Respons response = new Respons
             {
                 AnswerId = responseId,
@@ -52,24 +45,22 @@ namespace TestingModule.Hubs
             _context.Respons.Add(response);
             await _context.SaveChangesAsync();
             Clients.All.ResponseRecieved();
-            await _quizManager.UpdateQuizModel(quizVM);
-            return quizVM;
+            return await _quizManager.UpdateQuizModel(quizVM);
         }
 
         private static bool _locked;
-        public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM,bool immediateCheck)
+        public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM, bool immediateCheck)
         {
             if (!_locked)
             {
                 _locked = true;
-                if(!immediateCheck) await Task.Delay(5000);
+                if (!immediateCheck) await Task.Delay(5000);
                 IEnumerable<RealTimeStatistics> realTimeStatistics =
                     _quizManager.GetRealTimeStatistics(realTimeStatisticsVM).ToList();
                 Clients.Caller.RecieveRealTimeStatistics(realTimeStatistics);
                 _locked = false;
-                }
             }
-
+        }
 
         public void ModuleEnquire()
         {
@@ -89,13 +80,5 @@ namespace TestingModule.Hubs
         {
             Clients.All.reciveStopModule();
         }
-
     }
-
-    public static class UserHandler
-    {
-        public static HashSet<string> ConnectedIds = new HashSet<string>();
-        public static string GroupName { get; set; }
-    }
-
 }

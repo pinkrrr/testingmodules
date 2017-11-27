@@ -347,3 +347,7 @@ i.fa {
 .table_questions .table-item label input{
     display: none;
 }
+
+.description {
+    white-space: pre-wrap
+}

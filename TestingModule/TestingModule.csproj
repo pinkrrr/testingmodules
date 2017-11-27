@@ -386,7 +386,9 @@
       <DependentUpon>TestingDb.edmx</DependentUpon>
       <LastGenOutput>TestingDb.cs</LastGenOutput>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -431,6 +433,8 @@
     <Content Include="Views\Quiz\TotalStatistics.cshtml" />
     <Content Include="Views\Quiz\HistoryStatistics.cshtml" />
     <Content Include="Views\Admin\ActiveLecture.cshtml" />
+    <Content Include="Views\Student\StudentLectures.cshtml" />
+    <Content Include="Views\Student\StudentModules.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

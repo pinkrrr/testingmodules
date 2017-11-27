@@ -16,7 +16,12 @@ namespace TestingModule.Additional
 {
     public class QuizManager
     {
-        private readonly testingDbEntities _context = new testingDbEntities();
+        private readonly testingDbEntities _context;
+
+        public QuizManager()
+        {
+            _context = new testingDbEntities();
+        }
 
         public async Task<ICollection<Question>> GetQuestionsList(int moduleId)
         {

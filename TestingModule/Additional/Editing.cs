@@ -66,13 +66,14 @@ namespace TestingModule.Additional
             }
             _db.SaveChanges();
         }
-        public void EditQuestion(int questionId, string text, int moduleId)
+        public void EditQuestion(int questionId, string text, int moduleId, int questionType)
         {
             var qs = _db.Questions.FirstOrDefault(t => t.Id == questionId);
             if (moduleId != _db.Questions.FirstOrDefault(t => t.Id == questionId).ModuleId && moduleId != 0)
             {
                 qs.ModuleId = moduleId;
             }
+            qs.QuestionType = questionType;
             qs.Text = text;
             _db.SaveChanges();
         }

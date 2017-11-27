@@ -21,28 +21,44 @@ namespace TestingModule.Controllers
     [CustomAuthorize(RoleName.Administrator, RoleName.Lecturer)]
     public class AdminController : Controller
     {
-        private testingDbEntities _db = new testingDbEntities();
+        private testingDbEntities _db;
+
+        public AdminController()
+        {
+            _db = new testingDbEntities();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         public async Task<ActionResult> Index()
         {
             //If admin
             if (new AccountCredentials().GetRole() != RoleName.Lecturer)
             {
-                var adminModel = new ReasignViewModel();
-                adminModel.Disciplines = _db.Disciplines.ToList();
-                adminModel.Lectures = _db.Lectures.ToList();
-                adminModel.Modules = _db.Modules.ToList();
-                adminModel.Questions = _db.Questions.ToList();
-                adminModel.Answers = _db.Answers.ToList();
-                adminModel.Specialities = _db.Specialities.ToList();
-                adminModel.Groups = _db.Groups.ToList();
-                adminModel.Students = _db.Students.ToList();
-                adminModel.Lectors = _db.Lectors.ToList();
+                var adminModel = new ReasignViewModel
+                {
+                    Disciplines = await _db.Disciplines.ToListAsync(),
+                    Lectures = await _db.Lectures.ToListAsync(),
+                    Modules = await _db.Modules.ToListAsync(),
+                    Questions = await _db.Questions.ToListAsync(),
+                    Answers = await _db.Answers.ToListAsync(),
+                    Specialities = await _db.Specialities.ToListAsync(),
+                    Groups = await _db.Groups.ToListAsync(),
+                    Students = await _db.Students.ToListAsync(),
+                    Lectors = await _db.Lectors.ToListAsync()
+                };
                 return View(adminModel);
             }
             //If lector
             Lector lector = await new AccountCredentials().GetLector();
-            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id&&lh.EndTime==null))
+            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id && lh.EndTime == null))
             {
                 if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id))
                 {
@@ -129,7 +145,7 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
-            var lectureHistoryId = await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
+            await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
             return RedirectToAction("activelecture", "Admin");
         }
 
@@ -242,7 +258,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId, model.Description);
                 TempData["Success"] = "Лекція - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
             }
             catch (Exception)
@@ -302,7 +318,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass);
+                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass, model.Description);
                 TempData["Success"] = "Модуль - \"" + model.Name.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch
@@ -356,6 +372,7 @@ namespace TestingModule.Controllers
         //Question
         public ActionResult Questions(int? moduleId)
         {
+            var description = _db.Modules.FirstOrDefault(t => t.Id == moduleId).Description;
             List<QueAns> viewModels = (from q in _db.Questions
                                        from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
                                        select new QueAns()
@@ -365,9 +382,11 @@ namespace TestingModule.Controllers
                                            ModuleId = q.ModuleId,
                                            QuestionId = q.Id,
                                            Question = q.Text,
+                                           QuestionType = q.QuestionType,
                                            AnswerId = a.Id,
                                            Answer = a.Text,
-                                           IsCorrect = a.IsCorrect
+                                           IsCorrect = a.IsCorrect,
+                                           Description = description
                                        }).ToList();
             var lectId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
             IEnumerable<Module> mod = _db.Modules.Where(t => t.LectureId == lectId).ToList();
@@ -382,7 +401,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId);
+                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Питання - \"" + model.Question.TrimEnd().TrimStart() + "\" було успішно додано!";
             }
             catch (Exception)
@@ -399,7 +418,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
+                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Зміни було збережено!";
             }
             catch (Exception)
@@ -458,7 +477,7 @@ namespace TestingModule.Controllers
                 {
                     var correctAnswer = 0;
                     var modelIndex = 0;
-                    foreach (var item in model.Where(t => t.ModuleId != null && t.ModuleId != 0))
+                    foreach (var item in model.Where(t => t.CorrectAnswerId != 0))
                     {
                         if (item.CorrectAnswerId != 0)
                         {
@@ -475,7 +494,7 @@ namespace TestingModule.Controllers
                     if (firstOrDefault != null)
                         new Editing().EditQuestion(firstOrDefault.QuestionId,
                             firstOrDefault.Question.TrimEnd().TrimStart()
-                            , firstOrDefault.ModuleId);
+                            , firstOrDefault.ModuleId, firstOrDefault.QuestionType);
                     TempData["Success"] = "Зміни по запитаннях та відповідях було успішно збережено!";
                 }
                 catch (Exception)

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Win32.SafeHandles;
 using TestingModule.Controllers;
 using TestingModule.Models;
 using TestingModule.ViewModels;
@@ -115,19 +119,55 @@ namespace TestingModule.Additional
                 _db.Respons.RemoveRange(responsesToDelete);
                 moduleHistory.IsPassed = false;
             }
-
             moduleHistory.StartTime = DateTime.UtcNow;
+            TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
+                .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
+            StartModuleTimer(moduleHistoryId, minutesToPass);
             await _db.SaveChangesAsync();
         }
 
-        public async Task<int> ModulePassed(int moduleHistoryId)
+        public static Dictionary<int, Timer> ModuleTimers = new Dictionary<int, Timer>();
+        public void StartModuleTimer(int moduleHistoryId, TimeSpan minutesToPass)
+        {
+            ModuleTimers.Add(moduleHistoryId, new Timer(StopModuleOnTimer, moduleHistoryId, minutesToPass, TimeSpan.Zero));
+        }
+
+        private async void StopModuleOnTimer(object timer)
+        {
+            int moduleHistoryId = (int)timer;
+            await ModulePassed(moduleHistoryId);
+        }
+
+        public async Task OnStartModuleTimer()
+        {
+            if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed != true))
+            {
+                IEnumerable<ModuleHistory> ongoingModules =
+                    await (from mh in _db.ModuleHistories
+                           where mh.StartTime != null && mh.IsPassed != true
+                           select mh).ToListAsync();
+                IEnumerable<Module> modules =
+                    (from m in await _db.Modules.ToListAsync()
+                     join om in ongoingModules on m.Id equals om.ModuleId
+                     select m).ToList();
+                foreach (ModuleHistory ongoingModule in ongoingModules)
+                {
+                    StartModuleTimer(ongoingModule.Id, TimeSpan.FromMinutes(modules.Where(m => m.Id == ongoingModule.ModuleId)
+                        .Select(m => m.MinutesToPass).SingleOrDefault()));
+                }
+            }
+
+        }
+
+        public async Task ModulePassed(int moduleHistoryId)
         {
             ModuleHistory moduleHistory =
                 await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
             moduleHistory.IsPassed = true;
             await _db.SaveChangesAsync();
-            return moduleHistory.LectureHistoryId;
+            ModuleTimers.TryGetValue(moduleHistoryId, out Timer t);
+            t.Dispose();
+            ModuleTimers.Remove(moduleHistoryId);
         }
-
     }
 }
