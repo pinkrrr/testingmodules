@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using TestingModule.Models;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
@@ -16,7 +17,12 @@ namespace TestingModule.Additional
 {
     public class QuizManager
     {
-        private readonly testingDbEntities _context = new testingDbEntities();
+        private readonly testingDbEntities _context;
+
+        public QuizManager()
+        {
+            _context = new testingDbEntities();
+        }
 
         public async Task<ICollection<Question>> GetQuestionsList(int moduleId)
         {
@@ -193,7 +199,6 @@ namespace TestingModule.Additional
                        where lhg.LectureHistoryId == lecturesHistory.Id
                        join g in _context.Groups on lhg.GroupId equals g.Id
                        select g).ToListAsync();
-
             RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
             {
                 Lector = lector,
@@ -201,7 +206,8 @@ namespace TestingModule.Additional
                 LecturesHistory = lecturesHistory,
                 Module = module,
                 Questions = questions,
-                ModuleHistory = moduleHistory
+                ModuleHistory = moduleHistory,
+                Timer = LectureHistoryHelper.ModuleTimers.Where(mt=>mt.Key==lecturesHistory.Id).Select(mt=>mt.Value).SingleOrDefault()
             };
             return realTimeStatistics;
         }

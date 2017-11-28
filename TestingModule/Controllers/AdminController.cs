@@ -21,15 +21,44 @@ namespace TestingModule.Controllers
     [CustomAuthorize(RoleName.Administrator, RoleName.Lecturer)]
     public class AdminController : Controller
     {
-        private testingDbEntities _db = new testingDbEntities();
+        private testingDbEntities _db;
+
+        public AdminController()
+        {
+            _db = new testingDbEntities();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         public async Task<ActionResult> Index()
         {
             //If admin
-            if (new AccountCredentials().GetRole() != RoleName.Lecturer) return View();
+            if (new AccountCredentials().GetRole() != RoleName.Lecturer)
+            {
+                var adminModel = new ReasignViewModel
+                {
+                    Disciplines = await _db.Disciplines.ToListAsync(),
+                    Lectures = await _db.Lectures.ToListAsync(),
+                    Modules = await _db.Modules.ToListAsync(),
+                    Questions = await _db.Questions.ToListAsync(),
+                    Answers = await _db.Answers.ToListAsync(),
+                    Specialities = await _db.Specialities.ToListAsync(),
+                    Groups = await _db.Groups.ToListAsync(),
+                    Students = await _db.Students.ToListAsync(),
+                    Lectors = await _db.Lectors.ToListAsync()
+                };
+                return View(adminModel);
+            }
             //If lector
             Lector lector = await new AccountCredentials().GetLector();
-            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id&&lh.EndTime==null))
+            if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id && lh.EndTime == null))
             {
                 if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id))
                 {
@@ -116,7 +145,7 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
-            var lectureHistoryId = await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
+            await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
             return RedirectToAction("activelecture", "Admin");
         }
 
@@ -141,8 +170,8 @@ namespace TestingModule.Controllers
                    .ToList();
                 viewModels = _db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
                 {
-                    Id = d.Id,
-                    Name = d.Name
+                    DiscId = d.Id,
+                    DiscName = d.Name
                 }
                 ).ToList();
             }
@@ -150,14 +179,14 @@ namespace TestingModule.Controllers
             {
                 viewModels = _db.Disciplines.Select(d => new DiscLecotorViewModel
                 {
-                    Id = d.Id,
-                    Name = d.Name
+                    DiscId = d.Id,
+                    DiscName = d.Name
                 }
                 ).ToList();
                 foreach (var model in viewModels)
                 {
                     model.Lectors = lectors;
-                    model.LectorId = _db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
+                    model.LectorId = _db.LectorDisciplines.Where(t => model.DiscId == t.DisciplineId).Select(t => t.LectorId)
                         .FirstOrDefault();
                 }
             }
@@ -169,15 +198,15 @@ namespace TestingModule.Controllers
             {
                 if (model.LectorId != null)
                 {
-                    new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart(), model.LectorId);
-                    TempData["Success"] = "Дисципліна - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
+                    new Adding().AddNewDiscipline(model.DiscName.TrimEnd().TrimStart(), model.LectorId);
+                    TempData["Success"] = "Дисципліна - \"" + model.DiscName.TrimEnd().TrimStart() + "\" була успішно додана!";
                 }
             }
             catch (Exception)
             {
                 HttpContext con = System.Web.HttpContext.Current;
                 var url = con.Request.Url.ToString();
-                new Adding().AddNewError(url, "NewDiscipline Name = " + model.Name + " LectorId = " + model.LectorId);
+                new Adding().AddNewError(url, "NewDiscipline Name = " + model.DiscName + " LectorId = " + model.LectorId);
                 TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
 
@@ -187,14 +216,14 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
+                new Editing().EditDiscipline(model.DiscId, model.DiscName.TrimEnd().TrimStart(), model.LectorId);
                 TempData["Success"] = "Зміни було успішно збережено";
             }
             catch (Exception)
             {
                 HttpContext con = System.Web.HttpContext.Current;
                 var url = con.Request.Url.ToString();
-                new Adding().AddNewError(url, "EditDiscipline Name = " + model.Name + " LectorId = " + model.LectorId + " Id = " + model.Id);
+                new Adding().AddNewError(url, "EditDiscipline Name = " + model.DiscName + " LectorId = " + model.LectorId + " Id = " + model.DiscId);
                 TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Disciplines");
@@ -229,7 +258,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId);
+                new Adding().AddNewLecture(model.Name.TrimEnd().TrimStart(), model.DisciplineId, model.Description);
                 TempData["Success"] = "Лекція - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
             }
             catch (Exception)
@@ -289,7 +318,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass);
+                new Adding().AddNewModule(model.Name.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.MinutesToPass, model.Description);
                 TempData["Success"] = "Модуль - \"" + model.Name.TrimEnd().TrimStart() + "\" був успішно доданий!";
             }
             catch
@@ -343,8 +372,9 @@ namespace TestingModule.Controllers
         //Question
         public ActionResult Questions(int? moduleId)
         {
+            var description = _db.Modules.FirstOrDefault(t => t.Id == moduleId).Description;
             List<QueAns> viewModels = (from q in _db.Questions
-                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId).DefaultIfEmpty()
+                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
                                        select new QueAns()
                                        {
                                            DisciplineId = q.DisciplineId,
@@ -352,9 +382,11 @@ namespace TestingModule.Controllers
                                            ModuleId = q.ModuleId,
                                            QuestionId = q.Id,
                                            Question = q.Text,
+                                           QuestionType = q.QuestionType,
                                            AnswerId = a.Id,
                                            Answer = a.Text,
-                                           IsCorrect = a.IsCorrect
+                                           IsCorrect = a.IsCorrect,
+                                           Description = description
                                        }).ToList();
             var lectId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
             IEnumerable<Module> mod = _db.Modules.Where(t => t.LectureId == lectId).ToList();
@@ -369,7 +401,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId);
+                new Adding().AddNewQuestion(model.Question.TrimEnd().TrimStart(), model.LectureId, model.DisciplineId, model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Питання - \"" + model.Question.TrimEnd().TrimStart() + "\" було успішно додано!";
             }
             catch (Exception)
@@ -386,7 +418,7 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId);
+                new Editing().EditQuestion(model.QuestionId, model.Question.TrimEnd().TrimStart(), model.ModuleId, model.QuestionType);
                 TempData["Success"] = "Зміни було збережено!";
             }
             catch (Exception)
@@ -445,7 +477,7 @@ namespace TestingModule.Controllers
                 {
                     var correctAnswer = 0;
                     var modelIndex = 0;
-                    foreach (var item in model.Where(t => t.ModuleId != null && t.ModuleId != 0))
+                    foreach (var item in model.Where(t => t.CorrectAnswerId != 0))
                     {
                         if (item.CorrectAnswerId != 0)
                         {
@@ -462,7 +494,7 @@ namespace TestingModule.Controllers
                     if (firstOrDefault != null)
                         new Editing().EditQuestion(firstOrDefault.QuestionId,
                             firstOrDefault.Question.TrimEnd().TrimStart()
-                            , firstOrDefault.ModuleId);
+                            , firstOrDefault.ModuleId, firstOrDefault.QuestionType);
                     TempData["Success"] = "Зміни по запитаннях та відповідях було успішно збережено!";
                 }
                 catch (Exception)
@@ -885,7 +917,7 @@ namespace TestingModule.Controllers
         }
         public ActionResult EditLector(UserViewModel model)
         {
-            if (model.Surname != null && model.Login != null && model.Password != null)
+            if (model.Surname != null && model.Login != null && model.Password != null && model.Id != 0)
             {
                 if (model.Name != model.Surname && model.Name != model.Login)
                 {

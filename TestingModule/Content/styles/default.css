@@ -320,7 +320,9 @@ i.fa {
 
 
 .table_questions .table-item label input{
-    clip: initial;
-    width: 20px;
-    height: 20px;
+    display: none;
+}
+
+.description {
+    white-space: pre-wrap
 }

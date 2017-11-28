@@ -19,19 +19,19 @@ namespace TestingModule.Additional
             lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
             _db.SaveChanges();
         }
-        public void AddNewLecture(string name, int disciplineId)
+        public void AddNewLecture(string name, int disciplineId, string description)
         {
             var lecturesTable = _db.Set<Lecture>();
-            lecturesTable.Add(new Lecture() { DisciplineId = disciplineId, Name = name });
+            lecturesTable.Add(new Lecture() { DisciplineId = disciplineId, Name = name , Description = description});
             _db.SaveChanges();
         }
-        public void AddNewModule(string name, int lectureId, int disciplineId, int minutes)
+        public void AddNewModule(string name, int lectureId, int disciplineId, int minutes, string description)
         {
             var lecturesTable = _db.Set<Module>();
-            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes });
+            lecturesTable.Add(new Module() { DisciplineId = disciplineId, LectureId = lectureId, Name = name, MinutesToPass = minutes, Description = description});
             _db.SaveChanges();
         }
-        public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId)
+        public void AddNewQuestion(string name, int lectureId, int disciplineId, int moduleId, int questionType)
         {
             if (disciplineId == 0 || lectureId == 0)
             {
@@ -39,7 +39,7 @@ namespace TestingModule.Additional
                 disciplineId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).DisciplineId;
             }
             var questionsTable = _db.Set<Question>();
-            questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name });
+            questionsTable.Add(new Question() { DisciplineId = disciplineId, LectureId = lectureId, ModuleId = moduleId, Text = name, QuestionType = questionType});
             _db.SaveChanges();
             var questionId = _db.Questions
                 .FirstOrDefault(t => t.DisciplineId == disciplineId && t.LectureId == lectureId &&
@@ -51,7 +51,14 @@ namespace TestingModule.Additional
         public void AddNewAnswer(string name, int questionId)
         {
             var answersTable = _db.Set<Answer>();
-            answersTable.Add(new Answer() { QuestionId = questionId, Text = name });
+            if (answersTable.Count(t => t.QuestionId == questionId) == 1)
+            {
+                answersTable.Add(new Answer() { QuestionId = questionId, Text = name, IsCorrect = true });
+            }
+            else
+            {
+                answersTable.Add(new Answer() { QuestionId = questionId, Text = name, IsCorrect = false });
+            }
             _db.SaveChanges();
         }
         public void AddNewSpeciality(string name)

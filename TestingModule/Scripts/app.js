@@ -64,7 +64,7 @@
                     answer: inputText.val(),
                     answerId: $('#id').val(),
                     question: inputText.val(),
-                    questionId: $('#id').val(),
+                    questionId: $('#questionId').val(),
                 };
 
                 sendData(data, url, method);
@@ -224,7 +224,7 @@
         });
     }
 
-    function specialitiesStudentsAccordion() {
+    function initAccordion() {
 
         $('.accordion').accordion({
             header: '.accordion_header',
@@ -460,7 +460,7 @@
     popup();
     selectmenuInit();
     checkboxradioInit();
-    specialitiesStudentsAccordion();
+    initAccordion();
     selectAllorNobody();
     statistics();
     startLectureValidation();
@@ -472,9 +472,9 @@
 
 });
 
-function progress(qID, correctAnswersCount, studentsCount) {
-    var progress = correctAnswersCount / studentsCount * 100;
-    $('.body-content__statistics .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
+    var progress = correctAnswersCount / totalAnswersCount * 100;
+    $('.body-content__statistics #group'+gID+' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
 }
 
 function stopModule() {
