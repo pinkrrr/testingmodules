@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using TestingModule.Models;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
@@ -198,7 +199,7 @@ namespace TestingModule.Additional
                        where lhg.LectureHistoryId == lecturesHistory.Id
                        join g in _context.Groups on lhg.GroupId equals g.Id
                        select g).ToListAsync();
-
+            LectureHistoryHelper.ModuleTimers.TryGetValue(lecturesHistory.Id, out Timer moduleTimer);
             RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
             {
                 Lector = lector,
@@ -206,7 +207,8 @@ namespace TestingModule.Additional
                 LecturesHistory = lecturesHistory,
                 Module = module,
                 Questions = questions,
-                ModuleHistory = moduleHistory
+                ModuleHistory = moduleHistory,
+                Timer = moduleTimer
             };
             return realTimeStatistics;
         }
