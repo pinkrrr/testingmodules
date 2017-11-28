@@ -199,7 +199,6 @@ namespace TestingModule.Additional
                        where lhg.LectureHistoryId == lecturesHistory.Id
                        join g in _context.Groups on lhg.GroupId equals g.Id
                        select g).ToListAsync();
-            LectureHistoryHelper.ModuleTimers.TryGetValue(lecturesHistory.Id, out Timer moduleTimer);
             RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
             {
                 Lector = lector,
@@ -208,7 +207,7 @@ namespace TestingModule.Additional
                 Module = module,
                 Questions = questions,
                 ModuleHistory = moduleHistory,
-                Timer = moduleTimer
+                Timer = LectureHistoryHelper.ModuleTimers.Where(mt=>mt.Key==lecturesHistory.Id).Select(mt=>mt.Value).SingleOrDefault()
             };
             return realTimeStatistics;
         }

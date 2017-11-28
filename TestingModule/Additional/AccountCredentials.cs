@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using TestingModule.Models;
 using TestingModule.ViewModels;
 using System.Security.Claims;
+using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web.Routing;
@@ -33,6 +34,11 @@ namespace TestingModule.Additional
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
             return await context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+        }
+
+        public string GetStudentGroup(ClaimsIdentity identity)
+        {
+            return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
         }
 
         public async Task<Lector> GetLector()

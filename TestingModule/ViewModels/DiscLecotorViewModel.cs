@@ -8,8 +8,8 @@ namespace TestingModule.ViewModels
 {
     public class DiscLecotorViewModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int DiscId { get; set; }
+        public string DiscName { get; set; }
         public int? LectorId { get; set; }
         public IEnumerable<Lector> Lectors { get; set; }
     }

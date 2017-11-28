@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.EnterpriseServices;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -60,6 +61,40 @@ namespace TestingModule.Hubs
                 Clients.Caller.RecieveRealTimeStatistics(realTimeStatistics);
                 _locked = false;
             }
+        }
+
+        private static readonly ConnectionMapping<string> Connections =
+            new ConnectionMapping<string>();
+        public override Task OnConnected()
+        {
+            if (Context.User.IsInRole(RoleName.Student))
+            {
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+
+                Connections.Add(group, Context.ConnectionId);
+            }
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+
+            Connections.Remove(group, Context.ConnectionId);
+
+            return base.OnDisconnected(stopCalled);
+        }
+
+        public override Task OnReconnected()
+        {
+            string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+
+            if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
+            {
+                Connections.Add(group, Context.ConnectionId);
+            }
+
+            return base.OnReconnected();
         }
 
         public void ModuleEnquire()
