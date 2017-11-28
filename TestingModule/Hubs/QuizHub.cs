@@ -70,7 +70,6 @@ namespace TestingModule.Hubs
             if (Context.User.IsInRole(RoleName.Student))
             {
                 string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-
                 Connections.Add(group, Context.ConnectionId);
             }
             return base.OnConnected();
@@ -78,20 +77,23 @@ namespace TestingModule.Hubs
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-
-            Connections.Remove(group, Context.ConnectionId);
-
+            if (Context.User.IsInRole(RoleName.Student))
+            {
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                Connections.Remove(group, Context.ConnectionId);
+            }
             return base.OnDisconnected(stopCalled);
         }
 
         public override Task OnReconnected()
         {
-            string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-
-            if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
+            if (Context.User.IsInRole(RoleName.Student))
             {
-                Connections.Add(group, Context.ConnectionId);
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity) Context.User.Identity);
+                if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
+                {
+                    Connections.Add(group, Context.ConnectionId);
+                }
             }
 
             return base.OnReconnected();
