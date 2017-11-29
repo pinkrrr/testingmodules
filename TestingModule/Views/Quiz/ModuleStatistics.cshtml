@@ -21,11 +21,8 @@
         var statisticsDynamicData = [];
 
         $.connection.hub.start().done(function () {
-            quiz.server.queryRealTimeStats(statisticsModel, true).done(function() {
-                setInterval(function ()
-                { quiz.server.queryRealTimeStats(statisticsModel, true) },
-                    intervalTime);
-            });
+            sendInvintations();
+            retrieveResponses();
         });
 
         statisticsModel.Questions.forEach(function (item, i) {
@@ -44,21 +41,28 @@
             });
         };
 
-        moduleId = @Model.Questions.Select(q => q.ModuleId).FirstOrDefault();
-        quiz.client.recieveEnquire = function (accountId, connectionId) {
-            quiz.server.sendQVM(moduleId, connectionId);
+        var groups =@Html.Raw(Json.Encode(Model.Groups));
+        function sendInvintations() {
+            quiz.server.sendQVM(groups, @Model.ModuleHistory.Id);
+            setInterval(function() {quiz.server.sendQVM(groups, @Model.ModuleHistory.Id)}, 5000);
         }
 
-
+        function retrieveResponses() {
+            quiz.server.queryRealTimeStats(statisticsModel, true).done(function () {
+                setInterval(function ()
+                { quiz.server.queryRealTimeStats(statisticsModel, true) },
+                    intervalTime);
+            });
+        }
 
         quiz.client.responseRecieved = function () {
             quiz.server.queryRealTimeStats(statisticsModel, false);
         };
 
         quiz.client.recieveRealTimeStatistics = function (realTimeStatistics) {
-            realTimeStatistics.forEach(function (item) {
+            realTimeStatistics.forEach(function(item) {
                 progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
-            })
+            });
         }
     </script>
 }

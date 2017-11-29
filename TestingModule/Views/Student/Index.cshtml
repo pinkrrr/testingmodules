@@ -68,15 +68,10 @@ else
     <script>
         var quiz = $.connection.quizHub;
         var intervalTime = 3000;
-
-        $.connection.hub.start().done(function () {
-            setInterval(function () {
-                quiz.server.moduleEnquire();}, 
-                intervalTime);
-        });
-        quiz.client.reciveModuleId = function (moduleId) {
-            console.log(moduleId);
-            window.location.href = '/quiz/' + moduleId;
+        
+        quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
+            console.log(moduleHistoryId);
+            window.location.href = '/quiz/' + moduleHistoryId;
         };
     </script>
 }

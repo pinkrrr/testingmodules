@@ -29,10 +29,10 @@ namespace TestingModule.Controllers
             base.Dispose(disposing);
         }
 
-        [Route("quiz/{moduleId}")]
-        public async Task<ActionResult> Index(int moduleId)
+        [Route("quiz/{moduleHistoryId}")]
+        public async Task<ActionResult> Index(int moduleHistoryId)
         {
-            QuizViewModel qvm = await new QuizManager().GetQnA(moduleId);
+            QuizViewModel qvm = await new QuizManager().GetQnA(moduleHistoryId);
             if (qvm == null)
                 return RedirectToAction("Index", "Student");
             if (qvm.Question == null)
@@ -67,7 +67,7 @@ namespace TestingModule.Controllers
         [Route("quiz/totalstatistics/")]
         public async Task<ActionResult> TotalStatistics()
         {
-            return View(await new QuizManager().GetHistorieForLector());
+            return View(await new QuizManager().GetHistoriesForLector());
         }
 
         [Route("quiz/totalstatistics/history/{lectureHistoryId}")]
