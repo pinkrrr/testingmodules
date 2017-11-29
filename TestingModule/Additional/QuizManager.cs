@@ -38,29 +38,27 @@ namespace TestingModule.Additional
             return answersList;
         }
 
-        public async Task<QuizViewModel> GetQnA(int moduleId)
+        public async Task<QuizViewModel> GetQnA(int moduleHistoryId)
         {
             var student = await new AccountCredentials().GetStudent();
             var answeredQuestions = new StudentPageHelper().CheckActiveQuiz(student.Id);
             QuizViewModel qnA = new QuizViewModel();
             if (answeredQuestions != null)
             {
-                ICollection<Question> questions = await GetQuestionsList(moduleId);
+                ModuleHistory moduleHistory =
+                    await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
+                ICollection<Question> questions = await GetQuestionsList(moduleHistory.ModuleId);
                 questions = questions.Where(t => !answeredQuestions.Contains(t.Id)).ToList();
                 if (questions.Count != 0)
                 {
                     var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-                    int lectureHistoryId = await GetLectureHistoryId(question.LectureId, student.GroupId);
-                    int moduleHistoryId = await _context.ModuleHistories
-                        .Where(mh => mh.LectureHistoryId == lectureHistoryId && mh.StartTime != null &&
-                                     mh.IsPassed == false).Select(mh => mh.Id).SingleOrDefaultAsync();
                     qnA = new QuizViewModel
                     {
                         QuestionsList = questions,
                         Question = question,
                         Student = student,
                         Answers = await GetAnswersList(question.Id),
-                        LectureHistoryId = lectureHistoryId,
+                        LectureHistoryId = moduleHistory.LectureHistoryId,
                         ModuleHistoryId = moduleHistoryId
                     };
                 }
@@ -77,19 +75,8 @@ namespace TestingModule.Additional
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
-
-        public async Task<int> GetLectureHistoryId(int lectureId, int studentGroupId)
-        {
-            var lect = await _context.LecturesHistories
-                .Join(_context.LectureHistoryGroups, lh => lh.Id, lhg => lhg.LectureHistoryId,
-                    (lh, lhg) => new { LecturesHistory = lh, LectureHistoryGroup = lhg })
-                .Where(t => t.LecturesHistory.LectureId == lectureId &&
-                            t.LecturesHistory.EndTime == null && t.LectureHistoryGroup.GroupId == studentGroupId)
-                .Select(t => t.LecturesHistory.Id).FirstOrDefaultAsync();
-            return lect;
-        }
-
-        public async Task<StatisticsViewModel> GetHistorieForLector()
+        
+        public async Task<StatisticsViewModel> GetHistoriesForLector()
         {
             Lector lector = await new AccountCredentials().GetLector();
             IEnumerable<Discipline> disciplines =

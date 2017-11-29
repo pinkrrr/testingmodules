@@ -89,7 +89,7 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity) Context.User.Identity);
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
                 if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
                 {
                     Connections.Add(group, Context.ConnectionId);
@@ -99,18 +99,21 @@ namespace TestingModule.Hubs
             return base.OnReconnected();
         }
 
-        public void ModuleEnquire()
+        /*public void ModuleEnquire()
         {
-            var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = Int32.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id")
-                .Select(c => c.Value)
-                .SingleOrDefault());
-            Clients.All.RecieveEnquire(accountId, Context.ConnectionId);
-        }
+            
+            Clients.All.RecieveEnquire(, Context.ConnectionId);
+        }*/
 
-        public void SendQVM(int moduleId, string connectionId)
+        public void SendQVM(IEnumerable<Group> groups, int moduleHistoryId)
         {
-            Clients.Client(connectionId).ReciveModuleId(moduleId);
+            foreach (Group group in groups)
+            {
+                foreach (string connection in Connections.GetConnections(group.Name))
+                {
+                    Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
+                }
+            }
         }
 
         public void StopModule()
