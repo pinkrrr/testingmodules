@@ -61,5 +61,17 @@ namespace TestingModule.Models
                 }
             }
         }
+
+        public IEnumerable<T> Any(IEnumerable<T> keys)
+        {
+            lock (_connections)
+            {
+                if (_connections.Any(c => keys.Contains(c.Key)))
+                {
+                    return keys.Where(k => _connections.Keys.Contains(k));
+                }
+            }
+            return Enumerable.Empty<T>();
+        }
     }
 }
