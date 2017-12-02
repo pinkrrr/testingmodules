@@ -46,15 +46,6 @@
 else
 {
     <h1><u>@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Name</u></h1>
-    <h2>Матеріали лекції</h2>
-    if (Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Description == null)
-    {
-        <div>Немає матеріалів лекції...Бажаєте додати? <i class="fa fa-pencil" aria-hidden="true"></i></div>
-    }
-    else
-    {
-        <div class="description">@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Description</div>
-    }
     <h2>Модулі лекції</h2>
     <table class="table" border="1">
         <tr class="table-row table-header-row">
