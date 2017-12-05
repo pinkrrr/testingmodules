@@ -40,7 +40,7 @@ namespace TestingModule.Models
     {
         private readonly Timer timer;
         private readonly DateTime moduleFinish;
-        public static Dictionary<int, TimerAssociates> ModuleTimers = new Dictionary<int, TimerAssociates>();
+        private static readonly Dictionary<int, TimerAssociates> ModuleTimers = new Dictionary<int, TimerAssociates>();
 
         public TimerAssociates(Timer timer, DateTime moduleFinish)
         {
@@ -86,13 +86,13 @@ namespace TestingModule.Models
             }
         }
 
-        public TimeSpan TimeLeft(int moduleHistoryId)
+        public double TimeLeft(int moduleHistoryId)
         {
             if (ModuleTimers.TryGetValue(moduleHistoryId, out TimerAssociates timerAssociatives))
             {
-                return timerAssociatives.moduleFinish - DateTime.UtcNow;
+                return (timerAssociatives.moduleFinish - DateTime.UtcNow).TotalMilliseconds;
             }
-            return TimeSpan.Zero;
+            return 0;
         }
 
         private async void StopModuleOnTimer(object state)

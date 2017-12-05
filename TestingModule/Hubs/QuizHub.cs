@@ -99,12 +99,6 @@ namespace TestingModule.Hubs
             return base.OnReconnected();
         }
 
-        /*public void ModuleEnquire()
-        {
-            
-            Clients.All.RecieveEnquire(, Context.ConnectionId);
-        }*/
-
         public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
         {
 
