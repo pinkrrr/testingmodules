@@ -31,7 +31,7 @@ namespace TestingModule.ViewModels
         public Module Module { get; set; }
         public IEnumerable<Question> Questions { get; set; }
         public IEnumerable<Group> Groups { get; set; }
-        public Timer Timer { get; set; }
+        public TimeSpan TimeLeft { get; set; }
 
     }
 }
