@@ -105,11 +105,12 @@ namespace TestingModule.Hubs
             Clients.All.RecieveEnquire(, Context.ConnectionId);
         }*/
 
-        public void SendQVM(IEnumerable<Group> groups, int moduleHistoryId)
+        public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
         {
-            foreach (Group group in groups)
+
+            foreach (string group in Connections.Any(groups))
             {
-                foreach (string connection in Connections.GetConnections(group.Name))
+                foreach (string connection in Connections.GetConnections(group))
                 {
                     Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
                 }

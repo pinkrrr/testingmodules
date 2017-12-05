@@ -43,16 +43,6 @@
 else
 {
     <h1><u>@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Name</u></h1>
-    <h2>Матеріали лекції</h2>
-    if (Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Description == null)
-    {
-        <div>Немає матеріалів лекції...</div>
-    }
-    else
-    {
-        <div class="description">@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Description</div>
-    }
-    <hr>
     <h1>Модулі лекції</h1>
 
         foreach (var item in Model.Modules.OrderBy(t => t.Name))

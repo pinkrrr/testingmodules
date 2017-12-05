@@ -17,6 +17,5 @@ namespace TestingModule.Models
         public int Id { get; set; }
         public int GroupId { get; set; }
         public int LectureHistoryId { get; set; }
-        public bool IsSelected { get; set; }
     }
 }

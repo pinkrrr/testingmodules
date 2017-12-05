@@ -9,6 +9,7 @@ using TestingModule.Models;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using Microsoft.Owin;
+using Microsoft.Win32;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using TestingModule.ViewModels;
@@ -194,7 +195,7 @@ namespace TestingModule.Additional
                 Module = module,
                 Questions = questions,
                 ModuleHistory = moduleHistory,
-                Timer = LectureHistoryHelper.ModuleTimers.Where(mt=>mt.Key==lecturesHistory.Id).Select(mt=>mt.Value).SingleOrDefault()
+                TimeLeft = new TimerAssociates().TimeLeft(moduleHistory.Id)
             };
             return realTimeStatistics;
         }

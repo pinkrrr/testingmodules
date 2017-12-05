@@ -41,7 +41,7 @@
             });
         };
 
-        var groups =@Html.Raw(Json.Encode(Model.Groups));
+        var groups =@Html.Raw(Json.Encode(Model.Groups.Select(g=>g.Name)));
         function sendInvintations() {
             quiz.server.sendQVM(groups, @Model.ModuleHistory.Id);
             setInterval(function() {quiz.server.sendQVM(groups, @Model.ModuleHistory.Id)}, 5000);
