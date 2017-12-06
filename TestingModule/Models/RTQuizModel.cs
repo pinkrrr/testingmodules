@@ -86,11 +86,11 @@ namespace TestingModule.Models
             }
         }
 
-        public double TimeLeft(int moduleHistoryId)
+        public int TimeLeft(int moduleHistoryId)
         {
             if (ModuleTimers.TryGetValue(moduleHistoryId, out TimerAssociates timerAssociatives))
             {
-                return (timerAssociatives.moduleFinish - DateTime.UtcNow).TotalMilliseconds;
+                return Convert.ToInt32((timerAssociatives.moduleFinish - DateTime.UtcNow).TotalMilliseconds);
             }
             return 0;
         }

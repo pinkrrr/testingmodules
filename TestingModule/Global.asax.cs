@@ -23,7 +23,7 @@ namespace TestingModule
             await new TimerAssociates().OnStartModuleTimer();
         }
 
-        /*protected void Application_Error(object sender, EventArgs e)
+        protected void Application_Error(object sender, EventArgs e)
         {
             Exception exept = Server.GetLastError();
             HttpException httpEx = exept as HttpException;
@@ -41,30 +41,29 @@ namespace TestingModule
                 Response.Redirect("/Error/ServerError");
             }
 
-        }*/
-        /*
-        protected void Application_AuthenticateRequest(Object sender, EventArgs e)
-        {
-            // This is the page
-            string cTheFile = HttpContext.Current.Request.Path;
-            bool val1 = (System.Web.HttpContext.Current.User != null) &&
-                        System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
-            // Check if I am all ready on login page to avoid crash
-            if (!cTheFile.Contains("/Account/Login") && !cTheFile.Contains("/__browserLink/requestData") && !val1)
-            {
-                // Extract the form's authentication cookie
-                string cookieName = FormsAuthentication.FormsCookieName;
-                HttpCookie authCookie = Context.Request.Cookies[cookieName];
-
-                // If not logged in
-                if (null == authCookie)
-                {
-                    Response.Redirect("/Account/Login", true);
-                    Response.End();
-                    return;
-                }
-            }
         }
-        */
+        //protected void Application_AuthenticateRequest(Object sender, EventArgs e)
+        //{
+        //    // This is the page
+        //    string cTheFile = HttpContext.Current.Request.Path;
+        //    bool val1 = (System.Web.HttpContext.Current.User != null) &&
+        //                System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+        //    // Check if I am all ready on login page to avoid crash
+        //    if (!cTheFile.Contains("/Account/Login") && !cTheFile.Contains("/__browserLink/requestData") && !val1)
+        //    {
+        //       //  Extract the form's authentication cookie
+        //        string cookieName = FormsAuthentication.FormsCookieName;
+        //        HttpCookie authCookie = Context.Request.Cookies[cookieName];
+
+        //       //  If not logged in
+        //        if (null == authCookie)
+        //        {
+        //            Response.Redirect("/Account/Login", true);
+        //            Response.End();
+        //            return;
+        //        }
+        //    }
+        //}
+        
     }
 }

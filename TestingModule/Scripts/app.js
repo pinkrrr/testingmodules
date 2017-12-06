@@ -31,7 +31,7 @@
 
         function showPopupEdit($inputTexts) {
             $popup.edit.addClass('popup-active');
-
+            console.log($inputTexts);
             $inputTexts.each(function (i) {
                 $popup.edit.find('.input-text').eq(i).val($(this).text());
             });
@@ -65,6 +65,7 @@
                     answerId: $('#id').val(),
                     question: inputText.val(),
                     questionId: $('#questionId').val(),
+                    description: inputText.val()
                 };
 
                 sendData(data, url, method);

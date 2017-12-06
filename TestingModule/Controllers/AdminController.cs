@@ -337,7 +337,7 @@ namespace TestingModule.Controllers
             {
                 if (model.Id != null && model.Name != null)
                 {
-                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId, model.MinutesToPass);
+                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId, model.MinutesToPass, model.Description);
                     TempData["Success"] = "Зміни було успіщно збережено!";
                 }
 
