@@ -170,8 +170,8 @@ namespace TestingModule.Controllers
                    .ToList();
                 viewModels = _db.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
                 {
-                    Id = d.Id,
-                    Name = d.Name
+                    DiscId = d.Id,
+                    DiscName = d.Name
                 }
                 ).ToList();
             }
@@ -179,14 +179,14 @@ namespace TestingModule.Controllers
             {
                 viewModels = _db.Disciplines.Select(d => new DiscLecotorViewModel
                 {
-                    Id = d.Id,
-                    Name = d.Name
+                    DiscId = d.Id,
+                    DiscName = d.Name
                 }
                 ).ToList();
                 foreach (var model in viewModels)
                 {
                     model.Lectors = lectors;
-                    model.LectorId = _db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
+                    model.LectorId = _db.LectorDisciplines.Where(t => model.DiscId == t.DisciplineId).Select(t => t.LectorId)
                         .FirstOrDefault();
                 }
             }
@@ -198,15 +198,15 @@ namespace TestingModule.Controllers
             {
                 if (model.LectorId != null)
                 {
-                    new Adding().AddNewDiscipline(model.Name.TrimEnd().TrimStart(), model.LectorId);
-                    TempData["Success"] = "Дисципліна - \"" + model.Name.TrimEnd().TrimStart() + "\" була успішно додана!";
+                    new Adding().AddNewDiscipline(model.DiscName.TrimEnd().TrimStart(), model.LectorId);
+                    TempData["Success"] = "Дисципліна - \"" + model.DiscName.TrimEnd().TrimStart() + "\" була успішно додана!";
                 }
             }
             catch (Exception)
             {
                 HttpContext con = System.Web.HttpContext.Current;
                 var url = con.Request.Url.ToString();
-                new Adding().AddNewError(url, "NewDiscipline Name = " + model.Name + " LectorId = " + model.LectorId);
+                new Adding().AddNewError(url, "NewDiscipline Name = " + model.DiscName + " LectorId = " + model.LectorId);
                 TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
 
@@ -216,14 +216,14 @@ namespace TestingModule.Controllers
         {
             try
             {
-                new Editing().EditDiscipline(model.Id, model.Name.TrimEnd().TrimStart(), model.LectorId);
+                new Editing().EditDiscipline(model.DiscId, model.DiscName.TrimEnd().TrimStart(), model.LectorId);
                 TempData["Success"] = "Зміни було успішно збережено";
             }
             catch (Exception)
             {
                 HttpContext con = System.Web.HttpContext.Current;
                 var url = con.Request.Url.ToString();
-                new Adding().AddNewError(url, "EditDiscipline Name = " + model.Name + " LectorId = " + model.LectorId + " Id = " + model.Id);
+                new Adding().AddNewError(url, "EditDiscipline Name = " + model.DiscName + " LectorId = " + model.LectorId + " Id = " + model.DiscId);
                 TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
             }
             return RedirectToAction("Disciplines");
@@ -337,7 +337,7 @@ namespace TestingModule.Controllers
             {
                 if (model.Id != null && model.Name != null)
                 {
-                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId, model.MinutesToPass);
+                    new Editing().EditModule(model.Id, model.Name.TrimEnd().TrimStart(), model.LectureId, model.MinutesToPass, model.Description);
                     TempData["Success"] = "Зміни було успіщно збережено!";
                 }
 
@@ -374,20 +374,20 @@ namespace TestingModule.Controllers
         {
             var description = _db.Modules.FirstOrDefault(t => t.Id == moduleId).Description;
             List<QueAns> viewModels = (from q in _db.Questions
-                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
-                                       select new QueAns()
-                                       {
-                                           DisciplineId = q.DisciplineId,
-                                           LectureId = q.LectureId,
-                                           ModuleId = q.ModuleId,
-                                           QuestionId = q.Id,
-                                           Question = q.Text,
-                                           QuestionType = q.QuestionType,
-                                           AnswerId = a.Id,
-                                           Answer = a.Text,
-                                           IsCorrect = a.IsCorrect,
-                                           Description = description
-                                       }).ToList();
+                from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
+                select new QueAns()
+                {
+                    DisciplineId = q.DisciplineId,
+                    LectureId = q.LectureId,
+                    ModuleId = q.ModuleId,
+                    QuestionId = q.Id,
+                    Question = q.Text,
+                    QuestionType = q.QuestionType,
+                    AnswerId = a.Id,
+                    Answer = a.Text,
+                    IsCorrect = a.IsCorrect,
+                    Description = description
+                }).ToList();
             var lectId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
             IEnumerable<Module> mod = _db.Modules.Where(t => t.LectureId == lectId).ToList();
             foreach (var model in viewModels)

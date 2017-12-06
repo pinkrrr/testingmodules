@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.EnterpriseServices;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -62,18 +63,52 @@ namespace TestingModule.Hubs
             }
         }
 
-        public void ModuleEnquire()
+        private static readonly ConnectionMapping<string> Connections =
+            new ConnectionMapping<string>();
+        public override Task OnConnected()
         {
-            var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = Int32.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id")
-                .Select(c => c.Value)
-                .SingleOrDefault());
-            Clients.All.RecieveEnquire(accountId, Context.ConnectionId);
+            if (Context.User.IsInRole(RoleName.Student))
+            {
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                Connections.Add(group, Context.ConnectionId);
+            }
+            return base.OnConnected();
         }
 
-        public void SendQVM(int moduleId, string connectionId)
+        public override Task OnDisconnected(bool stopCalled)
         {
-            Clients.Client(connectionId).ReciveModuleId(moduleId);
+            if (Context.User.IsInRole(RoleName.Student))
+            {
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                Connections.Remove(group, Context.ConnectionId);
+            }
+            return base.OnDisconnected(stopCalled);
+        }
+
+        public override Task OnReconnected()
+        {
+            if (Context.User.IsInRole(RoleName.Student))
+            {
+                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
+                {
+                    Connections.Add(group, Context.ConnectionId);
+                }
+            }
+
+            return base.OnReconnected();
+        }
+
+        public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
+        {
+
+            foreach (string group in Connections.Any(groups))
+            {
+                foreach (string connection in Connections.GetConnections(group))
+                {
+                    Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
+                }
+            }
         }
 
         public void StopModule()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using TestingModule.Models;
 
@@ -30,5 +31,7 @@ namespace TestingModule.ViewModels
         public Module Module { get; set; }
         public IEnumerable<Question> Questions { get; set; }
         public IEnumerable<Group> Groups { get; set; }
+        public double TimeLeft { get; set; }
+
     }
 }

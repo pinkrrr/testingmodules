@@ -17,14 +17,14 @@ namespace TestingModule.Additional
             IEnumerable<Lector> lectors = _db.Lectors.ToList();
             List<DiscLecotorViewModel> viewModels = _db.Disciplines.Select(d => new DiscLecotorViewModel
             {
-                Id = d.Id,
-                Name = d.Name
+                DiscId = d.Id,
+                DiscName = d.Name
             }
             ).ToList();
             foreach (var model in viewModels)
             {
                 model.Lectors = lectors;
-                model.LectorId = _db.LectorDisciplines.Where(t => model.Id == t.DisciplineId).Select(t => t.LectorId)
+                model.LectorId = _db.LectorDisciplines.Where(t => model.DiscId == t.DisciplineId).Select(t => t.LectorId)
                     .FirstOrDefault();
             }
             var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
@@ -33,7 +33,7 @@ namespace TestingModule.Additional
             var account = _db.Accounts.FirstOrDefault(t => t.Login == login).Id;
             var student = _db.Students.FirstOrDefault(t => t.AccountId == account).Id;
             var connect = _db.StudentDisciplines.Where(t => t.StudentId == student).Select(t => t.DisciplineId).ToList();
-            viewModels = viewModels.Where(t => connect.Contains(t.Id)).ToList();
+            viewModels = viewModels.Where(t => connect.Contains(t.DiscId)).ToList();
             return (viewModels);
         }
 

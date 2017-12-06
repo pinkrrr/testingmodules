@@ -20,23 +20,23 @@
         var totalCorrectAnswers = 1;
         var statisticsDynamicData = [];
 
-        $.connection.hub.start().done(function () {
-            quiz.server.queryRealTimeStats(statisticsModel, true).done(function() {
-                setInterval(function ()
-                { quiz.server.queryRealTimeStats(statisticsModel, true) },
-                    intervalTime);
-            });
+        $.connection.hub.start().done(function() {
+            /*quiz.server.queryRealTimeStats(Model, true).fail(function(error) {
+                console.log('Invocation of NewContosoChatMessage failed. Error: ' + error);
+            });*/
+            retrieveResponses();
+            sendInvintations();
         });
 
-        statisticsModel.Questions.forEach(function (item, i) {
+        statisticsModel.Questions.forEach(function(item, i) {
             statisticsDynamicData[i] = {
                 questionId: item.Id,
                 totalAnswersCount: 0
             }
         });
 
-        quiz.client.recieveStatistics = function (questionId, studentsCount, groupId) {
-            statisticsDynamicData.forEach(function (item) {
+        quiz.client.recieveStatistics = function(questionId, studentsCount, groupId) {
+            statisticsDynamicData.forEach(function(item) {
                 if (item.questionId === questionId) {
                     item.totalAnswersCount++;
                 }
@@ -44,21 +44,26 @@
             });
         };
 
-        moduleId = @Model.Questions.Select(q => q.ModuleId).FirstOrDefault();
-        quiz.client.recieveEnquire = function (accountId, connectionId) {
-            quiz.server.sendQVM(moduleId, connectionId);
+        var groups = @Html.Raw(Json.Encode(Model.Groups.Select(g => g.Name)));
+
+        function sendInvintations() {
+            quiz.server.sendQVM(groups, @Model.ModuleHistory.Id);
+            setInterval(function() { quiz.server.sendQVM(groups, @Model.ModuleHistory.Id) }, 5000);
         }
 
+        function retrieveResponses() {
+            quiz.server.queryRealTimeStats(statisticsModel, true);
+            setInterval(function() { quiz.server.queryRealTimeStats(statisticsModel, true) }, intervalTime);
+        }
 
-
-        quiz.client.responseRecieved = function () {
+        quiz.client.responseRecieved = function() {
             quiz.server.queryRealTimeStats(statisticsModel, false);
         };
 
-        quiz.client.recieveRealTimeStatistics = function (realTimeStatistics) {
-            realTimeStatistics.forEach(function (item) {
+        quiz.client.recieveRealTimeStatistics = function(realTimeStatistics) {
+            realTimeStatistics.forEach(function(item) {
                 progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
-            })
+            });
         }
     </script>
 }

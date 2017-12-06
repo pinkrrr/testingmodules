@@ -47,7 +47,7 @@ else
         <u>@Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Name</u>
     </h1>
     <h2>Матеріали модуля</h2>
-    if (Model.FirstOrDefault().Modules.FirstOrDefault().Description == null)
+    if (Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Description == null)
     {
         <div>
             Немає матеріалів лекції...Бажаєте додати? <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -55,7 +55,7 @@ else
     }
     else
     {
-        <div class="description">@Model.FirstOrDefault().Modules.FirstOrDefault().Description</div>
+        <div class="description">@Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Description</div>
     }
     <hr>
     foreach (var type in Model.OrderBy(t => t.QuestionType).GroupBy(t => t.QuestionType))
@@ -210,42 +210,41 @@ else
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="popup popup-add">
-                                    <div class="popup-body">
-                                        <tr class="popup-content">
-                                            <div class="popup-title">Створити нове питання</div>
-                                            @using (Html.BeginForm("NewQuestion", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
-                                            {
-                                                <form>
-                                                    @{
-                                                        var name = Model.LastOrDefault();
-                                                    }
-                                                    @if (name == null)
+                                }
+<div class="popup popup-add">
+    <div class="popup-body">
+        <tr class="popup-content">
+            <div class="popup-title">Створити нове питання</div>
+            @using (Html.BeginForm("NewQuestion", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
+            {
+                <form>
+                    @{
+                        var name = Model.LastOrDefault();
+                    }
+                    @if (name == null)
                     {
-                                                        @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.TextBoxFor(model => model.LastOrDefault().Question, name.Question = "", new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
-                                                    }
-                                                    <table>
-                                                        <tr>
-                                                            <td>@Html.RadioButtonFor(model => Model.FirstOrDefault().QuestionType, 1, new { @class = "radioInput", required = "required" })</td>
-                                                            <td>Лекційне питання</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>@Html.RadioButtonFor(model => Model.FirstOrDefault().QuestionType, 2, new { @class = "radioInput", required = "required" })</td>
-                                                            <td>Індивідуальне питання</td>
-                                                        </tr>
-                                                    </table>
-                                                    @Html.HiddenFor(model => model.LastOrDefault().ModuleId)
-                                                    @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
-                                                    @Html.HiddenFor(model => model.LastOrDefault().LectureId)
-                                                    <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
-                                                    <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-                                                </form>
-                                                        }
-                                    </div>
-                                </div>
-                                                        }
+                        @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Question, name.Question = "", new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
+                    }
+                    <table>
+                        <tr>
+                            <td>@Html.RadioButtonFor(model => Model.FirstOrDefault().QuestionType, 1, new { @class = "radioInput", required = "required" })</td>
+                            <td>Лекційне питання</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.RadioButtonFor(model => Model.FirstOrDefault().QuestionType, 2, new { @class = "radioInput", required = "required" })</td>
+                            <td>Індивідуальне питання</td>
+                        </tr>
+                    </table>
+                    @Html.HiddenFor(model => model.LastOrDefault().ModuleId)
+                    @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
+                    @Html.HiddenFor(model => model.LastOrDefault().LectureId)
+                    <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
+                    <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                </form>
+                        }
+    </div>
+</div>

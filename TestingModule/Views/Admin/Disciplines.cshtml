@@ -56,11 +56,11 @@ else
                     }
                     <th>Студенти</th>
                 </tr>
-                @foreach (var item in Model.OrderBy(t => t.Name))
+                @foreach (var item in Model.OrderBy(t => t.DiscName))
                 {
                     <tr class="table-row">
                         <td class="table-item table-item_name">
-                            <a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text" data-editable>@item.Name</a>
+                            <a data-id="@item.DiscId" href="disciplines/@item.DiscId/lectures" class="table-item_name_text" data-editable>@item.DiscName</a>
                         </td>
                         @if (c.Value.ToString() == "Administrator")
                         {
@@ -84,13 +84,13 @@ else
                                 <div class="table-button table-edit-button">
                                     <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
                                 </div>
-                                <div data-remove="disciplines/@item.Id/Delete" class="table-button table-remove-button">
+                                <div data-remove="disciplines/@item.DiscId/Delete" class="table-button table-remove-button">
                                     <i class='fa fa-trash' aria-hidden='true'></i>Видалити
                                 </div>
                             </td>
                                     }
                         <td class="table-item table-item_students">
-                            <a class="" href="disciplines/@item.Id/disciplinestudents">Студенти</a>
+                            <a class="" href="disciplines/@item.DiscId/disciplinestudents">Студенти</a>
                         </td>
                     </tr>
                                     }
@@ -116,12 +116,12 @@ else
                             {
                                                         <div class="popup-title">Редагування</div>
                                                         <form>
-                                                            @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
+                                                            @Html.TextBoxFor(model => model.FirstOrDefault().DiscName, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
                                                             <div class="selectmenu">
                                                                 <div class="selectmenu_title">Оберіть лектора</div>
                                                                 @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"), "Оберіть лектора")
                                                             </div>
-                                                            @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
+                                                            @Html.HiddenFor(model => model.FirstOrDefault().DiscId, new { @id = "id" })
                                                             <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                                                             <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                                                         </form>
@@ -141,11 +141,11 @@ else
                                                             }
                                                             @if (name == null)
                                                             {
-                                                                @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
+                                                                @Html.TextBoxFor(model => model.LastOrDefault().DiscName, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
                                                             }
                                                             else
                                                             {
-                                                                @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву дицсипліни", @required = "required" })
+                                                                @Html.TextBoxFor(model => model.LastOrDefault().DiscName, name.DiscName = "", new { @class = "input-text", @placeholder = "Введіть назву дицсипліни", @required = "required" })
                                                             }
                                                             @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"), "Оберіть лектора")
                                                             <div>

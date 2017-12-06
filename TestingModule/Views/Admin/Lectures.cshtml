@@ -91,12 +91,10 @@ else
                         @if (name == null)
                         {
                             @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, new { @class = "input-text" , @placeholder = "Введіть назву лекції", @required = "required" })
-                            @Html.TextAreaFor(model => model.Lectures.LastOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис лекції", @required = "required" })
                         }
                         else
                         {
                             @Html.TextBoxFor(model => model.Lectures.LastOrDefault().Name, name.Name = "", new { @class = "input-text" , @placeholder = "Введіть назву лекції", @required = "required" })
-                            @Html.TextAreaFor(model => model.Lectures.LastOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис лекції", @required = "required" })
                         }
                     </div>
                     <div>

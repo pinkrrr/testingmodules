@@ -208,6 +208,7 @@
     <Compile Include="Models\Account.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ConnectionMapping.cs" />
     <Compile Include="Models\ExeptionLog.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -223,7 +224,7 @@
     <Compile Include="Models\ModuleHistory.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ResponseTable.cs" />
+    <Compile Include="Models\RTQuizModel.cs" />
     <Compile Include="Models\Respons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
