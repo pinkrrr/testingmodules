@@ -6,6 +6,8 @@
 
 <div class="statistics_moduleName">Викторина "в реальном времени"</div>
 
+<div id="timer">00:00</div>
+
 <div class="questions"></div>
 
 @*@Html.ActionLink("Зупинити модуль", "stopmodule", "admin", new { moduleHistoryId = Model.ModuleHistory.Id }, new { @class = "stopModule", @id = "stopModuleButton" })*@
@@ -65,5 +67,29 @@
                 progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
             });
         }
+
+        function zeroes(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        function timer(distance, element, status) {
+            var x = setInterval(function () {
+                var minutes = zeroes(Math.floor((distance / (1000 * 60))));
+                var seconds = zeroes(Math.floor((distance % (1000 * 60)) / 1000));
+                document.getElementById(element).innerHTML = minutes + ":" + seconds;
+                distance = distance - 1000;
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById(element).innerHTML = "00:00";
+                    status = false;
+                }
+            }, 1000);
+        }
+
+        timer(@Model.TimeLeft, 'timer', true);
+
     </script>
 }
