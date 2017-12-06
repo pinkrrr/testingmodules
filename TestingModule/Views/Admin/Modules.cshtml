@@ -107,6 +107,7 @@ else
                         Введіть назву модулю:
                         @{
                             var name = Model.Modules.LastOrDefault();
+                            Model.Modules.LastOrDefault().Description = "";
                         }
                         @if (name == null)
                         {
@@ -145,7 +146,10 @@ else
                         @Html.DropDownListFor(model => model.Modules.FirstOrDefault().LectureId, new SelectList(Model.Lectures, "Id", "Name", new { @lectureId = "lectureId" }), "Оберіть лекцію")
                     </div>
                     <div>
-                        @Html.TextBoxFor(model => model.Modules.LastOrDefault().MinutesToPass, new { @class = "input-text", @placeholder = "Введіть кількість хвилин для проходження модуля", @required = "required" })
+                        @Html.TextAreaFor(model => model.Modules.FirstOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис модуля"})
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(model => model.Modules.FirstOrDefault().MinutesToPass, new { @class = "input-text", @placeholder = "Введіть кількість хвилин для проходження модуля", @required = "required" })
                     </div>
                     @Html.HiddenFor(model => model.Modules.FirstOrDefault().Id, new { @id = "id" })
                     @Html.HiddenFor(model => model.Modules.FirstOrDefault().DisciplineId, new { @id = "id" })

@@ -47,7 +47,7 @@ namespace TestingModule.Additional
             lct.Name = name;
             _db.SaveChanges();
         }
-        public void EditModule(int moduleId, string name, int lectureId, int minutes)
+        public void EditModule(int moduleId, string name, int lectureId, int minutes, string description)
         {
             var mdl = _db.Modules.FirstOrDefault(t => t.Id == moduleId);
             if (lectureId != _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId && lectureId != 0)
@@ -60,6 +60,7 @@ namespace TestingModule.Additional
                 }
             }
             mdl.Name = name;
+            mdl.Description = description;
             if (minutes != 0)
             {
                 mdl.MinutesToPass = minutes;

@@ -47,7 +47,7 @@ else
         <u>@Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Name</u>
     </h1>
     <h2>Матеріали модуля</h2>
-    if (Model.FirstOrDefault().Modules.FirstOrDefault().Description == null)
+    if (Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Description == null)
     {
         <div>
             Немає матеріалів лекції...Бажаєте додати? <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -55,7 +55,7 @@ else
     }
     else
     {
-        <div class="description">@Model.FirstOrDefault().Modules.FirstOrDefault().Description</div>
+        <div class="description">@Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Description</div>
     }
     <hr>
     foreach (var type in Model.OrderBy(t => t.QuestionType).GroupBy(t => t.QuestionType))

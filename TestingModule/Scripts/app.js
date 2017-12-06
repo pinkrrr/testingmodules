@@ -65,6 +65,7 @@
                     answerId: $('#id').val(),
                     question: inputText.val(),
                     questionId: $('#questionId').val(),
+                    description: inputText.val()
                 };
 
                 sendData(data, url, method);
