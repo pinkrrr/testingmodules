@@ -173,3 +173,13 @@
     font-weight: 600;
     margin-bottom: 10px;
 }
+
+#timer{
+    font-size: 48px;
+    color: red;
+    display: inline-block;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
