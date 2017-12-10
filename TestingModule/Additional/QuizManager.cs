@@ -42,7 +42,7 @@ namespace TestingModule.Additional
         public async Task<QuizViewModel> GetQnA(int moduleHistoryId)
         {
             var student = await new AccountCredentials().GetStudent();
-            var answeredQuestions = new StudentPageHelper().CheckActiveQuiz(student.Id);
+            var answeredQuestions = await new StudentPageHelper().CheckActiveQuiz(moduleHistoryId, student.Id);
             QuizViewModel qnA = new QuizViewModel();
             if (answeredQuestions != null)
             {
@@ -76,7 +76,7 @@ namespace TestingModule.Additional
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
-        
+
         public async Task<StatisticsViewModel> GetHistoriesForLector()
         {
             Lector lector = await new AccountCredentials().GetLector();
