@@ -491,15 +491,15 @@ stopModule();
 
 function historyStatisticsPage(model) {
 
-    var chartDataObj = {
-        id: null,
-        answers: []
-    };
-
     console.log(model);
-    createHistoryStatisticsPage();
 
-    function createHistoryStatisticsPage() {
+    function drawChart() {
+
+        // Module -> Question -> Group
+
+        var ctx = null;
+
+
 
         var moduleId = null;
 
@@ -507,7 +507,7 @@ function historyStatisticsPage(model) {
 
             $('<div/>', {
                 class: 'module',
-                id: 'module'+module.Id
+                id: 'module' + module.Id
             }).appendTo('.chartsWrapper');
 
             $('<div/>', {
@@ -529,7 +529,7 @@ function historyStatisticsPage(model) {
                         html: question.Text
                     }).appendTo('#questionId' + question.Id);
 
-                    chartDataObj.id = question.Id;
+                    //chartDataObj.id = question.Id;
 
                     model.Groups.forEach(function (group) {
 
@@ -543,27 +543,62 @@ function historyStatisticsPage(model) {
                             html: group.Name
                         }).prependTo('#questionId' + question.Id + ' #group' + group.Id);
 
-                        $('<div/>', {
+                        $('<canvas/>', {
                             class: 'pieChart',
                             id: 'chartContainer' + question.Id
                         }).appendTo('#questionId' + question.Id + ' #group' + group.Id);
+
+                        ctx = $('#questionId' + question.Id + ' #group' + group.Id + ' .pieChart');
+
+                        var answersList = [];
+                        var labelsList = [];
 
                         model.AnswersCount.forEach(function (answer) {
 
                             if (question.Id === answer.QuestionId && answer.GroupId === group.Id) {
 
-                                chartDataObj.answers.push({
-                                    y: answer.Count,
-                                    name: answer.Text
-                                })
+                                answersList.push(answer.Count);
+
+                                labelsList.push(answer.Text);
+                                // chartData.push([answer.Text, answer.Count]);
 
                             }
 
                         });
 
-                        renderChart(chartDataObj);
+                        var myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                datasets: [{
+                                    // data: [10, 20, 30]
+                                    data: answersList,
+                                    backgroundColor: [
+                                        '#e6194b',
+                                        '#3cb44b',
+                                        '#ffe119',
+                                        '#0082c8',
+                                        '#f58231',
+                                        '#911eb4',
+                                        '#f032e6',
+                                        '#008080',
+                                        '#aa6e28',
+                                        '#800000',
+                                        '#000080'],
+                                }],
 
-                        chartDataObj.answers = [];
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: labelsList,
+                            },
+                            options: {
+                                pieceLabel: {
+                                    render: 'percentage',
+                                    fontColor: '#ffffff',
+                                    fontSize: '18',
+                                    precision: 2
+                                }
+                            }
+                        });
+
 
                     })
 
@@ -571,38 +606,121 @@ function historyStatisticsPage(model) {
 
             });
 
+            // chartData.unshift(['Відповідь', 'Кількість правильних відповідей']);
+
         });
+
     }
 
-    function renderChart(chartData) {
+    drawChart();
 
-        var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
-            {
-                animationEnabled: true,
-                legend: {
-                    verticalAlign: "bottom",
-                    horizontalAlign: "left",
-                    fontSize: 16,
-                    fontFamily: "arial"
-                },
-                theme: "theme3",
-                backgroundColor: "transparent",
-                data: [{
-                    type: "pie",
-                    indexLabelFontFamily: "Arial",
-                    indexLabelFontSize: 20,
-                    indexLabelFontWeight: "bold",
-                    startAngle: 0,
-                    indexLabelFontColor: "#ffffff",
-                    indexLabelLineColor: "#ff0000",
-                    indexLabelPlacement: "inside",
-                    toolTipContent: "Відповідь: {name}",
-                    showInLegend: true,
-                    indexLabel: "{y}",
-                    dataPoints: chartData.answers
-                }]
-            });
-        chart.render();
-    }
+    //createHistoryStatisticsPage();
+
+    //function createHistoryStatisticsPage() {
+
+    //    var moduleId = null;
+
+    //    model.Modules.forEach(function (module) {
+
+    //        $('<div/>', {
+    //            class: 'module',
+    //            id: 'module'+module.Id
+    //        }).appendTo('.chartsWrapper');
+
+    //        $('<div/>', {
+    //            class: 'module_name',
+    //            html: module.Name
+    //        }).prependTo('#module' + module.Id);
+
+    //        model.Questions.forEach(function (question) {
+
+    //            if (question.ModuleId === module.Id) {
+
+    //                $('<div/>', {
+    //                    class: 'question',
+    //                    id: 'questionId' + question.Id
+    //                }).appendTo('#module' + module.Id);
+
+    //                $('<div/>', {
+    //                    class: 'question_text',
+    //                    html: question.Text
+    //                }).appendTo('#questionId' + question.Id);
+
+    //                chartDataObj.id = question.Id;
+
+    //                model.Groups.forEach(function (group) {
+
+    //                    $('<div/>', {
+    //                        class: 'group',
+    //                        id: 'group' + group.Id
+    //                    }).appendTo('#questionId' + question.Id);
+
+    //                    $('<div/>', {
+    //                        class: 'group_name',
+    //                        html: group.Name
+    //                    }).prependTo('#questionId' + question.Id + ' #group' + group.Id);
+
+    //                    $('<div/>', {
+    //                        class: 'pieChart',
+    //                        id: 'chartContainer' + question.Id
+    //                    }).appendTo('#questionId' + question.Id + ' #group' + group.Id);
+
+    //                    model.AnswersCount.forEach(function (answer) {
+
+    //                        if (question.Id === answer.QuestionId && answer.GroupId === group.Id) {
+
+    //                            chartDataObj.answers.push({
+    //                                y: answer.Count,
+    //                                name: answer.Text
+    //                            })
+
+    //                        }
+
+    //                    });
+
+    //                    renderChart(chartDataObj);
+
+    //                    chartDataObj.answers = [];
+
+    //                })
+
+    //            }
+
+    //        });
+
+    //    });
+    //}
+
+    //function renderChart(chartData) {
+
+    //    var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
+    //        {
+    //            animationEnabled: true,
+    //            legend: {
+    //                verticalAlign: "bottom",
+    //                horizontalAlign: "left",
+    //                fontSize: 16,
+    //                fontFamily: "arial"
+    //            },
+    //            theme: "theme3",
+    //            backgroundColor: "transparent",
+    //            data: [{
+    //                type: "pie",
+    //                indexLabelFontFamily: "Arial",
+    //                indexLabelFontSize: 20,
+    //                indexLabelFontWeight: "bold",
+    //                startAngle: 0,
+    //                indexLabelFontColor: "#ffffff",
+    //                indexLabelLineColor: "#ff0000",
+    //                indexLabelPlacement: "inside",
+    //                toolTipContent: "Відповідь: {name}",
+    //                showInLegend: true,
+    //                indexLabel: "{y}",
+    //                dataPoints: chartData.answers
+    //            }]
+    //        });
+    //    chart.render();
+    //}
+
 
 }
