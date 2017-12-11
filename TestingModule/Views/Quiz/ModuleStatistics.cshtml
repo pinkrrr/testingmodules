@@ -57,7 +57,8 @@
         };
 
         quiz.client.recieveRealTimeStatistics = function(realTimeStatistics) {
-            realTimeStatistics.forEach(function(item) {
+            realTimeStatistics.forEach(function (item) {
+                console.log(item);
                 progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
             });
         }
