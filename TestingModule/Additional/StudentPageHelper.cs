@@ -55,10 +55,8 @@ namespace TestingModule.Additional
                     where sd.DisciplineId == lh.DisciplineId
                     select s).AnyAsync())
                 return null;
-            var answeredQuestions = await _db.Respons.Where(t => t.StudentId == studentId &&
-                                                                 t.ModuleHistoryId == moduleHistoryId).Select(t => t.QuestionId).ToListAsync();
-            return answeredQuestions;
-
-        }
+            return await _db.Respons.Where(t => t.StudentId == studentId &&
+                                                t.ModuleHistoryId == moduleHistoryId).Select(t => t.QuestionId).ToListAsync(); 
+            }
     }
 }
