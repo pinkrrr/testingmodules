@@ -158,23 +158,11 @@ namespace TestingModule.Additional
                         GroupId = group.Id,
                         QuestionId = answer.QuestionId,
                         Count = responses.All(r => r.AnswerId != answer.Id) ? 0 : responses.Count(r => r.AnswerId == answer.Id && r.GroupId == group.Id),
-                        Text = answers.Where(a=>a.Id==answer.Id).Select(a=>a.Text).SingleOrDefault()
+                        Text = answers.Where(a => a.Id == answer.Id).Select(a => a.Text).SingleOrDefault()
                     });
                 }
             }
-
-
-            /*IEnumerable<AnswersForGroup> answersCount =
-            from a in answers
-            join r in responses on a.Id equals r.AnswerId
-            join g in groups on r.GroupId equals g.Id
-            select new AnswersForGroup
-            {
-                GroupId = g.Id,
-                QuestionId = a.QuestionId,
-                Text = questions.Where(q => q.Id == a.QuestionId).Select(q => q.Text).SingleOrDefault(),
-                Count = r == null ? 0 : responses.Count(rspns => rspns.Id==r.Id)
-            };*/
+            
             ResponseStatisticsViewModel responseStatistics = new ResponseStatisticsViewModel
             {
                 Modules = modules,
@@ -225,18 +213,21 @@ namespace TestingModule.Additional
                 (from r in _context.Respons.ToList()
                  where r.ModuleHistoryId == rtsVM.ModuleHistory.Id
                  select r).ToList();
-            IEnumerable<RealTimeStatistics> realTimeStatistics =
-                (from q in rtsVM.Questions
-                 join r in responses on q.Id equals r.QuestionId into gj
-                 from groupjoin in gj.DefaultIfEmpty()
-                 from g in rtsVM.Groups
-                 select new RealTimeStatistics
-                 {
-                     GroupId = g.Id,
-                     QuestionId = q.Id,
-                     TotalAnswers = groupjoin == null ? 0 : responses.Count(r => r.QuestionId == q.Id && g.Id == groupjoin.GroupId),
-                     CorrectAnswers = groupjoin == null ? 0 : responses.Count(r => r.QuestionId == q.Id && g.Id == groupjoin.GroupId && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true)
-                 }).ToList();
+            ICollection<RealTimeStatistics> realTimeStatistics = new List<RealTimeStatistics>();
+            foreach (var group in rtsVM.Groups)
+            {
+                foreach (var question in rtsVM.Questions)
+                {
+                    realTimeStatistics.Add(new RealTimeStatistics
+                    {
+                        GroupId = group.Id,
+                        QuestionId = question.Id,
+                        TotalAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id) ? 0 : responses.Count(r => r.QuestionId == question.Id && r.GroupId == group.Id),
+                        CorrectAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id&& answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true) ? 0 
+                        : responses.Count(r => r.QuestionId == question.Id && r.GroupId == group.Id && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true)
+                    });
+                }
+            }
             return realTimeStatistics;
         }
     }
