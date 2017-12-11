@@ -181,9 +181,15 @@ input[type="text"] {
     flex-direction: row;
 }
 
-.admin-info{
-    padding: 10px;
-    flex-grow: 3;
+.admin-info {
+    padding: 20px;
+    width: 31.3%;
+    border: 1px solid #3d3d3d;
+    margin: 0 3% 3% 0;
+}
+
+.admin-info:nth-child(3n){
+    margin-right: 0;
 }
 
 .admin-info .name, .admin-info .count, .admin-info .icon {
