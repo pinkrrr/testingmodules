@@ -148,18 +148,33 @@ namespace TestingModule.Additional
                        join tr in tableResponses on r.Id equals tr.ResponseId
                        select r).ToListAsync();
 
-            IEnumerable<AnswersForGroup> answersCount =
-                from a in answers
-                join r in responses on a.Id equals r.AnswerId into gj
-                from g in groups
-                from groupjoin in gj.DefaultIfEmpty()
-                select new AnswersForGroup
+            ICollection<AnswersForGroup> answersCount = new List<AnswersForGroup>();
+            foreach (var group in groups)
+            {
+                foreach (var answer in answers)
                 {
-                    GroupId = g.Id,
-                    Text = a.Text,
-                    Count = groupjoin == null ? 0 : responses.Count(r => r.AnswerId == a.Id && g.Id == groupjoin.GroupId),
-                    QuestionId = a.QuestionId
-                };
+                    answersCount.Add(new AnswersForGroup
+                    {
+                        GroupId = group.Id,
+                        QuestionId = answer.QuestionId,
+                        Count = responses.All(r => r.AnswerId != answer.Id) ? 0 : responses.Count(r => r.AnswerId == answer.Id && r.GroupId == group.Id),
+                        Text = answers.Where(a=>a.Id==answer.Id).Select(a=>a.Text).SingleOrDefault()
+                    });
+                }
+            }
+
+
+            /*IEnumerable<AnswersForGroup> answersCount =
+            from a in answers
+            join r in responses on a.Id equals r.AnswerId
+            join g in groups on r.GroupId equals g.Id
+            select new AnswersForGroup
+            {
+                GroupId = g.Id,
+                QuestionId = a.QuestionId,
+                Text = questions.Where(q => q.Id == a.QuestionId).Select(q => q.Text).SingleOrDefault(),
+                Count = r == null ? 0 : responses.Count(rspns => rspns.Id==r.Id)
+            };*/
             ResponseStatisticsViewModel responseStatistics = new ResponseStatisticsViewModel
             {
                 Modules = modules,
