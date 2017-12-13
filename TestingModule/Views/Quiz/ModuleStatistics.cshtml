@@ -6,12 +6,9 @@
 
 <div class="statistics_moduleName">Викторина "в реальном времени"</div>
 
-<div id="timer">00:00</div>
+<div id="timer"></div>
 
 <div class="questions"></div>
-
-@*@Html.ActionLink("Зупинити модуль", "stopmodule", "admin", new { moduleHistoryId = Model.ModuleHistory.Id }, new { @class = "stopModule", @id = "stopModuleButton" })*@
-
 
 @section scripts
 {
@@ -23,9 +20,6 @@
         var statisticsDynamicData = [];
 
         $.connection.hub.start().done(function() {
-            /*quiz.server.queryRealTimeStats(Model, true).fail(function(error) {
-                console.log('Invocation of NewContosoChatMessage failed. Error: ' + error);
-            });*/
             retrieveResponses();
             sendInvintations();
         });
@@ -63,7 +57,8 @@
         };
 
         quiz.client.recieveRealTimeStatistics = function(realTimeStatistics) {
-            realTimeStatistics.forEach(function(item) {
+            realTimeStatistics.forEach(function (item) {
+                console.log(item);
                 progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
             });
         }

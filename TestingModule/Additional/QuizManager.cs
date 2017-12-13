@@ -42,27 +42,27 @@ namespace TestingModule.Additional
         public async Task<QuizViewModel> GetQnA(int moduleHistoryId)
         {
             var student = await new AccountCredentials().GetStudent();
-            var answeredQuestions = new StudentPageHelper().CheckActiveQuiz(student.Id);
-            QuizViewModel qnA = new QuizViewModel();
-            if (answeredQuestions != null)
+            bool studentCanPass = await new StudentPageHelper().StudentCanPass(moduleHistoryId, student.Id);
+            if (studentCanPass)
             {
+                QuizViewModel qnA = new QuizViewModel();
+                if (await _context.StudentsModulesPasseds.AnyAsync(smp =>
+                    smp.StudentId == student.Id && smp.ModuleHistoryId == moduleHistoryId))
+                    return qnA;
                 ModuleHistory moduleHistory =
                     await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
-                ICollection<Question> questions = await GetQuestionsList(moduleHistory.ModuleId);
-                questions = questions.Where(t => !answeredQuestions.Contains(t.Id)).ToList();
-                if (questions.Count != 0)
+                var question = await _context.Questions.Where(q => q.ModuleId == moduleHistory.ModuleId &&
+                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == moduleHistoryId &&
+                                                                   r.StudentId == student.Id).Select(r => r.QuestionId).Contains(q.Id))
+                                                                   .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+                qnA = new QuizViewModel
                 {
-                    var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-                    qnA = new QuizViewModel
-                    {
-                        QuestionsList = questions,
-                        Question = question,
-                        Student = student,
-                        Answers = await GetAnswersList(question.Id),
-                        LectureHistoryId = moduleHistory.LectureHistoryId,
-                        ModuleHistoryId = moduleHistoryId
-                    };
-                }
+                    Question = question,
+                    Student = student,
+                    Answers = await GetAnswersList(question.Id),
+                    LectureHistoryId = moduleHistory.LectureHistoryId,
+                    ModuleHistoryId = moduleHistoryId
+                };
                 return qnA;
             }
             return null;
@@ -70,13 +70,26 @@ namespace TestingModule.Additional
 
         public async Task<QuizViewModel> UpdateQuizModel(QuizViewModel quizVM)
         {
-            Question questionToRemove = quizVM.QuestionsList.SingleOrDefault(ql => ql.Id == quizVM.Question.Id);
-            quizVM.QuestionsList.Remove(questionToRemove);
-            quizVM.Question = quizVM.QuestionsList.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            int moduleId = quizVM.Question.ModuleId;
+            quizVM.Question = await _context.Questions.Where(q => q.ModuleId == moduleId &&
+                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == quizVM.ModuleHistoryId &&
+                                                                   r.StudentId == quizVM.Student.Id).Select(r => r.QuestionId).Contains(q.Id))
+                                                                     .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+            if (quizVM.Question == null)
+            {
+                _context.StudentsModulesPasseds.Add(new StudentsModulesPassed
+                {
+                    ModuleId = moduleId,
+                    StudentId = quizVM.Student.Id,
+                    ModuleHistoryId = quizVM.ModuleHistoryId
+                });
+                await _context.SaveChangesAsync();
+                return null;
+            }
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
-        
+
         public async Task<StatisticsViewModel> GetHistoriesForLector()
         {
             Lector lector = await new AccountCredentials().GetLector();
@@ -148,18 +161,21 @@ namespace TestingModule.Additional
                        join tr in tableResponses on r.Id equals tr.ResponseId
                        select r).ToListAsync();
 
-            IEnumerable<AnswersForGroup> answersCount =
-                from a in answers
-                join r in responses on a.Id equals r.AnswerId into gj
-                from g in groups
-                from groupjoin in gj.DefaultIfEmpty()
-                select new AnswersForGroup
+            ICollection<AnswersForGroup> answersCount = new List<AnswersForGroup>();
+            foreach (var group in groups)
+            {
+                foreach (var answer in answers)
                 {
-                    GroupId = g.Id,
-                    Text = a.Text,
-                    Count = groupjoin == null ? 0 : responses.Count(r => r.AnswerId == a.Id && g.Id == groupjoin.GroupId),
-                    QuestionId = a.QuestionId
-                };
+                    answersCount.Add(new AnswersForGroup
+                    {
+                        GroupId = group.Id,
+                        QuestionId = answer.QuestionId,
+                        Count = responses.All(r => r.AnswerId != answer.Id) ? 0 : responses.Count(r => r.AnswerId == answer.Id && r.GroupId == group.Id),
+                        Text = answers.Where(a => a.Id == answer.Id).Select(a => a.Text).SingleOrDefault()
+                    });
+                }
+            }
+
             ResponseStatisticsViewModel responseStatistics = new ResponseStatisticsViewModel
             {
                 Modules = modules,
@@ -210,18 +226,21 @@ namespace TestingModule.Additional
                 (from r in _context.Respons.ToList()
                  where r.ModuleHistoryId == rtsVM.ModuleHistory.Id
                  select r).ToList();
-            IEnumerable<RealTimeStatistics> realTimeStatistics =
-                (from q in rtsVM.Questions
-                 join r in responses on q.Id equals r.QuestionId into gj
-                 from groupjoin in gj.DefaultIfEmpty()
-                 from g in rtsVM.Groups
-                 select new RealTimeStatistics
-                 {
-                     GroupId = g.Id,
-                     QuestionId = q.Id,
-                     TotalAnswers = groupjoin == null ? 0 : responses.Count(r => r.QuestionId == q.Id && g.Id == groupjoin.GroupId),
-                     CorrectAnswers = groupjoin == null ? 0 : responses.Count(r => r.QuestionId == q.Id && g.Id == groupjoin.GroupId && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true)
-                 }).ToList();
+            ICollection<RealTimeStatistics> realTimeStatistics = new List<RealTimeStatistics>();
+            foreach (var group in rtsVM.Groups)
+            {
+                foreach (var question in rtsVM.Questions)
+                {
+                    realTimeStatistics.Add(new RealTimeStatistics
+                    {
+                        GroupId = group.Id,
+                        QuestionId = question.Id,
+                        TotalAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id) ? 0 : responses.Count(r => r.QuestionId == question.Id && r.GroupId == group.Id),
+                        CorrectAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true) ? 0
+                        : responses.Count(r => r.QuestionId == question.Id && r.GroupId == group.Id && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true)
+                    });
+                }
+            }
             return realTimeStatistics;
         }
     }

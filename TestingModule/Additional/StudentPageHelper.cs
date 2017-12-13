@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using TestingModule.Controllers;
 using TestingModule.Models;
@@ -37,34 +39,22 @@ namespace TestingModule.Additional
             return (viewModels);
         }
 
-        public List<int> CheckActiveQuiz(int student)
+        public async Task<bool> StudentCanPass(int moduleHistoryId, int studentId)
         {
-            var connect = _db.StudentDisciplines.Where(t => t.StudentId == student).Select(t => t.DisciplineId).ToList();
-            var group = _db.Students.FirstOrDefault(t => t.Id == student).GroupId;
-            var active = _db.LecturesHistories.Where(t => connect.Contains(t.DisciplineId) && t.EndTime == null).Select(t => t.Id)
-                .ToList();
-            if (active.Any())
+            if (await _db.ModuleHistories.AnyAsync(mh =>
+                mh.Id == moduleHistoryId && mh.StartTime != null && mh.IsPassed != true))
             {
-                var groupsToDisc =
-                    _db.LectureHistoryGroups.Where(t => active.Contains(t.LectureHistoryId) && t.GroupId == group);
-                if (groupsToDisc.Any())
-                {
-                    var activeModule = _db.ModuleHistories.FirstOrDefault(t => active.Contains(t.LectureHistoryId));
-                    if (activeModule != null)
-                    {
-                        var moduleQuestions = _db.Questions.Where(t => t.ModuleId == activeModule.ModuleId).Select(t => t.Id)
-                            .ToList();
-                        var studentResponses =
-                            _db.Respons.Where(t => t.StudentId == student &&
-                                                     t.LectureHistoryId == activeModule.LectureHistoryId &&
-                                                     moduleQuestions.Contains(t.QuestionId)).Select(t => t.QuestionId).ToList();
-                        return studentResponses;
-
-
-                    }
-                }
+                if (await (from mh in _db.ModuleHistories
+                           join lh in _db.LecturesHistories on mh.LectureHistoryId equals lh.Id
+                           join lhg in _db.LectureHistoryGroups on mh.LectureHistoryId equals lhg.Id
+                           join s in _db.Students on lhg.GroupId equals s.GroupId
+                           where s.Id == studentId
+                           join sd in _db.StudentDisciplines on s.Id equals sd.StudentId
+                           where sd.DisciplineId == lh.DisciplineId
+                           select s).AnyAsync())
+                    return true;
             }
-            return null;
+            return false;
         }
     }
 }

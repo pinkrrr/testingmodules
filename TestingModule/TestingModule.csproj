@@ -234,6 +234,9 @@
     <Compile Include="Models\StudentDiscipline.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StudentsModulesPassed.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ActiveLectureViewModel.cs" />
     <Compile Include="ViewModels\DiscLecotorViewModel.cs" />
     <Compile Include="ViewModels\QueAns.cs" />
@@ -368,6 +371,8 @@
     </Content>
     <Content Include="Content\fontawesome-webfont.woff" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <Content Include="Scripts\chart.js" />
+    <Content Include="Scripts\chart.pieceLabel.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\canvas.lib.js" />
