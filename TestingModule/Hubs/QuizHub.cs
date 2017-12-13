@@ -34,6 +34,8 @@ namespace TestingModule.Hubs
         {
             if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
                 return null;
+            if(await _context.Respons.AnyAsync(r=>r.ModuleHistoryId==quizVM.ModuleHistoryId&&r.StudentId==quizVM.Student.Id&&r.QuestionId==quizVM.Question.Id))
+                return await _quizManager.UpdateQuizModel(quizVM);
             Respons response = new Respons
             {
                 AnswerId = responseId,

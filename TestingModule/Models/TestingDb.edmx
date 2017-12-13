@@ -125,7 +125,7 @@
           <Property Name="LectureId" Type="int" Nullable="false" />
           <Property Name="ModuleId" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="QuestionType" Type="int" />
+          <Property Name="QuestionType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Responses">
           <Key>
@@ -173,6 +173,15 @@
           <Property Name="Surname" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AccountId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="StudentsModulesPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="ModuleId" Type="int" Nullable="false" />
+          <Property Name="ModuleHistoryId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="testingDbModelStoreContainer">
           <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
@@ -192,6 +201,7 @@
           <EntitySet Name="Speciality" EntityType="Self.Speciality" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudentDisciplines" EntityType="Self.StudentDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentsModulesPassed" EntityType="Self.StudentsModulesPassed" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -216,6 +226,7 @@
           <EntitySet Name="LectureHistoryGroups" EntityType="testingDbModel.LectureHistoryGroup" />
           <EntitySet Name="ModuleHistories" EntityType="testingDbModel.ModuleHistory" />
           <EntitySet Name="Respons" EntityType="testingDbModel.Respons" />
+          <EntitySet Name="StudentsModulesPasseds" EntityType="testingDbModel.StudentsModulesPassed" />
         </EntityContainer>
         <EntityType Name="Answer">
           <Key>
@@ -282,7 +293,7 @@
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
           <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="QuestionType" Type="Int32" />
+          <Property Name="QuestionType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -383,6 +394,15 @@
           <Property Name="TimeToPass" Type="Int32" />
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
           <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StudentsModulesPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleId" Type="Int32" Nullable="false" />
           <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
@@ -573,6 +593,16 @@
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentsModulesPasseds">
+            <EntityTypeMapping TypeName="testingDbModel.StudentsModulesPassed">
+              <MappingFragment StoreEntitySet="StudentsModulesPassed">
+                <ScalarProperty Name="ModuleHistoryId" ColumnName="ModuleHistoryId" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

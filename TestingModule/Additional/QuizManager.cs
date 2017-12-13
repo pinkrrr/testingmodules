@@ -42,27 +42,24 @@ namespace TestingModule.Additional
         public async Task<QuizViewModel> GetQnA(int moduleHistoryId)
         {
             var student = await new AccountCredentials().GetStudent();
-            var answeredQuestions = await new StudentPageHelper().CheckActiveQuiz(moduleHistoryId, student.Id);
-            QuizViewModel qnA = new QuizViewModel();
-            if (answeredQuestions != null)
+            bool studentCanPass = await new StudentPageHelper().StudentCanPass(moduleHistoryId, student.Id);
+            if (studentCanPass)
             {
                 ModuleHistory moduleHistory =
                     await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
-                ICollection<Question> questions = await GetQuestionsList(moduleHistory.ModuleId);
-                questions = questions.Where(t => !answeredQuestions.Contains(t.Id)).ToList();
-                if (questions.Count != 0)
+                var question = await _context.Questions.Where(q => q.ModuleId == moduleHistory.ModuleId &&
+                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == moduleHistoryId &&
+                                                                                                r.StudentId == student.Id).Select(r => r.QuestionId).Contains(q.Id))
+                    .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+                QuizViewModel qnA = new QuizViewModel
                 {
-                    var question = questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-                    qnA = new QuizViewModel
-                    {
-                        QuestionsList = questions,
-                        Question = question,
-                        Student = student,
-                        Answers = await GetAnswersList(question.Id),
-                        LectureHistoryId = moduleHistory.LectureHistoryId,
-                        ModuleHistoryId = moduleHistoryId
-                    };
-                }
+                    //QuestionsList = questions,
+                    Question = question,
+                    Student = student,
+                    Answers = await GetAnswersList(question.Id),
+                    LectureHistoryId = moduleHistory.LectureHistoryId,
+                    ModuleHistoryId = moduleHistoryId
+                };
                 return qnA;
             }
             return null;
@@ -70,9 +67,22 @@ namespace TestingModule.Additional
 
         public async Task<QuizViewModel> UpdateQuizModel(QuizViewModel quizVM)
         {
-            Question questionToRemove = quizVM.QuestionsList.SingleOrDefault(ql => ql.Id == quizVM.Question.Id);
-            quizVM.QuestionsList.Remove(questionToRemove);
-            quizVM.Question = quizVM.QuestionsList.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            int moduleId = quizVM.Question.ModuleId;
+            quizVM.Question = await _context.Questions.Where(q => q.ModuleId == moduleId &&
+                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == quizVM.ModuleHistoryId &&
+                                                                   r.StudentId == quizVM.Student.Id).Select(r => r.QuestionId).Contains(q.Id))
+                                                                     .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+            if (quizVM.Question == null)
+            {
+                _context.StudentsModulesPasseds.Add(new StudentsModulesPassed
+                {
+                    ModuleId = moduleId,
+                    StudentId = quizVM.Student.Id,
+                    ModuleHistoryId = quizVM.ModuleHistoryId
+                });
+                await _context.SaveChangesAsync();
+                return null;
+            }
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
@@ -162,7 +172,7 @@ namespace TestingModule.Additional
                     });
                 }
             }
-            
+
             ResponseStatisticsViewModel responseStatistics = new ResponseStatisticsViewModel
             {
                 Modules = modules,
@@ -223,7 +233,7 @@ namespace TestingModule.Additional
                         GroupId = group.Id,
                         QuestionId = question.Id,
                         TotalAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id) ? 0 : responses.Count(r => r.QuestionId == question.Id && r.GroupId == group.Id),
-                        CorrectAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id&& answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true) ? 0 
+                        CorrectAnswers = !responses.Any(r => r.QuestionId == question.Id && r.GroupId == group.Id && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true) ? 0
                         : responses.Count(r => r.QuestionId == question.Id && r.GroupId == group.Id && answers.Where(a => a.Id == r.AnswerId).Select(a => a.IsCorrect).SingleOrDefault() == true)
                     });
                 }
