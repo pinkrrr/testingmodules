@@ -39,24 +39,26 @@ namespace TestingModule.Additional
             return (viewModels);
         }
 
-        public async Task<List<int>> CheckActiveQuiz(int moduleHistoryId, int studentId)
+        public async Task<bool> StudentCanPass(int moduleHistoryId, int studentId)
         {
-            if (!await _db.ModuleHistories.AnyAsync(mh =>
+            if (await _db.ModuleHistories.AnyAsync(mh =>
                 mh.Id == moduleHistoryId && mh.StartTime != null && mh.IsPassed != true))
-                return null;
-            if (
-                !await (
-                    from mh in _db.ModuleHistories
-                    join lh in _db.LecturesHistories on mh.LectureHistoryId equals lh.Id
-                    join lhg in _db.LectureHistoryGroups on mh.LectureHistoryId equals lhg.Id
-                    join s in _db.Students on lhg.GroupId equals s.GroupId
-                    where s.Id == studentId
-                    join sd in _db.StudentDisciplines on s.Id equals sd.StudentId
-                    where sd.DisciplineId == lh.DisciplineId
-                    select s).AnyAsync())
-                return null;
-            return await _db.Respons.Where(t => t.StudentId == studentId &&
-                                                t.ModuleHistoryId == moduleHistoryId).Select(t => t.QuestionId).ToListAsync(); 
+            {
+                if (await (from mh in _db.ModuleHistories
+                        join lh in _db.LecturesHistories on mh.LectureHistoryId equals lh.Id
+                        join lhg in _db.LectureHistoryGroups on mh.LectureHistoryId equals lhg.Id
+                        join s in _db.Students on lhg.GroupId equals s.GroupId
+                        where s.Id == studentId
+                        join sd in _db.StudentDisciplines on s.Id equals sd.StudentId
+                        where sd.DisciplineId == lh.DisciplineId
+                        select s).AnyAsync())
+                {
+                    if (!await _db.StudentsModulesPasseds.AnyAsync(smp =>
+                        smp.StudentId == studentId && smp.ModuleHistoryId == moduleHistoryId))
+                        return true;
+                }
             }
+            return false;
+        }
     }
 }
