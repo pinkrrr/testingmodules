@@ -45,15 +45,18 @@ namespace TestingModule.Additional
             bool studentCanPass = await new StudentPageHelper().StudentCanPass(moduleHistoryId, student.Id);
             if (studentCanPass)
             {
+                QuizViewModel qnA = new QuizViewModel();
+                if (await _context.StudentsModulesPasseds.AnyAsync(smp =>
+                    smp.StudentId == student.Id && smp.ModuleHistoryId == moduleHistoryId))
+                    return qnA;
                 ModuleHistory moduleHistory =
                     await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
                 var question = await _context.Questions.Where(q => q.ModuleId == moduleHistory.ModuleId &&
                                                                    !_context.Respons.Where(r => r.ModuleHistoryId == moduleHistoryId &&
-                                                                                                r.StudentId == student.Id).Select(r => r.QuestionId).Contains(q.Id))
-                    .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
-                QuizViewModel qnA = new QuizViewModel
+                                                                   r.StudentId == student.Id).Select(r => r.QuestionId).Contains(q.Id))
+                                                                   .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+                qnA = new QuizViewModel
                 {
-                    //QuestionsList = questions,
                     Question = question,
                     Student = student,
                     Answers = await GetAnswersList(question.Id),
