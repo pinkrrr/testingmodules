@@ -52,7 +52,7 @@ namespace TestingModule.Additional
                 ModuleHistory moduleHistory =
                     await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
                 var question = await _context.Questions.Where(q => q.ModuleId == moduleHistory.ModuleId &&
-                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == moduleHistoryId &&
+                                                                   !_context.RealtimeResponses.Where(r => r.ModuleHistoryId == moduleHistoryId &&
                                                                    r.StudentId == student.Id).Select(r => r.QuestionId).Contains(q.Id))
                                                                    .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
                 qnA = new QuizViewModel
@@ -72,7 +72,7 @@ namespace TestingModule.Additional
         {
             int moduleId = quizVM.Question.ModuleId;
             quizVM.Question = await _context.Questions.Where(q => q.ModuleId == moduleId &&
-                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == quizVM.ModuleHistoryId &&
+                                                                   !_context.RealtimeResponses.Where(r => r.ModuleHistoryId == quizVM.ModuleHistoryId &&
                                                                    r.StudentId == quizVM.Student.Id).Select(r => r.QuestionId).Contains(q.Id))
                                                                      .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
             if (quizVM.Question == null)
@@ -119,7 +119,7 @@ namespace TestingModule.Additional
         public async Task<ResponseStatisticsViewModel> GetModulesForLector(int lectureHistoryId)
         {
             IEnumerable<ResponseTable> tableResponses =
-                from rs in _context.Respons
+                from rs in _context.RealtimeResponses
                 join lhg in _context.LectureHistoryGroups on rs.LectureHistoryId equals lhg.LectureHistoryId
                 join qs in _context.Questions on rs.QuestionId equals qs.Id
                 where rs.LectureHistoryId == lectureHistoryId && lhg.GroupId == rs.GroupId
@@ -156,8 +156,8 @@ namespace TestingModule.Additional
                         join q in questions on a.QuestionId equals q.Id
                         select a).ToListAsync();
 
-            IEnumerable<Respons> responses =
-                await (from r in _context.Respons
+            IEnumerable<RealtimeRespons> responses =
+                await (from r in _context.RealtimeResponses
                        join tr in tableResponses on r.Id equals tr.ResponseId
                        select r).ToListAsync();
 
@@ -222,8 +222,8 @@ namespace TestingModule.Additional
                 (from a in _context.Answers.ToList()
                  join q in rtsVM.Questions on a.QuestionId equals q.Id
                  select a).ToList();
-            IEnumerable<Respons> responses =
-                (from r in _context.Respons.ToList()
+            IEnumerable<RealtimeRespons> responses =
+                (from r in _context.RealtimeResponses.ToList()
                  where r.ModuleHistoryId == rtsVM.ModuleHistory.Id
                  select r).ToList();
             ICollection<RealTimeStatistics> realTimeStatistics = new List<RealTimeStatistics>();

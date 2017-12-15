@@ -112,12 +112,12 @@ namespace TestingModule.Additional
             if (moduleHistory.IsPassed)
             {
                 var responsesToDelete =
-                    from r in _db.Respons
+                    from r in _db.RealtimeResponses
                     where r.LectureHistoryId == moduleHistory.LectureHistoryId
                     join q in _db.Questions on r.QuestionId equals q.Id
                     where q.ModuleId == moduleHistory.ModuleId
                     select r;
-                _db.Respons.RemoveRange(responsesToDelete);
+                _db.RealtimeResponses.RemoveRange(responsesToDelete);
                 moduleHistory.IsPassed = false;
             }
             moduleHistory.StartTime = DateTime.UtcNow;

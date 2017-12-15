@@ -42,7 +42,7 @@ namespace TestingModule.Models
         public virtual DbSet<ExeptionLog> ExeptionLogs { get; set; }
         public virtual DbSet<LectureHistoryGroup> LectureHistoryGroups { get; set; }
         public virtual DbSet<ModuleHistory> ModuleHistories { get; set; }
-        public virtual DbSet<Respons> Respons { get; set; }
         public virtual DbSet<StudentsModulesPassed> StudentsModulesPasseds { get; set; }
+        public virtual DbSet<RealtimeRespons> RealtimeResponses { get; set; }
     }
 }

@@ -226,10 +226,10 @@
     <Compile Include="Models\ModuleHistory.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RTQuizModel.cs" />
-    <Compile Include="Models\Respons.cs">
+    <Compile Include="Models\RealtimeRespons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RTQuizModel.cs" />
     <Compile Include="Models\RoleName.cs" />
     <Compile Include="Models\StudentDiscipline.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>

@@ -34,9 +34,9 @@ namespace TestingModule.Hubs
         {
             if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
                 return null;
-            if(await _context.Respons.AnyAsync(r=>r.ModuleHistoryId==quizVM.ModuleHistoryId&&r.StudentId==quizVM.Student.Id&&r.QuestionId==quizVM.Question.Id))
+            if(await _context.RealtimeResponses.AnyAsync(r=>r.ModuleHistoryId==quizVM.ModuleHistoryId&&r.StudentId==quizVM.Student.Id&&r.QuestionId==quizVM.Question.Id))
                 return await _quizManager.UpdateQuizModel(quizVM);
-            Respons response = new Respons
+            RealtimeRespons response = new RealtimeRespons
             {
                 AnswerId = responseId,
                 LectureHistoryId = quizVM.LectureHistoryId,
@@ -45,7 +45,7 @@ namespace TestingModule.Hubs
                 StudentId = quizVM.Student.Id,
                 GroupId = quizVM.Student.GroupId
             };
-            _context.Respons.Add(response);
+            _context.RealtimeResponses.Add(response);
             await _context.SaveChangesAsync();
             Clients.All.ResponseRecieved();
             return await _quizManager.UpdateQuizModel(quizVM);
