@@ -127,7 +127,7 @@
           <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="QuestionType" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Responses">
+        <EntityType Name="RealtimeResponses">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -196,7 +196,7 @@
           <EntitySet Name="ModuleHistory" EntityType="Self.ModuleHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Responses" EntityType="Self.Responses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RealtimeResponses" EntityType="Self.RealtimeResponses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciality" EntityType="Self.Speciality" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudentDisciplines" EntityType="Self.StudentDisciplines" Schema="dbo" store:Type="Tables" />
@@ -225,8 +225,8 @@
           <EntitySet Name="ExeptionLogs" EntityType="testingDbModel.ExeptionLog" />
           <EntitySet Name="LectureHistoryGroups" EntityType="testingDbModel.LectureHistoryGroup" />
           <EntitySet Name="ModuleHistories" EntityType="testingDbModel.ModuleHistory" />
-          <EntitySet Name="Respons" EntityType="testingDbModel.Respons" />
           <EntitySet Name="StudentsModulesPasseds" EntityType="testingDbModel.StudentsModulesPassed" />
+          <EntitySet Name="RealtimeResponses" EntityType="testingDbModel.RealtimeRespons" />
         </EntityContainer>
         <EntityType Name="Answer">
           <Key>
@@ -383,7 +383,16 @@
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
           <Property Name="LectorId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Respons">
+        <EntityType Name="StudentsModulesPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RealtimeRespons">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -394,15 +403,6 @@
           <Property Name="TimeToPass" Type="Int32" />
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
           <Property Name="GroupId" Type="Int32" Nullable="false" />
-          <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="StudentsModulesPassed">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StudentId" Type="Int32" Nullable="false" />
-          <Property Name="ModuleId" Type="Int32" Nullable="false" />
           <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
@@ -583,9 +583,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Respons">
-            <EntityTypeMapping TypeName="testingDbModel.Respons">
-              <MappingFragment StoreEntitySet="Responses">
+          <EntitySetMapping Name="StudentsModulesPasseds">
+            <EntityTypeMapping TypeName="testingDbModel.StudentsModulesPassed">
+              <MappingFragment StoreEntitySet="StudentsModulesPassed">
+                <ScalarProperty Name="ModuleHistoryId" ColumnName="ModuleHistoryId" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RealtimeResponses">
+            <EntityTypeMapping TypeName="testingDbModel.RealtimeRespons">
+              <MappingFragment StoreEntitySet="RealtimeResponses">
                 <ScalarProperty Name="ModuleHistoryId" ColumnName="ModuleHistoryId" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
@@ -593,16 +603,6 @@
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StudentsModulesPasseds">
-            <EntityTypeMapping TypeName="testingDbModel.StudentsModulesPassed">
-              <MappingFragment StoreEntitySet="StudentsModulesPassed">
-                <ScalarProperty Name="ModuleHistoryId" ColumnName="ModuleHistoryId" />
-                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
-                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

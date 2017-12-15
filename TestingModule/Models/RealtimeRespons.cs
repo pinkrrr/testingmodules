@@ -12,7 +12,7 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Respons
+    public partial class RealtimeRespons
     {
         public int Id { get; set; }
         public int QuestionId { get; set; }
