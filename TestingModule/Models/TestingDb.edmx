@@ -23,6 +23,32 @@
           <Property Name="Text" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="IsCorrect" Type="bit" />
         </EntityType>
+        <EntityType Name="CummulativeResponses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="AnswerId" Type="int" Nullable="false" />
+          <Property Name="CummulativeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CumulativeTestsLectures">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CumulativeTestId" Type="int" Nullable="false" />
+          <Property Name="LectureId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CumulativeTestsPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DisciplineId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="IsPassed" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Disciplines">
           <Key>
             <PropertyRef Name="Id" />
@@ -47,6 +73,26 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SpecialityId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IndividualResponses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ModuleId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="AnswerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IndividualTestsPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DisciplineId" Type="int" Nullable="false" />
+          <Property Name="LectureId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="IsPassed" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="LectorDisciplines">
           <Key>
@@ -127,6 +173,15 @@
           <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="QuestionType" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="RealtimeModulesPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="ModuleId" Type="int" Nullable="false" />
+          <Property Name="ModuleHistoryId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="RealtimeResponses">
           <Key>
             <PropertyRef Name="Id" />
@@ -173,21 +228,185 @@
           <Property Name="Surname" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AccountId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="StudentsModulesPassed">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StudentId" Type="int" Nullable="false" />
-          <Property Name="ModuleId" Type="int" Nullable="false" />
-          <Property Name="ModuleHistoryId" Type="int" Nullable="false" />
-        </EntityType>
+        <Association Name="FK_CummulativeResponses_Answers">
+          <End Role="Answers" Type="Self.Answers" Multiplicity="1" />
+          <End Role="CummulativeResponses" Type="Self.CummulativeResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CummulativeResponses">
+              <PropertyRef Name="AnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CummulativeResponses_CumulativeTestsPassed">
+          <End Role="CumulativeTestsPassed" Type="Self.CumulativeTestsPassed" Multiplicity="1" />
+          <End Role="CummulativeResponses" Type="Self.CummulativeResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CumulativeTestsPassed">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CummulativeResponses">
+              <PropertyRef Name="CummulativeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CummulativeResponses_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="CummulativeResponses" Type="Self.CummulativeResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CummulativeResponses">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsLectures_CumulativeTestsPassed">
+          <End Role="CumulativeTestsPassed" Type="Self.CumulativeTestsPassed" Multiplicity="1" />
+          <End Role="CumulativeTestsLectures" Type="Self.CumulativeTestsLectures" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CumulativeTestsPassed">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsLectures">
+              <PropertyRef Name="CumulativeTestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsLectures_Lectures">
+          <End Role="Lectures" Type="Self.Lectures" Multiplicity="1" />
+          <End Role="CumulativeTestsLectures" Type="Self.CumulativeTestsLectures" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lectures">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsLectures">
+              <PropertyRef Name="LectureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsPassed_Disciplines">
+          <End Role="Disciplines" Type="Self.Disciplines" Multiplicity="1" />
+          <End Role="CumulativeTestsPassed" Type="Self.CumulativeTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Disciplines">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsPassed">
+              <PropertyRef Name="DisciplineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsPassed_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="CumulativeTestsPassed" Type="Self.CumulativeTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsPassed">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Answers">
+          <End Role="Answers" Type="Self.Answers" Multiplicity="1" />
+          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualResponses">
+              <PropertyRef Name="AnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Modules">
+          <End Role="Modules" Type="Self.Modules" Multiplicity="1" />
+          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modules">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualResponses">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualResponses">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualResponses">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualTestsPassed_Disciplines">
+          <End Role="Disciplines" Type="Self.Disciplines" Multiplicity="1" />
+          <End Role="IndividualTestsPassed" Type="Self.IndividualTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Disciplines">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualTestsPassed">
+              <PropertyRef Name="DisciplineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualTestsPassed_Lectures">
+          <End Role="Lectures" Type="Self.Lectures" Multiplicity="1" />
+          <End Role="IndividualTestsPassed" Type="Self.IndividualTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lectures">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualTestsPassed">
+              <PropertyRef Name="LectureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualTestsPassed_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="IndividualTestsPassed" Type="Self.IndividualTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualTestsPassed">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="testingDbModelStoreContainer">
           <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CummulativeResponses" EntityType="Self.CummulativeResponses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CumulativeTestsLectures" EntityType="Self.CumulativeTestsLectures" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CumulativeTestsPassed" EntityType="Self.CumulativeTestsPassed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Disciplines" EntityType="Self.Disciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExeptionLogs" EntityType="Self.ExeptionLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IndividualResponses" EntityType="Self.IndividualResponses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IndividualTestsPassed" EntityType="Self.IndividualTestsPassed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LectorDisciplines" EntityType="Self.LectorDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lectors" EntityType="Self.Lectors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LectureHistoryGroups" EntityType="Self.LectureHistoryGroups" Schema="dbo" store:Type="Tables" />
@@ -196,119 +415,155 @@
           <EntitySet Name="ModuleHistory" EntityType="Self.ModuleHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RealtimeModulesPassed" EntityType="Self.RealtimeModulesPassed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RealtimeResponses" EntityType="Self.RealtimeResponses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciality" EntityType="Self.Speciality" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StudentDisciplines" EntityType="Self.StudentDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="StudentsModulesPassed" EntityType="Self.StudentsModulesPassed" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CummulativeResponses_Answers" Association="Self.FK_CummulativeResponses_Answers">
+            <End Role="Answers" EntitySet="Answers" />
+            <End Role="CummulativeResponses" EntitySet="CummulativeResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CummulativeResponses_CumulativeTestsPassed" Association="Self.FK_CummulativeResponses_CumulativeTestsPassed">
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPassed" />
+            <End Role="CummulativeResponses" EntitySet="CummulativeResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CummulativeResponses_Questions" Association="Self.FK_CummulativeResponses_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="CummulativeResponses" EntitySet="CummulativeResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsLectures_CumulativeTestsPassed" Association="Self.FK_CumulativeTestsLectures_CumulativeTestsPassed">
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPassed" />
+            <End Role="CumulativeTestsLectures" EntitySet="CumulativeTestsLectures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsLectures_Lectures" Association="Self.FK_CumulativeTestsLectures_Lectures">
+            <End Role="Lectures" EntitySet="Lectures" />
+            <End Role="CumulativeTestsLectures" EntitySet="CumulativeTestsLectures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsPassed_Disciplines" Association="Self.FK_CumulativeTestsPassed_Disciplines">
+            <End Role="Disciplines" EntitySet="Disciplines" />
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPassed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsPassed_Students" Association="Self.FK_CumulativeTestsPassed_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPassed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Answers" Association="Self.FK_IndividualResponses_Answers">
+            <End Role="Answers" EntitySet="Answers" />
+            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Modules" Association="Self.FK_IndividualResponses_Modules">
+            <End Role="Modules" EntitySet="Modules" />
+            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Questions" Association="Self.FK_IndividualResponses_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Students" Association="Self.FK_IndividualResponses_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualTestsPassed_Disciplines" Association="Self.FK_IndividualTestsPassed_Disciplines">
+            <End Role="Disciplines" EntitySet="Disciplines" />
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPassed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualTestsPassed_Lectures" Association="Self.FK_IndividualTestsPassed_Lectures">
+            <End Role="Lectures" EntitySet="Lectures" />
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPassed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualTestsPassed_Students" Association="Self.FK_IndividualTestsPassed_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPassed" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="testingDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="testingDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="testingDbModel.Account" />
           <EntitySet Name="Answers" EntityType="testingDbModel.Answer" />
+          <EntitySet Name="CummulativeResponses" EntityType="testingDbModel.CummulativeRespons" />
+          <EntitySet Name="CumulativeTestsLectures" EntityType="testingDbModel.CumulativeTestsLecture" />
+          <EntitySet Name="CumulativeTestsPasseds" EntityType="testingDbModel.CumulativeTestsPassed" />
           <EntitySet Name="Disciplines" EntityType="testingDbModel.Discipline" />
+          <EntitySet Name="ExeptionLogs" EntityType="testingDbModel.ExeptionLog" />
           <EntitySet Name="Groups" EntityType="testingDbModel.Group" />
+          <EntitySet Name="IndividualResponses" EntityType="testingDbModel.IndividualRespons" />
+          <EntitySet Name="IndividualTestsPasseds" EntityType="testingDbModel.IndividualTestsPassed" />
+          <EntitySet Name="LectorDisciplines" EntityType="testingDbModel.LectorDiscipline" />
+          <EntitySet Name="Lectors" EntityType="testingDbModel.Lector" />
+          <EntitySet Name="LectureHistoryGroups" EntityType="testingDbModel.LectureHistoryGroup" />
           <EntitySet Name="Lectures" EntityType="testingDbModel.Lecture" />
           <EntitySet Name="LecturesHistories" EntityType="testingDbModel.LecturesHistory" />
+          <EntitySet Name="ModuleHistories" EntityType="testingDbModel.ModuleHistory" />
           <EntitySet Name="Modules" EntityType="testingDbModel.Module" />
           <EntitySet Name="Questions" EntityType="testingDbModel.Question" />
+          <EntitySet Name="RealtimeModulesPasseds" EntityType="testingDbModel.RealtimeModulesPassed" />
+          <EntitySet Name="RealtimeResponses" EntityType="testingDbModel.RealtimeRespons" />
           <EntitySet Name="Roles" EntityType="testingDbModel.Role" />
           <EntitySet Name="Specialities" EntityType="testingDbModel.Speciality" />
-          <EntitySet Name="Accounts" EntityType="testingDbModel.Account" />
-          <EntitySet Name="Lectors" EntityType="testingDbModel.Lector" />
-          <EntitySet Name="Students" EntityType="testingDbModel.Student" />
-          <EntitySet Name="LectorDisciplines" EntityType="testingDbModel.LectorDiscipline" />
           <EntitySet Name="StudentDisciplines" EntityType="testingDbModel.StudentDiscipline" />
-          <EntitySet Name="ExeptionLogs" EntityType="testingDbModel.ExeptionLog" />
-          <EntitySet Name="LectureHistoryGroups" EntityType="testingDbModel.LectureHistoryGroup" />
-          <EntitySet Name="ModuleHistories" EntityType="testingDbModel.ModuleHistory" />
-          <EntitySet Name="StudentsModulesPasseds" EntityType="testingDbModel.StudentsModulesPassed" />
-          <EntitySet Name="RealtimeResponses" EntityType="testingDbModel.RealtimeRespons" />
+          <EntitySet Name="Students" EntityType="testingDbModel.Student" />
+          <AssociationSet Name="FK_CummulativeResponses_Answers" Association="testingDbModel.FK_CummulativeResponses_Answers">
+            <End Role="Answer" EntitySet="Answers" />
+            <End Role="CummulativeRespons" EntitySet="CummulativeResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Answers" Association="testingDbModel.FK_IndividualResponses_Answers">
+            <End Role="Answer" EntitySet="Answers" />
+            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CummulativeResponses_CumulativeTestsPassed" Association="testingDbModel.FK_CummulativeResponses_CumulativeTestsPassed">
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPasseds" />
+            <End Role="CummulativeRespons" EntitySet="CummulativeResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CummulativeResponses_Questions" Association="testingDbModel.FK_CummulativeResponses_Questions">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="CummulativeRespons" EntitySet="CummulativeResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsLectures_CumulativeTestsPassed" Association="testingDbModel.FK_CumulativeTestsLectures_CumulativeTestsPassed">
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPasseds" />
+            <End Role="CumulativeTestsLecture" EntitySet="CumulativeTestsLectures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsLectures_Lectures" Association="testingDbModel.FK_CumulativeTestsLectures_Lectures">
+            <End Role="Lecture" EntitySet="Lectures" />
+            <End Role="CumulativeTestsLecture" EntitySet="CumulativeTestsLectures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsPassed_Disciplines" Association="testingDbModel.FK_CumulativeTestsPassed_Disciplines">
+            <End Role="Discipline" EntitySet="Disciplines" />
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPasseds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CumulativeTestsPassed_Students" Association="testingDbModel.FK_CumulativeTestsPassed_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="CumulativeTestsPassed" EntitySet="CumulativeTestsPasseds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualTestsPassed_Disciplines" Association="testingDbModel.FK_IndividualTestsPassed_Disciplines">
+            <End Role="Discipline" EntitySet="Disciplines" />
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPasseds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Modules" Association="testingDbModel.FK_IndividualResponses_Modules">
+            <End Role="Module" EntitySet="Modules" />
+            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Questions" Association="testingDbModel.FK_IndividualResponses_Questions">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_Students" Association="testingDbModel.FK_IndividualResponses_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualTestsPassed_Lectures" Association="testingDbModel.FK_IndividualTestsPassed_Lectures">
+            <End Role="Lecture" EntitySet="Lectures" />
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPasseds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IndividualTestsPassed_Students" Association="testingDbModel.FK_IndividualTestsPassed_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPasseds" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Answer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuestionId" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IsCorrect" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="Discipline">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Group">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SpecialityId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Lecture">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="LecturesHistory">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LectureId" Type="Int32" Nullable="false" />
-          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
-          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndTime" Type="DateTime" Precision="3" />
-          <Property Name="LectorId" Type="Int32" Nullable="false" />
-          <Property Name="IsFrozen" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Module">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
-          <Property Name="LectureId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MinutesToPass" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
-          <Property Name="LectureId" Type="Int32" Nullable="false" />
-          <Property Name="ModuleId" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="QuestionType" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Speciality">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="Id" />
@@ -318,41 +573,60 @@
           <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="RoleId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="Lector">
+        <EntityType Name="Answer">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AccountId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsCorrect" Type="Boolean" />
+          <NavigationProperty Name="CummulativeResponses" Relationship="testingDbModel.FK_CummulativeResponses_Answers" FromRole="Answer" ToRole="CummulativeRespons" />
+          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Answers" FromRole="Answer" ToRole="IndividualRespons" />
         </EntityType>
-        <EntityType Name="Student">
+        <EntityType Name="CummulativeRespons">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SpecialityId" Type="Int32" Nullable="false" />
-          <Property Name="GroupId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AccountId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="AnswerId" Type="Int32" Nullable="false" />
+          <Property Name="CummulativeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Answer" Relationship="testingDbModel.FK_CummulativeResponses_Answers" FromRole="CummulativeRespons" ToRole="Answer" />
+          <NavigationProperty Name="CumulativeTestsPassed" Relationship="testingDbModel.FK_CummulativeResponses_CumulativeTestsPassed" FromRole="CummulativeRespons" ToRole="CumulativeTestsPassed" />
+          <NavigationProperty Name="Question" Relationship="testingDbModel.FK_CummulativeResponses_Questions" FromRole="CummulativeRespons" ToRole="Question" />
         </EntityType>
-        <EntityType Name="LectorDiscipline">
+        <EntityType Name="CumulativeTestsLecture">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LectorId" Type="Int32" Nullable="false" />
+          <Property Name="CumulativeTestId" Type="Int32" Nullable="false" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CumulativeTestsPassed" Relationship="testingDbModel.FK_CumulativeTestsLectures_CumulativeTestsPassed" FromRole="CumulativeTestsLecture" ToRole="CumulativeTestsPassed" />
+          <NavigationProperty Name="Lecture" Relationship="testingDbModel.FK_CumulativeTestsLectures_Lectures" FromRole="CumulativeTestsLecture" ToRole="Lecture" />
+        </EntityType>
+        <EntityType Name="CumulativeTestsPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="StudentDiscipline">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
-          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+          <Property Name="IsPassed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CummulativeResponses" Relationship="testingDbModel.FK_CummulativeResponses_CumulativeTestsPassed" FromRole="CumulativeTestsPassed" ToRole="CummulativeRespons" />
+          <NavigationProperty Name="CumulativeTestsLectures" Relationship="testingDbModel.FK_CumulativeTestsLectures_CumulativeTestsPassed" FromRole="CumulativeTestsPassed" ToRole="CumulativeTestsLecture" />
+          <NavigationProperty Name="Discipline" Relationship="testingDbModel.FK_CumulativeTestsPassed_Disciplines" FromRole="CumulativeTestsPassed" ToRole="Discipline" />
+          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_CumulativeTestsPassed_Students" FromRole="CumulativeTestsPassed" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Discipline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CumulativeTestsPasseds" Relationship="testingDbModel.FK_CumulativeTestsPassed_Disciplines" FromRole="Discipline" ToRole="CumulativeTestsPassed" />
+          <NavigationProperty Name="IndividualTestsPasseds" Relationship="testingDbModel.FK_IndividualTestsPassed_Disciplines" FromRole="Discipline" ToRole="IndividualTestsPassed" />
         </EntityType>
         <EntityType Name="ExeptionLog">
           <Key>
@@ -364,6 +638,58 @@
           <Property Name="Date" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Resolved" Type="Boolean" />
         </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SpecialityId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="IndividualRespons">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ModuleId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="AnswerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Answer" Relationship="testingDbModel.FK_IndividualResponses_Answers" FromRole="IndividualRespons" ToRole="Answer" />
+          <NavigationProperty Name="Module" Relationship="testingDbModel.FK_IndividualResponses_Modules" FromRole="IndividualRespons" ToRole="Module" />
+          <NavigationProperty Name="Question" Relationship="testingDbModel.FK_IndividualResponses_Questions" FromRole="IndividualRespons" ToRole="Question" />
+          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_IndividualResponses_Students" FromRole="IndividualRespons" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="IndividualTestsPassed">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="IsPassed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Discipline" Relationship="testingDbModel.FK_IndividualTestsPassed_Disciplines" FromRole="IndividualTestsPassed" ToRole="Discipline" />
+          <NavigationProperty Name="Lecture" Relationship="testingDbModel.FK_IndividualTestsPassed_Lectures" FromRole="IndividualTestsPassed" ToRole="Lecture" />
+          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_IndividualTestsPassed_Students" FromRole="IndividualTestsPassed" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="LectorDiscipline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LectorId" Type="Int32" Nullable="false" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lector">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AccountId" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="LectureHistoryGroup">
           <Key>
             <PropertyRef Name="Id" />
@@ -371,6 +697,29 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GroupId" Type="Int32" Nullable="false" />
           <Property Name="LectureHistoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lecture">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CumulativeTestsLectures" Relationship="testingDbModel.FK_CumulativeTestsLectures_Lectures" FromRole="Lecture" ToRole="CumulativeTestsLecture" />
+          <NavigationProperty Name="IndividualTestsPasseds" Relationship="testingDbModel.FK_IndividualTestsPassed_Lectures" FromRole="Lecture" ToRole="IndividualTestsPassed" />
+        </EntityType>
+        <EntityType Name="LecturesHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Precision="3" />
+          <Property Name="IsFrozen" Type="Boolean" Nullable="false" />
+          <Property Name="LectorId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ModuleHistory">
           <Key>
@@ -383,7 +732,32 @@
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
           <Property Name="LectorId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="StudentsModulesPassed">
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MinutesToPass" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Modules" FromRole="Module" ToRole="IndividualRespons" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleId" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="QuestionType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CummulativeResponses" Relationship="testingDbModel.FK_CummulativeResponses_Questions" FromRole="Question" ToRole="CummulativeRespons" />
+          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Questions" FromRole="Question" ToRole="IndividualRespons" />
+        </EntityType>
+        <EntityType Name="RealtimeModulesPassed">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -405,18 +779,261 @@
           <Property Name="GroupId" Type="Int32" Nullable="false" />
           <Property Name="ModuleHistoryId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Speciality">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="StudentDiscipline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="DisciplineId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SpecialityId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AccountId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CumulativeTestsPasseds" Relationship="testingDbModel.FK_CumulativeTestsPassed_Students" FromRole="Student" ToRole="CumulativeTestsPassed" />
+          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Students" FromRole="Student" ToRole="IndividualRespons" />
+          <NavigationProperty Name="IndividualTestsPasseds" Relationship="testingDbModel.FK_IndividualTestsPassed_Students" FromRole="Student" ToRole="IndividualTestsPassed" />
+        </EntityType>
+        <Association Name="FK_CummulativeResponses_Answers">
+          <End Type="testingDbModel.Answer" Role="Answer" Multiplicity="1" />
+          <End Type="testingDbModel.CummulativeRespons" Role="CummulativeRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CummulativeRespons">
+              <PropertyRef Name="AnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Answers">
+          <End Type="testingDbModel.Answer" Role="Answer" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Answer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualRespons">
+              <PropertyRef Name="AnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CummulativeResponses_CumulativeTestsPassed">
+          <End Type="testingDbModel.CumulativeTestsPassed" Role="CumulativeTestsPassed" Multiplicity="1" />
+          <End Type="testingDbModel.CummulativeRespons" Role="CummulativeRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CumulativeTestsPassed">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CummulativeRespons">
+              <PropertyRef Name="CummulativeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CummulativeResponses_Questions">
+          <End Type="testingDbModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="testingDbModel.CummulativeRespons" Role="CummulativeRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CummulativeRespons">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsLectures_CumulativeTestsPassed">
+          <End Type="testingDbModel.CumulativeTestsPassed" Role="CumulativeTestsPassed" Multiplicity="1" />
+          <End Type="testingDbModel.CumulativeTestsLecture" Role="CumulativeTestsLecture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CumulativeTestsPassed">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsLecture">
+              <PropertyRef Name="CumulativeTestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsLectures_Lectures">
+          <End Type="testingDbModel.Lecture" Role="Lecture" Multiplicity="1" />
+          <End Type="testingDbModel.CumulativeTestsLecture" Role="CumulativeTestsLecture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lecture">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsLecture">
+              <PropertyRef Name="LectureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsPassed_Disciplines">
+          <End Type="testingDbModel.Discipline" Role="Discipline" Multiplicity="1" />
+          <End Type="testingDbModel.CumulativeTestsPassed" Role="CumulativeTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Discipline">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsPassed">
+              <PropertyRef Name="DisciplineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CumulativeTestsPassed_Students">
+          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="testingDbModel.CumulativeTestsPassed" Role="CumulativeTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CumulativeTestsPassed">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualTestsPassed_Disciplines">
+          <End Type="testingDbModel.Discipline" Role="Discipline" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualTestsPassed" Role="IndividualTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Discipline">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualTestsPassed">
+              <PropertyRef Name="DisciplineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Modules">
+          <End Type="testingDbModel.Module" Role="Module" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualRespons">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Questions">
+          <End Type="testingDbModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualRespons">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualResponses_Students">
+          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualRespons">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualTestsPassed_Lectures">
+          <End Type="testingDbModel.Lecture" Role="Lecture" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualTestsPassed" Role="IndividualTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lecture">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualTestsPassed">
+              <PropertyRef Name="LectureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IndividualTestsPassed_Students">
+          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualTestsPassed" Role="IndividualTestsPassed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualTestsPassed">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="testingDbModelStoreContainer" CdmEntityContainer="testingDbEntities">
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="testingDbModel.Account">
+              <MappingFragment StoreEntitySet="Accounts">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Answers">
             <EntityTypeMapping TypeName="testingDbModel.Answer">
               <MappingFragment StoreEntitySet="Answers">
                 <ScalarProperty Name="IsCorrect" ColumnName="IsCorrect" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CummulativeResponses">
+            <EntityTypeMapping TypeName="testingDbModel.CummulativeRespons">
+              <MappingFragment StoreEntitySet="CummulativeResponses">
+                <ScalarProperty Name="CummulativeId" ColumnName="CummulativeId" />
+                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CumulativeTestsLectures">
+            <EntityTypeMapping TypeName="testingDbModel.CumulativeTestsLecture">
+              <MappingFragment StoreEntitySet="CumulativeTestsLectures">
+                <ScalarProperty Name="LectureId" ColumnName="LectureId" />
+                <ScalarProperty Name="CumulativeTestId" ColumnName="CumulativeTestId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CumulativeTestsPasseds">
+            <EntityTypeMapping TypeName="testingDbModel.CumulativeTestsPassed">
+              <MappingFragment StoreEntitySet="CumulativeTestsPassed">
+                <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -429,11 +1046,72 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ExeptionLogs">
+            <EntityTypeMapping TypeName="testingDbModel.ExeptionLog">
+              <MappingFragment StoreEntitySet="ExeptionLogs">
+                <ScalarProperty Name="Resolved" ColumnName="Resolved" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Groups">
             <EntityTypeMapping TypeName="testingDbModel.Group">
               <MappingFragment StoreEntitySet="Groups">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="SpecialityId" ColumnName="SpecialityId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IndividualResponses">
+            <EntityTypeMapping TypeName="testingDbModel.IndividualRespons">
+              <MappingFragment StoreEntitySet="IndividualResponses">
+                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IndividualTestsPasseds">
+            <EntityTypeMapping TypeName="testingDbModel.IndividualTestsPassed">
+              <MappingFragment StoreEntitySet="IndividualTestsPassed">
+                <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="LectureId" ColumnName="LectureId" />
+                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LectorDisciplines">
+            <EntityTypeMapping TypeName="testingDbModel.LectorDiscipline">
+              <MappingFragment StoreEntitySet="LectorDisciplines">
+                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
+                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lectors">
+            <EntityTypeMapping TypeName="testingDbModel.Lector">
+              <MappingFragment StoreEntitySet="Lectors">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LectureHistoryGroups">
+            <EntityTypeMapping TypeName="testingDbModel.LectureHistoryGroup">
+              <MappingFragment StoreEntitySet="LectureHistoryGroups">
+                <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -451,12 +1129,24 @@
           <EntitySetMapping Name="LecturesHistories">
             <EntityTypeMapping TypeName="testingDbModel.LecturesHistory">
               <MappingFragment StoreEntitySet="LecturesHistory">
-                <ScalarProperty Name="IsFrozen" ColumnName="IsFrozen" />
                 <ScalarProperty Name="LectorId" ColumnName="LectorId" />
+                <ScalarProperty Name="IsFrozen" ColumnName="IsFrozen" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
                 <ScalarProperty Name="LectureId" ColumnName="LectureId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ModuleHistories">
+            <EntityTypeMapping TypeName="testingDbModel.ModuleHistory">
+              <MappingFragment StoreEntitySet="ModuleHistory">
+                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
+                <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+                <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -485,107 +1175,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="testingDbModel.Role">
-              <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Specialities">
-            <EntityTypeMapping TypeName="testingDbModel.Speciality">
-              <MappingFragment StoreEntitySet="Speciality">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Accounts">
-            <EntityTypeMapping TypeName="testingDbModel.Account">
-              <MappingFragment StoreEntitySet="Accounts">
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Login" ColumnName="Login" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Lectors">
-            <EntityTypeMapping TypeName="testingDbModel.Lector">
-              <MappingFragment StoreEntitySet="Lectors">
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Students">
-            <EntityTypeMapping TypeName="testingDbModel.Student">
-              <MappingFragment StoreEntitySet="Students">
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-                <ScalarProperty Name="SpecialityId" ColumnName="SpecialityId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LectorDisciplines">
-            <EntityTypeMapping TypeName="testingDbModel.LectorDiscipline">
-              <MappingFragment StoreEntitySet="LectorDisciplines">
-                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
-                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StudentDisciplines">
-            <EntityTypeMapping TypeName="testingDbModel.StudentDiscipline">
-              <MappingFragment StoreEntitySet="StudentDisciplines">
-                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
-                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ExeptionLogs">
-            <EntityTypeMapping TypeName="testingDbModel.ExeptionLog">
-              <MappingFragment StoreEntitySet="ExeptionLogs">
-                <ScalarProperty Name="Resolved" ColumnName="Resolved" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Url" ColumnName="Url" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LectureHistoryGroups">
-            <EntityTypeMapping TypeName="testingDbModel.LectureHistoryGroup">
-              <MappingFragment StoreEntitySet="LectureHistoryGroups">
-                <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
-                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ModuleHistories">
-            <EntityTypeMapping TypeName="testingDbModel.ModuleHistory">
-              <MappingFragment StoreEntitySet="ModuleHistory">
-                <ScalarProperty Name="LectorId" ColumnName="LectorId" />
-                <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
-                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
-                <ScalarProperty Name="LectureHistoryId" ColumnName="LectureHistoryId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StudentsModulesPasseds">
-            <EntityTypeMapping TypeName="testingDbModel.StudentsModulesPassed">
-              <MappingFragment StoreEntitySet="StudentsModulesPassed">
+          <EntitySetMapping Name="RealtimeModulesPasseds">
+            <EntityTypeMapping TypeName="testingDbModel.RealtimeModulesPassed">
+              <MappingFragment StoreEntitySet="RealtimeModulesPassed">
                 <ScalarProperty Name="ModuleHistoryId" ColumnName="ModuleHistoryId" />
                 <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
@@ -603,6 +1195,43 @@
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="testingDbModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Specialities">
+            <EntityTypeMapping TypeName="testingDbModel.Speciality">
+              <MappingFragment StoreEntitySet="Speciality">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentDisciplines">
+            <EntityTypeMapping TypeName="testingDbModel.StudentDiscipline">
+              <MappingFragment StoreEntitySet="StudentDisciplines">
+                <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="testingDbModel.Student">
+              <MappingFragment StoreEntitySet="Students">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="SpecialityId" ColumnName="SpecialityId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

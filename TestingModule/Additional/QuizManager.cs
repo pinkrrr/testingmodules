@@ -46,7 +46,7 @@ namespace TestingModule.Additional
             if (studentCanPass)
             {
                 QuizViewModel qnA = new QuizViewModel();
-                if (await _context.StudentsModulesPasseds.AnyAsync(smp =>
+                if (await _context.RealtimeModulesPasseds.AnyAsync(smp =>
                     smp.StudentId == student.Id && smp.ModuleHistoryId == moduleHistoryId))
                     return qnA;
                 ModuleHistory moduleHistory =
@@ -77,7 +77,7 @@ namespace TestingModule.Additional
                                                                      .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
             if (quizVM.Question == null)
             {
-                _context.StudentsModulesPasseds.Add(new StudentsModulesPassed
+                _context.RealtimeModulesPasseds.Add(new RealtimeModulesPassed()
                 {
                     ModuleId = moduleId,
                     StudentId = quizVM.Student.Id,
@@ -242,6 +242,15 @@ namespace TestingModule.Additional
                 }
             }
             return realTimeStatistics;
+        }
+
+        public async Task<IEnumerable<int>> GetQuizForLectureAlailability(int disciplineId)
+        {
+            var student = await new AccountCredentials().GetStudent();
+            var studentId = student.Id;
+            return (from itp in _context.IndividualTestsPasseds
+                where !itp.IsPassed && itp.StudentId == studentId && itp.DisciplineId == disciplineId
+                select itp.LectureId).ToList();
         }
     }
 }

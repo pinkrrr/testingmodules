@@ -29,6 +29,8 @@ namespace TestingModule.Controllers
             base.Dispose(disposing);
         }
 
+        #region Realtime Testing
+
         [Route("quiz/{moduleHistoryId}")]
         public async Task<ActionResult> Index(int moduleHistoryId)
         {
@@ -40,23 +42,14 @@ namespace TestingModule.Controllers
             return View(qvm);
         }
 
-        //[HttpPost]
-        //public ActionResult RedirectToQuiz(QuizViewModel quizViewModel)
-        //{
-        //    var redirectUrl=new UrlHelper(Request.RequestContext).Action("Index","Quiz",quizViewModel);
-        //    return Json(new {Url=redirectUrl});
-        //}
-
-        // GET: Statistic
-
         [CustomAuthorize(Roles = RoleName.Lecturer)]
         [Route("quiz/modulestatistics/")]
         public async Task<ActionResult> ModuleStatistics()
         {
             Lector lector = await new AccountCredentials().GetLector();
             if (await _context.ModuleHistories.AnyAsync(mh => mh.StartTime != null
-                                                         && mh.IsPassed == false
-                                                         && mh.LectorId == lector.Id))
+                                                              && mh.IsPassed == false
+                                                              && mh.LectorId == lector.Id))
             {
                 return View(await new QuizManager().GetRealTimeStatisticsViewModel(lector));
             }
@@ -75,5 +68,18 @@ namespace TestingModule.Controllers
         {
             return View(await new QuizManager().GetModulesForLector(lectureHistoryId));
         }
+
+        #endregion
+
+        #region Individual Testing
+
+        [Route("individualquiz/{lectureId}")]
+        public ActionResult IndividualQuiz(int lectureId)
+        {
+
+            return View();
+        }
+
+        #endregion
     }
 }

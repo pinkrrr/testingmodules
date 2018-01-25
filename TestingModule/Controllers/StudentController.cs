@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TestingModule.Additional;
@@ -13,10 +15,12 @@ namespace TestingModule.Controllers
     public class StudentController : Controller
     {
         private testingDbEntities _db;
+        private QuizManager _quizManager;
 
         public StudentController()
         {
             _db = new testingDbEntities();
+            _quizManager=new QuizManager();
         }
 
         protected override void Dispose(bool disposing)
@@ -24,6 +28,7 @@ namespace TestingModule.Controllers
             if (disposing)
             {
                 _db.Dispose();
+                _quizManager = null;
             }
             base.Dispose(disposing);
         }
@@ -44,12 +49,17 @@ namespace TestingModule.Controllers
             return View(viewModels);
         }
 
-        public ActionResult StudentLectures(int disciplineId)
+        public async Task<ActionResult> StudentLectures(int disciplineId)
         {
+            System.Diagnostics.Stopwatch watch=new Stopwatch();
+            watch.Start();
             IList<Lecture> lect = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
             IList<Discipline> disc = new testingDbEntities().Disciplines.ToList();
-            ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Disciplines = disc };
-            return View(test);
+            LectureQuizViewModel model = new LectureQuizViewModel { Lectures = lect, Disciplines = disc, LecturesForQuizId = await _quizManager.GetQuizForLectureAlailability(lect.Select(l=>l.DisciplineId).First())};
+            watch.Stop();
+            var result = watch.ElapsedMilliseconds;
+            return View(model);
+            
         }
 
         public ActionResult StudentModules(int lectureId)
