@@ -21,8 +21,8 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private readonly testingDbEntities _context;
-        private readonly QuizManager _quizManager;
+        private testingDbEntities _context;
+        private QuizManager _quizManager;
 
         public QuizHub()
         {
@@ -34,7 +34,9 @@ namespace TestingModule.Hubs
         {
             if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
                 return null;
-            if(await _context.RealtimeResponses.AnyAsync(r=>r.ModuleHistoryId==quizVM.ModuleHistoryId&&r.StudentId==quizVM.Student.Id&&r.QuestionId==quizVM.Question.Id))
+            if (await _context.RealtimeResponses.AnyAsync(r =>
+                r.ModuleHistoryId == quizVM.ModuleHistoryId && r.StudentId == quizVM.Student.Id &&
+                r.QuestionId == quizVM.Question.Id))
                 return await _quizManager.UpdateQuizModel(quizVM);
             RealtimeRespons response = new RealtimeRespons
             {
@@ -116,6 +118,16 @@ namespace TestingModule.Hubs
         public void StopModule()
         {
             Clients.All.reciveStopModule();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context = null;
+                _quizManager = null;
+            }
+            base.Dispose(disposing);
         }
     }
 }

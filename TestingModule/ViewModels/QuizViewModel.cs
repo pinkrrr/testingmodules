@@ -15,4 +15,11 @@ namespace TestingModule.ViewModels
         public int LectureHistoryId { get; set; }
         public int ModuleHistoryId { get; set; }
     }
+
+    public class LectureQuizViewModel:ReasignViewModel
+    {
+        public IEnumerable<int> LecturesForQuizId { get; set; }
+        
+    }
+
 }
