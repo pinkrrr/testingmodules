@@ -30,7 +30,7 @@ namespace TestingModule.Hubs
             _quizManager = new QuizManager();
         }
 
-        public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
+        public async Task<RealTimeQuizViewModel> SaveResponse(RealTimeQuizViewModel quizVM, int responseId)
         {
             if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
                 return null;

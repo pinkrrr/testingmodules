@@ -36,8 +36,20 @@ namespace TestingModule.Additional
             return await context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
         }
 
+        public int GetStudentId()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
+        }
+
         public string GetStudentGroup(ClaimsIdentity identity)
         {
+            return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
+        }
+
+        public string GetStudentGroup()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
         }
 

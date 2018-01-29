@@ -34,7 +34,7 @@ namespace TestingModule.Controllers
         [Route("quiz/{moduleHistoryId}")]
         public async Task<ActionResult> Index(int moduleHistoryId)
         {
-            QuizViewModel qvm = await new QuizManager().GetQnA(moduleHistoryId);
+            RealTimeQuizViewModel qvm = await new QuizManager().GetRealtimeQnA(moduleHistoryId);
             if (qvm == null)
                 return RedirectToAction("Index", "Student");
             if (qvm.Question == null)
@@ -73,10 +73,14 @@ namespace TestingModule.Controllers
 
         #region Individual Testing
 
-        [Route("individualquiz/{lectureId}")]
-        public ActionResult IndividualQuiz(int lectureId)
+        [Route("individualquiz/{individualQuizId}")]
+        public ActionResult IndividualQuiz(int individualQuizId)
         {
-
+            var studentId = new AccountCredentials().GetStudentId();
+            if (!_context.IndividualTestsPasseds.Any(itp => itp.LectureId == individualQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            {
+                return RedirectToAction("Index","Student");
+            }
             return View();
         }
 

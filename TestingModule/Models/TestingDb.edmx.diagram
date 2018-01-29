@@ -43,6 +43,7 @@
         <AssociationConnector Association="testingDbModel.FK_IndividualResponses_Students" />
         <AssociationConnector Association="testingDbModel.FK_IndividualTestsPassed_Lectures" />
         <AssociationConnector Association="testingDbModel.FK_IndividualTestsPassed_Students" />
+        <AssociationConnector Association="testingDbModel.FK_IndividualResponses_IndividualTestsPassed" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

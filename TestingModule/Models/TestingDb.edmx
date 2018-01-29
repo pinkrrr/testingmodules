@@ -83,6 +83,7 @@
           <Property Name="StudentId" Type="int" Nullable="false" />
           <Property Name="QuestionId" Type="int" Nullable="false" />
           <Property Name="AnswerId" Type="int" Nullable="false" />
+          <Property Name="IndividualTestId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="IndividualTestsPassed">
           <Key>
@@ -324,6 +325,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_IndividualResponses_IndividualTestsPassed">
+          <End Role="IndividualTestsPassed" Type="Self.IndividualTestsPassed" Multiplicity="1" />
+          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IndividualTestsPassed">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualResponses">
+              <PropertyRef Name="IndividualTestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_IndividualResponses_Modules">
           <End Role="Modules" Type="Self.Modules" Multiplicity="1" />
           <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
@@ -453,6 +466,10 @@
             <End Role="Answers" EntitySet="Answers" />
             <End Role="IndividualResponses" EntitySet="IndividualResponses" />
           </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_IndividualTestsPassed" Association="Self.FK_IndividualResponses_IndividualTestsPassed">
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPassed" />
+            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
+          </AssociationSet>
           <AssociationSet Name="FK_IndividualResponses_Modules" Association="Self.FK_IndividualResponses_Modules">
             <End Role="Modules" EntitySet="Modules" />
             <End Role="IndividualResponses" EntitySet="IndividualResponses" />
@@ -563,6 +580,10 @@
             <End Role="Student" EntitySet="Students" />
             <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPasseds" />
           </AssociationSet>
+          <AssociationSet Name="FK_IndividualResponses_IndividualTestsPassed" Association="testingDbModel.FK_IndividualResponses_IndividualTestsPassed">
+            <End Role="IndividualTestsPassed" EntitySet="IndividualTestsPasseds" />
+            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -659,6 +680,8 @@
           <NavigationProperty Name="Module" Relationship="testingDbModel.FK_IndividualResponses_Modules" FromRole="IndividualRespons" ToRole="Module" />
           <NavigationProperty Name="Question" Relationship="testingDbModel.FK_IndividualResponses_Questions" FromRole="IndividualRespons" ToRole="Question" />
           <NavigationProperty Name="Student" Relationship="testingDbModel.FK_IndividualResponses_Students" FromRole="IndividualRespons" ToRole="Student" />
+          <Property Name="IndividualTestId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="IndividualTestsPassed" Relationship="testingDbModel.FK_IndividualResponses_IndividualTestsPassed" FromRole="IndividualRespons" ToRole="IndividualTestsPassed" />
         </EntityType>
         <EntityType Name="IndividualTestsPassed">
           <Key>
@@ -672,6 +695,7 @@
           <NavigationProperty Name="Discipline" Relationship="testingDbModel.FK_IndividualTestsPassed_Disciplines" FromRole="IndividualTestsPassed" ToRole="Discipline" />
           <NavigationProperty Name="Lecture" Relationship="testingDbModel.FK_IndividualTestsPassed_Lectures" FromRole="IndividualTestsPassed" ToRole="Lecture" />
           <NavigationProperty Name="Student" Relationship="testingDbModel.FK_IndividualTestsPassed_Students" FromRole="IndividualTestsPassed" ToRole="Student" />
+          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_IndividualTestsPassed" FromRole="IndividualTestsPassed" ToRole="IndividualRespons" />
         </EntityType>
         <EntityType Name="LectorDiscipline">
           <Key>
@@ -983,6 +1007,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_IndividualResponses_IndividualTestsPassed">
+          <End Type="testingDbModel.IndividualTestsPassed" Role="IndividualTestsPassed" Multiplicity="1" />
+          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IndividualTestsPassed">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IndividualRespons">
+              <PropertyRef Name="IndividualTestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1069,6 +1105,7 @@
           <EntitySetMapping Name="IndividualResponses">
             <EntityTypeMapping TypeName="testingDbModel.IndividualRespons">
               <MappingFragment StoreEntitySet="IndividualResponses">
+                <ScalarProperty Name="IndividualTestId" ColumnName="IndividualTestId" />
                 <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
