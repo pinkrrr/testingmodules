@@ -14,6 +14,12 @@ namespace TestingModule.Models
     
     public partial class IndividualTestsPassed
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public IndividualTestsPassed()
+        {
+            this.IndividualResponses = new HashSet<IndividualRespons>();
+        }
+    
         public int Id { get; set; }
         public int DisciplineId { get; set; }
         public int LectureId { get; set; }
@@ -23,5 +29,7 @@ namespace TestingModule.Models
         public virtual Discipline Discipline { get; set; }
         public virtual Lecture Lecture { get; set; }
         public virtual Student Student { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IndividualRespons> IndividualResponses { get; set; }
     }
 }
