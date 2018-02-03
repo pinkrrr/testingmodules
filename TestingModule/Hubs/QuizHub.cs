@@ -21,8 +21,8 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private readonly testingDbEntities _context;
-        private readonly QuizManager _quizManager;
+        private testingDbEntities _context;
+        private QuizManager _quizManager;
 
         public QuizHub()
         {
@@ -30,13 +30,15 @@ namespace TestingModule.Hubs
             _quizManager = new QuizManager();
         }
 
-        public async Task<QuizViewModel> SaveResponse(QuizViewModel quizVM, int responseId)
+        public async Task<RealTimeQuizViewModel> SaveResponse(RealTimeQuizViewModel quizVM, int responseId)
         {
             if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.ModuleHistoryId && mh.IsPassed))
                 return null;
-            if(await _context.Respons.AnyAsync(r=>r.ModuleHistoryId==quizVM.ModuleHistoryId&&r.StudentId==quizVM.Student.Id&&r.QuestionId==quizVM.Question.Id))
+            if (await _context.RealtimeResponses.AnyAsync(r =>
+                r.ModuleHistoryId == quizVM.ModuleHistoryId && r.StudentId == quizVM.Student.Id &&
+                r.QuestionId == quizVM.Question.Id))
                 return await _quizManager.UpdateQuizModel(quizVM);
-            Respons response = new Respons
+            RealtimeRespons response = new RealtimeRespons
             {
                 AnswerId = responseId,
                 LectureHistoryId = quizVM.LectureHistoryId,
@@ -45,10 +47,29 @@ namespace TestingModule.Hubs
                 StudentId = quizVM.Student.Id,
                 GroupId = quizVM.Student.GroupId
             };
-            _context.Respons.Add(response);
+            _context.RealtimeResponses.Add(response);
             await _context.SaveChangesAsync();
             Clients.All.ResponseRecieved();
             return await _quizManager.UpdateQuizModel(quizVM);
+        }
+
+        public async Task<IndividualQuizViewModel> SaveIndividualResponse(IndividualQuizViewModel quizVM, int responseId)
+        {
+            if (await _context.IndividualResponses.AnyAsync(r =>
+                r.IndividualQuizId == quizVM.IndividualQuizId && r.StudentId == quizVM.Student.Id &&
+                r.QuestionId == quizVM.Question.Id))
+                return await _quizManager.GetIndividualQnA(quizVM.IndividualQuizId);
+            IndividualRespons response = new IndividualRespons()
+            {
+                AnswerId = responseId,
+                IndividualQuizId = quizVM.IndividualQuizId,
+                ModuleId = quizVM.Question.ModuleId,
+                QuestionId = quizVM.Question.Id,
+                StudentId = quizVM.Student.Id
+            };
+            _context.IndividualResponses.Add(response);
+            await _context.SaveChangesAsync();
+            return await _quizManager.GetIndividualQnA(quizVM.IndividualQuizId);
         }
 
         private static bool _locked;
@@ -64,9 +85,27 @@ namespace TestingModule.Hubs
                 _locked = false;
             }
         }
+        
+        public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
+        {
+
+            foreach (string group in Connections.Any(groups))
+            {
+                foreach (string connection in Connections.GetConnections(group))
+                {
+                    Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
+                }
+            }
+        }
+
+        /*public void StopModule()
+        {
+            Clients.All.reciveStopModule();
+        }*/
 
         private static readonly ConnectionMapping<string> Connections =
             new ConnectionMapping<string>();
+
         public override Task OnConnected()
         {
             if (Context.User.IsInRole(RoleName.Student))
@@ -101,21 +140,14 @@ namespace TestingModule.Hubs
             return base.OnReconnected();
         }
 
-        public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
+        protected override void Dispose(bool disposing)
         {
-
-            foreach (string group in Connections.Any(groups))
+            if (disposing)
             {
-                foreach (string connection in Connections.GetConnections(group))
-                {
-                    Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
-                }
+                _context = null;
+                _quizManager = null;
             }
-        }
-
-        public void StopModule()
-        {
-            Clients.All.reciveStopModule();
+            base.Dispose(disposing);
         }
     }
 }

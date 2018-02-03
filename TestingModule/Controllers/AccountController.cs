@@ -105,6 +105,7 @@ namespace TestingModule.Controllers
                     Student student =await _context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                     identity.AddClaims(new[]
                     {
+                        new Claim("StudentId", _context.Students.Where(s => s.AccountId == account.Id).Select(s=>s.Id).SingleOrDefault().ToString()),
                         new Claim(ClaimTypes.Name, student.Name),
                         new Claim(ClaimTypes.Surname, student.Surname),
                         new Claim("Speciality", await _context.Specialities.Where(sp => sp.Id == student.SpecialityId).Select(sp => sp.Name).SingleOrDefaultAsync()),

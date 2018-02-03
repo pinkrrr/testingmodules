@@ -1,4 +1,5 @@
-﻿@model TestingModule.ViewModels.ReasignViewModel
+﻿@using TestingModule.ViewModels
+@model LectureQuizViewModel
 @{
     ViewBag.Title = "Лекції";
     Layout = "~/Views/Shared/_Layoutstudent.cshtml";
@@ -48,6 +49,11 @@ else
         {
             <tr class="table-row">
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text" data-editable>@item.Name</a></td>
+                @if (Model.LecturesForQuizId.Any(lfq=>lfq.Key==item.Id))
+                {
+                    <td class="table-item table-item_name"><a href=@Url.Action("IndividualQuiz","Quiz",new{individualQuizId=Model.LecturesForQuizId.Where(lfq=>lfq.Key==item.Id).Select(lfq=>lfq.Value).SingleOrDefault()})>Пройти тест</a></td>
+                }
+
             </tr>
         }
 

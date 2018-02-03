@@ -12,14 +12,12 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class LecturesHistory
+    public partial class sysdiagram
     {
-        public int Id { get; set; }
-        public int LectureId { get; set; }
-        public int DisciplineId { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public Nullable<System.DateTime> EndTime { get; set; }
-        public bool IsFrozen { get; set; }
-        public int LectorId { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

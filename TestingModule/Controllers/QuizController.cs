@@ -29,10 +29,12 @@ namespace TestingModule.Controllers
             base.Dispose(disposing);
         }
 
+        #region Realtime Testing
+
         [Route("quiz/{moduleHistoryId}")]
         public async Task<ActionResult> Index(int moduleHistoryId)
         {
-            QuizViewModel qvm = await new QuizManager().GetQnA(moduleHistoryId);
+            RealTimeQuizViewModel qvm = await new QuizManager().GetRealtimeQnA(moduleHistoryId);
             if (qvm == null)
                 return RedirectToAction("Index", "Student");
             if (qvm.Question == null)
@@ -40,23 +42,14 @@ namespace TestingModule.Controllers
             return View(qvm);
         }
 
-        //[HttpPost]
-        //public ActionResult RedirectToQuiz(QuizViewModel quizViewModel)
-        //{
-        //    var redirectUrl=new UrlHelper(Request.RequestContext).Action("Index","Quiz",quizViewModel);
-        //    return Json(new {Url=redirectUrl});
-        //}
-
-        // GET: Statistic
-
         [CustomAuthorize(Roles = RoleName.Lecturer)]
         [Route("quiz/modulestatistics/")]
         public async Task<ActionResult> ModuleStatistics()
         {
             Lector lector = await new AccountCredentials().GetLector();
             if (await _context.ModuleHistories.AnyAsync(mh => mh.StartTime != null
-                                                         && mh.IsPassed == false
-                                                         && mh.LectorId == lector.Id))
+                                                              && mh.IsPassed == false
+                                                              && mh.LectorId == lector.Id))
             {
                 return View(await new QuizManager().GetRealTimeStatisticsViewModel(lector));
             }
@@ -75,5 +68,23 @@ namespace TestingModule.Controllers
         {
             return View(await new QuizManager().GetModulesForLector(lectureHistoryId));
         }
+
+        #endregion
+
+        #region Individual Testing
+
+        [Route("individualquiz/{individualQuizId}")]
+        public async Task<ActionResult> IndividualQuiz(int individualQuizId)
+        {
+            var studentId = new AccountCredentials().GetStudentId();
+            if (!_context.IndividualQuizPasseds.Any(itp => itp.Id == individualQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            {
+                return RedirectToAction("Index", "Student");
+            }
+            var temp = await new QuizManager().GetIndividualQnA(individualQuizId);
+            return View();
+        }
+
+        #endregion
     }
 }

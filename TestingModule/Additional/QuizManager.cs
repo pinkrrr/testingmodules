@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Threading;
 using TestingModule.Models;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
+using Microsoft.Ajax.Utilities;
 using Microsoft.Owin;
 using Microsoft.Win32;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
@@ -25,37 +27,129 @@ namespace TestingModule.Additional
             _context = new testingDbEntities();
         }
 
-        public async Task<ICollection<Question>> GetQuestionsList(int moduleId)
+        #region RealTimeQuiz Student
+
+        private async Task<ICollection<Question>> GetQuestionsList(int moduleId)
         {
             ICollection<Question> questionsList = await _context.Questions.Where(q => q.ModuleId == moduleId)
                 .ToListAsync();
             return questionsList;
         }
 
-        public async Task<IEnumerable<Answer>> GetAnswersList(int questionId)
+        private async Task<IEnumerable<Answer>> GetAnswersList(int questionId)
         {
             IEnumerable<Answer> answersList = await _context.Answers.Where(a => a.QuestionId == questionId)
                 .ToListAsync();
             return answersList;
         }
 
-        public async Task<QuizViewModel> GetQnA(int moduleHistoryId)
+        private async Task ResovlePassedRealtimeQuiz(int moduleId, int studentId, int moduleHistoryId, int lectureId)
+        {
+            _context.RealtimeModulesPasseds.Add(new RealtimeModulesPassed()
+            {
+                ModuleId = moduleId,
+                StudentId = studentId,
+                ModuleHistoryId = moduleHistoryId
+            });
+            var passedModules =
+                await (from m in _context.Modules
+                       where m.LectureId == lectureId
+                       join rtmp in _context.RealtimeModulesPasseds on m.Id equals rtmp.ModuleId into groupjoin
+                       from gj in groupjoin.DefaultIfEmpty()
+                       where gj == null || gj.StudentId == studentId
+                       select gj).ToListAsync();
+
+            if (passedModules.All(a => a != null))
+            {
+                IndividualQuizPassed individualTestsPassed = new IndividualQuizPassed()
+                {
+                    DisciplineId = _context.Lectures.Where(w => w.Id == lectureId).Select(s => s.DisciplineId)
+                        .SingleOrDefault(),
+                    IsPassed = false,
+                    LectureId = lectureId,
+                    StudentId = studentId
+                };
+                _context.IndividualQuizPasseds.Add(individualTestsPassed);
+            }
+
+
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task ResovlePassedIndividualQuiz(int individualQuizId)
+        {
+            var studentId = new AccountCredentials().GetStudentId();
+            var toUpdate = await _context.IndividualQuizPasseds.SingleOrDefaultAsync(w => w.Id == individualQuizId);
+            if (toUpdate == null)
+            {
+                return;
+            }
+            toUpdate.IsPassed = true;
+            var individualQuiz = _context.IndividualQuizPasseds.SingleOrDefault(s => s.Id == individualQuizId);
+            if (individualQuiz == null)
+            {
+                return;
+            }
+            if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == individualQuiz.DisciplineId && it.IsPassed && it.StudentId == studentId))
+            {
+                var passedLectures =
+                    await (from l in _context.Lectures
+                           where l.DisciplineId == individualQuiz.DisciplineId
+                           join iqp in _context.IndividualQuizPasseds on l.Id equals iqp.LectureId into groupjoin
+                           from gj in groupjoin.DefaultIfEmpty()
+                           where gj == null || gj.StudentId == individualQuiz.StudentId
+                           select gj).ToListAsync();
+
+                if (passedLectures.All(a => a != null))
+                {
+                    CumulativeQuizPassed cumulativeTestsPassed = new CumulativeQuizPassed()
+                    {
+                        DisciplineId = individualQuiz.DisciplineId,
+                        IsPassed = false,
+                        StudentId = studentId
+                    };
+                    var returnvalue = _context.CumulativeQuizPasseds.Add(cumulativeTestsPassed);
+                    IEnumerable<CumulativeQuizLecture> cumulativeLectures =
+                        from pl in passedLectures
+                        where pl != null
+                        select new CumulativeQuizLecture()
+                        {
+                            CumulativeQuizId = returnvalue.Id,
+                            LectureId = pl.LectureId
+                        };
+                    _context.CumulativeQuizLectures.AddRange(cumulativeLectures);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<RealTimeQuizViewModel> GetRealtimeQnA(int moduleHistoryId)
         {
             var student = await new AccountCredentials().GetStudent();
             bool studentCanPass = await new StudentPageHelper().StudentCanPass(moduleHistoryId, student.Id);
             if (studentCanPass)
             {
-                QuizViewModel qnA = new QuizViewModel();
-                if (await _context.StudentsModulesPasseds.AnyAsync(smp =>
+                RealTimeQuizViewModel qnA = new RealTimeQuizViewModel();
+                if (await _context.RealtimeModulesPasseds.AnyAsync(smp =>
                     smp.StudentId == student.Id && smp.ModuleHistoryId == moduleHistoryId))
                     return qnA;
                 ModuleHistory moduleHistory =
                     await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
-                var question = await _context.Questions.Where(q => q.ModuleId == moduleHistory.ModuleId &&
-                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == moduleHistoryId &&
+                int lectureId = _context.LecturesHistories.Where(lh => lh.Id == moduleHistory.LectureHistoryId)
+                    .Select(lh => lh.LectureId).SingleOrDefault();
+                var question = await _context.Questions.Where(q => q.ModuleId == moduleHistory.ModuleId && q.QuestionType == QuestionType.RealtimeId &&
+                                                                   !_context.RealtimeResponses.Where(r => r.ModuleHistoryId == moduleHistoryId &&
                                                                    r.StudentId == student.Id).Select(r => r.QuestionId).Contains(q.Id))
                                                                    .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
-                qnA = new QuizViewModel
+
+                if (question == null)
+                {
+                    await ResovlePassedRealtimeQuiz(moduleHistory.ModuleId, student.Id, moduleHistoryId, lectureId);
+                    return qnA;
+                }
+
+                qnA = new RealTimeQuizViewModel
                 {
                     Question = question,
                     Student = student,
@@ -68,27 +162,51 @@ namespace TestingModule.Additional
             return null;
         }
 
-        public async Task<QuizViewModel> UpdateQuizModel(QuizViewModel quizVM)
+        public async Task<RealTimeQuizViewModel> UpdateQuizModel(RealTimeQuizViewModel quizVM)
         {
             int moduleId = quizVM.Question.ModuleId;
-            quizVM.Question = await _context.Questions.Where(q => q.ModuleId == moduleId &&
-                                                                   !_context.Respons.Where(r => r.ModuleHistoryId == quizVM.ModuleHistoryId &&
-                                                                   r.StudentId == quizVM.Student.Id).Select(r => r.QuestionId).Contains(q.Id))
-                                                                     .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+            int lectureId = quizVM.Question.LectureId;
+            quizVM.Question = await _context.Questions.Where(q => q.ModuleId == moduleId && q.QuestionType == QuestionType.RealtimeId &&
+                                                                  !_context.RealtimeResponses.Where(r => r.ModuleHistoryId == quizVM.ModuleHistoryId &&
+                                                                  r.StudentId == quizVM.Student.Id).Select(r => r.QuestionId).Contains(q.Id))
+                                                                  .OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
             if (quizVM.Question == null)
             {
-                _context.StudentsModulesPasseds.Add(new StudentsModulesPassed
-                {
-                    ModuleId = moduleId,
-                    StudentId = quizVM.Student.Id,
-                    ModuleHistoryId = quizVM.ModuleHistoryId
-                });
-                await _context.SaveChangesAsync();
+                await ResovlePassedRealtimeQuiz(moduleId, quizVM.Student.Id, quizVM.ModuleHistoryId, lectureId);
                 return null;
             }
             quizVM.Answers = await GetAnswersList(quizVM.Question.Id);
             return quizVM;
         }
+
+        #endregion
+
+        public async Task<IndividualQuizViewModel> GetIndividualQnA(int individualQuizId)
+        {
+            Student student = await new AccountCredentials().GetStudent();
+            var question =
+                await (from q in _context.Questions
+                       where !_context.IndividualResponses.Any(ir => ir.IndividualQuizId == individualQuizId && ir.QuestionId == q.Id) && q.QuestionType == QuestionType.IndividualId
+                       join it in _context.IndividualQuizPasseds on q.LectureId equals it.LectureId
+                       where it.Id == individualQuizId
+                       select q).OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+
+            if (question == null)
+            {
+                await ResovlePassedIndividualQuiz(individualQuizId);
+                return null;
+            }
+
+            return new IndividualQuizViewModel
+            {
+                Question = question,
+                Student = student,
+                Answers = await GetAnswersList(question.Id),
+                IndividualQuizId = individualQuizId
+            };
+        }
+
+
 
         public async Task<StatisticsViewModel> GetHistoriesForLector()
         {
@@ -119,7 +237,7 @@ namespace TestingModule.Additional
         public async Task<ResponseStatisticsViewModel> GetModulesForLector(int lectureHistoryId)
         {
             IEnumerable<ResponseTable> tableResponses =
-                from rs in _context.Respons
+                from rs in _context.RealtimeResponses
                 join lhg in _context.LectureHistoryGroups on rs.LectureHistoryId equals lhg.LectureHistoryId
                 join qs in _context.Questions on rs.QuestionId equals qs.Id
                 where rs.LectureHistoryId == lectureHistoryId && lhg.GroupId == rs.GroupId
@@ -156,8 +274,8 @@ namespace TestingModule.Additional
                         join q in questions on a.QuestionId equals q.Id
                         select a).ToListAsync();
 
-            IEnumerable<Respons> responses =
-                await (from r in _context.Respons
+            IEnumerable<RealtimeRespons> responses =
+                await (from r in _context.RealtimeResponses
                        join tr in tableResponses on r.Id equals tr.ResponseId
                        select r).ToListAsync();
 
@@ -222,8 +340,8 @@ namespace TestingModule.Additional
                 (from a in _context.Answers.ToList()
                  join q in rtsVM.Questions on a.QuestionId equals q.Id
                  select a).ToList();
-            IEnumerable<Respons> responses =
-                (from r in _context.Respons.ToList()
+            IEnumerable<RealtimeRespons> responses =
+                (from r in _context.RealtimeResponses.ToList()
                  where r.ModuleHistoryId == rtsVM.ModuleHistory.Id
                  select r).ToList();
             ICollection<RealTimeStatistics> realTimeStatistics = new List<RealTimeStatistics>();
@@ -242,6 +360,15 @@ namespace TestingModule.Additional
                 }
             }
             return realTimeStatistics;
+        }
+
+        public async Task<Dictionary<int, int>> GetQuizForLectureAlailability(int disciplineId)
+        {
+            var studentId = new AccountCredentials().GetStudentId();
+            return await (from itp in _context.IndividualQuizPasseds
+                          where !itp.IsPassed && itp.StudentId == studentId && itp.DisciplineId == disciplineId
+                          select new { itp.LectureId, itp.Id }).ToDictionaryAsync(td => td.LectureId, td => td.Id);
+
         }
     }
 }

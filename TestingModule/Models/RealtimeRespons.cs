@@ -12,11 +12,15 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class StudentsModulesPassed
+    public partial class RealtimeRespons
     {
         public int Id { get; set; }
+        public int QuestionId { get; set; }
+        public int AnswerId { get; set; }
         public int StudentId { get; set; }
-        public int ModuleId { get; set; }
+        public Nullable<int> TimeToPass { get; set; }
+        public int LectureHistoryId { get; set; }
+        public int GroupId { get; set; }
         public int ModuleHistoryId { get; set; }
     }
 }

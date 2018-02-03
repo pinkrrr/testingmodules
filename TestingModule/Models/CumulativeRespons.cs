@@ -12,14 +12,17 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class LecturesHistory
+    public partial class CumulativeRespons
     {
         public int Id { get; set; }
-        public int LectureId { get; set; }
-        public int DisciplineId { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public Nullable<System.DateTime> EndTime { get; set; }
-        public bool IsFrozen { get; set; }
-        public int LectorId { get; set; }
+        public int QuestionId { get; set; }
+        public int AnswerId { get; set; }
+        public int CumulativeQuizId { get; set; }
+        public int StudentId { get; set; }
+    
+        public virtual Answer Answer { get; set; }
+        public virtual CumulativeQuizPassed CumulativeQuizPassed { get; set; }
+        public virtual Question Question { get; set; }
+        public virtual Student Student { get; set; }
     }
 }
