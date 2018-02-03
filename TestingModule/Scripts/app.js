@@ -383,8 +383,6 @@
 
     }
 
-    
-
     function statistics() {
 
         if ($('.body-content__statistics').length > 0) {
@@ -465,7 +463,6 @@
     selectAllorNobody();
     statistics();
     startLectureValidation();
-    //questionsEditChecked();
 
     if ($('.questionBlock').length > 0) {
         quiz();
@@ -478,7 +475,7 @@ function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
     $('.body-content__statistics #group'+gID+' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
 }
 
-function stopModule() {
+var stopModule = function() {
     var $stopModuleBtn = $('#stopModuleButton');
     var quiz = $.connection.quizHub;
     $.connection.hub.start();
@@ -487,7 +484,9 @@ function stopModule() {
     });
 }
 
-stopModule();
+if ($('#stopModuleButton').length == 1) {
+    stopModule();
+}
 
 function historyStatisticsPage(model) {
 
@@ -605,8 +604,7 @@ function historyStatisticsPage(model) {
                 }
 
             });
-
-            // chartData.unshift(['Відповідь', 'Кількість правильних відповідей']);
+            
 
         });
 
@@ -614,113 +612,12 @@ function historyStatisticsPage(model) {
 
     drawChart();
 
-    //createHistoryStatisticsPage();
-
-    //function createHistoryStatisticsPage() {
-
-    //    var moduleId = null;
-
-    //    model.Modules.forEach(function (module) {
-
-    //        $('<div/>', {
-    //            class: 'module',
-    //            id: 'module'+module.Id
-    //        }).appendTo('.chartsWrapper');
-
-    //        $('<div/>', {
-    //            class: 'module_name',
-    //            html: module.Name
-    //        }).prependTo('#module' + module.Id);
-
-    //        model.Questions.forEach(function (question) {
-
-    //            if (question.ModuleId === module.Id) {
-
-    //                $('<div/>', {
-    //                    class: 'question',
-    //                    id: 'questionId' + question.Id
-    //                }).appendTo('#module' + module.Id);
-
-    //                $('<div/>', {
-    //                    class: 'question_text',
-    //                    html: question.Text
-    //                }).appendTo('#questionId' + question.Id);
-
-    //                chartDataObj.id = question.Id;
-
-    //                model.Groups.forEach(function (group) {
-
-    //                    $('<div/>', {
-    //                        class: 'group',
-    //                        id: 'group' + group.Id
-    //                    }).appendTo('#questionId' + question.Id);
-
-    //                    $('<div/>', {
-    //                        class: 'group_name',
-    //                        html: group.Name
-    //                    }).prependTo('#questionId' + question.Id + ' #group' + group.Id);
-
-    //                    $('<div/>', {
-    //                        class: 'pieChart',
-    //                        id: 'chartContainer' + question.Id
-    //                    }).appendTo('#questionId' + question.Id + ' #group' + group.Id);
-
-    //                    model.AnswersCount.forEach(function (answer) {
-
-    //                        if (question.Id === answer.QuestionId && answer.GroupId === group.Id) {
-
-    //                            chartDataObj.answers.push({
-    //                                y: answer.Count,
-    //                                name: answer.Text
-    //                            })
-
-    //                        }
-
-    //                    });
-
-    //                    renderChart(chartDataObj);
-
-    //                    chartDataObj.answers = [];
-
-    //                })
-
-    //            }
-
-    //        });
-
-    //    });
-    //}
-
-    //function renderChart(chartData) {
-
-    //    var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
-    //        {
-    //            animationEnabled: true,
-    //            legend: {
-    //                verticalAlign: "bottom",
-    //                horizontalAlign: "left",
-    //                fontSize: 16,
-    //                fontFamily: "arial"
-    //            },
-    //            theme: "theme3",
-    //            backgroundColor: "transparent",
-    //            data: [{
-    //                type: "pie",
-    //                indexLabelFontFamily: "Arial",
-    //                indexLabelFontSize: 20,
-    //                indexLabelFontWeight: "bold",
-    //                startAngle: 0,
-    //                indexLabelFontColor: "#ffffff",
-    //                indexLabelLineColor: "#ff0000",
-    //                indexLabelPlacement: "inside",
-    //                toolTipContent: "Відповідь: {name}",
-    //                showInLegend: true,
-    //                indexLabel: "{y}",
-    //                dataPoints: chartData.answers
-    //            }]
-    //        });
-    //    chart.render();
-    //}
-
 
 }
+
+var ckeditorInit = function () {
+    console.log('ckeditor');
+    CKEDITOR.replace('ckeditor');
+};
+
+ckeditorInit();

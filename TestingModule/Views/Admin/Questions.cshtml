@@ -51,11 +51,19 @@ else
     {
         <div>
             Немає матеріалів лекції...Бажаєте додати? <i class="fa fa-pencil" aria-hidden="true"></i>
+            <br>
         </div>
     }
-    else
+    using (Html.BeginForm("EditMaterial", "Admin", FormMethod.Post))
     {
-        <div class="description">@Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Description</div>
+        <div class="popup-title">Редагування</div>
+                <form>
+                    @Html.TextAreaFor(model => model.FirstOrDefault().Description, new { @id = "ckeditor", name = "materials" })
+                    @Html.HiddenFor(model => model.FirstOrDefault().ModuleId)
+                    @Html.HiddenFor(model => model.FirstOrDefault().LectureId)
+                    @Html.HiddenFor(model => model.FirstOrDefault().DisciplineId)
+                    <button type="submit">Зберегти</button>
+                </form>
     }
     <hr>
     foreach (var type in Model.OrderBy(t => t.QuestionType).GroupBy(t => t.QuestionType))
@@ -95,11 +103,11 @@ else
                         <tr class="table-row">
                             <th class="table-item table-item_name">
                                 @Html.TextAreaFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new
-                           {
-                               @class = "input-text-Questions",
-                               @placeholder = "Введіть текст запитання",
-                               @required = "required"
-                           })
+{
+    @class = "input-text-Questions",
+    @placeholder = "Введіть текст запитання",
+    @required = "required"
+})
                             </th>
                             <th class="table-item table-item_correct"> Правильна відповідь </th>
                             <th class="table-item table-item_correct">
@@ -129,16 +137,16 @@ else
                                     @if (que.IsCorrect == true)
                                     {
                                         <td class="table-item table-item_correct" bgcolor="#2ECC71" title="Правильна відповідь!">
-                                            <label>
-                                                @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", @checked = "checked" })
+                                            <label for="@Model[Model.IndexOf(que)].AnswerId">
+                                                @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", @checked = "checked", @id = Model[Model.IndexOf(que)].AnswerId })
                                             </label>
                                         </td>
                                     }
                                     else
                                     {
                                         <td class="table-item table-item_correct" bgcolor="#C0392B" title="Неправильна відповідь!">
-                                            <label>
-                                                @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", required = "required" })
+                                            <label for="@Model[Model.IndexOf(que)].AnswerId">
+                                                @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", required = "required", @id = Model[Model.IndexOf(que)].AnswerId })
                                             </label>
                                         </td>
                                     }
@@ -156,7 +164,7 @@ else
                             }
                             <div class="select">
                                 @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(item.FirstOrDefault().Modules,
-                                    "Id", "Name", new { @moduleId = "moduleId" }), "Оберіть новий модуль")
+        "Id", "Name", new { @moduleId = "moduleId" }), "Оберіть новий модуль")
                             </div>
                             <div>
                                 <label>Лекційне питання @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].QuestionType, 1, "Lect")</label>
@@ -222,7 +230,7 @@ else
                         var name = Model.LastOrDefault();
                     }
                     @if (name == null)
-                    {
+                {
                         @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
                     }
                     else

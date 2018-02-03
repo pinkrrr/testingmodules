@@ -52,7 +52,7 @@ else
             <h3>Матеріали модуля</h3>
         if (item.Description != null)
         {
-            <div class="description">@item.Description</div>
+            <div class="description">@Html.Raw(item.Description)</div>
         }
         else
         {
