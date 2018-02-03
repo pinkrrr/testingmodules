@@ -1,17 +1,28 @@
-﻿
+﻿@model TestingModule.ViewModels.IndividualQuizViewModel
 @{
-    Layout = null;
+    ViewBag.Title = "Quiz";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
-<!DOCTYPE html>
+<div class="questionBlock">
+    <div class="question" data-questionid=""></div>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>IndividualQuiz</title>
-</head>
-<body>
-    <div> 
+    <div class="answers">
     </div>
-</body>
-</html>
+
+    <button class="nextQuestion nextQuestion-individual">Далі</button>
+</div>
+
+
+@section scripts
+{
+    <script>
+        var qModel = @Html.Raw(Json.Encode(@Model));
+
+        var quiz = $.connection.quizHub;
+        $.connection.hub.start();
+        quiz.client.reciveStopModule = function () {
+            window.location.href = "/";
+        }
+    </script>
+}

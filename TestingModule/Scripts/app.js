@@ -304,6 +304,7 @@
 
     function quiz() {
         var $nextQbtn = $('.nextQuestion');
+        var $nextIndQbtn = $('.nextQuestion-individual');
 
         var $questionBlock = $('.questionBlock');
         var $question = $questionBlock.find('.question');
@@ -359,9 +360,34 @@
             }
         }
 
+        function showNextIndividualQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quizHub = $.connection.quizHub;
+                $.connection.hub.start().done(function () {
+                    quizHub.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
+                        _model = model;
+                        console.log(_model);
+                        setQuestionData(_model);
+                    }).fail(function () {
+                        quizFinished();
+                    });
+                });
+
+            } else {
+                return;
+            }
+        }
+
         function initNextQuestion() {
             $nextQbtn.click(function () {
                 showNextQuestion();
+            });
+        }
+
+        function initNextIndividualQuestion() {
+            $nextIndQbtn.click(function () {
+                showNextIndividualQuestion();
             });
         }
 
@@ -379,7 +405,7 @@
         initSelectAnswer();
         setQuestionData(_model);
         initNextQuestion();
-
+        initNextIndividualQuestion();
 
     }
 
@@ -408,7 +434,7 @@
 
                 $('<div>', {
                     class: 'group',
-                    id: 'group'+group.Id,
+                    id: 'group' + group.Id,
                     html: questionList
                 }).appendTo('.groups');
 
@@ -472,10 +498,10 @@
 
 function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
     var progress = correctAnswersCount / totalAnswersCount * 100;
-    $('.body-content__statistics #group'+gID+' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+    $('.body-content__statistics #group' + gID + ' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
 }
 
-var stopModule = function() {
+/*function stopModule() {
     var $stopModuleBtn = $('#stopModuleButton');
     var quiz = $.connection.quizHub;
     $.connection.hub.start();
@@ -483,10 +509,7 @@ var stopModule = function() {
         quiz.server.stopModule();
     });
 }
-
-if ($('#stopModuleButton').length == 1) {
-    stopModule();
-}
+stopModule();*/
 
 function historyStatisticsPage(model) {
 
@@ -604,7 +627,7 @@ function historyStatisticsPage(model) {
                 }
 
             });
-            
+
 
         });
 

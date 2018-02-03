@@ -12,6 +12,7 @@ using TestingModule.ViewModels;
 
 namespace TestingModule.Controllers
 {
+    [CustomAuthorize(RoleName.Student)]
     public class StudentController : Controller
     {
         private testingDbEntities _db;

@@ -56,7 +56,7 @@ namespace TestingModule.Controllers
             return RedirectToAction("index", "admin");
 
         }
-
+        [CustomAuthorize(RoleName.Lecturer,RoleName.Administrator)]
         [Route("quiz/totalstatistics/")]
         public async Task<ActionResult> TotalStatistics()
         {
@@ -81,8 +81,8 @@ namespace TestingModule.Controllers
             {
                 return RedirectToAction("Index", "Student");
             }
-            var temp = await new QuizManager().GetIndividualQnA(individualQuizId);
-            return View();
+            var model = await new QuizManager().GetIndividualQnA(individualQuizId);
+            return View(model);
         }
 
         #endregion

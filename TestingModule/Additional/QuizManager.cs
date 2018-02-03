@@ -186,7 +186,7 @@ namespace TestingModule.Additional
             Student student = await new AccountCredentials().GetStudent();
             var question =
                 await (from q in _context.Questions
-                       where !_context.IndividualResponses.Any(ir => ir.IndividualQuizId == individualQuizId && ir.QuestionId == q.Id) && q.QuestionType == QuestionType.IndividualId
+                       where !_context.IndividualResponses.Any(ir => ir.IndividualQuizId == individualQuizId && ir.QuestionId == q.Id)// && q.QuestionType == QuestionType.IndividualId
                        join it in _context.IndividualQuizPasseds on q.LectureId equals it.LectureId
                        where it.Id == individualQuizId
                        select q).OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();

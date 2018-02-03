@@ -67,8 +67,8 @@ else
 {
     <script>
         var quiz = $.connection.quizHub;
+        $.connection.hub.start();
         var intervalTime = 3000;
-        
         quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
             console.log(moduleHistoryId);
             window.location.href = '/quiz/' + moduleHistoryId;

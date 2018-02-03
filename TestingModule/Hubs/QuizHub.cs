@@ -98,10 +98,10 @@ namespace TestingModule.Hubs
             }
         }
 
-        /*public void StopModule()
+        public void StopModule()
         {
             Clients.All.reciveStopModule();
-        }*/
+        }
 
         private static readonly ConnectionMapping<string> Connections =
             new ConnectionMapping<string>();
