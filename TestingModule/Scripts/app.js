@@ -1,5 +1,14 @@
 ﻿$(document).ready(function () {
 
+
+
+    var ckeditorInit = function () {
+        $('#ckeditor').ckeditor();
+        //CKEDITOR.replace('ckeditor');
+    };
+
+    ckeditorInit();
+
     function popup() {
         var _$editBtn = $('.table-edit-button');
         var _$removeBtn = $('.table-remove-button');
