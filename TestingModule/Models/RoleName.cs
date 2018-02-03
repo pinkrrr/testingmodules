@@ -14,4 +14,12 @@ namespace TestingModule.Models
         public const int StudentId = 2;
         public const int LecturerId = 3;
     }
+
+    public static class QuestionType
+    {
+        public const int RealtimeId = 1;
+        public const int IndividualId = 2;
+
+    }
+
 }

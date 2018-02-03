@@ -74,13 +74,14 @@ namespace TestingModule.Controllers
         #region Individual Testing
 
         [Route("individualquiz/{individualQuizId}")]
-        public ActionResult IndividualQuiz(int individualQuizId)
+        public async Task<ActionResult> IndividualQuiz(int individualQuizId)
         {
             var studentId = new AccountCredentials().GetStudentId();
-            if (!_context.IndividualTestsPasseds.Any(itp => itp.LectureId == individualQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            if (!_context.IndividualQuizPasseds.Any(itp => itp.Id == individualQuizId && itp.StudentId == studentId && itp.IsPassed == false))
             {
-                return RedirectToAction("Index","Student");
+                return RedirectToAction("Index", "Student");
             }
+            var temp = await new QuizManager().GetIndividualQnA(individualQuizId);
             return View();
         }
 

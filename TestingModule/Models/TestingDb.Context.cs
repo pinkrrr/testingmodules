@@ -27,14 +27,14 @@ namespace TestingModule.Models
     
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
-        public virtual DbSet<CummulativeRespons> CummulativeResponses { get; set; }
-        public virtual DbSet<CumulativeTestsLecture> CumulativeTestsLectures { get; set; }
-        public virtual DbSet<CumulativeTestsPassed> CumulativeTestsPasseds { get; set; }
+        public virtual DbSet<CumulativeQuizLecture> CumulativeQuizLectures { get; set; }
+        public virtual DbSet<CumulativeQuizPassed> CumulativeQuizPasseds { get; set; }
+        public virtual DbSet<CumulativeRespons> CumulativeResponses { get; set; }
         public virtual DbSet<Discipline> Disciplines { get; set; }
         public virtual DbSet<ExeptionLog> ExeptionLogs { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<IndividualQuizPassed> IndividualQuizPasseds { get; set; }
         public virtual DbSet<IndividualRespons> IndividualResponses { get; set; }
-        public virtual DbSet<IndividualTestsPassed> IndividualTestsPasseds { get; set; }
         public virtual DbSet<LectorDiscipline> LectorDisciplines { get; set; }
         public virtual DbSet<Lector> Lectors { get; set; }
         public virtual DbSet<LectureHistoryGroup> LectureHistoryGroups { get; set; }
@@ -49,5 +49,6 @@ namespace TestingModule.Models
         public virtual DbSet<Speciality> Specialities { get; set; }
         public virtual DbSet<StudentDiscipline> StudentDisciplines { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

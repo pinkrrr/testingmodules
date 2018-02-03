@@ -17,7 +17,7 @@ namespace TestingModule.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Question()
         {
-            this.CummulativeResponses = new HashSet<CummulativeRespons>();
+            this.CumulativeResponses = new HashSet<CumulativeRespons>();
             this.IndividualResponses = new HashSet<IndividualRespons>();
         }
     
@@ -29,7 +29,7 @@ namespace TestingModule.Models
         public int QuestionType { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CummulativeRespons> CummulativeResponses { get; set; }
+        public virtual ICollection<CumulativeRespons> CumulativeResponses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IndividualRespons> IndividualResponses { get; set; }
     }

@@ -17,9 +17,10 @@ namespace TestingModule.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
-            this.CumulativeTestsPasseds = new HashSet<CumulativeTestsPassed>();
+            this.CumulativeQuizPasseds = new HashSet<CumulativeQuizPassed>();
+            this.CumulativeResponses = new HashSet<CumulativeRespons>();
+            this.IndividualQuizPasseds = new HashSet<IndividualQuizPassed>();
             this.IndividualResponses = new HashSet<IndividualRespons>();
-            this.IndividualTestsPasseds = new HashSet<IndividualTestsPassed>();
         }
     
         public int Id { get; set; }
@@ -30,10 +31,12 @@ namespace TestingModule.Models
         public int AccountId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CumulativeTestsPassed> CumulativeTestsPasseds { get; set; }
+        public virtual ICollection<CumulativeQuizPassed> CumulativeQuizPasseds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CumulativeRespons> CumulativeResponses { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IndividualQuizPassed> IndividualQuizPasseds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IndividualRespons> IndividualResponses { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<IndividualTestsPassed> IndividualTestsPasseds { get; set; }
     }
 }

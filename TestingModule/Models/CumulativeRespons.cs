@@ -12,13 +12,17 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CumulativeTestsLecture
+    public partial class CumulativeRespons
     {
         public int Id { get; set; }
-        public int CumulativeTestId { get; set; }
-        public int LectureId { get; set; }
+        public int QuestionId { get; set; }
+        public int AnswerId { get; set; }
+        public int CumulativeQuizId { get; set; }
+        public int StudentId { get; set; }
     
-        public virtual CumulativeTestsPassed CumulativeTestsPassed { get; set; }
-        public virtual Lecture Lecture { get; set; }
+        public virtual Answer Answer { get; set; }
+        public virtual CumulativeQuizPassed CumulativeQuizPassed { get; set; }
+        public virtual Question Question { get; set; }
+        public virtual Student Student { get; set; }
     }
 }
