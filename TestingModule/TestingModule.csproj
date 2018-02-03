@@ -214,13 +214,13 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ConnectionMapping.cs" />
-    <Compile Include="Models\CummulativeRespons.cs">
+    <Compile Include="Models\CumulativeQuizLecture.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CumulativeTestsLecture.cs">
+    <Compile Include="Models\CumulativeQuizPassed.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CumulativeTestsPassed.cs">
+    <Compile Include="Models\CumulativeRespons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Discipline.cs">
@@ -232,10 +232,10 @@
     <Compile Include="Models\Group.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\IndividualRespons.cs">
+    <Compile Include="Models\IndividualQuizPassed.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\IndividualTestsPassed.cs">
+    <Compile Include="Models\IndividualRespons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Lector.cs">
@@ -280,6 +280,9 @@
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\StudentDiscipline.cs">
+      <DependentUpon>TestingDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ActiveLectureViewModel.cs" />

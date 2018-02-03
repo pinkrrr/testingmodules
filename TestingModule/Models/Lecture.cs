@@ -17,8 +17,8 @@ namespace TestingModule.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Lecture()
         {
-            this.CumulativeTestsLectures = new HashSet<CumulativeTestsLecture>();
-            this.IndividualTestsPasseds = new HashSet<IndividualTestsPassed>();
+            this.CumulativeQuizLectures = new HashSet<CumulativeQuizLecture>();
+            this.IndividualQuizPasseds = new HashSet<IndividualQuizPassed>();
         }
     
         public int Id { get; set; }
@@ -27,8 +27,8 @@ namespace TestingModule.Models
         public string Description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CumulativeTestsLecture> CumulativeTestsLectures { get; set; }
+        public virtual ICollection<CumulativeQuizLecture> CumulativeQuizLectures { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<IndividualTestsPassed> IndividualTestsPasseds { get; set; }
+        public virtual ICollection<IndividualQuizPassed> IndividualQuizPasseds { get; set; }
     }
 }

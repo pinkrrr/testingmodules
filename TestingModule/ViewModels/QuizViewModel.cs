@@ -22,7 +22,7 @@ namespace TestingModule.ViewModels
 
     public class IndividualQuizViewModel : QuizViewModel
     {
-        private int IndividualQuizId { get; set; }
+        public int IndividualQuizId { get; set; }
     }
 
     public class LectureQuizViewModel : ReasignViewModel

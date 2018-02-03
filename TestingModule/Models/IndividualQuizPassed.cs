@@ -12,25 +12,24 @@ namespace TestingModule.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CumulativeTestsPassed
+    public partial class IndividualQuizPassed
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CumulativeTestsPassed()
+        public IndividualQuizPassed()
         {
-            this.CummulativeResponses = new HashSet<CummulativeRespons>();
-            this.CumulativeTestsLectures = new HashSet<CumulativeTestsLecture>();
+            this.IndividualResponses = new HashSet<IndividualRespons>();
         }
     
         public int Id { get; set; }
         public int DisciplineId { get; set; }
+        public int LectureId { get; set; }
         public int StudentId { get; set; }
         public bool IsPassed { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CummulativeRespons> CummulativeResponses { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CumulativeTestsLecture> CumulativeTestsLectures { get; set; }
         public virtual Discipline Discipline { get; set; }
+        public virtual Lecture Lecture { get; set; }
         public virtual Student Student { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IndividualRespons> IndividualResponses { get; set; }
     }
 }
