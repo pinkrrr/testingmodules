@@ -351,6 +351,28 @@ namespace TestingModule.Controllers
             }
             return RedirectToAction("Modules");
         }
+
+        [ValidateInput(false)]
+        public ActionResult EditMaterial(QueAns model)
+        {
+            try
+            {
+                if (model.ModuleId != null && model.Description != null)
+                {
+                    new Editing().EditMaterial(model.ModuleId, model.Description.TrimEnd().TrimStart());
+                    TempData["Success"] = "Зміни було успіщно збережено!";
+                }
+
+            }
+            catch (Exception)
+            {
+                HttpContext con = System.Web.HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                new Adding().AddNewError(url, "EditModule ModuleId = " + model.ModuleId + " Description = " + model.Description);
+                TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
+            }
+            return RedirectToAction("Questions");
+        }
         public ActionResult DeleteModule(int moduleId)
         {
             try
@@ -374,20 +396,20 @@ namespace TestingModule.Controllers
         {
             var description = _db.Modules.FirstOrDefault(t => t.Id == moduleId).Description;
             List<QueAns> viewModels = (from q in _db.Questions
-                from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
-                select new QueAns()
-                {
-                    DisciplineId = q.DisciplineId,
-                    LectureId = q.LectureId,
-                    ModuleId = q.ModuleId,
-                    QuestionId = q.Id,
-                    Question = q.Text,
-                    QuestionType = q.QuestionType,
-                    AnswerId = a.Id,
-                    Answer = a.Text,
-                    IsCorrect = a.IsCorrect,
-                    Description = description
-                }).ToList();
+                                       from a in _db.Answers.Where(t => q.Id == t.QuestionId && t.Text != "Не знаю відповіді").DefaultIfEmpty()
+                                       select new QueAns()
+                                       {
+                                           DisciplineId = q.DisciplineId,
+                                           LectureId = q.LectureId,
+                                           ModuleId = q.ModuleId,
+                                           QuestionId = q.Id,
+                                           Question = q.Text,
+                                           QuestionType = q.QuestionType,
+                                           AnswerId = a.Id,
+                                           Answer = a.Text,
+                                           IsCorrect = a.IsCorrect,
+                                           Description = description
+                                       }).ToList();
             var lectId = _db.Modules.FirstOrDefault(t => t.Id == moduleId).LectureId;
             IEnumerable<Module> mod = _db.Modules.Where(t => t.LectureId == lectId).ToList();
             foreach (var model in viewModels)

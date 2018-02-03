@@ -112,12 +112,11 @@ else
                         @if (name == null)
                         {
                             @Html.TextBoxFor(model => model.Modules.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву модуля", @required = "required" })
-                            @Html.TextAreaFor(model => model.Modules.LastOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис модуля", @required = "required" })
+
                         }
                         else
                         {
                             @Html.TextBoxFor(model => model.Modules.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву модуля", @required = "required" })
-                            @Html.TextAreaFor(model => model.Modules.LastOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис модуля", @required = "required" })
                         }
                     </div>
                     <div>
@@ -150,10 +149,6 @@ else
                     <label>Хвилин на проходження:</label>
                     <div>
                         @Html.TextBoxFor(model => model.Modules.FirstOrDefault().MinutesToPass, new { @class = "input-text", @placeholder = "Введіть кількість хвилин для проходження модуля", @required = "required" })
-                    </div>
-                    <label>Матеріали:</label>
-                    <div>
-                        @Html.TextAreaFor(model => model.Modules.FirstOrDefault().Description, new { @class = "input-text", @placeholder = "Введіть опис модуля" })
                     </div>
                     @Html.HiddenFor(model => model.Modules.FirstOrDefault().Id, new { @id = "id" })
                     @Html.HiddenFor(model => model.Modules.FirstOrDefault().DisciplineId, new { @id = "id" })
