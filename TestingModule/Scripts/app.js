@@ -303,8 +303,8 @@
     }
 
     function quiz() {
-        var $nextQbtn = $('.nextQuestion');
-        var $nextIndQbtn = $('.nextQuestion-individual');
+        var $nextQbtn = $('#nextRealtimeQuestion');
+        var $nextIndQbtn = $('#nextIndividualQuestion');
 
         var $questionBlock = $('.questionBlock');
         var $question = $questionBlock.find('.question');
@@ -379,17 +379,14 @@
             }
         }
 
-        function initNextQuestion() {
-            $nextQbtn.click(function () {
-                showNextQuestion();
-            });
-        }
+        $nextQbtn.click(function () {
+            showNextQuestion();
+        });
 
-        function initNextIndividualQuestion() {
-            $nextIndQbtn.click(function () {
-                showNextIndividualQuestion();
-            });
-        }
+        $nextIndQbtn.click(function () {
+            showNextIndividualQuestion();
+        });
+
 
         function quizFinished() {
             $('.questionBlock').remove();
@@ -404,8 +401,8 @@
         quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
-        initNextQuestion();
-        initNextIndividualQuestion();
+        //initNextQuestion();
+        //initNextIndividualQuestion();
 
     }
 

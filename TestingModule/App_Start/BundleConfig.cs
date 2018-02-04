@@ -14,7 +14,7 @@ namespace TestingModule
                         "~/Scripts/hubgeneration.js",
                         "~/Scripts/chart.js",
                         "~/Scripts/chart.pieceLabel.js",
-                        "~/ckeditor/ckeditor.js",
+                        //"~/ckeditor/ckeditor.js",
                         "~/Scripts/canvas.lib.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

@@ -85,26 +85,21 @@ namespace TestingModule.Additional
                 return;
             }
             toUpdate.IsPassed = true;
-            var individualQuiz = _context.IndividualQuizPasseds.SingleOrDefault(s => s.Id == individualQuizId);
-            if (individualQuiz == null)
-            {
-                return;
-            }
-            if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == individualQuiz.DisciplineId && it.IsPassed && it.StudentId == studentId))
+            if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == toUpdate.DisciplineId && it.IsPassed && it.StudentId == studentId))
             {
                 var passedLectures =
                     await (from l in _context.Lectures
-                           where l.DisciplineId == individualQuiz.DisciplineId
+                           where l.DisciplineId == toUpdate.DisciplineId
                            join iqp in _context.IndividualQuizPasseds on l.Id equals iqp.LectureId into groupjoin
                            from gj in groupjoin.DefaultIfEmpty()
-                           where gj == null || gj.StudentId == individualQuiz.StudentId
+                           where gj == null || gj.StudentId == toUpdate.StudentId
                            select gj).ToListAsync();
 
                 if (passedLectures.All(a => a != null))
                 {
                     CumulativeQuizPassed cumulativeTestsPassed = new CumulativeQuizPassed()
                     {
-                        DisciplineId = individualQuiz.DisciplineId,
+                        DisciplineId = toUpdate.DisciplineId,
                         IsPassed = false,
                         StudentId = studentId
                     };
@@ -119,9 +114,8 @@ namespace TestingModule.Additional
                         };
                     _context.CumulativeQuizLectures.AddRange(cumulativeLectures);
                 }
-
-                await _context.SaveChangesAsync();
             }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<RealTimeQuizViewModel> GetRealtimeQnA(int moduleHistoryId)
@@ -206,6 +200,30 @@ namespace TestingModule.Additional
             };
         }
 
+        /*public async Task<IndividualQuizViewModel> GetCumulativeQnA(int cumulativeQuizId)
+        {
+            Student student = await new AccountCredentials().GetStudent();
+            var question =
+                await (from q in _context.Questions
+                    where !_context.IndividualResponses.Any(ir => ir.IndividualQuizId == individualQuizId && ir.QuestionId == q.Id)// && q.QuestionType == QuestionType.IndividualId
+                    join it in _context.IndividualQuizPasseds on q.LectureId equals it.LectureId
+                    where it.Id == individualQuizId
+                    select q).OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+
+            if (question == null)
+            {
+                await ResovlePassedIndividualQuiz(individualQuizId);
+                return null;
+            }
+
+            return new IndividualQuizViewModel
+            {
+                Question = question,
+                Student = student,
+                Answers = await GetAnswersList(question.Id),
+                IndividualQuizId = individualQuizId
+            };
+        }*/
 
 
         public async Task<StatisticsViewModel> GetHistoriesForLector()
