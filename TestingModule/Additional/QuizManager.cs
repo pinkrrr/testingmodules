@@ -200,30 +200,33 @@ namespace TestingModule.Additional
             };
         }
 
-        /*public async Task<IndividualQuizViewModel> GetCumulativeQnA(int cumulativeQuizId)
+        public async Task<CumulativeQuizViewModel> GetCumulativeQnA(int cumulativeQuizId)
         {
             Student student = await new AccountCredentials().GetStudent();
             var question =
                 await (from q in _context.Questions
-                    where !_context.IndividualResponses.Any(ir => ir.IndividualQuizId == individualQuizId && ir.QuestionId == q.Id)// && q.QuestionType == QuestionType.IndividualId
-                    join it in _context.IndividualQuizPasseds on q.LectureId equals it.LectureId
-                    where it.Id == individualQuizId
-                    select q).OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
+                       where !_context.CumulativeResponses.Any(cr => cr.Id == cumulativeQuizId && cr.QuestionId == q.Id) // && q.QuestionType == QuestionType.IndividualId
+                       group q by q.Id into groupjoin
+                       from gj in groupjoin
+                       join cql in _context.CumulativeQuizLectures on gj.LectureId equals cql.LectureId
+                       where cql.CumulativeQuizId == cumulativeQuizId && _context.CumulativeResponses.Count(cr => cr.CumulativeQuizId == cql.CumulativeQuizId && cql.LectureId == gj.LectureId) <=
+                             Math.Floor((double)(groupjoin.Count(c => c.LectureId == cql.LectureId) / groupjoin.Count() * 10))
+                       select gj).OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
 
             if (question == null)
             {
-                await ResovlePassedIndividualQuiz(individualQuizId);
+                await ResovlePassedIndividualQuiz(cumulativeQuizId);
                 return null;
             }
 
-            return new IndividualQuizViewModel
+            return new CumulativeQuizViewModel
             {
                 Question = question,
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
-                IndividualQuizId = individualQuizId
+                CumulativeQuizId = cumulativeQuizId
             };
-        }*/
+        }
 
 
         public async Task<StatisticsViewModel> GetHistoriesForLector()

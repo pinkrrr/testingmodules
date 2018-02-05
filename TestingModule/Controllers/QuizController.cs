@@ -85,6 +85,18 @@ namespace TestingModule.Controllers
             return View(model);
         }
 
+        [Route("cumulativequiz/{cumulativeQuizId}")]
+        public async Task<ActionResult> CumulativeQuiz(int cumulativeQuizId)
+        {
+            var studentId = new AccountCredentials().GetStudentId();
+            if (!_context.CumulativeQuizPasseds.Any(itp => itp.Id == cumulativeQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            {
+                return RedirectToAction("Index", "Student");
+            }
+            await new QuizManager().GetCumulativeQnA(cumulativeQuizId);
+            return View();
+        }
+
         #endregion
     }
 }
