@@ -19,5 +19,6 @@ namespace TestingModule.Models
         public int AnswerId { get; set; }
         public int CumulativeQuizId { get; set; }
         public int StudentId { get; set; }
+        public int LectureId { get; set; }
     }
 }

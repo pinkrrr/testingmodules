@@ -305,6 +305,7 @@
     function quiz() {
         var $nextQbtn = $('#nextRealtimeQuestion');
         var $nextIndQbtn = $('#nextIndividualQuestion');
+        var $nextCumQbtn = $('#nextCumulativeQuestion');
 
         var $questionBlock = $('.questionBlock');
         var $question = $questionBlock.find('.question');
@@ -379,12 +380,35 @@
             }
         }
 
+        function showNextCumulativeQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quizHub = $.connection.quizHub;
+                $.connection.hub.start().done(function () {
+                    quizHub.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
+                        _model = model;
+                        console.log(_model);
+                        setQuestionData(_model);
+                    }).fail(function () {
+                        quizFinished();
+                    });
+                });
+
+            } else {
+                return;
+            }
+        }
+
         $nextQbtn.click(function () {
             showNextQuestion();
         });
 
         $nextIndQbtn.click(function () {
             showNextIndividualQuestion();
+        });
+        
+        $nextCumQbtn.click(function () {
+            showNextCumulativeQuestion();
         });
 
 

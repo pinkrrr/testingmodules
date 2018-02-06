@@ -49,6 +49,7 @@
           <Property Name="AnswerId" Type="int" Nullable="false" />
           <Property Name="CumulativeQuizId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="LectureId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Disciplines">
           <Key>
@@ -342,6 +343,7 @@
           <Property Name="AnswerId" Type="Int32" Nullable="false" />
           <Property Name="CumulativeQuizId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Discipline">
           <Key>
@@ -581,6 +583,7 @@
           <EntitySetMapping Name="CumulativeResponses">
             <EntityTypeMapping TypeName="testingDbModel.CumulativeRespons">
               <MappingFragment StoreEntitySet="CumulativeResponses">
+                <ScalarProperty Name="LectureId" ColumnName="LectureId" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="CumulativeQuizId" ColumnName="CumulativeQuizId" />
                 <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />

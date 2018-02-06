@@ -215,10 +215,14 @@ namespace TestingModule.Additional
 
             if (question == null)
             {
-                await ResovlePassedIndividualQuiz(cumulativeQuizId);
+                var toUpdate = await _context.CumulativeQuizPasseds.SingleOrDefaultAsync(cqp => cqp.Id == cumulativeQuizId);
+                if (toUpdate != null)
+                {
+                    toUpdate.IsPassed = true;
+                    await _context.SaveChangesAsync();
+                }
                 return null;
             }
-
             return new CumulativeQuizViewModel
             {
                 Question = question,
