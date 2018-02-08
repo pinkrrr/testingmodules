@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Policy;
-using System.Threading;
 using TestingModule.Models;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-using Microsoft.Ajax.Utilities;
-using Microsoft.Owin;
-using Microsoft.Win32;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
@@ -61,6 +51,10 @@ namespace TestingModule.Additional
 
             if (passedModules.All(a => a != null))
             {
+                if (await _context.IndividualQuizPasseds.AnyAsync(iqp => iqp.LectureId == lectureId && iqp.StudentId == studentId))
+                {
+                    return;
+                }
                 IndividualQuizPassed individualTestsPassed = new IndividualQuizPassed()
                 {
                     DisciplineId = _context.Lectures.Where(w => w.Id == lectureId).Select(s => s.DisciplineId)
