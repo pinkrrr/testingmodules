@@ -67,11 +67,10 @@
                     questionId: $('#questionId').val(),
                     description: inputText.val()
                 };
-
                 sendData(data, url, method);
-
             });
         }
+
         function getDisciplineOption() {
             var ddlReport = document.getElementByXpath("<%=DropDownListReports.ClientID%>");
 
@@ -85,7 +84,6 @@
                 $(this).closest('.popup').removeClass('popup-active');
             })
         }
-
         function sendData(data, url, method) {
             $.ajax({
                 url: url,
@@ -95,7 +93,6 @@
                 // location.reload();
             });
         }
-
         function initShowRemovePopup() {
             _$removeBtn.on('click', function () {
                 var removeLink = $(this).attr('data-remove');
@@ -165,17 +162,15 @@
             $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
         }
 
+        var $dropdownDiscipline = $('#ddldiscipline');
+        var $dropdownLection = $('#ddllecture');
+        var disciplineId = null;
 
-        function getLecture() {
-            var $dropdownDiscipline = $('#ddldiscipline');
-            var $dropdownLection = $('#ddllecture');
-            var disciplineId = null;
-
-            $dropdownDiscipline.on('selectmenuselect', function (e, ui) {
+        $dropdownDiscipline.on('selectmenuselect',
+            function (e, ui) {
                 setLectionsListByDisciplines(ui.item.value);
+                setGroupsListByDisciplines(ui.item.value);
             });
-
-        }
 
         function setLectionsListByDisciplines(disciplineId) {
             var url = "/admin/GetLecturesByDiscipline/";
@@ -195,8 +190,22 @@
                     $lectureSelect.html(optionsHTML);
                     $lectureSelect.selectmenu("refresh");
                 }
-            })
+            });
+        }
 
+        function setGroupsListByDisciplines(disciplineId) {
+            var url = "/admin/GetGroupsByDiscipline/";
+            disciplineId = parseInt(disciplineId);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { disciplineId: disciplineId },
+                success: function (data) {
+                    $('#dynamicGroups').html(data);
+                    startLectureValidation();
+                    checkboxradioInit();
+                }
+            });
         }
 
         var defaultLectureId = parseInt($('#ddldiscipline').find('option').first().attr('value'));
@@ -207,12 +216,11 @@
         initShowAddPopup();
         closePopup();
         initSaveData();
-        getLecture();
+        //getLecture();
         if ($("#ddllecture").length) {
             setLectionsListByDisciplines(defaultLectureId);
+            setGroupsListByDisciplines(defaultLectureId);
         }
-
-
     }
 
     function selectmenuInit() {
@@ -406,7 +414,7 @@
         $nextIndQbtn.click(function () {
             showNextIndividualQuestion();
         });
-        
+
         $nextCumQbtn.click(function () {
             showNextCumulativeQuestion();
         });

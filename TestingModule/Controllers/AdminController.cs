@@ -135,6 +135,21 @@ namespace TestingModule.Controllers
             return Json(obgcity);
         }
 
+        [HttpPost]
+        //[Route ("/admin/getlecturesbydiscipline")]
+        public PartialViewResult GetGroupsByDiscipline(int disciplineId)
+        {
+            List<Group> groups = (from g in _db.Groups
+                                  join s in _db.Students on g.Id equals s.GroupId
+                                  join sd in _db.StudentDisciplines on s.Id equals sd.StudentId
+                                  where sd.DisciplineId == disciplineId
+                                  group g by g.Id
+                                  into groupjoin
+                                  select groupjoin.Distinct().Select(s => s).FirstOrDefault()).ToList();
+            ViewData.TemplateInfo.HtmlFieldPrefix = "Groups";
+            return PartialView("_DynamicGroups", groups);
+        }
+
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StartModule(int moduleHistoryId)
         {
