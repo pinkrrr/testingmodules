@@ -49,6 +49,7 @@
           <Property Name="AnswerId" Type="int" Nullable="false" />
           <Property Name="CumulativeQuizId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="LectureId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Disciplines">
           <Key>
@@ -240,198 +241,6 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
-        <Association Name="FK_CummulativeResponses_Answers">
-          <End Role="Answers" Type="Self.Answers" Multiplicity="1" />
-          <End Role="CumulativeResponses" Type="Self.CumulativeResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Answers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeResponses">
-              <PropertyRef Name="AnswerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CummulativeResponses_Questions">
-          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
-          <End Role="CumulativeResponses" Type="Self.CumulativeResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Questions">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeResponses">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizLectures_CumulativeQuizPassed">
-          <End Role="CumulativeQuizPassed" Type="Self.CumulativeQuizPassed" Multiplicity="1" />
-          <End Role="CumulativeQuizLectures" Type="Self.CumulativeQuizLectures" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CumulativeQuizPassed">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizLectures">
-              <PropertyRef Name="CumulativeQuizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizLectures_Lectures">
-          <End Role="Lectures" Type="Self.Lectures" Multiplicity="1" />
-          <End Role="CumulativeQuizLectures" Type="Self.CumulativeQuizLectures" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lectures">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizLectures">
-              <PropertyRef Name="LectureId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizPassed_Disciplines">
-          <End Role="Disciplines" Type="Self.Disciplines" Multiplicity="1" />
-          <End Role="CumulativeQuizPassed" Type="Self.CumulativeQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Disciplines">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizPassed">
-              <PropertyRef Name="DisciplineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizPassed_Students">
-          <End Role="Students" Type="Self.Students" Multiplicity="1" />
-          <End Role="CumulativeQuizPassed" Type="Self.CumulativeQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizPassed">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeResponses_CumulativeQuizPassed">
-          <End Role="CumulativeQuizPassed" Type="Self.CumulativeQuizPassed" Multiplicity="1" />
-          <End Role="CumulativeResponses" Type="Self.CumulativeResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CumulativeQuizPassed">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeResponses">
-              <PropertyRef Name="CumulativeQuizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeResponses_Students">
-          <End Role="Students" Type="Self.Students" Multiplicity="1" />
-          <End Role="CumulativeResponses" Type="Self.CumulativeResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeResponses">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualQuizPassed_Disciplines">
-          <End Role="Disciplines" Type="Self.Disciplines" Multiplicity="1" />
-          <End Role="IndividualQuizPassed" Type="Self.IndividualQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Disciplines">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualQuizPassed">
-              <PropertyRef Name="DisciplineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualQuizPassed_Lectures">
-          <End Role="Lectures" Type="Self.Lectures" Multiplicity="1" />
-          <End Role="IndividualQuizPassed" Type="Self.IndividualQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lectures">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualQuizPassed">
-              <PropertyRef Name="LectureId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualQuizPassed_Students">
-          <End Role="Students" Type="Self.Students" Multiplicity="1" />
-          <End Role="IndividualQuizPassed" Type="Self.IndividualQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualQuizPassed">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Answers">
-          <End Role="Answers" Type="Self.Answers" Multiplicity="1" />
-          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Answers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualResponses">
-              <PropertyRef Name="AnswerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_IndividualQuizPassed">
-          <End Role="IndividualQuizPassed" Type="Self.IndividualQuizPassed" Multiplicity="1" />
-          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="IndividualQuizPassed">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualResponses">
-              <PropertyRef Name="IndividualQuizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Modules">
-          <End Role="Modules" Type="Self.Modules" Multiplicity="1" />
-          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Modules">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualResponses">
-              <PropertyRef Name="ModuleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Questions">
-          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
-          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Questions">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualResponses">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Students">
-          <End Role="Students" Type="Self.Students" Multiplicity="1" />
-          <End Role="IndividualResponses" Type="Self.IndividualResponses" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualResponses">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="testingDbModelStoreContainer">
           <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
@@ -458,70 +267,6 @@
           <EntitySet Name="StudentDisciplines" EntityType="Self.StudentDisciplines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_CummulativeResponses_Answers" Association="Self.FK_CummulativeResponses_Answers">
-            <End Role="Answers" EntitySet="Answers" />
-            <End Role="CumulativeResponses" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CummulativeResponses_Questions" Association="Self.FK_CummulativeResponses_Questions">
-            <End Role="Questions" EntitySet="Questions" />
-            <End Role="CumulativeResponses" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizLectures_CumulativeQuizPassed" Association="Self.FK_CumulativeQuizLectures_CumulativeQuizPassed">
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPassed" />
-            <End Role="CumulativeQuizLectures" EntitySet="CumulativeQuizLectures" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizLectures_Lectures" Association="Self.FK_CumulativeQuizLectures_Lectures">
-            <End Role="Lectures" EntitySet="Lectures" />
-            <End Role="CumulativeQuizLectures" EntitySet="CumulativeQuizLectures" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizPassed_Disciplines" Association="Self.FK_CumulativeQuizPassed_Disciplines">
-            <End Role="Disciplines" EntitySet="Disciplines" />
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPassed" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizPassed_Students" Association="Self.FK_CumulativeQuizPassed_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPassed" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeResponses_CumulativeQuizPassed" Association="Self.FK_CumulativeResponses_CumulativeQuizPassed">
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPassed" />
-            <End Role="CumulativeResponses" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeResponses_Students" Association="Self.FK_CumulativeResponses_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="CumulativeResponses" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualQuizPassed_Disciplines" Association="Self.FK_IndividualQuizPassed_Disciplines">
-            <End Role="Disciplines" EntitySet="Disciplines" />
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPassed" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualQuizPassed_Lectures" Association="Self.FK_IndividualQuizPassed_Lectures">
-            <End Role="Lectures" EntitySet="Lectures" />
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPassed" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualQuizPassed_Students" Association="Self.FK_IndividualQuizPassed_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPassed" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Answers" Association="Self.FK_IndividualResponses_Answers">
-            <End Role="Answers" EntitySet="Answers" />
-            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_IndividualQuizPassed" Association="Self.FK_IndividualResponses_IndividualQuizPassed">
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPassed" />
-            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Modules" Association="Self.FK_IndividualResponses_Modules">
-            <End Role="Modules" EntitySet="Modules" />
-            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Questions" Association="Self.FK_IndividualResponses_Questions">
-            <End Role="Questions" EntitySet="Questions" />
-            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Students" Association="Self.FK_IndividualResponses_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="IndividualResponses" EntitySet="IndividualResponses" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -553,70 +298,6 @@
           <EntitySet Name="StudentDisciplines" EntityType="testingDbModel.StudentDiscipline" />
           <EntitySet Name="Students" EntityType="testingDbModel.Student" />
           <EntitySet Name="sysdiagrams" EntityType="testingDbModel.sysdiagram" />
-          <AssociationSet Name="FK_CummulativeResponses_Answers" Association="testingDbModel.FK_CummulativeResponses_Answers">
-            <End Role="Answer" EntitySet="Answers" />
-            <End Role="CumulativeRespons" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Answers" Association="testingDbModel.FK_IndividualResponses_Answers">
-            <End Role="Answer" EntitySet="Answers" />
-            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizLectures_CumulativeQuizPassed" Association="testingDbModel.FK_CumulativeQuizLectures_CumulativeQuizPassed">
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPasseds" />
-            <End Role="CumulativeQuizLecture" EntitySet="CumulativeQuizLectures" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizLectures_Lectures" Association="testingDbModel.FK_CumulativeQuizLectures_Lectures">
-            <End Role="Lecture" EntitySet="Lectures" />
-            <End Role="CumulativeQuizLecture" EntitySet="CumulativeQuizLectures" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizPassed_Disciplines" Association="testingDbModel.FK_CumulativeQuizPassed_Disciplines">
-            <End Role="Discipline" EntitySet="Disciplines" />
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPasseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeQuizPassed_Students" Association="testingDbModel.FK_CumulativeQuizPassed_Students">
-            <End Role="Student" EntitySet="Students" />
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPasseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeResponses_CumulativeQuizPassed" Association="testingDbModel.FK_CumulativeResponses_CumulativeQuizPassed">
-            <End Role="CumulativeQuizPassed" EntitySet="CumulativeQuizPasseds" />
-            <End Role="CumulativeRespons" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CummulativeResponses_Questions" Association="testingDbModel.FK_CummulativeResponses_Questions">
-            <End Role="Question" EntitySet="Questions" />
-            <End Role="CumulativeRespons" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CumulativeResponses_Students" Association="testingDbModel.FK_CumulativeResponses_Students">
-            <End Role="Student" EntitySet="Students" />
-            <End Role="CumulativeRespons" EntitySet="CumulativeResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualQuizPassed_Disciplines" Association="testingDbModel.FK_IndividualQuizPassed_Disciplines">
-            <End Role="Discipline" EntitySet="Disciplines" />
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPasseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualQuizPassed_Lectures" Association="testingDbModel.FK_IndividualQuizPassed_Lectures">
-            <End Role="Lecture" EntitySet="Lectures" />
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPasseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualQuizPassed_Students" Association="testingDbModel.FK_IndividualQuizPassed_Students">
-            <End Role="Student" EntitySet="Students" />
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPasseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_IndividualQuizPassed" Association="testingDbModel.FK_IndividualResponses_IndividualQuizPassed">
-            <End Role="IndividualQuizPassed" EntitySet="IndividualQuizPasseds" />
-            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Modules" Association="testingDbModel.FK_IndividualResponses_Modules">
-            <End Role="Module" EntitySet="Modules" />
-            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Questions" Association="testingDbModel.FK_IndividualResponses_Questions">
-            <End Role="Question" EntitySet="Questions" />
-            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IndividualResponses_Students" Association="testingDbModel.FK_IndividualResponses_Students">
-            <End Role="Student" EntitySet="Students" />
-            <End Role="IndividualRespons" EntitySet="IndividualResponses" />
-          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -635,8 +316,6 @@
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
           <Property Name="Text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="IsCorrect" Type="Boolean" />
-          <NavigationProperty Name="CumulativeResponses" Relationship="testingDbModel.FK_CummulativeResponses_Answers" FromRole="Answer" ToRole="CumulativeRespons" />
-          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Answers" FromRole="Answer" ToRole="IndividualRespons" />
         </EntityType>
         <EntityType Name="CumulativeQuizLecture">
           <Key>
@@ -645,8 +324,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CumulativeQuizId" Type="Int32" Nullable="false" />
           <Property Name="LectureId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="CumulativeQuizPassed" Relationship="testingDbModel.FK_CumulativeQuizLectures_CumulativeQuizPassed" FromRole="CumulativeQuizLecture" ToRole="CumulativeQuizPassed" />
-          <NavigationProperty Name="Lecture" Relationship="testingDbModel.FK_CumulativeQuizLectures_Lectures" FromRole="CumulativeQuizLecture" ToRole="Lecture" />
         </EntityType>
         <EntityType Name="CumulativeQuizPassed">
           <Key>
@@ -656,10 +333,6 @@
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CumulativeQuizLectures" Relationship="testingDbModel.FK_CumulativeQuizLectures_CumulativeQuizPassed" FromRole="CumulativeQuizPassed" ToRole="CumulativeQuizLecture" />
-          <NavigationProperty Name="Discipline" Relationship="testingDbModel.FK_CumulativeQuizPassed_Disciplines" FromRole="CumulativeQuizPassed" ToRole="Discipline" />
-          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_CumulativeQuizPassed_Students" FromRole="CumulativeQuizPassed" ToRole="Student" />
-          <NavigationProperty Name="CumulativeResponses" Relationship="testingDbModel.FK_CumulativeResponses_CumulativeQuizPassed" FromRole="CumulativeQuizPassed" ToRole="CumulativeRespons" />
         </EntityType>
         <EntityType Name="CumulativeRespons">
           <Key>
@@ -670,10 +343,7 @@
           <Property Name="AnswerId" Type="Int32" Nullable="false" />
           <Property Name="CumulativeQuizId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Answer" Relationship="testingDbModel.FK_CummulativeResponses_Answers" FromRole="CumulativeRespons" ToRole="Answer" />
-          <NavigationProperty Name="CumulativeQuizPassed" Relationship="testingDbModel.FK_CumulativeResponses_CumulativeQuizPassed" FromRole="CumulativeRespons" ToRole="CumulativeQuizPassed" />
-          <NavigationProperty Name="Question" Relationship="testingDbModel.FK_CummulativeResponses_Questions" FromRole="CumulativeRespons" ToRole="Question" />
-          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_CumulativeResponses_Students" FromRole="CumulativeRespons" ToRole="Student" />
+          <Property Name="LectureId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Discipline">
           <Key>
@@ -681,8 +351,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="CumulativeQuizPasseds" Relationship="testingDbModel.FK_CumulativeQuizPassed_Disciplines" FromRole="Discipline" ToRole="CumulativeQuizPassed" />
-          <NavigationProperty Name="IndividualQuizPasseds" Relationship="testingDbModel.FK_IndividualQuizPassed_Disciplines" FromRole="Discipline" ToRole="IndividualQuizPassed" />
         </EntityType>
         <EntityType Name="ExeptionLog">
           <Key>
@@ -711,10 +379,6 @@
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Discipline" Relationship="testingDbModel.FK_IndividualQuizPassed_Disciplines" FromRole="IndividualQuizPassed" ToRole="Discipline" />
-          <NavigationProperty Name="Lecture" Relationship="testingDbModel.FK_IndividualQuizPassed_Lectures" FromRole="IndividualQuizPassed" ToRole="Lecture" />
-          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_IndividualQuizPassed_Students" FromRole="IndividualQuizPassed" ToRole="Student" />
-          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_IndividualQuizPassed" FromRole="IndividualQuizPassed" ToRole="IndividualRespons" />
         </EntityType>
         <EntityType Name="IndividualRespons">
           <Key>
@@ -726,11 +390,6 @@
           <Property Name="QuestionId" Type="Int32" Nullable="false" />
           <Property Name="AnswerId" Type="Int32" Nullable="false" />
           <Property Name="IndividualQuizId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Answer" Relationship="testingDbModel.FK_IndividualResponses_Answers" FromRole="IndividualRespons" ToRole="Answer" />
-          <NavigationProperty Name="IndividualQuizPassed" Relationship="testingDbModel.FK_IndividualResponses_IndividualQuizPassed" FromRole="IndividualRespons" ToRole="IndividualQuizPassed" />
-          <NavigationProperty Name="Module" Relationship="testingDbModel.FK_IndividualResponses_Modules" FromRole="IndividualRespons" ToRole="Module" />
-          <NavigationProperty Name="Question" Relationship="testingDbModel.FK_IndividualResponses_Questions" FromRole="IndividualRespons" ToRole="Question" />
-          <NavigationProperty Name="Student" Relationship="testingDbModel.FK_IndividualResponses_Students" FromRole="IndividualRespons" ToRole="Student" />
         </EntityType>
         <EntityType Name="LectorDiscipline">
           <Key>
@@ -765,8 +424,6 @@
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="CumulativeQuizLectures" Relationship="testingDbModel.FK_CumulativeQuizLectures_Lectures" FromRole="Lecture" ToRole="CumulativeQuizLecture" />
-          <NavigationProperty Name="IndividualQuizPasseds" Relationship="testingDbModel.FK_IndividualQuizPassed_Lectures" FromRole="Lecture" ToRole="IndividualQuizPassed" />
         </EntityType>
         <EntityType Name="LecturesHistory">
           <Key>
@@ -801,7 +458,6 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="MinutesToPass" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Modules" FromRole="Module" ToRole="IndividualRespons" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -813,8 +469,6 @@
           <Property Name="ModuleId" Type="Int32" Nullable="false" />
           <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="QuestionType" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="CumulativeResponses" Relationship="testingDbModel.FK_CummulativeResponses_Questions" FromRole="Question" ToRole="CumulativeRespons" />
-          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Questions" FromRole="Question" ToRole="IndividualRespons" />
         </EntityType>
         <EntityType Name="RealtimeModulesPassed">
           <Key>
@@ -870,10 +524,6 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AccountId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="CumulativeQuizPasseds" Relationship="testingDbModel.FK_CumulativeQuizPassed_Students" FromRole="Student" ToRole="CumulativeQuizPassed" />
-          <NavigationProperty Name="CumulativeResponses" Relationship="testingDbModel.FK_CumulativeResponses_Students" FromRole="Student" ToRole="CumulativeRespons" />
-          <NavigationProperty Name="IndividualQuizPasseds" Relationship="testingDbModel.FK_IndividualQuizPassed_Students" FromRole="Student" ToRole="IndividualQuizPassed" />
-          <NavigationProperty Name="IndividualResponses" Relationship="testingDbModel.FK_IndividualResponses_Students" FromRole="Student" ToRole="IndividualRespons" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -885,198 +535,6 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
-        <Association Name="FK_CummulativeResponses_Answers">
-          <End Type="testingDbModel.Answer" Role="Answer" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeRespons" Role="CumulativeRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Answer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeRespons">
-              <PropertyRef Name="AnswerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Answers">
-          <End Type="testingDbModel.Answer" Role="Answer" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Answer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualRespons">
-              <PropertyRef Name="AnswerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizLectures_CumulativeQuizPassed">
-          <End Type="testingDbModel.CumulativeQuizPassed" Role="CumulativeQuizPassed" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeQuizLecture" Role="CumulativeQuizLecture" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CumulativeQuizPassed">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizLecture">
-              <PropertyRef Name="CumulativeQuizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizLectures_Lectures">
-          <End Type="testingDbModel.Lecture" Role="Lecture" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeQuizLecture" Role="CumulativeQuizLecture" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lecture">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizLecture">
-              <PropertyRef Name="LectureId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizPassed_Disciplines">
-          <End Type="testingDbModel.Discipline" Role="Discipline" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeQuizPassed" Role="CumulativeQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Discipline">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizPassed">
-              <PropertyRef Name="DisciplineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeQuizPassed_Students">
-          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeQuizPassed" Role="CumulativeQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeQuizPassed">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeResponses_CumulativeQuizPassed">
-          <End Type="testingDbModel.CumulativeQuizPassed" Role="CumulativeQuizPassed" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeRespons" Role="CumulativeRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CumulativeQuizPassed">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeRespons">
-              <PropertyRef Name="CumulativeQuizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CummulativeResponses_Questions">
-          <End Type="testingDbModel.Question" Role="Question" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeRespons" Role="CumulativeRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeRespons">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CumulativeResponses_Students">
-          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
-          <End Type="testingDbModel.CumulativeRespons" Role="CumulativeRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CumulativeRespons">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualQuizPassed_Disciplines">
-          <End Type="testingDbModel.Discipline" Role="Discipline" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualQuizPassed" Role="IndividualQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Discipline">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualQuizPassed">
-              <PropertyRef Name="DisciplineId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualQuizPassed_Lectures">
-          <End Type="testingDbModel.Lecture" Role="Lecture" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualQuizPassed" Role="IndividualQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lecture">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualQuizPassed">
-              <PropertyRef Name="LectureId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualQuizPassed_Students">
-          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualQuizPassed" Role="IndividualQuizPassed" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualQuizPassed">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_IndividualQuizPassed">
-          <End Type="testingDbModel.IndividualQuizPassed" Role="IndividualQuizPassed" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="IndividualQuizPassed">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualRespons">
-              <PropertyRef Name="IndividualQuizId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Modules">
-          <End Type="testingDbModel.Module" Role="Module" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Module">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualRespons">
-              <PropertyRef Name="ModuleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Questions">
-          <End Type="testingDbModel.Question" Role="Question" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualRespons">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IndividualResponses_Students">
-          <End Type="testingDbModel.Student" Role="Student" Multiplicity="1" />
-          <End Type="testingDbModel.IndividualRespons" Role="IndividualRespons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IndividualRespons">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1125,6 +583,7 @@
           <EntitySetMapping Name="CumulativeResponses">
             <EntityTypeMapping TypeName="testingDbModel.CumulativeRespons">
               <MappingFragment StoreEntitySet="CumulativeResponses">
+                <ScalarProperty Name="LectureId" ColumnName="LectureId" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="CumulativeQuizId" ColumnName="CumulativeQuizId" />
                 <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
@@ -1358,7 +817,7 @@
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

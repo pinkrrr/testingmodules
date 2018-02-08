@@ -67,11 +67,10 @@
                     questionId: $('#questionId').val(),
                     description: inputText.val()
                 };
-
                 sendData(data, url, method);
-
             });
         }
+
         function getDisciplineOption() {
             var ddlReport = document.getElementByXpath("<%=DropDownListReports.ClientID%>");
 
@@ -85,7 +84,6 @@
                 $(this).closest('.popup').removeClass('popup-active');
             })
         }
-
         function sendData(data, url, method) {
             $.ajax({
                 url: url,
@@ -95,7 +93,6 @@
                 // location.reload();
             });
         }
-
         function initShowRemovePopup() {
             _$removeBtn.on('click', function () {
                 var removeLink = $(this).attr('data-remove');
@@ -165,17 +162,15 @@
             $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
         }
 
+        var $dropdownDiscipline = $('#ddldiscipline');
+        var $dropdownLection = $('#ddllecture');
+        var disciplineId = null;
 
-        function getLecture() {
-            var $dropdownDiscipline = $('#ddldiscipline');
-            var $dropdownLection = $('#ddllecture');
-            var disciplineId = null;
-
-            $dropdownDiscipline.on('selectmenuselect', function (e, ui) {
+        $dropdownDiscipline.on('selectmenuselect',
+            function (e, ui) {
                 setLectionsListByDisciplines(ui.item.value);
+                setGroupsListByDisciplines(ui.item.value);
             });
-
-        }
 
         function setLectionsListByDisciplines(disciplineId) {
             var url = "/admin/GetLecturesByDiscipline/";
@@ -195,8 +190,22 @@
                     $lectureSelect.html(optionsHTML);
                     $lectureSelect.selectmenu("refresh");
                 }
-            })
+            });
+        }
 
+        function setGroupsListByDisciplines(disciplineId) {
+            var url = "/admin/GetGroupsByDiscipline/";
+            disciplineId = parseInt(disciplineId);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { disciplineId: disciplineId },
+                success: function (data) {
+                    $('#dynamicGroups').html(data);
+                    startLectureValidation();
+                    checkboxradioInit();
+                }
+            });
         }
 
         var defaultLectureId = parseInt($('#ddldiscipline').find('option').first().attr('value'));
@@ -207,12 +216,11 @@
         initShowAddPopup();
         closePopup();
         initSaveData();
-        getLecture();
+        //getLecture();
         if ($("#ddllecture").length) {
             setLectionsListByDisciplines(defaultLectureId);
+            setGroupsListByDisciplines(defaultLectureId);
         }
-
-
     }
 
     function selectmenuInit() {
@@ -303,7 +311,9 @@
     }
 
     function quiz() {
-        var $nextQbtn = $('.nextQuestion');
+        var $nextQbtn = $('#nextRealtimeQuestion');
+        var $nextIndQbtn = $('#nextIndividualQuestion');
+        var $nextCumQbtn = $('#nextCumulativeQuestion');
 
         var $questionBlock = $('.questionBlock');
         var $question = $questionBlock.find('.question');
@@ -359,11 +369,56 @@
             }
         }
 
-        function initNextQuestion() {
-            $nextQbtn.click(function () {
-                showNextQuestion();
-            });
+        function showNextIndividualQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quizHub = $.connection.quizHub;
+                $.connection.hub.start().done(function () {
+                    quizHub.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
+                        _model = model;
+                        console.log(_model);
+                        setQuestionData(_model);
+                    }).fail(function () {
+                        quizFinished();
+                    });
+                });
+
+            } else {
+                return;
+            }
         }
+
+        function showNextCumulativeQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quizHub = $.connection.quizHub;
+                $.connection.hub.start().done(function () {
+                    quizHub.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
+                        _model = model;
+                        console.log(_model);
+                        setQuestionData(_model);
+                    }).fail(function () {
+                        quizFinished();
+                    });
+                });
+
+            } else {
+                return;
+            }
+        }
+
+        $nextQbtn.click(function () {
+            showNextQuestion();
+        });
+
+        $nextIndQbtn.click(function () {
+            showNextIndividualQuestion();
+        });
+
+        $nextCumQbtn.click(function () {
+            showNextCumulativeQuestion();
+        });
+
 
         function quizFinished() {
             $('.questionBlock').remove();
@@ -378,12 +433,10 @@
         quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
-        initNextQuestion();
-
+        //initNextQuestion();
+        //initNextIndividualQuestion();
 
     }
-
-    
 
     function statistics() {
 
@@ -410,7 +463,7 @@
 
                 $('<div>', {
                     class: 'group',
-                    id: 'group'+group.Id,
+                    id: 'group' + group.Id,
                     html: questionList
                 }).appendTo('.groups');
 
@@ -465,7 +518,6 @@
     selectAllorNobody();
     statistics();
     startLectureValidation();
-    //questionsEditChecked();
 
     if ($('.questionBlock').length > 0) {
         quiz();
@@ -475,10 +527,10 @@
 
 function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
     var progress = correctAnswersCount / totalAnswersCount * 100;
-    $('.body-content__statistics #group'+gID+' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+    $('.body-content__statistics #group' + gID + ' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
 }
 
-function stopModule() {
+/*function stopModule() {
     var $stopModuleBtn = $('#stopModuleButton');
     var quiz = $.connection.quizHub;
     $.connection.hub.start();
@@ -486,8 +538,7 @@ function stopModule() {
         quiz.server.stopModule();
     });
 }
-
-stopModule();
+stopModule();*/
 
 function historyStatisticsPage(model) {
 
@@ -606,7 +657,6 @@ function historyStatisticsPage(model) {
 
             });
 
-            // chartData.unshift(['Відповідь', 'Кількість правильних відповідей']);
 
         });
 
@@ -614,113 +664,12 @@ function historyStatisticsPage(model) {
 
     drawChart();
 
-    //createHistoryStatisticsPage();
-
-    //function createHistoryStatisticsPage() {
-
-    //    var moduleId = null;
-
-    //    model.Modules.forEach(function (module) {
-
-    //        $('<div/>', {
-    //            class: 'module',
-    //            id: 'module'+module.Id
-    //        }).appendTo('.chartsWrapper');
-
-    //        $('<div/>', {
-    //            class: 'module_name',
-    //            html: module.Name
-    //        }).prependTo('#module' + module.Id);
-
-    //        model.Questions.forEach(function (question) {
-
-    //            if (question.ModuleId === module.Id) {
-
-    //                $('<div/>', {
-    //                    class: 'question',
-    //                    id: 'questionId' + question.Id
-    //                }).appendTo('#module' + module.Id);
-
-    //                $('<div/>', {
-    //                    class: 'question_text',
-    //                    html: question.Text
-    //                }).appendTo('#questionId' + question.Id);
-
-    //                chartDataObj.id = question.Id;
-
-    //                model.Groups.forEach(function (group) {
-
-    //                    $('<div/>', {
-    //                        class: 'group',
-    //                        id: 'group' + group.Id
-    //                    }).appendTo('#questionId' + question.Id);
-
-    //                    $('<div/>', {
-    //                        class: 'group_name',
-    //                        html: group.Name
-    //                    }).prependTo('#questionId' + question.Id + ' #group' + group.Id);
-
-    //                    $('<div/>', {
-    //                        class: 'pieChart',
-    //                        id: 'chartContainer' + question.Id
-    //                    }).appendTo('#questionId' + question.Id + ' #group' + group.Id);
-
-    //                    model.AnswersCount.forEach(function (answer) {
-
-    //                        if (question.Id === answer.QuestionId && answer.GroupId === group.Id) {
-
-    //                            chartDataObj.answers.push({
-    //                                y: answer.Count,
-    //                                name: answer.Text
-    //                            })
-
-    //                        }
-
-    //                    });
-
-    //                    renderChart(chartDataObj);
-
-    //                    chartDataObj.answers = [];
-
-    //                })
-
-    //            }
-
-    //        });
-
-    //    });
-    //}
-
-    //function renderChart(chartData) {
-
-    //    var chart = new CanvasJS.Chart("chartContainer" + chartData.id,
-    //        {
-    //            animationEnabled: true,
-    //            legend: {
-    //                verticalAlign: "bottom",
-    //                horizontalAlign: "left",
-    //                fontSize: 16,
-    //                fontFamily: "arial"
-    //            },
-    //            theme: "theme3",
-    //            backgroundColor: "transparent",
-    //            data: [{
-    //                type: "pie",
-    //                indexLabelFontFamily: "Arial",
-    //                indexLabelFontSize: 20,
-    //                indexLabelFontWeight: "bold",
-    //                startAngle: 0,
-    //                indexLabelFontColor: "#ffffff",
-    //                indexLabelLineColor: "#ff0000",
-    //                indexLabelPlacement: "inside",
-    //                toolTipContent: "Відповідь: {name}",
-    //                showInLegend: true,
-    //                indexLabel: "{y}",
-    //                dataPoints: chartData.answers
-    //            }]
-    //        });
-    //    chart.render();
-    //}
-
 
 }
+
+var ckeditorInit = function () {
+    console.log('ckeditor');
+    CKEDITOR.replace('ckeditor');
+};
+
+ckeditorInit();

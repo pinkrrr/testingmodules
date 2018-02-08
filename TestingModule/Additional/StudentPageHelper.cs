@@ -11,7 +11,8 @@ using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
 {
-    public class StudentPageHelper : StudentController
+
+    public class StudentPageHelper
     {
         private readonly testingDbEntities _db = new testingDbEntities();
         public List<DiscLecotorViewModel> StudentsDisciplinesList(ClaimsIdentity claimsIdentity)

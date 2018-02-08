@@ -71,6 +71,25 @@ namespace TestingModule.Hubs
             await _context.SaveChangesAsync();
             return await _quizManager.GetIndividualQnA(quizVM.IndividualQuizId);
         }
+        
+        public async Task<CumulativeQuizViewModel> SaveCumulativeResponse(CumulativeQuizViewModel quizVM, int responseId)
+        {
+            if (await _context.CumulativeResponses.AnyAsync(r =>
+                r.CumulativeQuizId == quizVM.CumulativeQuizId && r.StudentId == quizVM.Student.Id &&
+                r.QuestionId == quizVM.Question.Id))
+                return await _quizManager.GetCumulativeQnA(quizVM.CumulativeQuizId);
+            CumulativeRespons response = new CumulativeRespons()
+            {
+                AnswerId = responseId,
+                CumulativeQuizId = quizVM.CumulativeQuizId,
+                QuestionId = quizVM.Question.Id,
+                StudentId = quizVM.Student.Id,
+                LectureId = quizVM.Question.LectureId
+            };
+            _context.CumulativeResponses.Add(response);
+            await _context.SaveChangesAsync();
+            return await _quizManager.GetCumulativeQnA(quizVM.CumulativeQuizId);
+        }
 
         private static bool _locked;
         public async Task QueryRealTimeStats(RealTimeStatisticsViewModel realTimeStatisticsVM, bool immediateCheck)
@@ -98,10 +117,10 @@ namespace TestingModule.Hubs
             }
         }
 
-        /*public void StopModule()
+        public void StopModule()
         {
             Clients.All.reciveStopModule();
-        }*/
+        }
 
         private static readonly ConnectionMapping<string> Connections =
             new ConnectionMapping<string>();

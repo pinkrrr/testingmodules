@@ -56,7 +56,7 @@ namespace TestingModule.Controllers
             return RedirectToAction("index", "admin");
 
         }
-
+        [CustomAuthorize(RoleName.Lecturer, RoleName.Administrator)]
         [Route("quiz/totalstatistics/")]
         public async Task<ActionResult> TotalStatistics()
         {
@@ -81,8 +81,20 @@ namespace TestingModule.Controllers
             {
                 return RedirectToAction("Index", "Student");
             }
-            var temp = await new QuizManager().GetIndividualQnA(individualQuizId);
-            return View();
+            var model = await new QuizManager().GetIndividualQnA(individualQuizId);
+            return View(model);
+        }
+
+        [Route("cumulativequiz/{cumulativeQuizId}")]
+        public async Task<ActionResult> CumulativeQuiz(int cumulativeQuizId)
+        {
+            var studentId = new AccountCredentials().GetStudentId();
+            if (!_context.CumulativeQuizPasseds.Any(itp => itp.Id == cumulativeQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            {
+                return RedirectToAction("Index", "Student");
+            }
+            CumulativeQuizViewModel model = await new QuizManager().GetCumulativeQnA(cumulativeQuizId);
+            return View(model);
         }
 
         #endregion
