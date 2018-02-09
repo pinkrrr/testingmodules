@@ -123,7 +123,7 @@ namespace TestingModule.Additional
             moduleHistory.StartTime = DateTime.UtcNow;
             TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
                 .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
-            _timerAssociates.StartModuleTimer(moduleHistoryId, minutesToPass);
+            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass);
             await _db.SaveChangesAsync();
         }
         
