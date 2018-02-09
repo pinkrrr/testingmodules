@@ -33,7 +33,7 @@ namespace TestingModule.Additional
             return answersList;
         }
 
-        private async Task ResovlePassedRealtimeQuiz(int moduleId, int studentId, int moduleHistoryId, int lectureId)
+        public async Task ResovlePassedRealtimeQuiz(int moduleId, int studentId, int moduleHistoryId, int lectureId)
         {
             _context.RealtimeModulesPasseds.Add(new RealtimeModulesPassed()
             {
@@ -70,16 +70,15 @@ namespace TestingModule.Additional
             await _context.SaveChangesAsync();
         }
 
-        private async Task ResovlePassedIndividualQuiz(int individualQuizId)
+        public async Task ResovlePassedIndividualQuiz(int individualQuizId)
         {
-            var studentId = new AccountCredentials().GetStudentId();
             var toUpdate = await _context.IndividualQuizPasseds.SingleOrDefaultAsync(w => w.Id == individualQuizId);
             if (toUpdate == null)
             {
                 return;
             }
             toUpdate.IsPassed = true;
-            if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == toUpdate.DisciplineId && it.IsPassed && it.StudentId == studentId))
+            if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == toUpdate.DisciplineId && it.IsPassed && it.StudentId == toUpdate.StudentId))
             {
                 var passedLectures =
                     await (from l in _context.Lectures
@@ -95,7 +94,7 @@ namespace TestingModule.Additional
                     {
                         DisciplineId = toUpdate.DisciplineId,
                         IsPassed = false,
-                        StudentId = studentId
+                        StudentId = toUpdate.StudentId
                     };
                     var returnvalue = _context.CumulativeQuizPasseds.Add(cumulativeTestsPassed);
                     IEnumerable<CumulativeQuizLecture> cumulativeLectures =
@@ -110,6 +109,16 @@ namespace TestingModule.Additional
                 }
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ResovlePassedCumulativeQuiz(int cumulativeQuizId)
+        {
+            var toUpdate = await _context.CumulativeQuizPasseds.SingleOrDefaultAsync(cqp => cqp.Id == cumulativeQuizId);
+            if (toUpdate != null)
+            {
+                toUpdate.IsPassed = true;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<RealTimeQuizViewModel> GetRealtimeQnA(int moduleHistoryId)
@@ -209,12 +218,7 @@ namespace TestingModule.Additional
 
             if (question == null)
             {
-                var toUpdate = await _context.CumulativeQuizPasseds.SingleOrDefaultAsync(cqp => cqp.Id == cumulativeQuizId);
-                if (toUpdate != null)
-                {
-                    toUpdate.IsPassed = true;
-                    await _context.SaveChangesAsync();
-                }
+                await ResovlePassedCumulativeQuiz(cumulativeQuizId);
                 return null;
             }
             return new CumulativeQuizViewModel
@@ -348,7 +352,7 @@ namespace TestingModule.Additional
                 Module = module,
                 Questions = questions,
                 ModuleHistory = moduleHistory,
-                TimeLeft = new TimerAssociates().TimeLeft(moduleHistory.Id)
+                TimeLeft = new TimerAssociates().TimeLeft(moduleHistory.Id,TimerAssociates.TimerType.RealtimeId)
             };
             return realTimeStatistics;
         }

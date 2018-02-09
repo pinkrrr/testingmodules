@@ -123,7 +123,7 @@ namespace TestingModule.Additional
             moduleHistory.StartTime = DateTime.UtcNow;
             TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
                 .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
-            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass);
+            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass,TimerAssociates.TimerType.RealtimeId);
             await _db.SaveChangesAsync();
         }
         
@@ -133,7 +133,7 @@ namespace TestingModule.Additional
                 await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
             moduleHistory.IsPassed = true;
             await _db.SaveChangesAsync();
-            _timerAssociates.DisposeTimer(moduleHistoryId);
+            _timerAssociates.DisposeTimer(moduleHistoryId,TimerAssociates.TimerType.RealtimeId);
         }
     }
 }
