@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestingModule.ViewModels.DiscLecotorViewModel>
+﻿@model IEnumerable<TestingModule.ViewModels.DiscLectorCumulativeCheckViewModel>
 @{
     ViewBag.Title = "TestingModule";
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
@@ -38,30 +38,35 @@ else
                 <td class="table-item table-item_name">
                     <a data-id="@item.DiscId" href="Student/@item.DiscId/lectures" class="table-item_name_text" data-editable>@item.DiscName</a>
                 </td>
-                <td class="table-item table-item_name">
-
-                    @{
-                        var name = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
-                    }
-                    @if (name != null)
+                <td>
+                    @if (item.CumulativeQuizId!=null)
                     {
-                        @name.Name
-                    }
-
-                    @{
-                        var surname = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
-                    }
-                    @if (surname != null)
-                    {
-                        @surname.Surname
+                        <a href="@Url.Action("CumulativeQuiz", "Quiz", new {cumulativeQuizId = item.CumulativeQuizId})">Пройти тестування</a>
                     }
                 </td>
+                <td class="table-item table-item_name">
 
-            </tr>
+                    @if (item.Lectors != null)
+                    {
+                        foreach (var lector in item.Lectors)
+                        {
+                            @(lector.Name + " " + lector.Surname)
+                            if (lector != item.Lectors.Last())
+                            {
+                                @(", ")
+                            }
                         }
+                    }
+                    else
+                    {
+                        @("Наразі викладачі даної дисципліни відсутні.")
+                    }
+                </td>
+            </tr>
+        }
 
     </table>
-                        }
+}
 
 @section scripts
 {
