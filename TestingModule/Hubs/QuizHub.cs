@@ -129,7 +129,7 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                string group = AccountCredentials.GetStudentGroup((ClaimsIdentity)Context.User.Identity);
                 Connections.Add(group, Context.ConnectionId);
             }
             return base.OnConnected();
@@ -139,7 +139,7 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                string group = AccountCredentials.GetStudentGroup((ClaimsIdentity)Context.User.Identity);
                 Connections.Remove(group, Context.ConnectionId);
             }
             return base.OnDisconnected(stopCalled);
@@ -149,7 +149,7 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
+                string group = AccountCredentials.GetStudentGroup((ClaimsIdentity)Context.User.Identity);
                 if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
                 {
                     Connections.Add(group, Context.ConnectionId);

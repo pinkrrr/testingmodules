@@ -23,8 +23,9 @@ namespace TestingModule.ViewModels
     public class IndividualQuizViewModel : QuizViewModel
     {
         public int IndividualQuizId { get; set; }
+        public int TimeLeft { get; set; }
     }
-    
+
     public class CumulativeQuizViewModel : QuizViewModel
     {
         public int CumulativeQuizId { get; set; }
@@ -32,6 +33,6 @@ namespace TestingModule.ViewModels
 
     public class LectureQuizViewModel : ReasignViewModel
     {
-        public Dictionary<int,int> LecturesForQuizId { get; set; }
+        public Dictionary<int, int> LecturesForQuizId { get; set; }
     }
 }

@@ -14,10 +14,12 @@ namespace TestingModule.Controllers
     public class QuizController : Controller
     {
         private readonly testingDbEntities _context;
+        private readonly QuizManager _quizManager;
 
         public QuizController()
         {
             _context = new testingDbEntities();
+            _quizManager = new QuizManager();
         }
 
         protected override void Dispose(bool disposing)
@@ -25,6 +27,7 @@ namespace TestingModule.Controllers
             if (disposing)
             {
                 _context.Dispose();
+                _quizManager.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -34,7 +37,7 @@ namespace TestingModule.Controllers
         [Route("quiz/{moduleHistoryId}")]
         public async Task<ActionResult> Index(int moduleHistoryId)
         {
-            RealTimeQuizViewModel qvm = await new QuizManager().GetRealtimeQnA(moduleHistoryId);
+            RealTimeQuizViewModel qvm = await _quizManager.GetRealtimeQnA(moduleHistoryId);
             if (qvm == null)
                 return RedirectToAction("Index", "Student");
             if (qvm.Question == null)
@@ -46,12 +49,12 @@ namespace TestingModule.Controllers
         [Route("quiz/modulestatistics/")]
         public async Task<ActionResult> ModuleStatistics()
         {
-            Lector lector = await new AccountCredentials().GetLector();
+            Lector lector = await AccountCredentials.GetLector();
             if (await _context.ModuleHistories.AnyAsync(mh => mh.StartTime != null
                                                               && mh.IsPassed == false
                                                               && mh.LectorId == lector.Id))
             {
-                return View(await new QuizManager().GetRealTimeStatisticsViewModel(lector));
+                return View(await _quizManager.GetRealTimeStatisticsViewModel(lector));
             }
             return RedirectToAction("index", "admin");
 
@@ -60,13 +63,13 @@ namespace TestingModule.Controllers
         [Route("quiz/totalstatistics/")]
         public async Task<ActionResult> TotalStatistics()
         {
-            return View(await new QuizManager().GetHistoriesForLector());
+            return View(await _quizManager.GetHistoriesForLector());
         }
 
         [Route("quiz/totalstatistics/history/{lectureHistoryId}")]
         public async Task<ActionResult> HistoryStatistics(int lectureHistoryId)
         {
-            return View(await new QuizManager().GetModulesForLector(lectureHistoryId));
+            return View(await _quizManager.GetModulesForLector(lectureHistoryId));
         }
 
         #endregion
@@ -76,24 +79,32 @@ namespace TestingModule.Controllers
         [Route("individualquiz/{individualQuizId}")]
         public async Task<ActionResult> IndividualQuiz(int individualQuizId)
         {
-            var studentId = new AccountCredentials().GetStudentId();
-            if (!_context.IndividualQuizPasseds.Any(itp => itp.Id == individualQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            var studentId = AccountCredentials.GetStudentId();
+            if (!_context.IndividualQuizPasseds.Any(itp => itp.Id == individualQuizId && itp.IsPassed == false))
             {
                 return RedirectToAction("Index", "Student");
             }
-            var model = await new QuizManager().GetIndividualQnA(individualQuizId);
+            var model = await _quizManager.GetIndividualQnA(individualQuizId);
+            var toSetStartDate = _context.IndividualQuizPasseds.SingleOrDefault(iq =>
+                    iq.Id == individualQuizId && iq.IsPassed == false && iq.StartDate == null);
+            if (toSetStartDate != null)
+            {
+                toSetStartDate.StartDate = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+            TimerAssociates.StartTimer(individualQuizId, TimeSpan.FromMilliseconds(model.TimeLeft), TimerAssociates.TimerType.IndividualId);
             return View(model);
         }
 
         [Route("cumulativequiz/{cumulativeQuizId}")]
         public async Task<ActionResult> CumulativeQuiz(int cumulativeQuizId)
         {
-            var studentId = new AccountCredentials().GetStudentId();
+            var studentId = AccountCredentials.GetStudentId();
             if (!_context.CumulativeQuizPasseds.Any(itp => itp.Id == cumulativeQuizId && itp.StudentId == studentId && itp.IsPassed == false))
             {
                 return RedirectToAction("Index", "Student");
             }
-            CumulativeQuizViewModel model = await new QuizManager().GetCumulativeQnA(cumulativeQuizId);
+            CumulativeQuizViewModel model = await _quizManager.GetCumulativeQnA(cumulativeQuizId);
             return View(model);
         }
 

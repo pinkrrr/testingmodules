@@ -18,14 +18,13 @@ namespace TestingModule.Additional
     public class LectureHistoryHelper
     {
         private readonly testingDbEntities _db = new testingDbEntities();
-        private readonly TimerAssociates _timerAssociates=new TimerAssociates();
 
         public async Task StartLecture(ReasignViewModel model)
         {
             var disc = model.Disciplines[0].Id;
             var lect = model.Lectures[0].Id;
             var date = DateTime.UtcNow;
-            var lector = await new AccountCredentials().GetLector();
+            var lector = await AccountCredentials.GetLector();
             _db.LecturesHistories.Add(new LecturesHistory
             {
                 LectureId = lect,
@@ -123,7 +122,7 @@ namespace TestingModule.Additional
             moduleHistory.StartTime = DateTime.UtcNow;
             TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
                 .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
-            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass,TimerAssociates.TimerType.RealtimeId);
+            TimerAssociates.StartTimer(moduleHistoryId, minutesToPass,TimerAssociates.TimerType.RealtimeId);
             await _db.SaveChangesAsync();
         }
         
@@ -133,7 +132,7 @@ namespace TestingModule.Additional
                 await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
             moduleHistory.IsPassed = true;
             await _db.SaveChangesAsync();
-            _timerAssociates.DisposeTimer(moduleHistoryId,TimerAssociates.TimerType.RealtimeId);
+            TimerAssociates.DisposeTimer(moduleHistoryId,TimerAssociates.TimerType.RealtimeId);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace TestingModule.Additional
         private readonly testingDbEntities _db = new testingDbEntities();
         public async Task<IEnumerable<DiscLectorCumulativeCheckViewModel>> StudentsDisciplinesList()
         {
-            var studentId = new AccountCredentials().GetStudentId();
+            var studentId = AccountCredentials.GetStudentId();
             List<DiscLectorCumulativeCheckViewModel> model =
                 await (from d in _db.Disciplines
                        join sd in _db.StudentDisciplines on d.Id equals sd.DisciplineId

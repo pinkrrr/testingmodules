@@ -40,7 +40,7 @@ namespace TestingModule.Controllers
         public async Task<ActionResult> Index()
         {
             //If admin
-            if (new AccountCredentials().GetRole() != RoleName.Lecturer)
+            if (AccountCredentials.GetRole() != RoleName.Lecturer)
             {
                 var adminModel = new ReasignViewModel
                 {
@@ -57,7 +57,7 @@ namespace TestingModule.Controllers
                 return View(adminModel);
             }
             //If lector
-            Lector lector = await new AccountCredentials().GetLector();
+            Lector lector = await AccountCredentials.GetLector();
             if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id && lh.EndTime == null))
             {
                 if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id))
@@ -89,7 +89,7 @@ namespace TestingModule.Controllers
         [Route("activelecture/")]
         public async Task<ActionResult> ActiveLecture()
         {
-            var lector = await new AccountCredentials().GetLector();
+            var lector = await AccountCredentials.GetLector();
             if (await _db.LecturesHistories.AnyAsync(lh => lh.EndTime == null
                                                            && lh.IsFrozen == false
                                                            && lh.LectorId == lector.Id))
