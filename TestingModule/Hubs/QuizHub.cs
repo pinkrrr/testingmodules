@@ -169,8 +169,8 @@ namespace TestingModule.Hubs
         {
             if (disposing)
             {
-                _context = null;
-                _quizManager = null;
+                _context.Dispose();
+                _quizManager.Dispose();
             }
             base.Dispose(disposing);
         }

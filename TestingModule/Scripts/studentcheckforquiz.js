@@ -12,15 +12,18 @@ $(function () {
         url: '/quiz/checkforactiverealtimequiz',
         datatype: 'JSON',
         success: function (moduleHistoryId) {
-            if (moduleHistoryId != 0) {
-                window.location.href = '/quiz/' + moduleHistoryId;
+            if (moduleHistoryId == 0) {
+                CheckForIndvidualQuizes();
             }
+
         },
         error: function (error) {
             console.log(error.responseText);
         }
     });
+});
 
+function CheckForIndvidualQuizes() {
     $.ajax({
         type: 'GET',
         url: '/quiz/checkforactiveindividualquiz',
@@ -48,5 +51,5 @@ $(function () {
             console.log(error.responseText);
         }
     });
-});
+}
 

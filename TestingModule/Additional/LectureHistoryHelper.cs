@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Win32.SafeHandles;
 using TestingModule.Controllers;
+using TestingModule.Hubs;
 using TestingModule.Models;
 using TestingModule.ViewModels;
 
@@ -122,17 +123,28 @@ namespace TestingModule.Additional
             moduleHistory.StartTime = DateTime.UtcNow;
             TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
                 .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
-            TimerAssociates.StartTimer(moduleHistoryId, minutesToPass,TimerAssociates.TimerType.RealtimeId);
+            TimerAssociates.StartTimer(moduleHistoryId, minutesToPass, TimerAssociates.TimerType.RealtimeId);
             await _db.SaveChangesAsync();
         }
-        
+
         public async Task ModulePassed(int moduleHistoryId)
         {
             ModuleHistory moduleHistory =
                 await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
             moduleHistory.IsPassed = true;
             await _db.SaveChangesAsync();
-            TimerAssociates.DisposeTimer(moduleHistoryId,TimerAssociates.TimerType.RealtimeId);
+            QuizManager quizManager = new QuizManager();
+            var lectureId =
+                await (from l in _db.Lectures
+                       join lh in _db.LecturesHistories on l.Id equals lh.LectureId
+                       where lh.Id == moduleHistory.LectureHistoryId
+                       select l).Select(l => l.Id).SingleOrDefaultAsync();
+            foreach (var studentId in QuizHub.Students.GetStudentsIdsByModuleHistoryId(moduleHistoryId))
+            {
+                await quizManager.ResovlePassedRealtimeQuiz(moduleHistory.ModuleId, studentId, moduleHistoryId, lectureId);
+            }
+            TimerAssociates.DisposeTimer(moduleHistoryId, TimerAssociates.TimerType.RealtimeId);
+            quizManager.Dispose();
         }
     }
 }

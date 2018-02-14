@@ -41,9 +41,9 @@ namespace TestingModule.Controllers
             RealTimeQuizViewModel qvm = await _quizManager.GetRealtimeQnA(moduleHistoryId);
             if (qvm == null)
                 return RedirectToAction("Index", "Student");
-            QuizHub.Students.Add(qvm.ModuleHistoryId, qvm.Student.Id);
             if (qvm.Question == null)
                 return View();
+            QuizHub.Students.Add(qvm.ModuleHistoryId, qvm.Student.Id);
             return View(qvm);
         }
 

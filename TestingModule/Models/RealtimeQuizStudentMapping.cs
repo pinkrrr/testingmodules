@@ -65,5 +65,14 @@ namespace TestingModule.Models
             }
         }
 
+        public IEnumerable<int> GetStudentsIdsByModuleHistoryId(int key)
+        {
+            lock (_students)
+            {
+                var studentsToReturn = _students.Where(s => s.Key == key).Select(s=>s.Value).SingleOrDefault();
+                return studentsToReturn ?? Enumerable.Empty<int>();
+            }
+
+        }
     }
 }

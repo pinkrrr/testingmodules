@@ -17,6 +17,7 @@ namespace TestingModule.Additional
     public class StudentPageHelper
     {
         private readonly testingDbEntities _db = new testingDbEntities();
+
         public async Task<IEnumerable<DiscLectorCumulativeCheckViewModel>> StudentsDisciplinesList()
         {
             var studentId = AccountCredentials.GetStudentId();
@@ -44,15 +45,15 @@ namespace TestingModule.Additional
             if (await _db.ModuleHistories.AnyAsync(mh =>
                 mh.Id == moduleHistoryId && mh.StartTime != null && mh.IsPassed != true))
             {
-                if (await (from lh in _db.LecturesHistories
-                           join mh in _db.ModuleHistories on lh.Id equals mh.LectureHistoryId
-                           where mh.Id == moduleHistoryId
-                           join lhg in _db.LectureHistoryGroups on lh.Id equals lhg.GroupId
-                           join s in _db.Students on lhg.GroupId equals s.GroupId
-                           where s.Id == studentId
-                           join sd in _db.StudentDisciplines on lh.DisciplineId equals sd.DisciplineId
-                           select sd).AnyAsync())
-                    return true;
+                var canPass = await (from lh in _db.LecturesHistories
+                                     join mh in _db.ModuleHistories on lh.Id equals mh.LectureHistoryId
+                                     where mh.Id == moduleHistoryId
+                                     join lhg in _db.LectureHistoryGroups on lh.Id equals lhg.LectureHistoryId
+                                     join s in _db.Students on lhg.GroupId equals s.GroupId
+                                     where s.Id == studentId
+                                     join sd in _db.StudentDisciplines on lh.DisciplineId equals sd.DisciplineId
+                                     select sd).AnyAsync();
+                return canPass;
             }
             return false;
         }
