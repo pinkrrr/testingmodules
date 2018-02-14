@@ -8,6 +8,7 @@ using TestingModule.Models;
 using TestingModule.ViewModels;
 using TestingModule.Additional;
 using System.Threading.Tasks;
+using TestingModule.Hubs;
 
 namespace TestingModule.Controllers
 {
@@ -40,6 +41,7 @@ namespace TestingModule.Controllers
             RealTimeQuizViewModel qvm = await _quizManager.GetRealtimeQnA(moduleHistoryId);
             if (qvm == null)
                 return RedirectToAction("Index", "Student");
+            QuizHub.Students.Add(qvm.ModuleHistoryId, qvm.Student.Id);
             if (qvm.Question == null)
                 return View();
             return View(qvm);
@@ -124,9 +126,9 @@ namespace TestingModule.Controllers
                 .OrderBy(o => o.StartDate).Select(s => s.Id).FirstOrDefaultAsync();
             return Json(individualQuizId, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpGet]
-        [Route("quiz/checkforactivecumulativequizid")]
+        [Route("quiz/checkforactivecumulativequiz")]
         public async Task<JsonResult> CheckForActiveCumulativeQuiz()
         {
             var studentId = AccountCredentials.GetStudentId();
@@ -134,6 +136,24 @@ namespace TestingModule.Controllers
                 .Where(iqp => iqp.StudentId == studentId && iqp.StartDate != null && iqp.EndDate == null)
                 .OrderBy(o => o.StartDate).Select(s => s.Id).FirstOrDefaultAsync();
             return Json(cumulativeQuizId, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [Route("quiz/checkforactiverealtimequiz")]
+        public async Task<JsonResult> CheckForActiveRealtimeQuiz()
+        {
+            var studentId = AccountCredentials.GetStudentId();
+            var moduleHistoryId =
+                await (from s in _context.Students
+                       where s.Id == studentId
+                       join lhg in _context.LectureHistoryGroups on s.GroupId equals lhg.GroupId
+                       join sd in _context.StudentDisciplines on s.Id equals sd.StudentId
+                       join lh in _context.LecturesHistories on sd.DisciplineId equals lh.DisciplineId
+                       where lh.Id == lhg.LectureHistoryId
+                       join mh in _context.ModuleHistories on lh.Id equals mh.LectureHistoryId
+                       where mh.StartTime != null && mh.IsPassed == false
+                       select mh).OrderBy(mh => mh.StartTime).Select(s=>s.Id).FirstOrDefaultAsync();
+            return Json(moduleHistoryId, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

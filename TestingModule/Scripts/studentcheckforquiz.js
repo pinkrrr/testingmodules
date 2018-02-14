@@ -6,6 +6,21 @@ quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
 
 $(function () {
     $.connection.hub.start();
+
+    $.ajax({
+        type: 'GET',
+        url: '/quiz/checkforactiverealtimequiz',
+        datatype: 'JSON',
+        success: function (moduleHistoryId) {
+            if (moduleHistoryId != 0) {
+                window.location.href = '/quiz/' + moduleHistoryId;
+            }
+        },
+        error: function (error) {
+            console.log(error.responseText);
+        }
+    });
+
     $.ajax({
         type: 'GET',
         url: '/quiz/checkforactiveindividualquiz',
@@ -22,7 +37,7 @@ $(function () {
 
     $.ajax({
         type: 'GET',
-        url: '/quiz/checkforactivecumulativequizid',
+        url: '/quiz/checkforactivecumulativequiz',
         datatype: 'JSON',
         success: function (cumulativeQuizId) {
             if (cumulativeQuizId != 0) {

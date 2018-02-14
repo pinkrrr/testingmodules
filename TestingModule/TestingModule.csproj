@@ -266,6 +266,7 @@
     <Compile Include="Models\RealtimeModulesPassed.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RealtimeQuizStudentMapping.cs" />
     <Compile Include="Models\RealtimeRespons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>

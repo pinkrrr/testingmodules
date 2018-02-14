@@ -73,7 +73,7 @@ namespace TestingModule.Hubs
             await _context.SaveChangesAsync();
             return await _quizManager.GetIndividualQnA(quizVM.IndividualQuizId);
         }
-        
+
         public async Task<CumulativeQuizViewModel> SaveCumulativeResponse(CumulativeQuizViewModel quizVM, int responseId)
         {
             if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.CumulativeQuizId && mh.IsPassed))
@@ -108,7 +108,7 @@ namespace TestingModule.Hubs
                 _locked = false;
             }
         }
-        
+
         public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
         {
 
@@ -128,6 +128,8 @@ namespace TestingModule.Hubs
 
         private static readonly ConnectionMapping<string> Connections =
             new ConnectionMapping<string>();
+
+        public static readonly RealtimeQuizStudentMapping Students = new RealtimeQuizStudentMapping();
 
         public override Task OnConnected()
         {

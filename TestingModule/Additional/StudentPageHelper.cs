@@ -47,8 +47,10 @@ namespace TestingModule.Additional
                 if (await (from lh in _db.LecturesHistories
                            join mh in _db.ModuleHistories on lh.Id equals mh.LectureHistoryId
                            where mh.Id == moduleHistoryId
+                           join lhg in _db.LectureHistoryGroups on lh.Id equals lhg.GroupId
+                           join s in _db.Students on lhg.GroupId equals s.GroupId
+                           where s.Id == studentId
                            join sd in _db.StudentDisciplines on lh.DisciplineId equals sd.DisciplineId
-                           where sd.StudentId == studentId
                            select sd).AnyAsync())
                     return true;
             }
