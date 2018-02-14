@@ -67,13 +67,3 @@ else
 
     </table>
 }
-@section scripts
-{<script>
-     var quiz = $.connection.quizHub;
-     $.connection.hub.start();
-     console.log(quiz);
-     quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
-         window.location.href = '/quiz/' + moduleHistoryId;
-     };
- </script>
-}

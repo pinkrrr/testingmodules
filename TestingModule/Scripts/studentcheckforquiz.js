@@ -1,6 +1,11 @@
-﻿$(function () {
+﻿var quiz = $.connection.quizHub;
+quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
+    console.log(moduleHistoryId);
+    window.location.href = '/quiz/' + moduleHistoryId;
+};
 
-    
+$(function () {
+    $.connection.hub.start();
     $.ajax({
         type: 'GET',
         url: '/quiz/checkforactiveindividualquiz',
@@ -29,3 +34,4 @@
         }
     });
 });
+

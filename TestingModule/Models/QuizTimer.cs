@@ -73,7 +73,7 @@ namespace TestingModule.Models
                      select m).ToList();
                 foreach (ModuleHistory ongoingModule in ongoingModules)
                 {
-                    StartTimer(ongoingModule.Id, TimeSpan.FromMilliseconds(modules.Where(m => m.Id == ongoingModule.ModuleId)
+                    StartTimer(ongoingModule.Id, TimeSpan.FromMinutes(modules.Where(m => m.Id == ongoingModule.ModuleId)
                         .Select(m => m.MinutesToPass).SingleOrDefault()), TimerType.RealtimeId);
                 }
             }
