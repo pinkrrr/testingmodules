@@ -213,7 +213,7 @@ namespace TestingModule.Additional
                        from gj in groupjoin
                        join cql in _context.CumulativeQuizLectures on gj.LectureId equals cql.LectureId
                        where cql.CumulativeQuizId == cumulativeQuizId && _context.CumulativeResponses.Count(cr => cr.CumulativeQuizId == cql.CumulativeQuizId && cql.LectureId == gj.LectureId) <=
-                             Math.Floor((double)(groupjoin.Count(c => c.LectureId == cql.LectureId) / groupjoin.Count() * 10))
+                             Math.Floor((double)(groupjoin.Count(c => c.LectureId == cql.LectureId) / groupjoin.Count() * 20))
                        select gj).OrderBy(q => Guid.NewGuid()).FirstOrDefaultAsync();
 
             if (question == null)
@@ -226,7 +226,8 @@ namespace TestingModule.Additional
                 Question = question,
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
-                CumulativeQuizId = cumulativeQuizId
+                CumulativeQuizId = cumulativeQuizId,
+                TimeLeft = TimerAssociates.TimeLeft(cumulativeQuizId,TimerAssociates.TimerType.CumulativeId)
             };
         }
 
@@ -236,12 +237,15 @@ namespace TestingModule.Additional
             if (toUpdate != null)
             {
                 toUpdate.IsPassed = true;
+                toUpdate.EndDate = DateTime.UtcNow;
+                TimerAssociates.DisposeTimer(cumulativeQuizId,TimerAssociates.TimerType.IndividualId);
                 await _context.SaveChangesAsync();
             }
         }
 
         #endregion
 
+        #region Realtime Statistics
 
         public async Task<StatisticsViewModel> GetHistoriesForLector()
         {
@@ -404,6 +408,9 @@ namespace TestingModule.Additional
                           where !itp.IsPassed && itp.StudentId == studentId && itp.DisciplineId == disciplineId
                           select new { itp.LectureId, itp.Id }).ToDictionaryAsync(td => td.LectureId, td => td.Id);
         }
+
+        #endregion
+        
 
         public void Dispose()
         {

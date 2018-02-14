@@ -29,6 +29,7 @@ namespace TestingModule.ViewModels
     public class CumulativeQuizViewModel : QuizViewModel
     {
         public int CumulativeQuizId { get; set; }
+        public int TimeLeft { get; set; }
     }
 
     public class LectureQuizViewModel : ReasignViewModel

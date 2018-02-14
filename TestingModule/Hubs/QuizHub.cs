@@ -55,6 +55,8 @@ namespace TestingModule.Hubs
 
         public async Task<IndividualQuizViewModel> SaveIndividualResponse(IndividualQuizViewModel quizVM, int responseId)
         {
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.IndividualQuizId && mh.IsPassed))
+                return null;
             if (await _context.IndividualResponses.AnyAsync(r =>
                 r.IndividualQuizId == quizVM.IndividualQuizId && r.StudentId == quizVM.Student.Id &&
                 r.QuestionId == quizVM.Question.Id))
@@ -74,6 +76,8 @@ namespace TestingModule.Hubs
         
         public async Task<CumulativeQuizViewModel> SaveCumulativeResponse(CumulativeQuizViewModel quizVM, int responseId)
         {
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.CumulativeQuizId && mh.IsPassed))
+                return null;
             if (await _context.CumulativeResponses.AnyAsync(r =>
                 r.CumulativeQuizId == quizVM.CumulativeQuizId && r.StudentId == quizVM.Student.Id &&
                 r.QuestionId == quizVM.Question.Id))

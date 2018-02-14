@@ -79,7 +79,6 @@ namespace TestingModule.Controllers
         [Route("individualquiz/{individualQuizId}")]
         public async Task<ActionResult> IndividualQuiz(int individualQuizId)
         {
-            var studentId = AccountCredentials.GetStudentId();
             if (!_context.IndividualQuizPasseds.Any(itp => itp.Id == individualQuizId && itp.IsPassed == false))
             {
                 return RedirectToAction("Index", "Student");
@@ -99,13 +98,42 @@ namespace TestingModule.Controllers
         [Route("cumulativequiz/{cumulativeQuizId}")]
         public async Task<ActionResult> CumulativeQuiz(int cumulativeQuizId)
         {
-            var studentId = AccountCredentials.GetStudentId();
-            if (!_context.CumulativeQuizPasseds.Any(itp => itp.Id == cumulativeQuizId && itp.StudentId == studentId && itp.IsPassed == false))
+            if (!_context.CumulativeQuizPasseds.Any(itp => itp.Id == cumulativeQuizId && itp.IsPassed == false))
             {
                 return RedirectToAction("Index", "Student");
             }
             CumulativeQuizViewModel model = await _quizManager.GetCumulativeQnA(cumulativeQuizId);
+            var toSetStartDate = _context.CumulativeQuizPasseds.SingleOrDefault(iq =>
+                iq.Id == cumulativeQuizId && iq.IsPassed == false && iq.StartDate == null);
+            if (toSetStartDate != null)
+            {
+                toSetStartDate.StartDate = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+            TimerAssociates.StartTimer(cumulativeQuizId, TimeSpan.FromMilliseconds(model.TimeLeft), TimerAssociates.TimerType.CumulativeId);
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("quiz/checkforactiveindividualquiz")]
+        public async Task<JsonResult> CheckForActiveIndividualQuiz()
+        {
+            var studentId = AccountCredentials.GetStudentId();
+            var individualQuizId = await _context.IndividualQuizPasseds
+                .Where(iqp => iqp.StudentId == studentId && iqp.StartDate != null && iqp.EndDate == null)
+                .OrderBy(o => o.StartDate).Select(s => s.Id).FirstOrDefaultAsync();
+            return Json(individualQuizId, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        [Route("quiz/checkforactivecumulativequizid")]
+        public async Task<JsonResult> CheckForActiveCumulativeQuiz()
+        {
+            var studentId = AccountCredentials.GetStudentId();
+            var cumulativeQuizId = await _context.CumulativeQuizPasseds
+                .Where(iqp => iqp.StudentId == studentId && iqp.StartDate != null && iqp.EndDate == null)
+                .OrderBy(o => o.StartDate).Select(s => s.Id).FirstOrDefaultAsync();
+            return Json(cumulativeQuizId, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

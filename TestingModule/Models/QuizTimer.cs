@@ -127,20 +127,26 @@ namespace TestingModule.Models
                     }
                     else
                     {
-                        Lazy<testingDbEntities> db = new Lazy<testingDbEntities>();
-                        int timeLeft = Convert.ToInt32(Math.Round(TimeSpan.FromMinutes((from q in db.Value.Questions
-                                                                           join iq in db.Value.IndividualQuizPasseds on q.LectureId equals iq.LectureId
+                        testingDbEntities db = new testingDbEntities();
+                        int timeLeft = Convert.ToInt32(Math.Round(TimeSpan.FromMinutes((from q in db.Questions
+                                                                           join iq in db.IndividualQuizPasseds on q.LectureId equals iq.LectureId
                                                                            where iq.Id == historyId
                                                                            select q).Count()).TotalMilliseconds / 2));
-                        db.Value.Dispose();
+                        db.Dispose();
                         return timeLeft;
                     }
                 case TimerType.CumulativeId:
                     if (CumulativeQuizTimers.TryGetValue(historyId, out TimerAssociates cumulativeTimerAssociates))
                     {
-
+                        return Convert.ToInt32((cumulativeTimerAssociates.moduleFinish - DateTime.UtcNow).TotalMilliseconds);
                     }
-                    return 0;
+                    else
+                    {
+                        testingDbEntities db = new testingDbEntities();
+                        int timeLeft = Convert.ToInt32(Math.Round(TimeSpan.FromMinutes(20).TotalMilliseconds / 2));
+                        db.Dispose();
+                        return timeLeft;
+                    }
             }
             return 0;
         }
