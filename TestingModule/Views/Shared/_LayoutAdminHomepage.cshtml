@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using TestingModule.Additional
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -44,7 +45,7 @@
             @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })*@
 
         </div>
-        <div class="body-content body-content__@(new TestingModule.Additional.AccountCredentials().GetRole())Homepage">
+        <div class="body-content body-content__@(AccountCredentials.GetRole())Homepage">
             @RenderBody()
         </div>
     </div>

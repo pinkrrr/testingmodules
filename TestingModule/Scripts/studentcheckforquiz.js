@@ -1,11 +1,6 @@
 ﻿$(function () {
 
-    var quiz = $.connection.quizHub;
-    $.connection.hub.start();
-    quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
-        window.location.href = '/quiz/' + moduleHistoryId;
-    };
-
+    
     $.ajax({
         type: 'GET',
         url: '/quiz/checkforactiveindividualquiz',
