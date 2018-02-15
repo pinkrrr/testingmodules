@@ -1,7 +1,6 @@
 ﻿var quiz = $.connection.quizHub;
 
 quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
-    console.log(moduleHistoryId);
     window.location.href = '/quiz/' + moduleHistoryId;
 };
 

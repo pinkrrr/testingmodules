@@ -1,20 +1,18 @@
 ﻿var qModel = $.parseJSON(document.getElementById("qModel").value);
 var timerObject = document.getElementById("timer");
-
+var quiz = $.connection.quizHub;
 
 $(function () {
     if (timerObject != null) {
         timer(qModel.TimeLeft, timerObject, true);
     } else {
-        var quiz = $.connection.quizHub;
         $.connection.hub.start();
-        console.log(quiz);
-        quiz.client.recieveStopModule = function () {
-            quizFinished();
-        };
-
     }
 });
+
+quiz.client.recieveStopModule = function () {
+    quizFinished();
+};
 
 function timer(distance, element, status) {
     var x = setInterval(function () {

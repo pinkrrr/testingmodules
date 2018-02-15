@@ -123,11 +123,12 @@ namespace TestingModule.Hubs
 
         public void StopModule(int moduleHistoryId)
         {
+            var hubcontext = GlobalHost.ConnectionManager.GetHubContext<QuizHub>();
             foreach (var student in Students.GetStudents(moduleHistoryId))
             {
                 foreach (string connection in Connections.GetConnections(student))
                 {
-                    Clients.Client(connection).RecieveStopModule();
+                    hubcontext.Clients.Client(connection).RecieveStopModule();
                 }
             }
         }
