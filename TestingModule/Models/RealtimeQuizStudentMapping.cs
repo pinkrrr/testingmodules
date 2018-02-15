@@ -32,18 +32,6 @@ namespace TestingModule.Models
             }
         }
 
-        public IEnumerable<int> GetConnections(int key)
-        {
-            lock (_students)
-            {
-                if (_students.TryGetValue(key, out HashSet<int> students))
-                {
-                    return students;
-                }
-            }
-            return Enumerable.Empty<int>();
-        }
-
         public void Remove(int key, int studentId)
         {
             lock (_students)
@@ -65,7 +53,7 @@ namespace TestingModule.Models
             }
         }
 
-        public IEnumerable<int> GetStudentsIdsByModuleHistoryId(int key)
+        public IEnumerable<int> GetStudents(int key)
         {
             lock (_students)
             {

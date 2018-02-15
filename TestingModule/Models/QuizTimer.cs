@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using TestingModule.Additional;
+using TestingModule.Hubs;
 
 namespace TestingModule.Models
 {
@@ -157,7 +158,10 @@ namespace TestingModule.Models
             switch (tuple.Item2)
             {
                 case TimerType.RealtimeId:
+                    QuizHub hub=new QuizHub();
+                    hub.StopModule(tuple.Item1);
                     await new LectureHistoryHelper().ModulePassed(tuple.Item1);
+                    hub.Dispose();
                     break;
                 case TimerType.IndividualId:
                     await new QuizManager().ResovlePassedIndividualQuiz(tuple.Item1);

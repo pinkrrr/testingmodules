@@ -139,7 +139,7 @@ namespace TestingModule.Additional
                        join lh in _db.LecturesHistories on l.Id equals lh.LectureId
                        where lh.Id == moduleHistory.LectureHistoryId
                        select l).Select(l => l.Id).SingleOrDefaultAsync();
-            foreach (var studentId in QuizHub.Students.GetStudentsIdsByModuleHistoryId(moduleHistoryId))
+            foreach (var studentId in QuizHub.Students.GetStudents(moduleHistoryId))
             {
                 await quizManager.ResovlePassedRealtimeQuiz(moduleHistory.ModuleId, studentId, moduleHistoryId, lectureId);
             }

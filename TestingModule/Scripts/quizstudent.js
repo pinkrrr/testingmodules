@@ -6,7 +6,13 @@ $(function () {
     if (timerObject != null) {
         timer(qModel.TimeLeft, timerObject, true);
     } else {
+        var quiz = $.connection.quizHub;
         $.connection.hub.start();
+        console.log(quiz);
+        quiz.client.recieveStopModule = function () {
+            quizFinished();
+        };
+
     }
 });
 

@@ -121,9 +121,15 @@ namespace TestingModule.Hubs
             }
         }
 
-        public void StopModule()
+        public void StopModule(int moduleHistoryId)
         {
-            Clients.All.reciveStopModule();
+            foreach (var student in Students.GetStudents(moduleHistoryId))
+            {
+                foreach (string connection in Connections.GetConnections(student))
+                {
+                    Clients.Client(connection).RecieveStopModule();
+                }
+            }
         }
 
         private static readonly ConnectionMapping<int> Connections =
