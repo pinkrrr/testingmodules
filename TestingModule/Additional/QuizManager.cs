@@ -165,7 +165,7 @@ namespace TestingModule.Additional
             }
             toUpdate.IsPassed = true;
             toUpdate.EndDate = DateTime.UtcNow;
-            TimerAssociates.DisposeTimer(individualQuizId,TimerAssociates.TimerType.IndividualId);
+            TimerAssociates.DisposeTimer(individualQuizId, TimerAssociates.TimerType.IndividualId);
             if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == toUpdate.DisciplineId && it.IsPassed && it.StudentId == toUpdate.StudentId))
             {
                 var passedLectures =
@@ -227,7 +227,7 @@ namespace TestingModule.Additional
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
                 CumulativeQuizId = cumulativeQuizId,
-                TimeLeft = TimerAssociates.TimeLeft(cumulativeQuizId,TimerAssociates.TimerType.CumulativeId)
+                TimeLeft = TimerAssociates.TimeLeft(cumulativeQuizId, TimerAssociates.TimerType.CumulativeId)
             };
         }
 
@@ -238,7 +238,7 @@ namespace TestingModule.Additional
             {
                 toUpdate.IsPassed = true;
                 toUpdate.EndDate = DateTime.UtcNow;
-                TimerAssociates.DisposeTimer(cumulativeQuizId,TimerAssociates.TimerType.IndividualId);
+                TimerAssociates.DisposeTimer(cumulativeQuizId, TimerAssociates.TimerType.IndividualId);
                 await _context.SaveChangesAsync();
             }
         }
@@ -360,6 +360,16 @@ namespace TestingModule.Additional
                        where lhg.LectureHistoryId == lecturesHistory.Id
                        join g in _context.Groups on lhg.GroupId equals g.Id
                        select g).ToListAsync();
+            IEnumerable<int> studentIds =
+                await (from lhg in _context.LectureHistoryGroups
+                where lhg.LectureHistoryId == lecturesHistory.Id
+                join g in _context.Groups on lhg.GroupId equals g.Id
+                join s in _context.Students on g.Id equals s.GroupId
+                join sd in _context.StudentDisciplines on s.Id equals sd.StudentId
+                where sd.DisciplineId == lecturesHistory.DisciplineId
+                select s.Id).ToListAsync();
+
+
             RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
             {
                 Lector = lector,
@@ -368,7 +378,8 @@ namespace TestingModule.Additional
                 Module = module,
                 Questions = questions,
                 ModuleHistory = moduleHistory,
-                TimeLeft = TimerAssociates.TimeLeft(moduleHistory.Id, TimerAssociates.TimerType.RealtimeId)
+                TimeLeft = TimerAssociates.TimeLeft(moduleHistory.Id, TimerAssociates.TimerType.RealtimeId),
+                StudentIds = studentIds
             };
             return realTimeStatistics;
         }
@@ -410,7 +421,7 @@ namespace TestingModule.Additional
         }
 
         #endregion
-        
+
 
         public void Dispose()
         {

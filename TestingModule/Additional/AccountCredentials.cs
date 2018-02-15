@@ -41,6 +41,11 @@ namespace TestingModule.Additional
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
         }
+        
+        public static int GetStudentId(ClaimsIdentity identity)
+        {
+            return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
+        }
 
         public static string GetStudentGroup(ClaimsIdentity identity)
         {

@@ -16,6 +16,7 @@
         var quiz = $.connection.quizHub;
         var intervalTime = 10000;
         var statisticsModel = @Html.Raw(Json.Encode(@Model));
+        console.log(statisticsModel);
         var totalCorrectAnswers = 1;
         var statisticsDynamicData = [];
 
@@ -40,11 +41,12 @@
             });
         };
 
-        var groups = @Html.Raw(Json.Encode(Model.Groups.Select(g => g.Name)));
+        var students = @Html.Raw(Json.Encode(Model.StudentIds));
 
         function sendInvintations() {
-            quiz.server.sendQVM(groups, @Model.ModuleHistory.Id);
-            setInterval(function() { quiz.server.sendQVM(groups, @Model.ModuleHistory.Id) }, 5000);
+            console.log(students);
+            quiz.server.sendQVM(students, @Model.ModuleHistory.Id);
+            setInterval(function () { quiz.server.sendQVM(students, @Model.ModuleHistory.Id) }, 5000);
         }
 
         function retrieveResponses() {
@@ -58,7 +60,6 @@
 
         quiz.client.recieveRealTimeStatistics = function(realTimeStatistics) {
             realTimeStatistics.forEach(function (item) {
-                console.log(item);
                 progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
             });
         }

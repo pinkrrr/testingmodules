@@ -109,12 +109,12 @@ namespace TestingModule.Hubs
             }
         }
 
-        public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
+        public void SendQVM(IEnumerable<int> students, int moduleHistoryId)
         {
 
-            foreach (string group in Connections.Any(groups))
+            foreach (int student in Connections.Any(students))
             {
-                foreach (string connection in Connections.GetConnections(group))
+                foreach (string connection in Connections.GetConnections(student))
                 {
                     Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
                 }
@@ -126,8 +126,8 @@ namespace TestingModule.Hubs
             Clients.All.reciveStopModule();
         }
 
-        private static readonly ConnectionMapping<string> Connections =
-            new ConnectionMapping<string>();
+        private static readonly ConnectionMapping<int> Connections =
+            new ConnectionMapping<int>();
 
         public static readonly RealtimeQuizStudentMapping Students = new RealtimeQuizStudentMapping();
 
@@ -135,8 +135,8 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = AccountCredentials.GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-                Connections.Add(group, Context.ConnectionId);
+                int studentId = AccountCredentials.GetStudentId((ClaimsIdentity)Context.User.Identity);
+                Connections.Add(studentId, Context.ConnectionId);
             }
             return base.OnConnected();
         }
@@ -145,8 +145,8 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = AccountCredentials.GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-                Connections.Remove(group, Context.ConnectionId);
+                int studentId = AccountCredentials.GetStudentId((ClaimsIdentity)Context.User.Identity);
+                Connections.Remove(studentId, Context.ConnectionId);
             }
             return base.OnDisconnected(stopCalled);
         }
@@ -155,10 +155,10 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = AccountCredentials.GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-                if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
+                int studentId = AccountCredentials.GetStudentId((ClaimsIdentity)Context.User.Identity);
+                if (!Connections.GetConnections(studentId).Contains(Context.ConnectionId))
                 {
-                    Connections.Add(group, Context.ConnectionId);
+                    Connections.Add(studentId, Context.ConnectionId);
                 }
             }
 
