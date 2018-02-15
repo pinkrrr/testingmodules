@@ -537,6 +537,8 @@
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js">
       <DependentUpon>jquery.unobtrusive-ajax.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\quizstudent.js" />
+    <Content Include="Scripts\realtimequizlector.js" />
     <Content Include="Scripts\studentcheckforquiz.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

@@ -353,17 +353,13 @@
         function showNextQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
@@ -372,17 +368,14 @@
         function showNextIndividualQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    console.log(_model);
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
@@ -391,17 +384,14 @@
         function showNextCumulativeQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    console.log(_model);
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
@@ -425,12 +415,12 @@
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
-        function quizTimerForStudent() {
+        /*function quizTimerForStudent() {
             console.log(_model);
-        }
+        }*/
 
 
-        quizTimerForStudent();
+        //quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
         //initNextQuestion();
@@ -458,8 +448,6 @@
             }).appendTo('.body-content__statistics');
 
             statisticsModel.Groups.forEach(function (group) {
-
-                console.log(questionList);
 
                 $('<div>', {
                     class: 'group',
@@ -524,6 +512,11 @@
     }
 
 });
+
+function quizFinished() {
+    $('.questionBlock').remove();
+    $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
+}
 
 function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
     var progress = correctAnswersCount / totalAnswersCount * 100;

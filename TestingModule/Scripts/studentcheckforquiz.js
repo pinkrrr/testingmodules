@@ -1,4 +1,5 @@
 ﻿var quiz = $.connection.quizHub;
+
 quiz.client.reciveModuleHistoryId = function (moduleHistoryId) {
     console.log(moduleHistoryId);
     window.location.href = '/quiz/' + moduleHistoryId;
@@ -12,10 +13,9 @@ $(function () {
         url: '/quiz/checkforactiverealtimequiz',
         datatype: 'JSON',
         success: function (moduleHistoryId) {
-            if (moduleHistoryId == 0) {
+            if (moduleHistoryId === 0) {
                 CheckForIndvidualQuizes();
             }
-
         },
         error: function (error) {
             console.log(error.responseText);
@@ -29,7 +29,7 @@ function CheckForIndvidualQuizes() {
         url: '/quiz/checkforactiveindividualquiz',
         datatype: 'JSON',
         success: function (individualQuizId) {
-            if (individualQuizId != 0) {
+            if (individualQuizId !== 0) {
                 window.location.href = '/individualquiz/' + individualQuizId;
             }
         },
@@ -43,7 +43,7 @@ function CheckForIndvidualQuizes() {
         url: '/quiz/checkforactivecumulativequiz',
         datatype: 'JSON',
         success: function (cumulativeQuizId) {
-            if (cumulativeQuizId != 0) {
+            if (cumulativeQuizId !== 0) {
                 window.location.href = '/cumulativequiz/' + cumulativeQuizId;
             }
         },
