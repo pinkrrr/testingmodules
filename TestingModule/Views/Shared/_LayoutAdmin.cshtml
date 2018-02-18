@@ -55,8 +55,11 @@
 
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jquery-ui")
+        @Scripts.Render("~/bundles/jquery-ui")
+        <script src="~/ckeditor/ckeditor.js"></script>
     <script src="~/Scripts/app.js"></script>
-    @RenderSection("scripts", required: false)
+        @RenderSection("scripts", required: false)
+   
+   
 </body>
 </html>
