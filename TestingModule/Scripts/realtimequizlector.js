@@ -1,26 +1,26 @@
 ﻿var statisticsModel = $.parseJSON(document.getElementById("statisticsModel").value);
 var quiz = $.connection.quizHub;
-
-$(function() {
+$(function () {
 
     var totalCorrectAnswers = 1;
     var statisticsDynamicData = [];
 
-    $.connection.hub.start().done(function() {
-        retrieveResponses();
+    $.connection.hub.start().done(function () {
+        timer(new Date(statisticsModel.TimeFinish) - new Date(), "timer", true);
         sendInvintations();
-        timer(statisticsModel.TimeLeft, "timer", true);
+        retrieveResponses();
+
     });
 
-    statisticsModel.Questions.forEach(function(item, i) {
+    statisticsModel.Questions.forEach(function (item, i) {
         statisticsDynamicData[i] = {
             questionId: item.Id,
             totalAnswersCount: 0
         }
     });
 
-    quiz.client.recieveStatistics = function(questionId, studentsCount, groupId) {
-        statisticsDynamicData.forEach(function(item) {
+    quiz.client.recieveStatistics = function (questionId, studentsCount, groupId) {
+        statisticsDynamicData.forEach(function (item) {
             if (item.questionId === questionId) {
                 item.totalAnswersCount++;
             }
@@ -28,12 +28,12 @@ $(function() {
         });
     };
 
-    quiz.client.responseRecieved = function() {
+    quiz.client.responseRecieved = function () {
         quiz.server.queryRealTimeStats(statisticsModel, false);
     };
 
-    quiz.client.recieveRealTimeStatistics = function(realTimeStatistics) {
-        realTimeStatistics.forEach(function(item) {
+    quiz.client.recieveRealTimeStatistics = function (realTimeStatistics) {
+        realTimeStatistics.forEach(function (item) {
             progress(item.GroupId, item.QuestionId, item.CorrectAnswers, item.TotalAnswers);
         });
     }

@@ -22,10 +22,12 @@ namespace TestingModule.Controllers
     public class AdminController : Controller
     {
         private testingDbEntities _db;
+        private LectureHistoryHelper _lectureHistoryHelper;
 
         public AdminController()
         {
             _db = new testingDbEntities();
+            _lectureHistoryHelper = new LectureHistoryHelper();
         }
 
         protected override void Dispose(bool disposing)
@@ -33,6 +35,7 @@ namespace TestingModule.Controllers
             if (disposing)
             {
                 _db.Dispose();
+                _lectureHistoryHelper.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -78,7 +81,7 @@ namespace TestingModule.Controllers
         {
             if (model != null)
             {
-                await new LectureHistoryHelper().StartLecture(model);
+                await _lectureHistoryHelper.StartLecture(model);
                 return RedirectToAction("activelecture", "admin");
             }
             TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
@@ -100,7 +103,7 @@ namespace TestingModule.Controllers
                 {
                     return RedirectToAction("modulestatistics", "quiz");
                 }
-                return View(await new LectureHistoryHelper().GetActiveLecture(lector));
+                return View(await _lectureHistoryHelper.GetActiveLecture(lector));
             }
             return RedirectToAction("Index", "Admin");
 
@@ -109,19 +112,19 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopLecture(int lectureHistoryId)
         {
-            await new LectureHistoryHelper().StopLecture(lectureHistoryId);
+            await _lectureHistoryHelper.StopLecture(lectureHistoryId);
             return RedirectToAction("index", "admin");
         }
 
         public async Task<ActionResult> FreezeLecture(int lectureHistoryId)
         {
-            await new LectureHistoryHelper().SetLectureAsFrozen(lectureHistoryId);
+            await _lectureHistoryHelper.SetLectureAsFrozen(lectureHistoryId);
             return RedirectToAction("index", "admin");
         }
 
         public async Task<ActionResult> UnfreezeLecture(int lectureHistoryId)
         {
-            await new LectureHistoryHelper().UnfreezeLecture(lectureHistoryId);
+            await _lectureHistoryHelper.UnfreezeLecture(lectureHistoryId);
             return RedirectToAction("activelecture", "admin");
         }
 
@@ -153,14 +156,14 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StartModule(int moduleHistoryId)
         {
-            await new LectureHistoryHelper().StartModule(moduleHistoryId);
+            await _lectureHistoryHelper.StartModule(moduleHistoryId);
             return RedirectToAction("ModuleStatistics", "Quiz");
         }
 
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
-            await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
+            await _lectureHistoryHelper.ModulePassed(moduleHistoryId);
             return RedirectToAction("activelecture", "Admin");
         }
 

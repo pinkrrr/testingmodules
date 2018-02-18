@@ -124,6 +124,7 @@ namespace TestingModule.Hubs
         public void StopModule(int moduleHistoryId)
         {
             var hubcontext = GlobalHost.ConnectionManager.GetHubContext<QuizHub>();
+            Thread.Sleep(TimeSpan.FromSeconds(1));
             foreach (var student in Students.GetStudents(moduleHistoryId))
             {
                 foreach (string connection in Connections.GetConnections(student))

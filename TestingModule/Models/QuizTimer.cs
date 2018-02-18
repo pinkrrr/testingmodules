@@ -13,8 +13,8 @@ namespace TestingModule.Models
 {
     public class TimerAssociates
     {
-        private readonly Timer timer;
-        private readonly DateTime moduleFinish;
+        private Timer timer;
+        public DateTime ModuleFinish;
         private static readonly Dictionary<int, TimerAssociates> ModuleTimers = new Dictionary<int, TimerAssociates>();
         private static readonly Dictionary<int, TimerAssociates> IndividualQuizTimers = new Dictionary<int, TimerAssociates>();
         private static readonly Dictionary<int, TimerAssociates> CumulativeQuizTimers = new Dictionary<int, TimerAssociates>();
@@ -22,7 +22,7 @@ namespace TestingModule.Models
         public TimerAssociates(Timer timer, DateTime moduleFinish)
         {
             this.timer = timer;
-            this.moduleFinish = moduleFinish;
+            ModuleFinish = moduleFinish;
         }
 
         public TimerAssociates() { }
@@ -34,12 +34,32 @@ namespace TestingModule.Models
             public const int CumulativeId = 3;
         }
 
+        public static TimerAssociates GetTimer(int historyId, int timerType)
+        {
+            switch (timerType)
+            {
+                case TimerType.RealtimeId:
+                    if (ModuleTimers.TryGetValue(historyId, out TimerAssociates realtimeTimer))
+                        return realtimeTimer;
+                    break;
+                case TimerType.IndividualId:
+                    if (IndividualQuizTimers.TryGetValue(historyId, out TimerAssociates individualTimer))
+                        return individualTimer;
+                    break;
+                case TimerType.CumulativeId:
+                    if (CumulativeQuizTimers.TryGetValue(historyId, out TimerAssociates cumulativeTimer))
+                        return cumulativeTimer;
+                    break;
+            }
+            return null;
+        }
+
         public static void StartTimer(int historyId, TimeSpan timeToPass, int timerType)
         {
             switch (timerType)
             {
                 case TimerType.RealtimeId:
-                    TimerAssociates realtimeTimerAssociates = new TimerAssociates(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), timeToPass, TimeSpan.Zero), DateTime.UtcNow + timeToPass);
+                    TimerAssociates realtimeTimerAssociates = new TimerAssociates(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), TimeSpan.FromSeconds(20), TimeSpan.Zero), DateTime.UtcNow + TimeSpan.FromSeconds(20));
                     ModuleTimers.Add(historyId, realtimeTimerAssociates);
                     break;
                 case TimerType.IndividualId:
@@ -118,28 +138,28 @@ namespace TestingModule.Models
                 case TimerType.RealtimeId:
                     if (ModuleTimers.TryGetValue(historyId, out TimerAssociates realtimeTimerAssociates))
                     {
-                        return Convert.ToInt32((realtimeTimerAssociates.moduleFinish - DateTime.UtcNow).TotalMilliseconds);
+                        return Convert.ToInt32((realtimeTimerAssociates.ModuleFinish - DateTime.UtcNow).TotalSeconds);
                     }
                     return 0;
                 case TimerType.IndividualId:
                     if (IndividualQuizTimers.TryGetValue(historyId, out TimerAssociates indivdualTimerAssociates))
                     {
-                        return Convert.ToInt32((indivdualTimerAssociates.moduleFinish - DateTime.UtcNow).TotalMilliseconds);
+                        return Convert.ToInt32((indivdualTimerAssociates.ModuleFinish - DateTime.UtcNow).TotalMilliseconds);
                     }
                     else
                     {
                         testingDbEntities db = new testingDbEntities();
                         int timeLeft = Convert.ToInt32(Math.Round(TimeSpan.FromMinutes((from q in db.Questions
-                                                                           join iq in db.IndividualQuizPasseds on q.LectureId equals iq.LectureId
-                                                                           where iq.Id == historyId
-                                                                           select q).Count()).TotalMilliseconds / 2));
+                                                                                        join iq in db.IndividualQuizPasseds on q.LectureId equals iq.LectureId
+                                                                                        where iq.Id == historyId
+                                                                                        select q).Count()).TotalMilliseconds / 2));
                         db.Dispose();
                         return timeLeft;
                     }
                 case TimerType.CumulativeId:
                     if (CumulativeQuizTimers.TryGetValue(historyId, out TimerAssociates cumulativeTimerAssociates))
                     {
-                        return Convert.ToInt32((cumulativeTimerAssociates.moduleFinish - DateTime.UtcNow).TotalMilliseconds);
+                        return Convert.ToInt32((cumulativeTimerAssociates.ModuleFinish - DateTime.UtcNow).TotalMilliseconds);
                     }
                     else
                     {
@@ -158,7 +178,7 @@ namespace TestingModule.Models
             switch (tuple.Item2)
             {
                 case TimerType.RealtimeId:
-                    QuizHub hub=new QuizHub();
+                    QuizHub hub = new QuizHub();
                     hub.StopModule(tuple.Item1);
                     await new LectureHistoryHelper().ModulePassed(tuple.Item1);
                     hub.Dispose();

@@ -152,7 +152,7 @@ namespace TestingModule.Controllers
                        where lh.Id == lhg.LectureHistoryId
                        join mh in _context.ModuleHistories on lh.Id equals mh.LectureHistoryId
                        where mh.StartTime != null && mh.IsPassed == false
-                       select mh).OrderBy(mh => mh.StartTime).Select(s=>s.Id).FirstOrDefaultAsync();
+                       select mh).OrderBy(mh => mh.StartTime).Select(s => s.Id).FirstOrDefaultAsync();
             return Json(moduleHistoryId, JsonRequestBehavior.AllowGet);
         }
 

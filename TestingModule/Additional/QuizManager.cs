@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using TestingModule.Models;
 using System.Threading.Tasks;
+using System.Web.DynamicData;
 using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
@@ -345,42 +346,32 @@ namespace TestingModule.Additional
 
         public async Task<RealTimeStatisticsViewModel> GetRealTimeStatisticsViewModel(Lector lector)
         {
-            ModuleHistory moduleHistory =
-                await _context.ModuleHistories.SingleOrDefaultAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id);
-            LecturesHistory lecturesHistory =
-                await _context.LecturesHistories
-                .SingleOrDefaultAsync(lh => lh.Id == moduleHistory.LectureHistoryId);
-            Module module = await _context.Modules.SingleOrDefaultAsync(m => m.Id == moduleHistory.ModuleId);
-            IEnumerable<Question> questions =
-                await (from q in _context.Questions
-                       where q.ModuleId == module.Id
-                       select q).ToListAsync();
-            IEnumerable<Group> groups =
-                await (from lhg in _context.LectureHistoryGroups
-                       where lhg.LectureHistoryId == lecturesHistory.Id
-                       join g in _context.Groups on lhg.GroupId equals g.Id
-                       select g).ToListAsync();
-            IEnumerable<int> studentIds =
-                await (from lhg in _context.LectureHistoryGroups
-                where lhg.LectureHistoryId == lecturesHistory.Id
-                join g in _context.Groups on lhg.GroupId equals g.Id
-                join s in _context.Students on g.Id equals s.GroupId
-                join sd in _context.StudentDisciplines on s.Id equals sd.StudentId
-                where sd.DisciplineId == lecturesHistory.DisciplineId
-                select s.Id).ToListAsync();
+            var realTimeStatistics =
+                await (
+                    from mh in _context.ModuleHistories
+                    where mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id
+                    join lh in _context.LecturesHistories on mh.LectureHistoryId equals lh.Id
+                    join m in _context.Modules on mh.ModuleId equals m.Id
+                    join q in _context.Questions on m.Id equals q.ModuleId into qjoin
+                    join sd in _context.StudentDisciplines on lh.DisciplineId equals sd.DisciplineId into sdjoin
+                    select new RealTimeStatisticsViewModel
+                    {
+                        LecturesHistory = lh,
+                        Module = m,
+                        ModuleHistory = mh,
+                        Questions = qjoin,
+                        StudentIds = sdjoin.Select(s => s.StudentId)
+                    }).SingleOrDefaultAsync();
 
+            var timer = TimerAssociates.GetTimer(realTimeStatistics.ModuleHistory.Id, TimerAssociates.TimerType.RealtimeId);
+            realTimeStatistics.Lector = lector;
+            realTimeStatistics.TimeFinish = timer.ModuleFinish.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss");
+            realTimeStatistics.Groups =
+                await (from g in _context.Groups
+                join lhg in _context.LectureHistoryGroups on g.Id equals lhg.GroupId
+                where lhg.LectureHistoryId == realTimeStatistics.LecturesHistory.Id
+                select g).ToListAsync();
 
-            RealTimeStatisticsViewModel realTimeStatistics = new RealTimeStatisticsViewModel
-            {
-                Lector = lector,
-                Groups = groups,
-                LecturesHistory = lecturesHistory,
-                Module = module,
-                Questions = questions,
-                ModuleHistory = moduleHistory,
-                TimeLeft = TimerAssociates.TimeLeft(moduleHistory.Id, TimerAssociates.TimerType.RealtimeId),
-                StudentIds = studentIds
-            };
             return realTimeStatistics;
         }
 
