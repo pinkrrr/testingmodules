@@ -38,12 +38,15 @@ else
                 <td class="table-item table-item_name">
                     <a data-id="@item.DiscId" href="Student/@item.DiscId/lectures" class="table-item_name_text" data-editable>@item.DiscName</a>
                 </td>
-                <td>
-                    @if (item.CumulativeQuizId!=null)
+
+                @if (item.CumulativeQuizId != null)
                     {
+                    <td>
                         <a href="@Url.Action("CumulativeQuiz", "Quiz", new {cumulativeQuizId = item.CumulativeQuizId})">Пройти тестування</a>
-                    }
-                </td>
+                    </td>
+                }
+
+
                 <td class="table-item table-item_name">
 
                     @if (item.Lectors != null)

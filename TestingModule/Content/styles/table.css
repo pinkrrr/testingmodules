@@ -183,6 +183,10 @@
     bottom: -90px;
 }
 
+.questionBlock .btnSave.disabled {
+    opacity: .5;
+}
+
 .table_questions .ui-checkboxradio-label{
     width: 50px;
     height: 50px;
