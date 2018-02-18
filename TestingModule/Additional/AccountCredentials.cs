@@ -20,7 +20,7 @@ namespace TestingModule.Additional
 {
     public class AccountCredentials
     {
-        public string GetRole()
+        public static string GetRole()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return identity.Claims.Where(c => c.Type == ClaimTypes.Role)
@@ -28,7 +28,7 @@ namespace TestingModule.Additional
                    .SingleOrDefault();
         }
 
-        public async Task<Student> GetStudent()
+        public static async Task<Student> GetStudent()
         {
             testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -36,24 +36,29 @@ namespace TestingModule.Additional
             return await context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
         }
 
-        public int GetStudentId()
+        public static int GetStudentId()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
         }
+        
+        public static int GetStudentId(ClaimsIdentity identity)
+        {
+            return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
+        }
 
-        public string GetStudentGroup(ClaimsIdentity identity)
+        public static string GetStudentGroup(ClaimsIdentity identity)
         {
             return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
         }
 
-        public string GetStudentGroup()
+        public static string GetStudentGroup()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
         }
 
-        public async Task<Lector> GetLector()
+        public static async Task<Lector> GetLector()
         {
             testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;

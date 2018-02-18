@@ -12,6 +12,7 @@ using TestingModule.ViewModels;
 
 namespace TestingModule.Controllers
 {
+    [CustomAuthorize(RoleName.Student)]
     public class StudentController : Controller
     {
         private testingDbEntities _db;
@@ -20,7 +21,7 @@ namespace TestingModule.Controllers
         public StudentController()
         {
             _db = new testingDbEntities();
-            _quizManager=new QuizManager();
+            _quizManager = new QuizManager();
         }
 
         protected override void Dispose(bool disposing)
@@ -34,7 +35,7 @@ namespace TestingModule.Controllers
         }
 
         // GET: Student
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var studePageHelper = new StudentPageHelper();
             //Check for active quiz
@@ -44,22 +45,22 @@ namespace TestingModule.Controllers
             //    return RedirectToAction("/" + active, "Quiz");
             //}
             //If no active quiz, or already answered
-            var viewModels =
-                studePageHelper.StudentsDisciplinesList(User.Identity as System.Security.Claims.ClaimsIdentity);
-            return View(viewModels);
+            var model = await studePageHelper.StudentsDisciplinesList();
+            return View(model);
         }
 
         public async Task<ActionResult> StudentLectures(int disciplineId)
         {
-            System.Diagnostics.Stopwatch watch=new Stopwatch();
-            watch.Start();
             IList<Lecture> lect = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
             IList<Discipline> disc = new testingDbEntities().Disciplines.ToList();
-            LectureQuizViewModel model = new LectureQuizViewModel { Lectures = lect, Disciplines = disc, LecturesForQuizId = await _quizManager.GetQuizForLectureAlailability(lect.Select(l=>l.DisciplineId).First())};
-            watch.Stop();
-            var result = watch.ElapsedMilliseconds;
+            LectureQuizViewModel model = new LectureQuizViewModel
+            {
+                Lectures = lect,
+                Disciplines = disc,
+                LecturesForQuizId = await _quizManager.GetQuizForLectureAlailability(lect.Select(l => l.DisciplineId).First())
+            };
             return View(model);
-            
+
         }
 
         public ActionResult StudentModules(int lectureId)

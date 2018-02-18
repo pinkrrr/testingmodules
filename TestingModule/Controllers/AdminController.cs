@@ -22,10 +22,12 @@ namespace TestingModule.Controllers
     public class AdminController : Controller
     {
         private testingDbEntities _db;
+        private LectureHistoryHelper _lectureHistoryHelper;
 
         public AdminController()
         {
             _db = new testingDbEntities();
+            _lectureHistoryHelper = new LectureHistoryHelper();
         }
 
         protected override void Dispose(bool disposing)
@@ -33,6 +35,7 @@ namespace TestingModule.Controllers
             if (disposing)
             {
                 _db.Dispose();
+                _lectureHistoryHelper.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -40,7 +43,7 @@ namespace TestingModule.Controllers
         public async Task<ActionResult> Index()
         {
             //If admin
-            if (new AccountCredentials().GetRole() != RoleName.Lecturer)
+            if (AccountCredentials.GetRole() != RoleName.Lecturer)
             {
                 var adminModel = new ReasignViewModel
                 {
@@ -57,7 +60,7 @@ namespace TestingModule.Controllers
                 return View(adminModel);
             }
             //If lector
-            Lector lector = await new AccountCredentials().GetLector();
+            Lector lector = await AccountCredentials.GetLector();
             if (await _db.LecturesHistories.AnyAsync(lh => lh.IsFrozen == false && lh.LectorId == lector.Id && lh.EndTime == null))
             {
                 if (await _db.ModuleHistories.AnyAsync(mh => mh.StartTime != null && mh.IsPassed == false && mh.LectorId == lector.Id))
@@ -78,7 +81,7 @@ namespace TestingModule.Controllers
         {
             if (model != null)
             {
-                await new LectureHistoryHelper().StartLecture(model);
+                await _lectureHistoryHelper.StartLecture(model);
                 return RedirectToAction("activelecture", "admin");
             }
             TempData["Fail"] = "Щось пішло не так. Перевірте правильність дій";
@@ -89,7 +92,7 @@ namespace TestingModule.Controllers
         [Route("activelecture/")]
         public async Task<ActionResult> ActiveLecture()
         {
-            var lector = await new AccountCredentials().GetLector();
+            var lector = await AccountCredentials.GetLector();
             if (await _db.LecturesHistories.AnyAsync(lh => lh.EndTime == null
                                                            && lh.IsFrozen == false
                                                            && lh.LectorId == lector.Id))
@@ -100,7 +103,7 @@ namespace TestingModule.Controllers
                 {
                     return RedirectToAction("modulestatistics", "quiz");
                 }
-                return View(await new LectureHistoryHelper().GetActiveLecture(lector));
+                return View(await _lectureHistoryHelper.GetActiveLecture(lector));
             }
             return RedirectToAction("Index", "Admin");
 
@@ -109,19 +112,19 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopLecture(int lectureHistoryId)
         {
-            await new LectureHistoryHelper().StopLecture(lectureHistoryId);
+            await _lectureHistoryHelper.StopLecture(lectureHistoryId);
             return RedirectToAction("index", "admin");
         }
 
         public async Task<ActionResult> FreezeLecture(int lectureHistoryId)
         {
-            await new LectureHistoryHelper().SetLectureAsFrozen(lectureHistoryId);
+            await _lectureHistoryHelper.SetLectureAsFrozen(lectureHistoryId);
             return RedirectToAction("index", "admin");
         }
 
         public async Task<ActionResult> UnfreezeLecture(int lectureHistoryId)
         {
-            await new LectureHistoryHelper().UnfreezeLecture(lectureHistoryId);
+            await _lectureHistoryHelper.UnfreezeLecture(lectureHistoryId);
             return RedirectToAction("activelecture", "admin");
         }
 
@@ -135,17 +138,32 @@ namespace TestingModule.Controllers
             return Json(obgcity);
         }
 
+        [HttpPost]
+        //[Route ("/admin/getlecturesbydiscipline")]
+        public PartialViewResult GetGroupsByDiscipline(int disciplineId)
+        {
+            List<Group> groups = (from g in _db.Groups
+                                  join s in _db.Students on g.Id equals s.GroupId
+                                  join sd in _db.StudentDisciplines on s.Id equals sd.StudentId
+                                  where sd.DisciplineId == disciplineId
+                                  group g by g.Id
+                                  into groupjoin
+                                  select groupjoin.Distinct().Select(s => s).FirstOrDefault()).ToList();
+            ViewData.TemplateInfo.HtmlFieldPrefix = "Groups";
+            return PartialView("_DynamicGroups", groups);
+        }
+
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StartModule(int moduleHistoryId)
         {
-            await new LectureHistoryHelper().StartModule(moduleHistoryId);
+            await _lectureHistoryHelper.StartModule(moduleHistoryId);
             return RedirectToAction("ModuleStatistics", "Quiz");
         }
 
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
-            await new LectureHistoryHelper().ModulePassed(moduleHistoryId);
+            await _lectureHistoryHelper.ModulePassed(moduleHistoryId);
             return RedirectToAction("activelecture", "Admin");
         }
 

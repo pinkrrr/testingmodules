@@ -67,11 +67,10 @@
                     questionId: $('#questionId').val(),
                     description: inputText.val()
                 };
-
                 sendData(data, url, method);
-
             });
         }
+
         function getDisciplineOption() {
             var ddlReport = document.getElementByXpath("<%=DropDownListReports.ClientID%>");
 
@@ -85,7 +84,6 @@
                 $(this).closest('.popup').removeClass('popup-active');
             })
         }
-
         function sendData(data, url, method) {
             $.ajax({
                 url: url,
@@ -95,7 +93,6 @@
                 // location.reload();
             });
         }
-
         function initShowRemovePopup() {
             _$removeBtn.on('click', function () {
                 var removeLink = $(this).attr('data-remove');
@@ -165,17 +162,15 @@
             $(questionHtml).insertAfter($popup.edit.find('form .popup-title'));
         }
 
+        var $dropdownDiscipline = $('#ddldiscipline');
+        var $dropdownLection = $('#ddllecture');
+        var disciplineId = null;
 
-        function getLecture() {
-            var $dropdownDiscipline = $('#ddldiscipline');
-            var $dropdownLection = $('#ddllecture');
-            var disciplineId = null;
-
-            $dropdownDiscipline.on('selectmenuselect', function (e, ui) {
+        $dropdownDiscipline.on('selectmenuselect',
+            function (e, ui) {
                 setLectionsListByDisciplines(ui.item.value);
+                setGroupsListByDisciplines(ui.item.value);
             });
-
-        }
 
         function setLectionsListByDisciplines(disciplineId) {
             var url = "/admin/GetLecturesByDiscipline/";
@@ -195,8 +190,22 @@
                     $lectureSelect.html(optionsHTML);
                     $lectureSelect.selectmenu("refresh");
                 }
-            })
+            });
+        }
 
+        function setGroupsListByDisciplines(disciplineId) {
+            var url = "/admin/GetGroupsByDiscipline/";
+            disciplineId = parseInt(disciplineId);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { disciplineId: disciplineId },
+                success: function (data) {
+                    $('#dynamicGroups').html(data);
+                    startLectureValidation();
+                    checkboxradioInit();
+                }
+            });
         }
 
         var defaultLectureId = parseInt($('#ddldiscipline').find('option').first().attr('value'));
@@ -207,12 +216,11 @@
         initShowAddPopup();
         closePopup();
         initSaveData();
-        getLecture();
+        //getLecture();
         if ($("#ddllecture").length) {
             setLectionsListByDisciplines(defaultLectureId);
+            setGroupsListByDisciplines(defaultLectureId);
         }
-
-
     }
 
     function selectmenuInit() {
@@ -303,7 +311,9 @@
     }
 
     function quiz() {
-        var $nextQbtn = $('.nextQuestion');
+        var $nextQbtn = $('#nextRealtimeQuestion');
+        var $nextIndQbtn = $('#nextIndividualQuestion');
+        var $nextCumQbtn = $('#nextCumulativeQuestion');
 
         var $questionBlock = $('.questionBlock');
         var $question = $questionBlock.find('.question');
@@ -343,43 +353,78 @@
         function showNextQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
         }
 
-        function initNextQuestion() {
-            $nextQbtn.click(function () {
-                showNextQuestion();
-            });
+        function showNextIndividualQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quiz = $.connection.quizHub;
+                quiz.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    console.log(_model);
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
+                });
+            } else {
+                return;
+            }
         }
+
+        function showNextCumulativeQuestion() {
+            var selectedAnswerId = getSelectedAnswerId();
+            if (selectedAnswerId) {
+                var quiz = $.connection.quizHub;
+                quiz.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    console.log(_model);
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
+                });
+            } else {
+                return;
+            }
+        }
+
+        $nextQbtn.click(function () {
+            showNextQuestion();
+        });
+
+        $nextIndQbtn.click(function () {
+            showNextIndividualQuestion();
+        });
+
+        $nextCumQbtn.click(function () {
+            showNextCumulativeQuestion();
+        });
+
 
         function quizFinished() {
             $('.questionBlock').remove();
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
-        function quizTimerForStudent() {
+        /*function quizTimerForStudent() {
             console.log(_model);
-        }
+        }*/
 
 
-        quizTimerForStudent();
+        //quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
-        initNextQuestion();
-
+        //initNextQuestion();
+        //initNextIndividualQuestion();
 
     }
 
@@ -404,11 +449,9 @@
 
             statisticsModel.Groups.forEach(function (group) {
 
-                console.log(questionList);
-
                 $('<div>', {
                     class: 'group',
-                    id: 'group'+group.Id,
+                    id: 'group' + group.Id,
                     html: questionList
                 }).appendTo('.groups');
 
@@ -470,12 +513,17 @@
 
 });
 
-function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
-    var progress = correctAnswersCount / totalAnswersCount * 100;
-    $('.body-content__statistics #group'+gID+' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+function quizFinished() {
+    $('.questionBlock').remove();
+    $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
 }
 
-var stopModule = function() {
+function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
+    var progress = correctAnswersCount / totalAnswersCount * 100;
+    $('.body-content__statistics #group' + gID + ' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
+}
+
+/*function stopModule() {
     var $stopModuleBtn = $('#stopModuleButton');
     var quiz = $.connection.quizHub;
     $.connection.hub.start();
@@ -483,10 +531,7 @@ var stopModule = function() {
         quiz.server.stopModule();
     });
 }
-
-if ($('#stopModuleButton').length == 1) {
-    stopModule();
-}
+stopModule();*/
 
 function historyStatisticsPage(model) {
 
@@ -604,7 +649,7 @@ function historyStatisticsPage(model) {
                 }
 
             });
-            
+
 
         });
 

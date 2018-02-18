@@ -20,7 +20,7 @@
 
             <nav class="navbar-nav">
 
-                @{  var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+                @{ var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
                     var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
                     if (Request.IsAuthenticated)
                     {
@@ -45,14 +45,15 @@
             @RenderBody()
         </div>
     </div>
-    
+
     <div class="testClass">TEST</div>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
-    <script src="~/signalr/hubs"></script>
+    @*<script src="~/signalr/hubs"></script>*@
     <script src="~/Scripts/app.js"></script>
+    <script src="~/Scripts/realtimequizlector.js"></script>
     @RenderSection("scripts", required: false)
 
 </body>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TestingModule.Models;
+using TestingModule;
 
 namespace TestingModule.ViewModels
 {

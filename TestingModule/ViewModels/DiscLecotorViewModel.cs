@@ -13,4 +13,9 @@ namespace TestingModule.ViewModels
         public int? LectorId { get; set; }
         public IEnumerable<Lector> Lectors { get; set; }
     }
+
+    public class DiscLectorCumulativeCheckViewModel : DiscLecotorViewModel
+    {
+        public int? CumulativeQuizId { get; set; }
+    }
 }

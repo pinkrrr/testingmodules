@@ -14,20 +14,11 @@ namespace TestingModule.Models
     
     public partial class Module
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Module()
-        {
-            this.IndividualResponses = new HashSet<IndividualRespons>();
-        }
-    
         public int Id { get; set; }
         public int DisciplineId { get; set; }
         public int LectureId { get; set; }
         public string Name { get; set; }
         public int MinutesToPass { get; set; }
         public string Description { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<IndividualRespons> IndividualResponses { get; set; }
     }
 }

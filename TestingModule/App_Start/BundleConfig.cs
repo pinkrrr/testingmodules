@@ -9,12 +9,13 @@ namespace TestingModule
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/ckeditor/ckeditor.js",
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery.unobtrusive-ajax.js",
+                        "~/Scripts/jquery.signalR-{version}.js",
+                        "~/Scripts/hubgeneration.js",
                         "~/Scripts/chart.js",
                         "~/Scripts/chart.pieceLabel.js",
-                        "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/jquery.signalR-{version}.js",
-                        "~/signalr/hubs",
+                        //"~/ckeditor/ckeditor.js",
                         "~/Scripts/canvas.lib.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

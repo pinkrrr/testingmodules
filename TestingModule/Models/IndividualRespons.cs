@@ -20,11 +20,5 @@ namespace TestingModule.Models
         public int QuestionId { get; set; }
         public int AnswerId { get; set; }
         public int IndividualQuizId { get; set; }
-    
-        public virtual Answer Answer { get; set; }
-        public virtual IndividualQuizPassed IndividualQuizPassed { get; set; }
-        public virtual Module Module { get; set; }
-        public virtual Question Question { get; set; }
-        public virtual Student Student { get; set; }
     }
 }
