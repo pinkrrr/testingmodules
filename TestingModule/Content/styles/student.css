@@ -1,3 +1,40 @@
 ﻿.studentBody{
     padding: 20px;
+    position: relative;
+}
+
+.studentBody .lecture-name, .module-name {
+    color: #545454;
+    text-align: center;
+}
+
+.studentBody .lecture-name span, .module-name span{
+    color: #000000;
+    text-align: center;
+}
+
+.studentBody .student-module-description{
+    font-size: 16px;
+}
+
+.studentBody .student-module-description img{
+    max-width: 50%;
+    height: auto;
+}
+
+.studentBody .student-module-description ul{
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
+}
+
+.studentBody .student-module-description table{
+    table-layout: fixed;
+    border-collapse: collapse;
+    padding: 4px;
+    border-color: #000000;
+}
+
+.studentBody .student-module-description table thead{
+    background-color: #f2f2f2;
 }
