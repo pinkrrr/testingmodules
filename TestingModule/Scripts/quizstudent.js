@@ -3,10 +3,9 @@ var timerObject = document.getElementById("timer");
 var quiz = $.connection.quizHub;
 
 $(function () {
+    $.connection.hub.start();
     if (timerObject != null) {
         timer(qModel.TimeLeft, timerObject, true);
-    } else {
-        $.connection.hub.start();
     }
 });
 

@@ -31,7 +31,6 @@
 
         function showPopupEdit($inputTexts) {
             $popup.edit.addClass('popup-active');
-            console.log($inputTexts);
             $inputTexts.each(function (i) {
                 $popup.edit.find('.input-text').eq(i).val($(this).text());
             });
@@ -371,7 +370,6 @@
                 var quiz = $.connection.quizHub;
                 quiz.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
                     _model = model;
-                    console.log(_model);
                     setQuestionData(_model);
                 }).fail(function () {
                     quizFinished();
@@ -387,7 +385,6 @@
                 var quiz = $.connection.quizHub;
                 quiz.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
                     _model = model;
-                    console.log(_model);
                     setQuestionData(_model);
                 }).fail(function () {
                     quizFinished();
@@ -415,16 +412,8 @@
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
-        /*function quizTimerForStudent() {
-            console.log(_model);
-        }*/
-
-
-        //quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
-        //initNextQuestion();
-        //initNextIndividualQuestion();
 
     }
 
@@ -534,8 +523,6 @@ function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
 stopModule();*/
 
 function historyStatisticsPage(model) {
-
-    console.log(model);
 
     function drawChart() {
 
@@ -661,7 +648,7 @@ function historyStatisticsPage(model) {
 }
 
 var ckeditorInit = function () {
-    console.log('ckeditor');
+    //console.log('ckeditor');
     CKEDITOR.replace('ckeditor');
 };
 

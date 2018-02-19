@@ -59,7 +59,7 @@ namespace TestingModule.Models
             switch (timerType)
             {
                 case TimerType.RealtimeId:
-                    TimerAssociates realtimeTimerAssociates = new TimerAssociates(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), TimeSpan.FromSeconds(20), TimeSpan.Zero), DateTime.UtcNow + TimeSpan.FromSeconds(20));
+                    TimerAssociates realtimeTimerAssociates = new TimerAssociates(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), timeToPass, TimeSpan.Zero), DateTime.UtcNow + timeToPass);
                     ModuleTimers.Add(historyId, realtimeTimerAssociates);
                     break;
                 case TimerType.IndividualId:
