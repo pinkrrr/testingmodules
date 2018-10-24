@@ -6,9 +6,14 @@ using TestingModule.Models;
 
 namespace TestingModule.Additional
 {
-    public class Deleting
+    public class Deleting : IDisposable
     {
-        private readonly testingDbEntities _db = new testingDbEntities();
+        private readonly testingDbEntities _db;
+
+        public Deleting(testingDbEntities context)
+        {
+            _db = context;
+        }
         public void DeleteDiscipline(int disciplineId)
         {
             var lectures = _db.Lectures.Where(t => t.DisciplineId == disciplineId).Select(t => t.Id).ToList();
@@ -122,5 +127,9 @@ namespace TestingModule.Additional
             _db.SaveChanges();
         }
 
+        public void Dispose()
+        {
+            _db.Dispose();
+        }
     }
 }

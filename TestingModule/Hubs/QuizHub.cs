@@ -21,13 +21,14 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private testingDbEntities _context;
-        private QuizManager _quizManager;
-
+        private readonly testingDbEntities _context;
+        private readonly QuizManager _quizManager;
+        public static RealtimeQuizStudentMapping Students = new RealtimeQuizStudentMapping();
+        
         public QuizHub()
         {
             _context = new testingDbEntities();
-            _quizManager = new QuizManager();
+            _quizManager = new QuizManager(_context);
         }
 
         public async Task<RealTimeQuizViewModel> SaveResponse(RealTimeQuizViewModel quizVM, int responseId)
@@ -121,10 +122,9 @@ namespace TestingModule.Hubs
             }
         }
 
-        public void StopModule(int moduleHistoryId)
+        public static void StopModule(int moduleHistoryId)
         {
             var hubcontext = GlobalHost.ConnectionManager.GetHubContext<QuizHub>();
-            Thread.Sleep(TimeSpan.FromSeconds(1));
             foreach (var student in Students.GetStudents(moduleHistoryId))
             {
                 foreach (string connection in Connections.GetConnections(student))
@@ -137,7 +137,6 @@ namespace TestingModule.Hubs
         private static readonly ConnectionMapping<int> Connections =
             new ConnectionMapping<int>();
 
-        public static readonly RealtimeQuizStudentMapping Students = new RealtimeQuizStudentMapping();
 
         public override Task OnConnected()
         {

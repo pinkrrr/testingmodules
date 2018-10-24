@@ -19,10 +19,14 @@ namespace TestingModule.Additional
     public class LectureHistoryHelper : IDisposable
     {
         private readonly testingDbEntities _db;
+        private readonly TimerAssociates _timerAssociates;
+        private readonly QuizManager _quizManager;
 
-        public LectureHistoryHelper()
+        public LectureHistoryHelper(testingDbEntities context)
         {
-            _db = new testingDbEntities();
+            _db = context;
+            _timerAssociates = new TimerAssociates(context);
+            _quizManager = new QuizManager(context);
         }
 
         public async Task StartLecture(ReasignViewModel model)
@@ -126,7 +130,7 @@ namespace TestingModule.Additional
             moduleHistory.StartTime = DateTime.UtcNow;
             TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
                 .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
-            TimerAssociates.StartTimer(moduleHistoryId, minutesToPass, TimerAssociates.TimerType.RealtimeId);
+            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass, TimerAssociates.TimerType.RealtimeId);
             await _db.SaveChangesAsync();
         }
 
@@ -136,7 +140,6 @@ namespace TestingModule.Additional
                 await _db.ModuleHistories.SingleOrDefaultAsync(mh => mh.Id == moduleHistoryId);
             moduleHistory.IsPassed = true;
             await _db.SaveChangesAsync();
-            QuizManager quizManager = new QuizManager();
             var lectureId =
                 await (from l in _db.Lectures
                        join lh in _db.LecturesHistories on l.Id equals lh.LectureId
@@ -144,15 +147,16 @@ namespace TestingModule.Additional
                        select l).Select(l => l.Id).SingleOrDefaultAsync();
             foreach (var studentId in QuizHub.Students.GetStudents(moduleHistoryId))
             {
-                await quizManager.ResovlePassedRealtimeQuiz(moduleHistory.ModuleId, studentId, moduleHistoryId, lectureId);
+                await _quizManager.ResovlePassedRealtimeQuiz(moduleHistory.ModuleId, studentId, moduleHistoryId, lectureId);
             }
-            TimerAssociates.DisposeTimer(moduleHistoryId, TimerAssociates.TimerType.RealtimeId);
-            quizManager.Dispose();
+            _timerAssociates.DisposeTimer(moduleHistoryId, TimerAssociates.TimerType.RealtimeId);
         }
 
         public void Dispose()
         {
-            _db?.Dispose();
+            _db.Dispose();
+            _timerAssociates.Dispose();
+            _quizManager.Dispose();
         }
     }
 }

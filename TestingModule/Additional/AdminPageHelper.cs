@@ -17,9 +17,14 @@ using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
 {
-    public class AdminPageHelper : AdminController
+    public class AdminPageHelper : IDisposable
     {
-        private testingDbEntities _db = new testingDbEntities();
+        private readonly testingDbEntities _db;
+
+        public AdminPageHelper(testingDbEntities context)
+        {
+            _db = context;
+        }
         public async Task<ReasignViewModel> LecturesIndexPage(Lector lector)
         {
 
@@ -41,6 +46,11 @@ namespace TestingModule.Additional
                  join lh in model.LecturesHistories on mh.LectureHistoryId equals lh.Id
                  select mh).ToList();
             return model;
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }

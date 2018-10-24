@@ -14,32 +14,47 @@ namespace TestingModule
 {
     public class MvcApplication : HttpApplication
     {
+        private readonly Adding _adding;
+        private readonly TimerAssociates _timerAssociates;
+        public MvcApplication()
+        {
+            testingDbEntities db = new testingDbEntities();
+            _adding = new Adding(db);
+            _timerAssociates = new TimerAssociates(db);
+        }
         protected async void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            await new TimerAssociates().OnStartModuleTimer();
+            await _timerAssociates.OnStartModuleTimer();
+        }
+
+        public override void Dispose()
+        {
+            _adding.Dispose();
+            _timerAssociates.Dispose();
+            base.Dispose();
         }
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            //Exception exept = Server.GetLastError();
-            //HttpException httpEx = exept as HttpException;
-            //if (httpEx.GetHttpCode() == 404)
-            //{
-            //    Server.ClearError();
-            //    Response.Redirect("/Error/NotFound");
-            //}
-            //else
-            //{
-            //    HttpContext con = HttpContext.Current;
-            //    var url = con.Request.Url.ToString();
-            //    new Additional.Adding().AddNewError(url, exept.Message);
-            //    Server.ClearError();
-            //    Response.Redirect("/Error/ServerError");
-            //}
+            Exception exept = Server.GetLastError();
+            HttpException httpEx = exept as HttpException;
+            if (httpEx.GetHttpCode() == 404)
+            {
+                Server.ClearError();
+                Response.Redirect("/Error/NotFound");
+            }
+            else
+            {
+                HttpContext con = HttpContext.Current;
+                var url = con.Request.Url.ToString();
+                _adding.AddNewError(url, exept.Message);
+                Server.ClearError();
+                Response.Redirect("/Error/ServerError");
+            }
 
         }
         //protected void Application_AuthenticateRequest(Object sender, EventArgs e)
@@ -64,6 +79,6 @@ namespace TestingModule
         //        }
         //    }
         //}
-        
+
     }
 }

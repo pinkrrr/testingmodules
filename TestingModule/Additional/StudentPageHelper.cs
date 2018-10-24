@@ -14,9 +14,14 @@ using TestingModule.ViewModels;
 namespace TestingModule.Additional
 {
 
-    public class StudentPageHelper
+    public class StudentPageHelper : IDisposable
     {
-        private readonly testingDbEntities _db = new testingDbEntities();
+        private readonly testingDbEntities _db;
+
+        public StudentPageHelper(testingDbEntities context)
+        {
+            _db = context;
+        }
 
         public async Task<IEnumerable<DiscLectorCumulativeCheckViewModel>> StudentsDisciplinesList()
         {
@@ -56,6 +61,11 @@ namespace TestingModule.Additional
                 return canPass;
             }
             return false;
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }

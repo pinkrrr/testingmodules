@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using TestingModule.Additional
+@using TestingModule.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -21,20 +24,18 @@
 
             <nav class="navbar-nav">
 
-                @{  var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-                    var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
-                    if (Request.IsAuthenticated)
+                @{ if (Request.IsAuthenticated)
                     {
-                        if (c.Value.ToString() != "Student")
+                        if (AccountCredentials.AuthorizedAs(RoleName.Administrator))
                         {
                             <!--<a href="@Url.Action("Index", "Admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
                             <a href="@Url.Action("Disciplines", "Admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
                         }
-                        if (c.Value.ToString() == "Lecturer")
+                        if (AccountCredentials.AuthorizedAs(RoleName.Lecturer))
                         {
                             <a href="@Url.Action("TotalStatistics", "Quiz")"><i class='fa fa-pie-chart' aria-hidden='true'></i>Статистика</a>
                         }
-                        if (c.Value.ToString() != "Lecturer")
+                        if (!AccountCredentials.AuthorizedAs(RoleName.Lecturer))
                         {
                             <a href="@Url.Action("Specialities", "Admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
                             <a href="@Url.Action("Lectors", "Admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
@@ -55,11 +56,11 @@
 
 
     @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/jquery-ui")
-        <script src="~/ckeditor/ckeditor.js"></script>
+    @Scripts.Render("~/bundles/jquery-ui")
+    <script src="~/ckeditor/ckeditor.js"></script>
     <script src="~/Scripts/app.js"></script>
-        @RenderSection("scripts", required: false)
-   
-   
+    @RenderSection("scripts", required: false)
+
+
 </body>
 </html>

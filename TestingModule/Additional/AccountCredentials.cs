@@ -41,7 +41,7 @@ namespace TestingModule.Additional
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
         }
-        
+
         public static int GetStudentId(ClaimsIdentity identity)
         {
             return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
@@ -65,6 +65,12 @@ namespace TestingModule.Additional
             int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
             Lector lector = await context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
             return lector;
+        }
+
+        public static bool AuthorizedAs(string role)
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault() == role;
         }
     }
 }

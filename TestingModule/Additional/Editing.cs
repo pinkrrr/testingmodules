@@ -4,9 +4,14 @@ using TestingModule.Models;
 
 namespace TestingModule.Additional
 {
-    public class Editing
+    public class Editing : IDisposable
     {
-        private readonly testingDbEntities _db = new testingDbEntities();
+        private readonly testingDbEntities _db;
+
+        public Editing(testingDbEntities context)
+        {
+            _db = context;
+        }
         public void EditDiscipline(int disciplineId, string name, int? lectorId)
         {
             var disc = _db.Disciplines.FirstOrDefault(t => t.Id == disciplineId);
@@ -158,6 +163,11 @@ namespace TestingModule.Additional
             var exl = _db.ExeptionLogs.FirstOrDefault(t => t.Id == exeptionId);
             exl.Resolved = true;
             _db.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }

@@ -12,10 +12,14 @@ namespace TestingModule.Additional
     public class QuizManager : IDisposable
     {
         private readonly testingDbEntities _context;
+        private readonly StudentPageHelper _studentPageHelper;
+        private readonly TimerAssociates _timerAssociates;
 
-        public QuizManager()
+        public QuizManager(testingDbEntities context)
         {
-            _context = new testingDbEntities();
+            _context = context;
+            _studentPageHelper = new StudentPageHelper(context);
+            _timerAssociates = new TimerAssociates(context);
         }
 
         #region RealTimeQuiz Student
@@ -75,7 +79,7 @@ namespace TestingModule.Additional
         public async Task<RealTimeQuizViewModel> GetRealtimeQnA(int moduleHistoryId)
         {
             var student = await AccountCredentials.GetStudent();
-            bool studentCanPass = await new StudentPageHelper().StudentCanPass(moduleHistoryId, student.Id);
+            bool studentCanPass = await _studentPageHelper.StudentCanPass(moduleHistoryId, student.Id);
             if (studentCanPass)
             {
                 RealTimeQuizViewModel qnA = new RealTimeQuizViewModel();
@@ -153,7 +157,7 @@ namespace TestingModule.Additional
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
                 IndividualQuizId = individualQuizId,
-                TimeLeft = TimerAssociates.TimeLeft(individualQuizId, TimerAssociates.TimerType.IndividualId)
+                TimeLeft = _timerAssociates.TimeLeft(individualQuizId, TimerAssociates.TimerType.IndividualId)
             };
         }
 
@@ -166,7 +170,7 @@ namespace TestingModule.Additional
             }
             toUpdate.IsPassed = true;
             toUpdate.EndDate = DateTime.UtcNow;
-            TimerAssociates.DisposeTimer(individualQuizId, TimerAssociates.TimerType.IndividualId);
+            _timerAssociates.DisposeTimer(individualQuizId, TimerAssociates.TimerType.IndividualId);
             if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == toUpdate.DisciplineId && it.IsPassed && it.StudentId == toUpdate.StudentId))
             {
                 var passedLectures =
@@ -228,7 +232,7 @@ namespace TestingModule.Additional
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
                 CumulativeQuizId = cumulativeQuizId,
-                TimeLeft = TimerAssociates.TimeLeft(cumulativeQuizId, TimerAssociates.TimerType.CumulativeId)
+                TimeLeft = _timerAssociates.TimeLeft(cumulativeQuizId, TimerAssociates.TimerType.CumulativeId)
             };
         }
 
@@ -239,7 +243,7 @@ namespace TestingModule.Additional
             {
                 toUpdate.IsPassed = true;
                 toUpdate.EndDate = DateTime.UtcNow;
-                TimerAssociates.DisposeTimer(cumulativeQuizId, TimerAssociates.TimerType.IndividualId);
+                _timerAssociates.DisposeTimer(cumulativeQuizId, TimerAssociates.TimerType.IndividualId);
                 await _context.SaveChangesAsync();
             }
         }
@@ -368,9 +372,9 @@ namespace TestingModule.Additional
             realTimeStatistics.TimeFinish = timer.ModuleFinish.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss");
             realTimeStatistics.Groups =
                 await (from g in _context.Groups
-                join lhg in _context.LectureHistoryGroups on g.Id equals lhg.GroupId
-                where lhg.LectureHistoryId == realTimeStatistics.LecturesHistory.Id
-                select g).ToListAsync();
+                       join lhg in _context.LectureHistoryGroups on g.Id equals lhg.GroupId
+                       where lhg.LectureHistoryId == realTimeStatistics.LecturesHistory.Id
+                       select g).ToListAsync();
 
             return realTimeStatistics;
         }
@@ -417,6 +421,8 @@ namespace TestingModule.Additional
         public void Dispose()
         {
             _context?.Dispose();
+            _studentPageHelper.Dispose();
+            _timerAssociates.Dispose();
         }
     }
 }
