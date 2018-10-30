@@ -12,16 +12,16 @@ namespace TestingModule.Additional
 {
     public class TestingModuleUserStore : IUserStore<TestingModuleUser, int>
     {
-        public testingDbEntities Context { get; }
+        private readonly testingDbEntities _context;
 
-        public TestingModuleUserStore()
+        public TestingModuleUserStore(testingDbEntities coontext)
         {
-            Context = new testingDbEntities();
+            _context = new testingDbEntities();
         }
 
         public void Dispose()
         {
-            Context.Dispose();
+            _context.Dispose();
         }
 
         public Task CreateAsync(TestingModuleUser user)
@@ -41,8 +41,8 @@ namespace TestingModule.Additional
 
         public async Task<TestingModuleUser> FindByIdAsync(int userId)
         {
-            var roles = await Context.Roles.ToListAsync();
-            var account = await Context.Accounts.SingleOrDefaultAsync(a => a.Id == userId);
+            var roles = await _context.Roles.ToListAsync();
+            var account = await _context.Accounts.SingleOrDefaultAsync(a => a.Id == userId);
             if (account == null) return null;
 
             TestingModuleUser user = new TestingModuleUser
@@ -52,7 +52,7 @@ namespace TestingModule.Additional
             };
             if (user.Role == RoleName.Student)
             {
-                Student student = await Context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
+                Student student = await _context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                 if (student == null) return null;
                 user.Id = student.Id;
                 user.UserName = student.Name;
@@ -65,8 +65,8 @@ namespace TestingModule.Additional
 
         public async Task<TestingModuleUser> FindByNameAsync(string userName)
         {
-            var roles = await Context.Roles.ToListAsync();
-            var account = await Context.Accounts.SingleOrDefaultAsync(a => a.Login == userName);
+            var roles = await _context.Roles.ToListAsync();
+            var account = await _context.Accounts.SingleOrDefaultAsync(a => a.Login == userName);
             if (account == null) return null;
 
             TestingModuleUser user = new TestingModuleUser
@@ -76,7 +76,7 @@ namespace TestingModule.Additional
             };
             if (user.Role == RoleName.Student)
             {
-                Student student = await Context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
+                Student student = await _context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                 if (student == null) return null;
                 user.Id = student.Id;
                 user.UserName = student.Name;
@@ -84,7 +84,7 @@ namespace TestingModule.Additional
             }
             else if (user.Role == RoleName.Lecturer)
             {
-                Lector lector = await Context.Lectors.SingleOrDefaultAsync(s => s.AccountId == account.Id);
+                Lector lector = await _context.Lectors.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                 if (lector == null) return null;
                 user.Id = lector.Id;
                 user.UserName = lector.Name;

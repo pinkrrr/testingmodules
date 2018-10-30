@@ -24,9 +24,19 @@ namespace TestingModule.Controllers
         public AccountController()
         {
             var httpContext = System.Web.HttpContext.Current.GetOwinContext().Authentication;
-            var userStore = new TestingModuleUserStore();
+            var userStore = new TestingModuleUserStore(Context);
             _userManager = new TestingModuleUserManager(userStore);
             _signInManager = new TestingModuleSignInManager(_userManager, httpContext);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _signInManager.Dispose();
+                _userManager.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         #region Registration

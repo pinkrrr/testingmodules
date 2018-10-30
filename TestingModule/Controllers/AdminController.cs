@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Antlr.Runtime.Misc;
+using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using TestingModule.Additional;
@@ -181,20 +182,14 @@ namespace TestingModule.Controllers
         public ActionResult Disciplines()
         {
             var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-            var login = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-            var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
-            int lector;
-            int lectorId;
-            var lectorsDisciplines = new List<int>();
-
+            var role = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value;
             ViewBag.Message = "All disciplines";
             IEnumerable<Lector> lectors = Context.Lectors.ToList();
             List<DiscLecotorViewModel> viewModels = new List<DiscLecotorViewModel>();
-            if (role == "Lecturer")
+            if (role == RoleName.Lecturer)
             {
-                lector = Context.Accounts.FirstOrDefault(t => t.Login == login).Id;
-                lectorId = Context.Lectors.FirstOrDefault(t => t.AccountId == lector).Id;
-                lectorsDisciplines = Context.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
+                var lectorId = Convert.ToInt32(claimsIdentity.GetUserId());
+                var lectorsDisciplines = Context.LectorDisciplines.Where(t => t.LectorId == lectorId).Select(t => t.DisciplineId)
                    .ToList();
                 viewModels = Context.Disciplines.Where(t => lectorsDisciplines.Contains(t.Id)).Select(d => new DiscLecotorViewModel
                 {
