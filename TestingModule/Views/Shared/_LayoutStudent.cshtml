@@ -17,7 +17,6 @@
                 <a class="studentName" href="/Student">@User.Identity.Name @surname</a>
                 using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "logoutForm" }))
                 {
-                    @Html.AntiForgeryToken()
                     <a class="logout" href="javascript:document.getElementById('logoutForm').submit()">
                         <i class="fa fa-sign-out" aria-hidden="true"></i> <span>Вийти</span>
                     </a>

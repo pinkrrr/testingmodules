@@ -12,11 +12,22 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web.Routing;
 using TestingModule.Additional;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace TestingModule.Controllers
 {
     public class AccountController : BaseController
     {
+        private readonly TestingModuleSignInManager _signInManager;
+        private readonly TestingModuleUserManager _userManager;
+
+        public AccountController()
+        {
+            var httpContext = System.Web.HttpContext.Current.GetOwinContext().Authentication;
+            var userStore = new TestingModuleUserStore();
+            _userManager = new TestingModuleUserManager(userStore);
+            _signInManager = new TestingModuleSignInManager(_userManager, httpContext);
+        }
 
         #region Registration
         /*
@@ -76,9 +87,22 @@ namespace TestingModule.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> LoginAttempt(Account account)
+        public async Task<ActionResult> Login(Account account)
         {
-            if (await AccountValid(account.Login, account.Password))
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(account.Login);
+                if (user == null)
+                {
+                    TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
+                    return RedirectToAction("Login");
+                }
+                await _signInManager.SignInAsync(user, false, false);
+                return RedirectToAction("Login");
+            }
+            TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
+            return RedirectToAction("Login");
+            /*if (await AccountValid(account.Login, account.Password))
             {
                 var roles = await Context.Roles.ToListAsync();
                 ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
@@ -117,7 +141,7 @@ namespace TestingModule.Controllers
 
             }
             TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
-            return RedirectToAction("Login");
+            return RedirectToAction("Login");*/
         }
 
         private async Task<bool> AccountValid(string username, string password)

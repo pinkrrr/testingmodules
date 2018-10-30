@@ -2,7 +2,7 @@
 {
     using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "active-user" }))
     {
-        @Html.AntiForgeryToken()
+        //@Html.AntiForgeryToken()
         @*@Html.ActionLink(User.Identity.Name, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
         <a class="active-user_name" @*href="@Url.Action("Index","Manage")"*@><i class="fa fa-user-o" aria-hidden="true"></i>Привіт, @User.Identity.Name!</a>
         <a class="active-user_logout" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Вийти</a>

@@ -32,19 +32,20 @@ namespace TestingModule.Additional
         {
             testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            return await context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            int studentId = Convert.ToInt32(claimsIdentity.Identity.GetUserId());
+            return await context.Students.SingleOrDefaultAsync(s => s.Id == studentId);
         }
 
         public static int GetStudentId()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
+            return Convert.ToInt32(identity.Identity.GetUserId());
+
         }
 
         public static int GetStudentId(ClaimsIdentity identity)
         {
-            return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
+            return Convert.ToInt32(identity.GetUserId());
         }
 
         public static string GetStudentGroup(ClaimsIdentity identity)
@@ -62,8 +63,8 @@ namespace TestingModule.Additional
         {
             testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            Lector lector = await context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            var lectorId = Convert.ToInt32(claimsIdentity.Identity.GetUserId());
+            Lector lector = await context.Lectors.SingleOrDefaultAsync(s => s.Id == lectorId);
             return lector;
         }
 
