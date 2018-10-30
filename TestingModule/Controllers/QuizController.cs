@@ -92,7 +92,7 @@ namespace TestingModule.Controllers
                 toSetStartDate.StartDate = DateTime.UtcNow;
                 await Context.SaveChangesAsync();
             }
-            _timerAssociates.StartTimer(individualQuizId, TimeSpan.FromMilliseconds(model.TimeLeft), TimerAssociates.TimerType.IndividualId);
+            _timerAssociates.StartTimer(individualQuizId, TimeSpan.FromMilliseconds(model.TimeLeft), TimerAssociates.TimerType.Individual);
             return View(model);
         }
 
@@ -111,7 +111,7 @@ namespace TestingModule.Controllers
                 toSetStartDate.StartDate = DateTime.UtcNow;
                 await Context.SaveChangesAsync();
             }
-            _timerAssociates.StartTimer(cumulativeQuizId, TimeSpan.FromMilliseconds(model.TimeLeft), TimerAssociates.TimerType.CumulativeId);
+            _timerAssociates.StartTimer(cumulativeQuizId, TimeSpan.FromMilliseconds(model.TimeLeft), TimerAssociates.TimerType.Cumulative);
             return View(model);
         }
 

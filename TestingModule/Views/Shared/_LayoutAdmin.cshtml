@@ -26,16 +26,16 @@
 
                 @{ if (Request.IsAuthenticated)
                     {
-                        if (AccountCredentials.AuthorizedAs(RoleName.Administrator))
+                        if (!Context.User.IsInRole(RoleName.Student))
                         {
                             <!--<a href="@Url.Action("Index", "Admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
                             <a href="@Url.Action("Disciplines", "Admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
                         }
-                        if (AccountCredentials.AuthorizedAs(RoleName.Lecturer))
+                        if (Context.User.IsInRole(RoleName.Lecturer))
                         {
                             <a href="@Url.Action("TotalStatistics", "Quiz")"><i class='fa fa-pie-chart' aria-hidden='true'></i>Статистика</a>
                         }
-                        if (!AccountCredentials.AuthorizedAs(RoleName.Lecturer))
+                        if (!Context.User.IsInRole(RoleName.Lecturer))
                         {
                             <a href="@Url.Action("Specialities", "Admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
                             <a href="@Url.Action("Lectors", "Admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
@@ -49,6 +49,7 @@
         <div class="body-content body-content__admin">
             @RenderBody()
             <footer>
+
                 <!-- <p>&copy; @DateTime.Now.Year - RBS</p> -->
             </footer>
         </div>

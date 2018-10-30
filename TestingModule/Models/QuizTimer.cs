@@ -38,26 +38,31 @@ namespace TestingModule.Models
             _context = context;
         }
 
-        public struct TimerType
+        public enum TimerType
+        {
+            Realtime, Individual, Cumulative
+        }
+
+        /*public struct TimerType
         {
             public const int RealtimeId = 1;
             public const int IndividualId = 2;
             public const int CumulativeId = 3;
-        }
+        }*/
 
-        public static TimerAssociates GetTimer(int historyId, int timerType)
+        public static TimerAssociates GetTimer(int historyId, TimerType timerType)
         {
             switch (timerType)
             {
-                case TimerType.RealtimeId:
+                case TimerType.Realtime:
                     if (ModuleTimers.TryGetValue(historyId, out TimerAssociates realtimeTimer))
                         return realtimeTimer;
                     break;
-                case TimerType.IndividualId:
+                case TimerType.Individual:
                     if (IndividualQuizTimers.TryGetValue(historyId, out TimerAssociates individualTimer))
                         return individualTimer;
                     break;
-                case TimerType.CumulativeId:
+                case TimerType.Cumulative:
                     if (CumulativeQuizTimers.TryGetValue(historyId, out TimerAssociates cumulativeTimer))
                         return cumulativeTimer;
                     break;
@@ -65,28 +70,30 @@ namespace TestingModule.Models
             return null;
         }
 
-        public void StartTimer(int historyId, TimeSpan timeToPass, int timerType)
+        public TimerAssociates StartTimer(int historyId, TimeSpan timeToPass, TimerType timerType)
         {
             switch (timerType)
             {
-                case TimerType.RealtimeId:
+                case TimerType.Realtime:
                     CreateTimer(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), timeToPass, TimeSpan.Zero), DateTime.UtcNow + timeToPass);
                     ModuleTimers.Add(historyId, this);
-                    break;
-                case TimerType.IndividualId:
+                    return this;
+                case TimerType.Individual:
                     if (!IndividualQuizTimers.ContainsKey(historyId))
                     {
                         CreateTimer(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), timeToPass, TimeSpan.Zero), DateTime.UtcNow + timeToPass);
                         IndividualQuizTimers.Add(historyId, this);
                     }
-                    break;
-                case TimerType.CumulativeId:
+                    return this;
+                case TimerType.Cumulative:
                     if (!CumulativeQuizTimers.ContainsKey(historyId))
                     {
                         CreateTimer(new Timer(StopQuizOnTimer, Tuple.Create(historyId, timerType), timeToPass, TimeSpan.Zero), DateTime.UtcNow + timeToPass);
                         CumulativeQuizTimers.Add(historyId, this);
                     }
-                    break;
+                    return this;
+                default:
+                    return null;
             }
         }
 
@@ -106,31 +113,31 @@ namespace TestingModule.Models
                 {
                     TimerAssociates timerAssociates = new TimerAssociates(_context);
                     timerAssociates.StartTimer(ongoingModule.Id, TimeSpan.FromMinutes(modules.Where(m => m.Id == ongoingModule.ModuleId)
-                    .Select(m => m.MinutesToPass).SingleOrDefault()), TimerType.RealtimeId);
+                    .Select(m => m.MinutesToPass).SingleOrDefault()), TimerType.Realtime);
 
                 }
             }
         }
 
-        public void DisposeTimer(int historyId, int timerType)
+        public void DisposeTimer(int historyId, TimerType timerType)
         {
             switch (timerType)
             {
-                case TimerType.RealtimeId:
+                case TimerType.Realtime:
                     if (ModuleTimers.TryGetValue(historyId, out TimerAssociates realtimeTimerAssociates))
                     {
                         realtimeTimerAssociates._timer.Dispose();
                         ModuleTimers.Remove(historyId);
                     }
                     break;
-                case TimerType.IndividualId:
+                case TimerType.Individual:
                     if (IndividualQuizTimers.TryGetValue(historyId, out TimerAssociates indivdualTimerAssociates))
                     {
                         indivdualTimerAssociates._timer.Dispose();
                         IndividualQuizTimers.Remove(historyId);
                     }
                     break;
-                case TimerType.CumulativeId:
+                case TimerType.Cumulative:
                     if (CumulativeQuizTimers.TryGetValue(historyId, out TimerAssociates cumulativeTimerAssociates))
                     {
                         cumulativeTimerAssociates._timer.Dispose();
@@ -142,17 +149,17 @@ namespace TestingModule.Models
 
         }
 
-        public int TimeLeft(int historyId, int timerType)
+        public int TimeLeft(int historyId, TimerType timerType)
         {
             switch (timerType)
             {
-                case TimerType.RealtimeId:
+                case TimerType.Realtime:
                     if (ModuleTimers.TryGetValue(historyId, out TimerAssociates realtimeTimerAssociates))
                     {
                         return Convert.ToInt32((realtimeTimerAssociates.ModuleFinish - DateTime.UtcNow).TotalSeconds);
                     }
                     return 0;
-                case TimerType.IndividualId:
+                case TimerType.Individual:
                     if (IndividualQuizTimers.TryGetValue(historyId, out TimerAssociates indivdualTimerAssociates))
                     {
                         return Convert.ToInt32((indivdualTimerAssociates.ModuleFinish - DateTime.UtcNow).TotalMilliseconds);
@@ -165,7 +172,7 @@ namespace TestingModule.Models
                                                                                         select q).Count()).TotalMilliseconds / 2));
                         return timeLeft;
                     }
-                case TimerType.CumulativeId:
+                case TimerType.Cumulative:
                     if (CumulativeQuizTimers.TryGetValue(historyId, out TimerAssociates cumulativeTimerAssociates))
                     {
                         return Convert.ToInt32((cumulativeTimerAssociates.ModuleFinish - DateTime.UtcNow).TotalMilliseconds);
@@ -181,17 +188,17 @@ namespace TestingModule.Models
 
         private async void StopQuizOnTimer(object state)
         {
-            var tuple = (Tuple<int, int>)state;
+            var tuple = (Tuple<int, TimerType>)state;
             switch (tuple.Item2)
             {
-                case TimerType.RealtimeId:
+                case TimerType.Realtime:
                     QuizHub.StopModule(tuple.Item1);
                     await new LectureHistoryHelper(_context).ModulePassed(tuple.Item1);
                     break;
-                case TimerType.IndividualId:
+                case TimerType.Individual:
                     await new QuizManager(_context).ResovlePassedIndividualQuiz(tuple.Item1);
                     break;
-                case TimerType.CumulativeId:
+                case TimerType.Cumulative:
                     await new QuizManager(_context).ResovlePassedCumulativeQuiz(tuple.Item1);
                     break;
             }

@@ -157,7 +157,7 @@ namespace TestingModule.Additional
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
                 IndividualQuizId = individualQuizId,
-                TimeLeft = _timerAssociates.TimeLeft(individualQuizId, TimerAssociates.TimerType.IndividualId)
+                TimeLeft = _timerAssociates.TimeLeft(individualQuizId, TimerAssociates.TimerType.Individual)
             };
         }
 
@@ -170,7 +170,7 @@ namespace TestingModule.Additional
             }
             toUpdate.IsPassed = true;
             toUpdate.EndDate = DateTime.UtcNow;
-            _timerAssociates.DisposeTimer(individualQuizId, TimerAssociates.TimerType.IndividualId);
+            _timerAssociates.DisposeTimer(individualQuizId, TimerAssociates.TimerType.Individual);
             if (_context.IndividualQuizPasseds.Any(it => it.DisciplineId == toUpdate.DisciplineId && it.IsPassed && it.StudentId == toUpdate.StudentId))
             {
                 var passedLectures =
@@ -232,7 +232,7 @@ namespace TestingModule.Additional
                 Student = student,
                 Answers = await GetAnswersList(question.Id),
                 CumulativeQuizId = cumulativeQuizId,
-                TimeLeft = _timerAssociates.TimeLeft(cumulativeQuizId, TimerAssociates.TimerType.CumulativeId)
+                TimeLeft = _timerAssociates.TimeLeft(cumulativeQuizId, TimerAssociates.TimerType.Cumulative)
             };
         }
 
@@ -243,7 +243,7 @@ namespace TestingModule.Additional
             {
                 toUpdate.IsPassed = true;
                 toUpdate.EndDate = DateTime.UtcNow;
-                _timerAssociates.DisposeTimer(cumulativeQuizId, TimerAssociates.TimerType.IndividualId);
+                _timerAssociates.DisposeTimer(cumulativeQuizId, TimerAssociates.TimerType.Individual);
                 await _context.SaveChangesAsync();
             }
         }
@@ -367,7 +367,9 @@ namespace TestingModule.Additional
                         StudentIds = sdjoin.Select(s => s.StudentId)
                     }).SingleOrDefaultAsync();
 
-            var timer = TimerAssociates.GetTimer(realTimeStatistics.ModuleHistory.Id, TimerAssociates.TimerType.RealtimeId);
+            var timer = TimerAssociates.GetTimer(realTimeStatistics.ModuleHistory.Id, TimerAssociates.TimerType.Realtime) ??
+                        _timerAssociates.StartTimer(realTimeStatistics.ModuleHistory.Id,
+                            TimeSpan.FromMinutes(realTimeStatistics.Module.MinutesToPass), TimerAssociates.TimerType.Realtime);
             realTimeStatistics.Lector = lector;
             realTimeStatistics.TimeFinish = timer.ModuleFinish.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss");
             realTimeStatistics.Groups =

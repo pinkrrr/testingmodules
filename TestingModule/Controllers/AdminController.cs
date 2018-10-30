@@ -12,6 +12,7 @@ using Antlr.Runtime.Misc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using TestingModule.Additional;
+using TestingModule.Hubs;
 using TestingModule.Models;
 using TestingModule.ViewModels;
 using Module = TestingModule.Models.Module;
@@ -171,6 +172,7 @@ namespace TestingModule.Controllers
         [CustomAuthorize(RoleName.Lecturer)]
         public async Task<ActionResult> StopModule(int moduleHistoryId)
         {
+            QuizHub.StopModule(moduleHistoryId);
             await _lectureHistoryHelper.ModulePassed(moduleHistoryId);
             return RedirectToAction("activelecture", "Admin");
         }

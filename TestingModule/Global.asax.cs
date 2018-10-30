@@ -15,26 +15,23 @@ namespace TestingModule
     public class MvcApplication : HttpApplication
     {
         private readonly Adding _adding;
-        private readonly TimerAssociates _timerAssociates;
         public MvcApplication()
         {
             testingDbEntities db = new testingDbEntities();
             _adding = new Adding(db);
-            _timerAssociates = new TimerAssociates(db);
         }
-        protected async void Application_Start()
+        protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            await _timerAssociates.OnStartModuleTimer();
+            //await _timerAssociates.OnStartModuleTimer();
         }
 
         public override void Dispose()
         {
             _adding.Dispose();
-            _timerAssociates.Dispose();
             base.Dispose();
         }
 

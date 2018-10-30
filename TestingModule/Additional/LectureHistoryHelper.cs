@@ -130,7 +130,7 @@ namespace TestingModule.Additional
             moduleHistory.StartTime = DateTime.UtcNow;
             TimeSpan minutesToPass = TimeSpan.FromMinutes(await _db.Modules.Where(m => m.Id == moduleHistory.ModuleId)
                 .Select(m => m.MinutesToPass).SingleOrDefaultAsync());
-            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass, TimerAssociates.TimerType.RealtimeId);
+            _timerAssociates.StartTimer(moduleHistoryId, minutesToPass, TimerAssociates.TimerType.Realtime);
             await _db.SaveChangesAsync();
         }
 
@@ -149,7 +149,7 @@ namespace TestingModule.Additional
             {
                 await _quizManager.ResovlePassedRealtimeQuiz(moduleHistory.ModuleId, studentId, moduleHistoryId, lectureId);
             }
-            _timerAssociates.DisposeTimer(moduleHistoryId, TimerAssociates.TimerType.RealtimeId);
+            _timerAssociates.DisposeTimer(moduleHistoryId, TimerAssociates.TimerType.Realtime);
         }
 
         public void Dispose()
