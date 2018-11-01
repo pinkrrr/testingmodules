@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
+using Autofac;
+using Autofac.Integration.Mvc;
 using TestingModule.Additional;
 using TestingModule.Models;
 
@@ -17,22 +20,27 @@ namespace TestingModule
         private readonly Adding _adding;
         public MvcApplication()
         {
-            testingDbEntities db = new testingDbEntities();
-            _adding = new Adding(db);
+            var context = new testingDbEntities();
+            _adding = new Adding(context);
         }
         protected void Application_Start()
         {
+            var builder = new ContainerBuilder();
+            var assembly = Assembly.GetExecutingAssembly();
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder
+                .RegisterAssemblyTypes(assembly)
+                .AssignableTo<IDependency>()
+                .AsImplementedInterfaces()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+            var container = builder.Build();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //await _timerAssociates.OnStartModuleTimer();
-        }
-
-        public override void Dispose()
-        {
-            _adding.Dispose();
-            base.Dispose();
         }
 
         protected void Application_Error(object sender, EventArgs e)

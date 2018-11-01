@@ -17,7 +17,7 @@ namespace TestingModule.Controllers
         private readonly QuizManager _quizManager;
         private readonly TimerAssociates _timerAssociates;
 
-        public QuizController()
+        public QuizController(ITestingDbEntityService context) : base(context)
         {
             _quizManager = new QuizManager(Context);
             _timerAssociates = new TimerAssociates(Context);
@@ -28,6 +28,7 @@ namespace TestingModule.Controllers
             if (disposing)
             {
                 _quizManager.Dispose();
+                _timerAssociates.Dispose();
             }
             base.Dispose(disposing);
         }

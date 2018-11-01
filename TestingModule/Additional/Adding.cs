@@ -6,13 +6,14 @@ using TestingModule.ViewModels;
 
 namespace TestingModule.Additional
 {
+
     public class Adding : IDisposable
     {
         private readonly testingDbEntities _db;
 
-        public Adding(testingDbEntities context)
+        public Adding(testingDbEntities db)
         {
-            _db = context;
+            _db = db;
         }
 
         public void AddNewDiscipline(string name, int? lectorId)
@@ -20,7 +21,7 @@ namespace TestingModule.Additional
             var disciplinesTable = _db.Set<Discipline>();
             disciplinesTable.Add(new Discipline() { Name = name });
             _db.SaveChanges();
-            var disciplineId = _db.Disciplines.Where(t => t.Name == name).FirstOrDefault().Id;
+            var disciplineId = _db.Disciplines.FirstOrDefault(t => t.Name == name).Id;
             var lecturesTable = _db.Set<LectorDiscipline>();
             lecturesTable.Add(new LectorDiscipline() { LectorId = Convert.ToInt32(lectorId), DisciplineId = disciplineId });
             _db.SaveChanges();

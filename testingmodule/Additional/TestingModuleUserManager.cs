@@ -7,9 +7,9 @@ using TestingModule.Models;
 
 namespace TestingModule.Additional
 {
-    public class TestingModuleUserManager : UserManager<TestingModuleUser, int>
+    public class TestingModuleUserManager : UserManager<TestingModuleUser, int>, ITestingModuleUserManager
     {
-        public TestingModuleUserManager(TestingModuleUserStore store) : base(store)
+        public TestingModuleUserManager(ITestingModuleUserStore store) : base(store)
         {
             ClaimsIdentityFactory = new ClaimsIdentityFactory<TestingModuleUser, int>();
             /*DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(10);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
+using TestingModule.Additional;
 using TestingModule.Models;
 
 namespace TestingModule.Controllers
@@ -12,9 +13,9 @@ namespace TestingModule.Controllers
     {
         private readonly Lazy<testingDbEntities> _context;
 
-        public BaseController()
+        public BaseController(ITestingDbEntityService context)
         {
-            _context = new Lazy<testingDbEntities>();
+            _context = new Lazy<testingDbEntities>(context.GetContext);
         }
 
         protected testingDbEntities Context => _context.Value;

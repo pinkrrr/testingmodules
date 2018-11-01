@@ -18,18 +18,19 @@ namespace TestingModule.Controllers
 {
     public class AccountController : BaseController
     {
-        private readonly TestingModuleSignInManager _signInManager;
-        private readonly TestingModuleUserManager _userManager;
+        private readonly ITestingModuleSignInManager _signInManager;
+        private readonly ITestingModuleUserManager _userManager;
 
-        public AccountController()
+        public AccountController(
+            ITestingDbEntityService context,
+            ITestingModuleUserManager userManager,
+            ITestingModuleSignInManager signInManager) : base(context)
         {
-            var httpContext = System.Web.HttpContext.Current.GetOwinContext().Authentication;
-            var userStore = new TestingModuleUserStore(Context);
-            _userManager = new TestingModuleUserManager(userStore);
-            _signInManager = new TestingModuleSignInManager(_userManager, httpContext);
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        protected override void Dispose(bool disposing)
+        /*protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -37,7 +38,7 @@ namespace TestingModule.Controllers
                 _userManager.Dispose();
             }
             base.Dispose(disposing);
-        }
+        }*/
 
         #region Registration
         /*

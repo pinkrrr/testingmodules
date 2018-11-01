@@ -12,7 +12,7 @@ namespace TestingModule.Controllers
     {
         private readonly Editing _editing;
 
-        public ErrorController()
+        public ErrorController(ITestingDbEntityService context) : base(context)
         {
             _editing = new Editing(Context);
         }

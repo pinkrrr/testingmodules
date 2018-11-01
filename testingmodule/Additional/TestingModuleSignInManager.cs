@@ -12,9 +12,9 @@ using TestingModule.Models;
 
 namespace TestingModule.Additional
 {
-    public class TestingModuleSignInManager : SignInManager<TestingModuleUser, int>
+    public class TestingModuleSignInManager : SignInManager<TestingModuleUser, int>, ITestingModuleSignInManager
     {
-        public TestingModuleSignInManager(TestingModuleUserManager userManager, IAuthenticationManager authenticationManager) : base(userManager, authenticationManager) { }
+        public TestingModuleSignInManager(TestingModuleUserManager userManager, IAuthenticationManager authenticationManager) : base(userManager, authenticationManager.Current) { }
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(TestingModuleUser user)
         {

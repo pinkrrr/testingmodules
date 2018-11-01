@@ -10,11 +10,11 @@ using TestingModule.Models;
 
 namespace TestingModule.Additional
 {
-    public class TestingModuleUserStore : IUserStore<TestingModuleUser, int>
+    public class TestingModuleUserStore : ITestingModuleUserStore
     {
         private readonly testingDbEntities _context;
 
-        public TestingModuleUserStore(testingDbEntities coontext)
+        public TestingModuleUserStore()
         {
             _context = new testingDbEntities();
         }

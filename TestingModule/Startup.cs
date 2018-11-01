@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.Cookies;
@@ -22,6 +20,7 @@ namespace TestingModule
             app.CreatePerOwinContext<TestingModuleSignInManager>((options, context) =>
                 new TestingModuleSignInManager(context.GetUserManager<TestingModuleUserManager>(),
                     context.Authentication));*/
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,

@@ -18,7 +18,7 @@ namespace TestingModule.Controllers
         private readonly QuizManager _quizManager;
         private readonly StudentPageHelper _studentPageHelper;
 
-        public StudentController()
+        public StudentController(ITestingDbEntityService context) : base(context)
         {
             _quizManager = new QuizManager(Context);
             _studentPageHelper = new StudentPageHelper(Context);

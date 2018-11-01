@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Antlr.Runtime.Misc;
+using Autofac;
+using Autofac.Integration.Mvc;
 using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -29,7 +31,8 @@ namespace TestingModule.Controllers
         private readonly Editing _editing;
         private readonly AdminPageHelper _adminPageHelper;
 
-        public AdminController()
+        public AdminController(
+            ITestingDbEntityService context) : base(context)
         {
             _lectureHistoryHelper = new LectureHistoryHelper(Context);
             _adding = new Adding(Context);
