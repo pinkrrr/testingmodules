@@ -1,94 +1,227 @@
-﻿@model IEnumerable<TestingModule.Models.QueAns>
+﻿@model IList<TestingModule.ViewModels.QueAns>
 @{
-    ViewBag.Title = "Questions";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Запитання та відповіді";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
 
-<h2>Питання</h2>
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
+<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання</button>
 @if (!Model.Any())
 {
-    <h3>Немає жодного питання...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодного питання...
+                    </h2>
+                    <div class="error-details">
+                        Створіть питання за допомогою кнопки "Додати нове питання".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    foreach (var item in Model.GroupBy(t => t.QuestionId))
+    <h1>
+        <u>@Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Name</u>
+    </h1>
+    <h2>Матеріали модуля</h2>
+    if (Model.FirstOrDefault().Modules.FirstOrDefault(t => t.Id == Model.FirstOrDefault().ModuleId).Description == null)
     {
-        <table border="1">
-
-            <tr class="table-row">
-                <th class="table-item table-item_name"><a data-id="@item.FirstOrDefault().QuestionId" class="table-item_name_text">@item.FirstOrDefault().Question</a></th>
-                <th class="table-item table-item_edit">
-                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                    <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
-                </th>
-            </tr>
-
-            @if (item.Any())
-            {
-                foreach (var que in item)
-                {
-                    if (que.Answer == null && que.AnswerId == null)
-                    {break;}
-     
-                    <tr class="table-row" bgcolor="f1f1f1">
-                        <td class="table-item table-item_name"><a data-id="@que.AnswerId" class="table-item_name_text">@que.Answer</a></td>
-                        <td class="table-item table-item_edit">
-                            <div class="table-button table-edit-button">
-                                <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
-                            </div>
-                            <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
-                                <i class='fa fa-trash' aria-hidden='true'></i>Видалити
-                            </div>
-                        </td>
-                    </tr>
-                }
-            }
-            @using (Html.BeginForm("NewAnswer", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
-            {
-                <tr>
-                    <form>
-                        @{
-                            var name = Model.LastOrDefault();
-                        }
-                        <td>
-                            @if (name == null)
-                            {
-                                @Html.TextBoxFor(model => model.LastOrDefault().Answer, new { @class = "input-text" })
-                            }
-                            else
-                            {
-                                @Html.TextBoxFor(model => model.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text" })
-                            }
-                            @Html.HiddenFor(model => model.LastOrDefault().QuestionId)
-                        </td>
-                        <td>
-                            <button type="submit">Додати відповідь</button>
-                        </td>
-                    </form>
-                </tr>
-                            }
-        </table>
-        <br>
-                                }
-                            }
-<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нове питання?</button>
-<hr>
-
-<div class="popup popup-remove">
-    <div class="popup-body">
-        <div class="popup-content">
-            <div class="popup-title">Дійсно видалити <span></span>?</div>
-            <form>
-                <button class="btn popup-btn popup-remove-btn">Видалити</button>
-                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-            </form>
+        <div>
+            Немає матеріалів лекції...Бажаєте додати? <i class="fa fa-pencil" aria-hidden="true"></i>
+            <br>
         </div>
-    </div>
-</div>
+    }
+    using (Html.BeginForm("EditMaterial", "Admin", FormMethod.Post))
+    {
+        <div class="popup-title">Редагування</div>
+                <form>
+                    @Html.TextAreaFor(model => model.FirstOrDefault().Description, new { @id = "ckeditor", name = "materials" })
+                    @Html.HiddenFor(model => model.FirstOrDefault().ModuleId)
+                    @Html.HiddenFor(model => model.FirstOrDefault().LectureId)
+                    @Html.HiddenFor(model => model.FirstOrDefault().DisciplineId)
+                    <button type="submit">Зберегти</button>
+                </form>
+    }
+    <hr>
+    foreach (var type in Model.OrderBy(t => t.QuestionType).GroupBy(t => t.QuestionType))
+    {
+        if (type.FirstOrDefault().QuestionType == 1)
+        {
+            <h2>Лекційні питання модуля</h2>
+            if (!Model.Any(t => t.QuestionType == 1))
+            {
+                <div class="error-details">
+                    Немає жодного лекційного питання...
 
+                    Створіть питання за допомогою кнопки "Додати нове питання".
+                </div>
+            }
+        }
+        else
+        {
+            <hr>
+            <h2>Індивідуальні питання модуля</h2>
+            if (!Model.Any(t => t.QuestionType == 2))
+            {
+                <div class="error-details">
+                    Немає жодного індивідуального питання...
+
+                    Створіть питання за допомогою кнопки "Додати нове питання".
+                </div>
+            }
+        }
+        foreach (var item in type.OrderBy(t => t.QuestionId).GroupBy(t => t.QuestionId))
+        {
+
+            <div class="questionBlock">
+                <table class="table table_questions" border="1">
+                    @using (Html.BeginForm("EditAnswer", "Admin", FormMethod.Post))
+                    {
+                        <tr class="table-row">
+                            <th class="table-item table-item_name">
+                                @Html.TextAreaFor(model => Model[Model.IndexOf(item.FirstOrDefault())].Question, new
+{
+    @class = "input-text-Questions",
+    @placeholder = "Введіть текст запитання",
+    @required = "required"
+})
+                            </th>
+                            <th class="table-item table-item_correct"> Правильна відповідь </th>
+                            <th class="table-item table-item_correct">
+                                <div data-remove="Questions/@item.FirstOrDefault().QuestionId/delete" class="table-button table-remove-button">
+                                    <i class='fa fa-trash' aria-hidden='true'></i>Видалити
+                                </div>
+                            </th>
+                        </tr>
+
+                        if (item.Any())
+                        {
+
+                            foreach (var que in item)
+                            {
+                                if (que.Answer == null && que.AnswerId == null)
+                                {
+                                    break;
+                                }
+                                <tr class="table-row">
+                                    <td class="table-item table-item_name">
+                                        @Html.TextBoxFor(model => Model[Model.IndexOf(que)].Answer, new { @class = "input-text-Questions", @placeholder = "Введіть текст відповіді", @required = "required" })
+                                        @Html.HiddenFor(model => Model[Model.IndexOf(que)].AnswerId)
+                                        @Html.HiddenFor(model => Model[Model.IndexOf(que)].Question)
+                                        @Html.HiddenFor(model => Model[Model.IndexOf(que)].QuestionId)
+                                        @*@Html.HiddenFor(model => Model[Model.IndexOf(que)].ModuleId)*@
+                                    </td>
+                                    @if (que.IsCorrect == true)
+                                    {
+                                        <td class="table-item table-item_correct" bgcolor="#2ECC71" title="Правильна відповідь!">
+                                            <label for="@Model[Model.IndexOf(que)].AnswerId">
+                                                @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", @checked = "checked", @id = Model[Model.IndexOf(que)].AnswerId })
+                                            </label>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="table-item table-item_correct" bgcolor="#C0392B" title="Неправильна відповідь!">
+                                            <label for="@Model[Model.IndexOf(que)].AnswerId">
+                                                @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].CorrectAnswerId, Model[Model.IndexOf(que)].AnswerId, new { @class = "radioInput", required = "required", @id = Model[Model.IndexOf(que)].AnswerId })
+                                            </label>
+                                        </td>
+                                    }
+                                    <td class="table-item table-item_correct">
+                                        <div data-remove="Answers/@que.AnswerId/delete" class="table-button table-remove-button">
+                                            <i class='fa fa-trash' aria-hidden='true'></i>Видалити
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            for (int i = 0; i < Model.Count; i++)
+                            {
+                                @Html.HiddenFor(model => Model[i].QuestionId)
+                                @Html.HiddenFor(model => Model[i].Question)
+                            }
+                            <div class="select">
+                                @Html.DropDownListFor(model => Model[Model.IndexOf(item.FirstOrDefault())].ModuleId, new SelectList(item.FirstOrDefault().Modules,
+        "Id", "Name", new { @moduleId = "moduleId" }), "Оберіть новий модуль")
+                            </div>
+                            <div>
+                                <label>Лекційне питання @Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].QuestionType, 1, "Lect")</label>
+                                <label>@Html.RadioButtonFor(model => Model[Model.IndexOf(item.FirstOrDefault())].QuestionType, 2, "Ind") Індивідуальне питання</label>
+                            </div>
+                            <button class="btnSave" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>Зберегти</button>
+                        }
+                    }
+                    @using (Html.BeginForm("NewAnswer", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
+                    {
+                        <form>
+                            @{
+                                var name = item.LastOrDefault();
+                            }
+                            <td class="table-item table-item_new">
+                                @if (name == null)
+                                {
+                                    @Html.TextBoxFor(model => item.LastOrDefault().Answer, new { @class = "input-text-Questions", @placeholder = "Введіть нову відповідь", @required = "required" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => item.LastOrDefault().Answer, name.Answer = "", new { @class = "input-text-Questions", @placeholder = "Введіть нову відповідь", @required = "required" })
+                                }
+                                @Html.HiddenFor(model => item.FirstOrDefault().QuestionId)
+                                @Html.HiddenFor(model => item.FirstOrDefault().DisciplineId)
+                                @Html.HiddenFor(model => item.FirstOrDefault().LectureId)
+                            </td>
+                            <td class="table-item table-item_new" colspan="2">
+                                <button type="submit" class="addAnsBtn"><i class="fa fa-plus" aria-hidden="true"></i>Додати відповідь</button>
+                            </td>
+                        </form>
+                                }
+                </table>
+
+            </div>
+
+                                    }
+                                }
+
+
+                                <div class="popup popup-remove">
+                                    <div class="popup-body">
+                                        <div class="popup-content">
+                                            <div class="popup-title">
+                                                Дійсно видалити <span></span>?
+                                            </div>
+                                            <form>
+                                                <button class="btn popup-btn popup-remove-btn">Видалити</button>
+                                                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
 <div class="popup popup-add">
     <div class="popup-body">
-        <div class="popup-content">
+        <tr class="popup-content">
             <div class="popup-title">Створити нове питання</div>
             @using (Html.BeginForm("NewQuestion", "Admin", FormMethod.Post, new { @class = "addNewItem-form" }))
             {
@@ -97,13 +230,23 @@ else
                         var name = Model.LastOrDefault();
                     }
                     @if (name == null)
-                    {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text" })
+                {
+                        @Html.TextBoxFor(model => model.LastOrDefault().Question, new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(model => model.LastOrDefault().Question, name.Question = "", new { @class = "input-text" })
+                        @Html.TextBoxFor(model => model.LastOrDefault().Question, name.Question = "", new { @class = "input-text", @placeholder = "Введіть нове запитання", @required = "required" })
                     }
+                    <table>
+                        <tr>
+                            <td>@Html.RadioButtonFor(model => Model.FirstOrDefault().QuestionType, 1, new { @class = "radioInput", required = "required" })</td>
+                            <td>Лекційне питання</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.RadioButtonFor(model => Model.FirstOrDefault().QuestionType, 2, new { @class = "radioInput", required = "required" })</td>
+                            <td>Індивідуальне питання</td>
+                        </tr>
+                    </table>
                     @Html.HiddenFor(model => model.LastOrDefault().ModuleId)
                     @Html.HiddenFor(model => model.LastOrDefault().DisciplineId)
                     @Html.HiddenFor(model => model.LastOrDefault().LectureId)
@@ -111,6 +254,5 @@ else
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                 </form>
                         }
-        </div>
     </div>
 </div>

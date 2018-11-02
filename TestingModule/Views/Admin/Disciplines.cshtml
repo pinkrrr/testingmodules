@@ -1,94 +1,163 @@
-﻿@model IEnumerable<TestingModule.Models.Discipline>
+﻿@model IEnumerable<TestingModule.ViewModels.DiscLecotorViewModel>
 
 @{
-    ViewBag.Title = "Disciplines";
+    ViewBag.Title = "Дисципліни";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
 }
-
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
 <h2>Дисципліни</h2>
 @if (!Model.Any())
 {
-    <h3>Немає жодної дисципліни...</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодної дисципліни...
+                    </h2>
+                    <div class="error-details">
+                        Створіть дисципліни за допомогою кнопки "Додати нову дисципліну."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <table class="table" border="1">
-        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Дії</th></tr>
-
-        @foreach (var item in Model)
+    {
+        var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+        var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
+        if (Request.IsAuthenticated)
         {
-            <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="disciplines/@item.Id/lectures" class="table-item_name_text">@item.Name</a></td>
-                <td class="table-item table-item_edit">
-                    <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
-                    <div data-remove="disciplines/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
-
-                </td>
-            </tr>
-        }
-
-    </table>
-}
-
-
-
-<button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову дисципліну</button>
-
-<div class="popup popup-remove">
-    <div class="popup-body">
-        <div class="popup-content">
-            <div class="popup-title">Дійсно видалити <span></span>?</div>
-            <form>
-                <button class="btn popup-btn popup-remove-btn">Видалити</button>
-                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="popup popup-edit">
-    <div class="popup-body">
-        <div class="popup-content">
-            @using (Html.BeginForm("EditDiscipline", "Admin", FormMethod.Post))
-            {
-                <div class="popup-title">Редагування</div>
-                <form>
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
-                    @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
-                    <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
-                    <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-                </form>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="popup popup-add">
-    <div class="popup-body">
-        <div class="popup-content">
-            <div class="popup-title">Додати нову дисципліну</div>
-            @using (Html.BeginForm("NewDiscipline", "Admin", FormMethod.Post))
-            {
-                <form>
-                    <div>
-                        Введіть назву дисципліни:
-                        @{
-                            var name = Model.LastOrDefault();
-                        }
-                        @if (name == null)
+            <table class="table" border="1">
+                <tr class="table-row table-header-row">
+                    <th class="table-header table-header_name">Назва</th>
+                    @if (c.Value.ToString() == "Administrator")
+                    {
+                        <th class="table-header">Лектор</th>
+                        <th class="table-header">Дії</th>
+                    }
+                    <th>Студенти</th>
+                </tr>
+                @foreach (var item in Model.OrderBy(t => t.DiscName))
+                {
+                    <tr class="table-row">
+                        <td class="table-item table-item_name">
+                            <a data-id="@item.DiscId" href="disciplines/@item.DiscId/lectures" class="table-item_name_text" data-editable>@item.DiscName</a>
+                        </td>
+                        @if (c.Value.ToString() == "Administrator")
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
-                        }
-                    </div>
-                    <div>
-                        <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
-                        <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
-                    </div>
-                </form>
-                            }
-        </div>
-    </div>
-</div>
+                            <td class="table-item">
+                                @{
+                                    var name = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                                }
+                                @if (name != null)
+                                {
+                                    @name.Name
+                                }
+                                @{
+                                    var surname = item.Lectors.FirstOrDefault(t => t.Id == item.LectorId);
+                                }
+                                @if (surname != null)
+                                {
+                                    @surname.Surname
+                                }
+                            </td>
+                            <td class="table-item table-item_edit">
+                                <div class="table-button table-edit-button">
+                                    <i class='fa fa-pencil' aria-hidden='true'></i>Редагувати
+                                </div>
+                                <div data-remove="disciplines/@item.DiscId/Delete" class="table-button table-remove-button">
+                                    <i class='fa fa-trash' aria-hidden='true'></i>Видалити
+                                </div>
+                            </td>
+                                    }
+                        <td class="table-item table-item_students">
+                            <a class="" href="disciplines/@item.DiscId/disciplinestudents">Студенти</a>
+                        </td>
+                    </tr>
+                                    }
+            </table>
+                                    if (c.Value.ToString() == "Administrator")
+                                    {
+                                        <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Додати нову дисципліну</button>
+                                        <div class="popup popup-remove">
+                                            <div class="popup-body">
+                                                <div class="popup-content">
+                                                    <div class="popup-title">Дійсно видалити <span></span>?</div>
+                                                    <form>
+                                                        <button class="btn popup-btn popup-remove-btn">Видалити</button>
+                                                        <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="popup popup-edit">
+                                            <div class="popup-body">
+                                                <div class="popup-content">
+                                                    @using (Html.BeginForm("EditDiscipline", "Admin", FormMethod.Post))
+                            {
+                                                        <div class="popup-title">Редагування</div>
+                                                        <form>
+                                                            @Html.TextBoxFor(model => model.FirstOrDefault().DiscName, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
+                                                            <div class="selectmenu">
+                                                                <div class="selectmenu_title">Оберіть лектора</div>
+                                                                @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"), "Оберіть лектора")
+                                                            </div>
+                                                            @Html.HiddenFor(model => model.FirstOrDefault().DiscId, new { @id = "id" })
+                                                            <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
+                                                            <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="popup popup-add">
+                                            <div class="popup-body">
+                                                <div class="popup-content">
+                                                    <div class="popup-title">Додати нову дисципліну</div>
+                                                    @using (Html.BeginForm("NewDiscipline", "Admin", FormMethod.Post))
+                            {
+                                                        <form>
+                                                            @{
+                                                                var name = Model.LastOrDefault();
+                                                            }
+                                                            @if (name == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.LastOrDefault().DiscName, new { @class = "input-text", @placeholder = "Введіть назву дисципліни", @required = "required" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.LastOrDefault().DiscName, name.DiscName = "", new { @class = "input-text", @placeholder = "Введіть назву дицсипліни", @required = "required" })
+                                                            }
+                                                            @Html.DropDownListFor(model => model.FirstOrDefault().LectorId, new SelectList(Model.FirstOrDefault().Lectors, "Id", "Surname", "Name"), "Оберіть лектора")
+                                                            <div>
+                                                                <button class="btn popup-btn popup-create-btn" type="submit">Додати</button>
+                                                                <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                                                            </div>
+                                                        </form>
+                                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }

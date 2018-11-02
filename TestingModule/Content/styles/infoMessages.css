@@ -1,0 +1,33 @@
+﻿.isa_info, 
+.isa_success, 
+.isa_warning, 
+.isa_error {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: 320px;
+    text-align: center;
+    padding: 10px;
+    animation: messageInfo 3s linear;
+    animation-delay: .5s;
+    transform: translateY(-100%);
+    z-index: 100;
+    font-size: 16px;
+}
+
+@keyframes messageInfo{
+    0%{
+        transform: translateY(-100%);
+    }
+    15%{
+        transform: translateY(0);
+    }
+    85%{
+        transform: translateY(0);
+    }
+    100%{
+        transform: translateY(-100%);
+    }
+}

@@ -1,0 +1,28 @@
+﻿@model TestingModule.ViewModels.RealTimeQuizViewModel
+@{
+    ViewBag.Title = "Quiz";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+}
+
+<div class="questionBlock">
+    <div class="question" data-questionid=""></div>
+
+    <div class="answers">
+    </div>
+
+    <button id="nextRealtimeQuestion" class="nextQuestion">Далі</button>
+</div>
+
+
+@section scripts
+{
+    <script>
+        var qModel = @Html.Raw(Json.Encode(@Model));
+
+        var quiz = $.connection.quizHub;
+        $.connection.hub.start();
+        quiz.client.reciveStopModule = function () {
+            window.location.href = "/";
+        }
+    </script>
+}

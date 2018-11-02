@@ -1,23 +1,56 @@
-﻿@model IEnumerable<TestingModule.Models.Group>
+﻿@model TestingModule.ViewModels.ReasignViewModel
 @{
-    ViewBag.Title = "Groups";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Групи";
+    Layout = "~/Views/Shared/_Layoutadmin.cshtml";
+}
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
 }
 
-<h2>Групи</h2>
-@if (!Model.Any())
+
+@if (TempData["Fail"] != null)
 {
-    <h3>Немає жодної групи...</h3>
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
+
+
+@if (!Model.Groups.Any())
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодної групи...
+                    </h2>
+                    <div class="error-details">
+                        Створіть групи за допомогою кнопки "Додати нову групу".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
+    <h2>Групи спеціальності <u>@Model.Specialities.FirstOrDefault(t => t.Id == Model.Groups.FirstOrDefault().SpecialityId).Name</u></h2>
     <table class="table" border="1">
         <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th><th class="table-header">Дії</th></tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.Groups.OrderBy(t => t.Name))
         {
             <tr class="table-row">
-                <td class="table-item table-item_name"><a data-id="@item.Id" href="specialities/@item.Id/groups" class="table-item_name_text">@item.Name</a></td>
+                <td class="table-item table-item_name"><a data-id="@item.Id" href="groups/@item.Id/students" class="table-item_name_text" data-editable>@item.Name</a></td>
                 <td class="table-item table-item_edit">
                     <div class="table-button table-edit-button"><i class='fa fa-pencil' aria-hidden='true'></i>Редагувати</div>
                     <div data-remove="groups/@item.Id/Delete" class="table-button table-remove-button"><i class='fa fa-trash' aria-hidden='true'></i>Видалити</div>
@@ -51,8 +84,11 @@ else
             {
                 <div class="popup-title">Редагування</div>
                 <form>
-                    @Html.TextBoxFor(model => model.FirstOrDefault().Name, new { @class = "input-text" })
-                    @Html.HiddenFor(model => model.FirstOrDefault().Id, new { @id = "id" })
+                    @Html.TextBoxFor(model => model.Groups.FirstOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required" })
+                    <div>
+                        @Html.DropDownListFor(model => model.Groups.FirstOrDefault().SpecialityId, new SelectList(Model.Specialities, "Id", "Name", new { @id = "SpecialityId" }), "Оберіть спеціальність")
+                    </div>
+                    @Html.HiddenFor(model => model.Groups.FirstOrDefault().Id, new { @id = "id" })
                     <button class="btn popup-btn popup-save-btn" type="submit">Зберегти</button>
                     <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
                 </form>
@@ -71,15 +107,15 @@ else
                     <div>
                         Введіть назву групи:
                         @{
-                            var name = Model.LastOrDefault();
+                            var name = Model.Groups.LastOrDefault();
                         }
                         @if (name == null)
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required", })
                         }
                         else
                         {
-                            @Html.TextBoxFor(model => model.LastOrDefault().Name, name.Name = "", new { @class = "input-text" })
+                            @Html.TextBoxFor(model => model.Groups.LastOrDefault().Name, name.Name = "", new { @class = "input-text", @placeholder = "Введіть назву групи", @required = "required" })
                         }
                     </div>
                     <div>

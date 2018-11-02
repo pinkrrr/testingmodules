@@ -1,0 +1,61 @@
+﻿@using TestingModule.ViewModels
+@model LectureQuizViewModel
+@{
+    ViewBag.Title = "Лекції";
+    Layout = "~/Views/Shared/_Layoutstudent.cshtml";
+}
+
+@if (@TempData["Success"] != null)
+{
+    <div class="isa_success">
+        <i class="fa fa-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Fail"] != null)
+{
+    <div class="isa_error">
+        <i class="fa fa-times-circle"></i>
+        @TempData["Fail"]
+    </div>
+}
+
+@if (!Model.Lectures.Any())
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Отакої!
+                    </h1>
+                    <h2>
+                        Немає жодної лекції...
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Лекції дисципліни <u>@Model.Disciplines.FirstOrDefault(t => t.Id == Model.Lectures.FirstOrDefault().DisciplineId).Name</u></h2>
+    <table class="table" border="1">
+        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th></tr>
+
+        @foreach (var item in Model.Lectures.OrderBy(t => t.Name))
+        {
+            <tr class="table-row">
+                <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text" data-editable>@item.Name</a></td>
+                @if (Model.LecturesForQuizId.Any(lfq=>lfq.Key==item.Id))
+                {
+                    <td class="table-item table-item_name"><a href=@Url.Action("IndividualQuiz","Quiz",new{individualQuizId=Model.LecturesForQuizId.Where(lfq=>lfq.Key==item.Id).Select(lfq=>lfq.Value).SingleOrDefault()})>Пройти тест</a></td>
+                }
+
+            </tr>
+        }
+
+    </table>
+}

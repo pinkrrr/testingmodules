@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestingModule - @ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+
+    <div class="studentHomepage">
+        <div class="header">
+            @{
+                var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+                var surname = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Surname).Value;
+
+                <a class="studentName" href="/Student">@User.Identity.Name @surname</a>
+                using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <a class="logout" href="javascript:document.getElementById('logoutForm').submit()">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i> <span>Вийти</span>
+                    </a>
+                }
+            }
+        </div>
+        <div class="studentBody">
+            @RenderBody()
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
+    @*<script src="~/signalr/hubs"></script>*@
+    <script src="~/Scripts/app.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

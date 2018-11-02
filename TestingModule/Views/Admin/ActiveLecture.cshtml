@@ -1,0 +1,37 @@
+﻿@model TestingModule.ViewModels.ActiveLectureViewModel
+@{
+    ViewBag.Title = "ActiveLecture";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="modulesBlock">
+    <div class="title">Лекція <span>@Model.Lecture.Name</span> з дисципліни <span>@Model.Discipline.Name</span> була розпочата <span>@Model.LecturesHistory.StartTime.ToLocalTime()</span></div>
+    <div class="modulesList">
+        @foreach (var module in
+                    from m in Model.Modules
+                    join mh in Model.ModuleHistories on m.Id equals mh.ModuleId
+                    select m)
+        {
+            var first = new int[] { 1, 21, 31, 41, 51, 61, 71, 81, 91, 101 };
+            var second = new int[] { 1, 2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54, 62, 63, 64, 72, 73, 74, 82, 83, 84, 92, 93, 94, 102, 103, 104 };
+            var minutes = "хвилин";
+            if (first.Contains(module.MinutesToPass))
+            {
+                minutes = "хвилина";
+            }
+            else if (second.Contains(module.MinutesToPass))
+            {
+                minutes = "хвилини";
+            }
+
+            <div class="module">
+                <div class="module_name">@module.Name  [@module.MinutesToPass @minutes]</div>
+                <div class="module_control">
+                    <button class="btnSave" type="Submit" onclick="location.href = '@Url.Action("StartModule", "Admin", new { moduleHistoryId = Model.ModuleHistories.Where(mh => mh.ModuleId == module.Id).Select(mh => mh.Id).SingleOrDefault() })'"><i class="fa fa-play" aria-hidden="true"></i> Розпочати модуль</button>
+                </div>
+            </div>
+        }
+    </div>
+    <button class="btnStop" onclick="location.href = '@Url.Action("FreezeLecture", "Admin",new {lectureHistoryId=Model.LecturesHistory.Id})'"><i class="fa fa-stop" aria-hidden="true"></i> Зупинити лекцію</button>
+    <button class="btnStop" onclick="location.href = '@Url.Action("StopLecture", "Admin",new {lectureHistoryId=Model.LecturesHistory.Id})'"><i class="fa fa-stop" aria-hidden="true"></i> Завершити лекцію</button>
+</div>

@@ -25,18 +25,30 @@ namespace TestingModule.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<CumulativeQuizLecture> CumulativeQuizLectures { get; set; }
+        public virtual DbSet<CumulativeQuizPassed> CumulativeQuizPasseds { get; set; }
+        public virtual DbSet<CumulativeRespons> CumulativeResponses { get; set; }
         public virtual DbSet<Discipline> Disciplines { get; set; }
+        public virtual DbSet<ExeptionLog> ExeptionLogs { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<IndividualQuizPassed> IndividualQuizPasseds { get; set; }
+        public virtual DbSet<IndividualRespons> IndividualResponses { get; set; }
+        public virtual DbSet<LectorDiscipline> LectorDisciplines { get; set; }
+        public virtual DbSet<Lector> Lectors { get; set; }
+        public virtual DbSet<LectureHistoryGroup> LectureHistoryGroups { get; set; }
         public virtual DbSet<Lecture> Lectures { get; set; }
         public virtual DbSet<LecturesHistory> LecturesHistories { get; set; }
+        public virtual DbSet<ModuleHistory> ModuleHistories { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
-        public virtual DbSet<Respons> Responses { get; set; }
+        public virtual DbSet<RealtimeModulesPassed> RealtimeModulesPasseds { get; set; }
+        public virtual DbSet<RealtimeRespons> RealtimeResponses { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Speciality> Specialities { get; set; }
-        public virtual DbSet<Account> Accounts { get; set; }
-        public virtual DbSet<Lector> Lectors { get; set; }
+        public virtual DbSet<StudentDiscipline> StudentDisciplines { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

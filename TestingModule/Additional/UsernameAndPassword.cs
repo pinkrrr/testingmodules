@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TestingModule.Additional
 {
     public class UsernameAndPassword
     {
-        Dictionary<string, string> dictionaryChar = new Dictionary<string, string>()
+        Dictionary<string, string> _dictionaryChar = new Dictionary<string, string>()
             {
                 {"'",""},
                 {"а","a"},
                 {"б","b"},
                 {"в","v"},
-                {"г","g"},
+                {"г","h"},
                 {"ґ","g"},
                 {"д","d"},
                 {"е","e"},
-                {"є","e"},
+                {"є","ie"},
                 {"ё","yo"},
                 {"ж","zh"},
                 {"з","z"},
-                {"и","i"},
+                {"и","y"},
                 {"і","i"},
-                {"ї","i"},
-                {"й","y"},
+                {"ї","yi"},
+                {"й","i"},
                 {"к","k"},
                 {"л","l"},
                 {"м","m"},
@@ -34,39 +35,92 @@ namespace TestingModule.Additional
                 {"т","t"},
                 {"у","u"},
                 {"ф","f"},
-                {"х","h"},
+                {"х","kh"},
                 {"ц","ts"},
                 {"ч","ch"},
                 {"ш","sh"},
-                {"щ","sch"},
+                {"щ","shch"},
                 {"ъ","'"},
                 {"ы","yi"},
                 {"ь",""},
                 {"э","e"},
-                {"ю","yu"},
-                {"я","ya"}
-
+                {"ю","iu"},
+                {"я","ia"},
+                {"1","1"},
+                {"2","2"},
+                {"3","3"},
+                {"4","4"},
+                {"5","5"},
+                {"6","6"},
+                {"7","7"},
+                {"8","8"},
+                {"9","9"},
+                {"0","0"}
             };
         public string TranslitFileName(string source)
         {
             var result = "";
+            string[] opt = { "г", "є", "ї", "й", "ю", "я" };
             try
             {
                 foreach (var ch in source)
                 {
                     var ss = "";
-                    if (dictionaryChar.TryGetValue(ch.ToString(), out ss))
+
+                    if (ch.ToString() == opt[0])
                     {
-                        result += ss;
+                        if (source.IndexOf(ch) == 0)
+                        {
+                            result += "h";
+                        }
+                        else
+                        {
+                            if (source[source.IndexOf(ch) - 1].ToString() == "з")
+                            {
+                                result += "gh";
+                            }
+                            else
+                            {
+                                result += "h";
+                            }
+                        }
                     }
-                    else result += ch;
+                    else if (ch.ToString() == opt[1] && source.IndexOf(ch) == 0)
+                    {
+                        result += "ye";
+                    }
+                    else if (ch.ToString() == opt[2] && source.IndexOf(ch) == 0)
+                    {
+                        result += "yi";
+                    }
+                    else if (ch.ToString() == opt[3] && source.IndexOf(ch) == 0)
+                    {
+                        result += "y";
+                    }
+                    else if (ch.ToString() == opt[4] && source.IndexOf(ch) == 0)
+                    {
+                        result += "yu";
+                    }
+                    else if (ch.ToString() == opt[5] && source.IndexOf(ch) == 0)
+                    {
+                        result += "ya";
+                    }
+                    else
+                    {
+                        if (_dictionaryChar.TryGetValue(ch.ToString(), out ss))
+                        {
+                            result += ss;
+                        }
+                        else result += ch;
+                    }
+
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 result = source;
             }
-            
+
             return result.TrimEnd().TrimStart();
         }
 

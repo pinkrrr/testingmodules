@@ -1,0 +1,140 @@
+﻿.accordion {
+    opacity: 0;
+    margin-bottom: 20px
+}
+
+.accordion_header{
+    outline: none;
+}
+
+.accordion_header{
+    border-radius: 0;
+    user-select: none;
+}
+
+.accordion_body{
+    width: 100%;
+}
+
+
+
+.btnSave:hover{
+    background-color: #ffffff;
+    color: #31ac00;
+}
+
+.selectAllorNobody{
+    float: right;
+}
+
+.btnSelectAll, .btnSelectNobody{
+    display: inline-block;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 10px 40px;
+    font-weight: bold;
+}
+
+.btnSelectAll{
+    background-color: #4cacff;
+    border: 3px solid #4cacff;
+}
+
+.btnSelectAll:hover{
+    background-color: #ffffff;
+    color: #4cacff;
+}
+
+.btnSelectNobody{
+    background-color: #8d0404;
+    border: 3px solid #8d0404;
+}
+
+.btnSelectNobody:hover{
+    background-color: #ffffff;
+    color: #8d0404;
+}
+
+.label_disciplineStudent,
+.label_disciplineStudent.ui-visual-focus.ui-state-focus{
+    margin: 0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    background-color: #8d0404;
+    color: #ffffff;
+    transition: background .2s;
+    border: 1px solid #b20606;
+}
+
+.label_disciplineStudent i.fa{
+    margin: 0;
+    width: auto;
+    font-size: 34px;
+}
+
+.label_disciplineStudent.ui-state-active,
+.label_disciplineStudent.ui-state-active.ui-visual-focus.ui-state-focus{
+    background-color: #31ac00 !important;
+    border: 1px solid #31ac00;
+}
+
+label.ui-button:active {
+    font-weight: normal;
+    color: #ffffff;
+    outline: none;
+}
+
+.label_disciplineStudent.ui-button.ui-state-active:hover{
+    background-color: #4de511;
+    border: 1px solid #4de511;
+    color: #ffffff;
+}
+
+.label_disciplineStudent.ui-button:hover{
+    background: #b20606;
+    border: 1px solid #b20606;
+    color: #ffffff;
+}
+
+.accordion.ui-accordion {
+    transition: opacity .3s;
+    opacity: 1;
+}
+
+.ui-accordion .ui-accordion-content {
+    padding: 20px;
+}
+
+.ui-state-active, 
+.ui-widget-content .ui-state-active, 
+.ui-widget-header .ui-state-active, 
+a.ui-button:active, 
+.ui-button:active {
+    background-color: #4cacff;
+}
+
+.ui-corner-bottom {
+    border-radius: 0;
+}
+
+.ui-accordion .ui-accordion-header:first-child {
+    margin-top: 0;
+}
+
+.ui-accordion .ui-accordion-header {
+    margin-top: 20px;
+}
+
+.ui-checkboxradio-label:focus {
+    outline: none;
+}
+
+.ui-visual-focus{
+    box-shadow: none !important;
+}
+
+.ui-button {
+    padding: 0;
+}

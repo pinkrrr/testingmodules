@@ -19,5 +19,6 @@ namespace TestingModule.Models
         public int LectureId { get; set; }
         public int ModuleId { get; set; }
         public string Text { get; set; }
+        public int QuestionType { get; set; }
     }
 }

@@ -17,9 +17,9 @@ namespace TestingModule.Models
         public int Id { get; set; }
         public int LectureId { get; set; }
         public int DisciplineId { get; set; }
-        public int GroupId { get; set; }
         public System.DateTime StartTime { get; set; }
         public Nullable<System.DateTime> EndTime { get; set; }
-        public Nullable<int> ModulesPassed { get; set; }
+        public bool IsFrozen { get; set; }
+        public int LectorId { get; set; }
     }
 }

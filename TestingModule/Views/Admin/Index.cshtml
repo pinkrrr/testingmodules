@@ -1,12 +1,148 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@using TestingModule.Additional
+@using TestingModule.Models
+@model TestingModule.ViewModels.ReasignViewModel
+@{
+    ViewBag.Title = "Домашня сторінка";
+    Layout = "~/Views/Shared/_LayoutAdminHomepage.cshtml";
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
-<div class="jumbotron">
-    <h1>KROK TESTING</h1>
-    
-    @if (Request.IsAuthenticated)
-    {
-        <h2>Hello </h2>
-    }
-</div>
 
+@if (new AccountCredentials().GetRole() == RoleName.Lecturer)
+{
+    foreach (var discipline in
+        from d in Model.Disciplines
+        join lh in Model.LecturesHistories on d.Id equals lh.DisciplineId
+        group d by d.Id into dg
+        select dg.FirstOrDefault())
+    {
+        <div class="disciplineName">@discipline.Name</div>
+        foreach (var lecture in
+            from l in Model.Lectures
+            where l.DisciplineId==discipline.Id
+            join lh in Model.LecturesHistories on l.Id equals lh.LectureId
+            group l by l.Id into lj
+            select lj.FirstOrDefault())
+        {
+            <div class="lecture">
+                <div class="lecture_name">@lecture.Name</div>
+                <div class="lectures_dates">
+                    @foreach (var lectureHistory in Model.LecturesHistories.Where(h => h.LectureId == lecture.Id))
+                    {
+                        <a href="@Url.Action("unfreezelecture", "Admin", new { lectureHistoryId = lectureHistory.Id})" class="lecture_date">@lectureHistory.StartTime.ToLocalTime()</a>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <button class="addNewItem-btn"><i class="fa fa-plus" aria-hidden="true"></i> Розпочати лекцію</button>
+    <div class="popup popup-add popup-startLecture">
+        <div class="popup-body">
+            <div class="popup-content">
+                <div class="popup-title">Розпочату лекцію</div>
+                @using (Html.BeginForm("StartLecture", "Admin", FormMethod.Post))
+                {
+                    <form>
+
+                        <div class="popup-subtitle">Виберіть дисципліну</div>
+                        @*@Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name", new { @Id = "DisciplineId" }), "Виберіть дисципліну")*@
+                        @Html.DropDownListFor(model => Model.Disciplines[0].Id, new SelectList(Model.Disciplines, "Id", "Name"), new
+                   {
+                       @class = "startLecture_selectDiscipline",
+                       id = "ddldiscipline",
+                       //@onchange = "javascript:GetLecture(this.value);",
+                       AutoPostBack = "True"
+                   })
+                        <div class="popup-subtitle">Виберіть лекцію</div>
+                        @Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new
+                   {
+                       @id = "ddllecture",
+                       name = "ddllecture",
+                       @class = "startLecture_selectLecture"
+                   })
+
+                        @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name", new { @Id = "LectureId" }), "Виберіть лекцію")*@
+                        @*@Html.DropDownListFor(model => Model.Lectures[0].Id, new SelectList(Model.Lectures, "Id", "Name"), new { @class = "startLecture_selectLecture" })*@
+                        <div class="popup-subtitle">Виберіть групи</div>
+                        <div class="groupItems" id="dynamicGroups">
+                        </div>
+                        <div>
+                            <button class="btn popup-btn popup-start-btn" type="submit" disabled>Розпочати</button>
+                            <button class="btn popup-btn popup-cancel-btn closePopupBtn">Відмінити</button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="admin-info-list">
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-disciplines.jpg" class="icon" />
+            <div class="name">Дисциплін</div>
+            <div class="count">@Model.Disciplines.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-lecture.jpg" class="icon"  />
+            <div class="name">Лекцій</div>
+            <div class="count">@Model.Lectures.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-module.jpg" class="icon"  />
+            <div class="name">Модулів</div>
+            <div class="count">@Model.Modules.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-questions.jpg" class="icon"  />
+            <div class="name">Питань</div>
+            <div class="count">@Model.Questions.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-answers.jpg" class="icon"  />
+            <div class="name">Відповідей</div>
+            <div class="count">@Model.Answers.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-specialities.jpg" class="icon"  />
+            <div class="name">Спеціальностей</div>
+            <div class="count">@Model.Specialities.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-group.jpg" class="icon"  />
+            <div class="name">Груп</div>
+            <div class="count">@Model.Groups.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-students.jpg" class="icon"  />
+            <div class="name">Студентів</div>
+            <div class="count">@Model.Students.Count()</div>
+        </div>
+
+        <div class="admin-info">
+            <img src="~/Content/img/admin-icons/admin-icon-lector.jpg" class="icon" />
+            <div class="name">Лекторів</div>
+            <div class="count">@Model.Lectors.Count()</div>
+        </div>
+
+    </div>
+    @*<table>
+        <tr><td>Дисциплін</td><td>@Model.Disciplines.Count()</td></tr>
+        <tr><td>Лекцій</td><td>@Model.Lectures.Count()</td></tr>
+        <tr><td>Модулів</td><td>@Model.Modules.Count()</td></tr>
+        <tr><td>Питань</td><td>@Model.Questions.Count()</td></tr>
+        <tr><td>Відповідей</td><td>@Model.Answers.Count()</td></tr>
+        <tr><td>Спеціальностей</td><td>@Model.Specialities.Count()</td></tr>
+        <tr><td>Груп</td><td>@Model.Groups.Count()</td></tr>
+        <tr><td>Студентів</td><td>@Model.Students.Count()</td></tr>
+        <tr><td>Лекторів</td><td>@Model.Lectors.Count()</td></tr>
+    </table>*@
+}

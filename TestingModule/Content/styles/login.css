@@ -1,0 +1,42 @@
+﻿.active-user, .active-user_logout{
+    transition: color .2s, background .2s;
+    width: 100%;
+}
+
+.active-user_name:hover, .active-user_logout:hover{
+    background-color: #4cacff;
+}
+
+.active-username{
+    font-weight: bold;
+}
+
+.active-user_logout{
+
+}
+
+.main-login{
+    text-align: center;
+    font-size: 0;
+    height: 100%;
+}
+
+.main-login:before{
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    height: 100%;
+}
+
+.login-form{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+}
+
+.login-form .input-text {
+    width:100%
+}

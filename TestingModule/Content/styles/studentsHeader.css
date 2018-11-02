@@ -1,0 +1,32 @@
+﻿.studentHomepage .header{
+    width: 100%;
+    display: block;
+    font-size: 0;
+    border-bottom: 1px solid #0094ff;
+}
+
+.studentName, .logoutForm{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    height: 100%;
+}
+
+.studentName{
+    width: 70%;
+    color: #ffffff;
+    background-color: #0094ff;
+    text-decoration: none;
+}
+
+.logoutForm{
+    width: 30%;
+}
+
+.logoutForm .logout{
+    color: #0094ff;
+    text-decoration: none;
+}

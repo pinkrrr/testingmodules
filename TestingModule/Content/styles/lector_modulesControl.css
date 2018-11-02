@@ -1,0 +1,71 @@
+﻿.modulesBlock{
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    min-width: 710px;
+}
+
+.modulesBlock .title{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.modulesBlock .title span{
+    font-weight: 600;
+    color: #0a7be8
+}
+
+.modulesBlock .modulesList{
+    margin-bottom: 30px;
+}
+
+.modulesBlock .module{
+    font-size: 0;
+    padding: 10px 20px;
+    display: block;
+    position: relative;
+    border-color: #808080;
+    border-style: solid;
+    border-width: 1px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    transition: background-color .2s;
+}
+
+.modulesBlock .module:hover{
+    background-color: rgba(255, 255, 255, 0.5)
+}
+
+.modulesBlock .module:last-child{
+    border-bottom-width: 1px;
+}
+
+.modulesBlock .module .module_name, .modulesBlock .module .module_control{
+    position: relative;
+    vertical-align: baseline;
+    display: inline-block;
+}
+
+.modulesBlock .module .module_name{
+    padding-right: 15px;
+    font-size: 18px;
+    width: 60%;
+    text-align: left;
+}
+
+.modulesBlock .module .module_control{
+    text-align: right;
+    width: 40%;
+    min-width: 290px;
+}
+
+.modulesBlock .module .module_control .btnSave{
+    margin: 0;
+    display: inline-block;
+}
+
+.modulesBlock .btnStop{
+
+}

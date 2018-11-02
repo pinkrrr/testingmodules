@@ -1,0 +1,188 @@
+﻿.statistics_moduleName{
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.body-content__statistics .questions .question{
+    transition: background .2s;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.body-content__statistics .questions .question:hover{
+    background-color: #d3d3d3;
+}
+
+.body-content__statistics .questions .question .question_title{
+    transition: all .2s;
+}
+
+.body-content__statistics .questions .question:hover .question_title{
+   color: #000000;
+}
+
+.question_progressbar{
+  width: 58%;
+  height: 30px;
+  display: block;
+  position: relative;
+  border: 1px solid #000000;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  background-color: #ffffff;
+}
+
+.progress{
+  background-color: #0094ff;
+  transition: .2s;
+  width: 0;
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+.question_title{
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  font-size: 18px;
+  width: 40%;
+  margin-right: 2%;
+}
+
+.stopModule{
+    color: #ffffff;
+    background-color: #de1414;
+    border: 3px solid #de1414;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    transition: .3s;
+    font-weight: 600;
+}
+
+.stopModule:hover{
+    background-color: #ffffff;
+    color: #de1414;
+}
+
+.statisticsItem{
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.disciplineName{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.lecture{
+    padding: 10px 0;
+}
+
+.lecture_name{
+    font-size: 20px;
+}
+
+.lecture_date{
+    display: block;
+    padding: 5px 0px;
+    text-decoration: none;
+    color: #0094ff;
+    font-weight: bold;
+    transition: background .2s;
+}
+
+.lecture_date:hover{
+    background-color: #e0e0e0;
+}
+
+.chartsWrapper{
+    text-align: center;
+    font-size: 0;
+}
+
+.chartsWrapper .pieChart{
+    display: inline-block;
+    background-color: transparent;
+    width: 15vw;
+    height: 15vw;
+    min-width: 180px;
+    min-height: 180px;
+}
+
+.chartsWrapper .module{
+    font-size: 0;
+}
+
+.chartsWrapper .module{
+    margin-bottom: 20px;
+}
+
+.chartsWrapper .module_name{
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.chartsWrapper .group{
+    margin-bottom: 20px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    padding: 20px;
+    background-color: #efefef;
+    border-radius: 20px;
+    margin: 0 10px 20px;
+    border: 1px solid #3d3d3d;
+    width: 400px;
+}
+
+.chartsWrapper .group_name{
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.chartsWrapper .module .question{
+    display: block;
+    width: 100%;
+    margin: 0 auto 20px;
+    text-align: center;
+    font-size: 16px;
+    padding: 20px;
+    border: 1px solid #3d3d3d;
+    border-radius: 20px;
+    background-color: rgba(255,255,255,.9);
+}
+.chartsWrapper .module .question .question_text{
+    margin-bottom: 20px;
+}
+
+.body-content__statistics .group{
+    padding: 20px 0;
+    border-bottom: 1px solid #000000;
+}
+
+.body-content__statistics .group:first-child{
+    border-top: 1px solid #000000;
+}
+
+.body-content__statistics .group:last-child{
+    margin-bottom: 20px;
+}
+
+.body-content__statistics .group .group_name{
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#timer{
+    font-size: 48px;
+    color: red;
+    display: inline-block;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
