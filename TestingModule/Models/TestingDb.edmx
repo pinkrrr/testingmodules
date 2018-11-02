@@ -39,6 +39,8 @@
           <Property Name="DisciplineId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
           <Property Name="IsPassed" Type="bit" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
         </EntityType>
         <EntityType Name="CumulativeResponses">
           <Key>
@@ -85,6 +87,8 @@
           <Property Name="LectureId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
           <Property Name="IsPassed" Type="bit" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
         </EntityType>
         <EntityType Name="IndividualResponses">
           <Key>
@@ -333,6 +337,8 @@
           <Property Name="DisciplineId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="CumulativeRespons">
           <Key>
@@ -379,6 +385,8 @@
           <Property Name="LectureId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="IsPassed" Type="Boolean" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="IndividualRespons">
           <Key>
@@ -573,6 +581,8 @@
           <EntitySetMapping Name="CumulativeQuizPasseds">
             <EntityTypeMapping TypeName="testingDbModel.CumulativeQuizPassed">
               <MappingFragment StoreEntitySet="CumulativeQuizPassed">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="DisciplineId" ColumnName="DisciplineId" />
@@ -623,6 +633,8 @@
           <EntitySetMapping Name="IndividualQuizPasseds">
             <EntityTypeMapping TypeName="testingDbModel.IndividualQuizPassed">
               <MappingFragment StoreEntitySet="IndividualQuizPassed">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="IsPassed" ColumnName="IsPassed" />
                 <ScalarProperty Name="StudentId" ColumnName="StudentId" />
                 <ScalarProperty Name="LectureId" ColumnName="LectureId" />

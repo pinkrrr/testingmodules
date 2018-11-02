@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using TestingModule.Additional
+@using TestingModule.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -24,16 +26,16 @@
                     var c = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role);
                     if (Request.IsAuthenticated)
                     {
-                        if (c.Value.ToString() != "Student")
+                        if (!Context.User.IsInRole(RoleName.Student))
                         {
                             <!--<a href="@Url.Action("Index", "Admin")"><i class='fa fa-user-secret' aria-hidden='true'></i>admin</a>-->
                             <a href="@Url.Action("Disciplines", "Admin")"><i class='fa fa-graduation-cap' aria-hidden='true'></i>Дисципліни</a>
                         }
-                        if (c.Value.ToString() == "Lecturer")
+                        if (Context.User.IsInRole(RoleName.Lecturer))
                         {
                             <a href="@Url.Action("TotalStatistics", "Quiz")"><i class='fa fa-pie-chart' aria-hidden='true'></i>Статистика</a>
                         }
-                        if (c.Value.ToString() != "Lecturer")
+                        if (!Context.User.IsInRole(RoleName.Lecturer))
                         {
                             <a href="@Url.Action("Specialities", "Admin")"><i class='fa fa-book' aria-hidden='true'></i>Спеціальності</a>
                             <a href="@Url.Action("Lectors", "Admin")"><i class='fa fa-users' aria-hidden='true'></i>Лектори</a>
@@ -44,7 +46,7 @@
             @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-login" })*@
 
         </div>
-        <div class="body-content body-content__@(new TestingModule.Additional.AccountCredentials().GetRole())Homepage">
+        <div class="body-content body-content__@(AccountCredentials.GetRole())Homepage">
             @RenderBody()
         </div>
     </div>

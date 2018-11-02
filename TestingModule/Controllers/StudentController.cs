@@ -13,31 +13,30 @@ using TestingModule.ViewModels;
 namespace TestingModule.Controllers
 {
     [CustomAuthorize(RoleName.Student)]
-    public class StudentController : Controller
+    public class StudentController : BaseController
     {
-        private testingDbEntities _db;
-        private QuizManager _quizManager;
+        private readonly QuizManager _quizManager;
+        private readonly StudentPageHelper _studentPageHelper;
 
-        public StudentController()
+        public StudentController(ITestingDbEntityService context) : base(context)
         {
-            _db = new testingDbEntities();
-            _quizManager=new QuizManager();
+            _quizManager = new QuizManager(Context);
+            _studentPageHelper = new StudentPageHelper(Context);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _db.Dispose();
-                _quizManager = null;
+                _quizManager.Dispose();
+                _studentPageHelper.Dispose();
             }
             base.Dispose(disposing);
         }
 
         // GET: Student
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var studePageHelper = new StudentPageHelper();
             //Check for active quiz
             //var active = studePageHelper.CheckActiveQuiz(User.Identity as System.Security.Claims.ClaimsIdentity);
             //if (active != null)
@@ -45,29 +44,29 @@ namespace TestingModule.Controllers
             //    return RedirectToAction("/" + active, "Quiz");
             //}
             //If no active quiz, or already answered
-            var viewModels =
-                studePageHelper.StudentsDisciplinesList(User.Identity as System.Security.Claims.ClaimsIdentity);
-            return View(viewModels);
+            var model = await _studentPageHelper.StudentsDisciplinesList();
+            return View(model);
         }
 
         public async Task<ActionResult> StudentLectures(int disciplineId)
         {
-            System.Diagnostics.Stopwatch watch=new Stopwatch();
-            watch.Start();
             IList<Lecture> lect = new testingDbEntities().Lectures.Where(t => t.DisciplineId == disciplineId).ToList();
             IList<Discipline> disc = new testingDbEntities().Disciplines.ToList();
-            LectureQuizViewModel model = new LectureQuizViewModel { Lectures = lect, Disciplines = disc, LecturesForQuizId = await _quizManager.GetQuizForLectureAlailability(lect.Select(l=>l.DisciplineId).First())};
-            watch.Stop();
-            var result = watch.ElapsedMilliseconds;
+            LectureQuizViewModel model = new LectureQuizViewModel
+            {
+                Lectures = lect,
+                Disciplines = disc,
+                LecturesForQuizId = await _quizManager.GetQuizForLectureAlailability(lect.Select(l => l.DisciplineId).First())
+            };
             return View(model);
-            
+
         }
 
         public ActionResult StudentModules(int lectureId)
         {
-            var discId = _db.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
-            IList<Module> mod = _db.Modules.Where(t => t.LectureId == lectureId).ToList();
-            IList<Lecture> lect = _db.Lectures.Where(t => t.DisciplineId == discId).ToList();
+            var discId = Context.Lectures.FirstOrDefault(t => t.Id == lectureId).DisciplineId;
+            IList<Module> mod = Context.Modules.Where(t => t.LectureId == lectureId).ToList();
+            IList<Lecture> lect = Context.Lectures.Where(t => t.DisciplineId == discId).ToList();
             ReasignViewModel test = new ReasignViewModel() { Lectures = lect, Modules = mod };
             return View(test);
         }

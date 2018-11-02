@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
+<div id="timer"></div>
+
 <div class="questionBlock">
     <div class="question" data-questionid=""></div>
 
@@ -13,16 +15,4 @@
     <button id="nextIndividualQuestion" class="nextQuestion">Далі</button>
 </div>
 
-
-@section scripts
-{
-    <script>
-        var qModel = @Html.Raw(Json.Encode(@Model));
-
-        var quiz = $.connection.quizHub;
-        $.connection.hub.start();
-        quiz.client.reciveStopModule = function () {
-            window.location.href = "/";
-        }
-    </script>
-}
+@Html.Hidden("qModel", @Html.Raw(Json.Encode(Model)))

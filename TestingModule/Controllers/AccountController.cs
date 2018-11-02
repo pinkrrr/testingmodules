@@ -12,14 +12,36 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web.Routing;
 using TestingModule.Additional;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace TestingModule.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private testingDbEntities _context = new testingDbEntities();
+        private readonly ITestingModuleSignInManager _signInManager;
+        private readonly ITestingModuleUserManager _userManager;
+
+        public AccountController(
+            ITestingDbEntityService context,
+            ITestingModuleUserManager userManager,
+            ITestingModuleSignInManager signInManager) : base(context)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
+        /*protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _signInManager.Dispose();
+                _userManager.Dispose();
+            }
+            base.Dispose(disposing);
+        }*/
 
         #region Registration
+        /*
         public ActionResult Registration()
         {
             var registrationForm = CreateRegistrationViewmodel();
@@ -37,17 +59,17 @@ namespace TestingModule.Controllers
             //account.Login = student.Username;
             //account.Password = student.Pass;
             account.RoleId = 2;
-            _context.Students.Add(student);
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
+            Context.Students.Add(student);
+            Context.Accounts.Add(account);
+            Context.SaveChanges();
             return RedirectToHome();
         }
 
         private RegistrationFormViewModel CreateRegistrationViewmodel()
         {
-            var groups = _context.Groups.ToList();
-            var specialities = _context.Specialities.ToList();
-            var roles = _context.Roles.ToList();
+            var groups = Context.Groups.ToList();
+            var specialities = Context.Specialities.ToList();
+            var roles = Context.Roles.ToList();
             var registrationForm = new RegistrationFormViewModel()
             {
                 Account = new Account(),
@@ -57,7 +79,7 @@ namespace TestingModule.Controllers
                 Roles = roles
             };
             return registrationForm;
-        }
+        }*/
         #endregion
 
         #region Login
@@ -73,17 +95,29 @@ namespace TestingModule.Controllers
             return View(loginForm);
         }
 
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> LoginAttempt(Account account)
+        public async Task<ActionResult> Login(Account account)
         {
-            if (await AccountValid(account.Login, account.Password))
+            if (ModelState.IsValid)
             {
-                var roles = await _context.Roles.ToListAsync();
+                var user = await _userManager.FindByNameAsync(account.Login);
+                if (user == null)
+                {
+                    TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
+                    return RedirectToAction("Login");
+                }
+                await _signInManager.SignInAsync(user, false, false);
+                return RedirectToAction("Login");
+            }
+            TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
+            return RedirectToAction("Login");
+            /*if (await AccountValid(account.Login, account.Password))
+            {
+                var roles = await Context.Roles.ToListAsync();
                 ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
-                account = await _context.Accounts.SingleOrDefaultAsync(a => a.Login == account.Login && a.Password == account.Password);
+                account = await Context.Accounts.SingleOrDefaultAsync(a => a.Login == account.Login && a.Password == account.Password);
                 identity.AddClaims(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, account.Login),
@@ -93,7 +127,7 @@ namespace TestingModule.Controllers
                 });
                 if (account.RoleId == RoleName.LecturerId)
                 {
-                    Lector lector = await _context.Lectors.SingleOrDefaultAsync(s => s.AccountId == account.Id);
+                    Lector lector = await Context.Lectors.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                     identity.AddClaims(new[]
                     {
                         new Claim(ClaimTypes.Name,lector.Name),
@@ -102,14 +136,14 @@ namespace TestingModule.Controllers
                 }
                 if (account.RoleId == RoleName.StudentId)
                 {
-                    Student student =await _context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
+                    Student student = await Context.Students.SingleOrDefaultAsync(s => s.AccountId == account.Id);
                     identity.AddClaims(new[]
                     {
-                        new Claim("StudentId", _context.Students.Where(s => s.AccountId == account.Id).Select(s=>s.Id).SingleOrDefault().ToString()),
+                        new Claim("StudentId", Context.Students.Where(s => s.AccountId == account.Id).Select(s=>s.Id).SingleOrDefault().ToString()),
                         new Claim(ClaimTypes.Name, student.Name),
                         new Claim(ClaimTypes.Surname, student.Surname),
-                        new Claim("Speciality", await _context.Specialities.Where(sp => sp.Id == student.SpecialityId).Select(sp => sp.Name).SingleOrDefaultAsync()),
-                        new Claim("Group", await _context.Groups.Where(g => g.Id == student.GroupId).Select(g => g.Name).SingleOrDefaultAsync()),
+                        new Claim("Speciality", await Context.Specialities.Where(sp => sp.Id == student.SpecialityId).Select(sp => sp.Name).SingleOrDefaultAsync()),
+                        new Claim("Group", await Context.Groups.Where(g => g.Id == student.GroupId).Select(g => g.Name).SingleOrDefaultAsync()),
                     });
                 }
                 HttpContext.GetOwinContext().Authentication.SignIn(
@@ -118,18 +152,18 @@ namespace TestingModule.Controllers
 
             }
             TempData["FailLogin"] = "Неправильний логін, або пароль! Спробуйте ще раз.";
-            return RedirectToAction("Login");
+            return RedirectToAction("Login");*/
         }
 
         private async Task<bool> AccountValid(string username, string password)
         {
-            return await _context.Accounts.AnyAsync(a => a.Login == username && a.Password == password);
+            return await Context.Accounts.AnyAsync(a => a.Login == username && a.Password == password);
         }
 
         public ActionResult RedirectToHome()
         {
 
-            var role = new AccountCredentials().GetRole();
+            var role = AccountCredentials.GetRole();
             if (role == RoleName.Student)
             {
                 return RedirectToAction("Index", "Student");

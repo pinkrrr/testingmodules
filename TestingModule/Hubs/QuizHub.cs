@@ -21,13 +21,14 @@ namespace TestingModule.Hubs
     [Authorize]
     public class QuizHub : Hub
     {
-        private testingDbEntities _context;
-        private QuizManager _quizManager;
-
+        private readonly testingDbEntities _context;
+        private readonly QuizManager _quizManager;
+        public static RealtimeQuizStudentMapping Students = new RealtimeQuizStudentMapping();
+        
         public QuizHub()
         {
             _context = new testingDbEntities();
-            _quizManager = new QuizManager();
+            _quizManager = new QuizManager(_context);
         }
 
         public async Task<RealTimeQuizViewModel> SaveResponse(RealTimeQuizViewModel quizVM, int responseId)
@@ -55,6 +56,8 @@ namespace TestingModule.Hubs
 
         public async Task<IndividualQuizViewModel> SaveIndividualResponse(IndividualQuizViewModel quizVM, int responseId)
         {
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.IndividualQuizId && mh.IsPassed))
+                return null;
             if (await _context.IndividualResponses.AnyAsync(r =>
                 r.IndividualQuizId == quizVM.IndividualQuizId && r.StudentId == quizVM.Student.Id &&
                 r.QuestionId == quizVM.Question.Id))
@@ -71,9 +74,11 @@ namespace TestingModule.Hubs
             await _context.SaveChangesAsync();
             return await _quizManager.GetIndividualQnA(quizVM.IndividualQuizId);
         }
-        
+
         public async Task<CumulativeQuizViewModel> SaveCumulativeResponse(CumulativeQuizViewModel quizVM, int responseId)
         {
+            if (await _context.ModuleHistories.AnyAsync(mh => mh.ModuleId == quizVM.CumulativeQuizId && mh.IsPassed))
+                return null;
             if (await _context.CumulativeResponses.AnyAsync(r =>
                 r.CumulativeQuizId == quizVM.CumulativeQuizId && r.StudentId == quizVM.Student.Id &&
                 r.QuestionId == quizVM.Question.Id))
@@ -104,33 +109,41 @@ namespace TestingModule.Hubs
                 _locked = false;
             }
         }
-        
-        public void SendQVM(IEnumerable<string> groups, int moduleHistoryId)
+
+        public void SendQVM(IEnumerable<int> students, int moduleHistoryId)
         {
 
-            foreach (string group in Connections.Any(groups))
+            foreach (int student in Connections.Any(students))
             {
-                foreach (string connection in Connections.GetConnections(group))
+                foreach (string connection in Connections.GetConnections(student))
                 {
                     Clients.Client(connection).ReciveModuleHistoryId(moduleHistoryId);
                 }
             }
         }
 
-        public void StopModule()
+        public static void StopModule(int moduleHistoryId)
         {
-            Clients.All.reciveStopModule();
+            var hubcontext = GlobalHost.ConnectionManager.GetHubContext<QuizHub>();
+            foreach (var student in Students.GetStudents(moduleHistoryId))
+            {
+                foreach (string connection in Connections.GetConnections(student))
+                {
+                    hubcontext.Clients.Client(connection).RecieveStopModule();
+                }
+            }
         }
 
-        private static readonly ConnectionMapping<string> Connections =
-            new ConnectionMapping<string>();
+        private static readonly ConnectionMapping<int> Connections =
+            new ConnectionMapping<int>();
+
 
         public override Task OnConnected()
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-                Connections.Add(group, Context.ConnectionId);
+                int studentId = AccountCredentials.GetStudentId((ClaimsIdentity)Context.User.Identity);
+                Connections.Add(studentId, Context.ConnectionId);
             }
             return base.OnConnected();
         }
@@ -139,8 +152,8 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-                Connections.Remove(group, Context.ConnectionId);
+                int studentId = AccountCredentials.GetStudentId((ClaimsIdentity)Context.User.Identity);
+                Connections.Remove(studentId, Context.ConnectionId);
             }
             return base.OnDisconnected(stopCalled);
         }
@@ -149,10 +162,10 @@ namespace TestingModule.Hubs
         {
             if (Context.User.IsInRole(RoleName.Student))
             {
-                string group = new AccountCredentials().GetStudentGroup((ClaimsIdentity)Context.User.Identity);
-                if (!Connections.GetConnections(group).Contains(Context.ConnectionId))
+                int studentId = AccountCredentials.GetStudentId((ClaimsIdentity)Context.User.Identity);
+                if (!Connections.GetConnections(studentId).Contains(Context.ConnectionId))
                 {
-                    Connections.Add(group, Context.ConnectionId);
+                    Connections.Add(studentId, Context.ConnectionId);
                 }
             }
 
@@ -163,8 +176,8 @@ namespace TestingModule.Hubs
         {
             if (disposing)
             {
-                _context = null;
-                _quizManager = null;
+                _context.Dispose();
+                _quizManager.Dispose();
             }
             base.Dispose(disposing);
         }

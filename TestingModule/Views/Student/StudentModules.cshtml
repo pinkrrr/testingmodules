@@ -1,8 +1,7 @@
 ﻿@model TestingModule.ViewModels.ReasignViewModel
 @{
     ViewBag.Title = "Модулі";
-    Layout = "~/Views/Shared/_Layoutstudent.cshtml";
-}
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";}
 
 
 @if (@TempData["Success"] != null)
@@ -42,17 +41,14 @@
 }
 else
 {
-    <h1><u>@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Name</u></h1>
-    <h1>Модулі лекції</h1>
+    <h1 class="lecture-name">Лекція: <span>«@Model.Lectures.FirstOrDefault(t => t.Id == Model.Modules.FirstOrDefault().LectureId).Name»</span></h1>
 
         foreach (var item in Model.Modules.OrderBy(t => t.Name))
         {
-            
-            <h2>@item.Name</h2>
-            <h3>Матеріали модуля</h3>
+            <h2 class="module-name">Модуль: <span>«@item.Name»</span></h2>
         if (item.Description != null)
         {
-            <div class="description">@Html.Raw(item.Description)</div>
+            <div class="student-module-description">@Html.Raw(item.Description)</div>
         }
         else
         {

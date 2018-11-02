@@ -7,7 +7,7 @@
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
 
-@if (new AccountCredentials().GetRole() == RoleName.Lecturer)
+@if (AccountCredentials.GetRole() == RoleName.Lecturer)
 {
     foreach (var discipline in
         from d in Model.Disciplines

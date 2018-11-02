@@ -31,7 +31,6 @@
 
         function showPopupEdit($inputTexts) {
             $popup.edit.addClass('popup-active');
-            console.log($inputTexts);
             $inputTexts.each(function (i) {
                 $popup.edit.find('.input-text').eq(i).val($(this).text());
             });
@@ -353,17 +352,13 @@
         function showNextQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
@@ -372,17 +367,13 @@
         function showNextIndividualQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveIndividualResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
@@ -391,17 +382,13 @@
         function showNextCumulativeQuestion() {
             var selectedAnswerId = getSelectedAnswerId();
             if (selectedAnswerId) {
-                var quizHub = $.connection.quizHub;
-                $.connection.hub.start().done(function () {
-                    quizHub.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
-                        _model = model;
-                        console.log(_model);
-                        setQuestionData(_model);
-                    }).fail(function () {
-                        quizFinished();
-                    });
+                var quiz = $.connection.quizHub;
+                quiz.server.saveCumulativeResponse(_model, selectedAnswerId).done(function (model) {
+                    _model = model;
+                    setQuestionData(_model);
+                }).fail(function () {
+                    quizFinished();
                 });
-
             } else {
                 return;
             }
@@ -425,16 +412,8 @@
             $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
         }
 
-        function quizTimerForStudent() {
-            console.log(_model);
-        }
-
-
-        quizTimerForStudent();
         initSelectAnswer();
         setQuestionData(_model);
-        //initNextQuestion();
-        //initNextIndividualQuestion();
 
     }
 
@@ -458,8 +437,6 @@
             }).appendTo('.body-content__statistics');
 
             statisticsModel.Groups.forEach(function (group) {
-
-                console.log(questionList);
 
                 $('<div>', {
                     class: 'group',
@@ -525,6 +502,11 @@
 
 });
 
+function quizFinished() {
+    $('.questionBlock').remove();
+    $('<div class="quizFinished"><h3>Тест закінчено.</h3><h4>Дякую за увагу!</h4></div>').prependTo('.studentBody');
+}
+
 function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
     var progress = correctAnswersCount / totalAnswersCount * 100;
     $('.body-content__statistics #group' + gID + ' .question[data-question-id="' + qID + '"] .question_progressbar .progress').css('width', progress + '%');
@@ -541,8 +523,6 @@ function progress(gID, qID, correctAnswersCount, totalAnswersCount) {
 stopModule();*/
 
 function historyStatisticsPage(model) {
-
-    console.log(model);
 
     function drawChart() {
 
@@ -668,7 +648,7 @@ function historyStatisticsPage(model) {
 }
 
 var ckeditorInit = function () {
-    console.log('ckeditor');
+    //console.log('ckeditor');
     CKEDITOR.replace('ckeditor');
 };
 

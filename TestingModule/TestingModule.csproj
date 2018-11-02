@@ -48,6 +48,12 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.4.0.2\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="BundleTransformer.Core, Version=1.9.171.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
       <HintPath>..\packages\BundleTransformer.Core.1.9.171\lib\net40\BundleTransformer.Core.dll</HintPath>
     </Reference>
@@ -73,7 +79,10 @@
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.4.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.2\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
@@ -104,6 +113,9 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -187,18 +199,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Additional\AdminPageHelper.cs" />
+    <Compile Include="Additional\AuthenticationManager.cs" />
     <Compile Include="Additional\Deleting.cs" />
     <Compile Include="Additional\Editing.cs" />
+    <Compile Include="Additional\IAuthenticationManager.cs" />
+    <Compile Include="Additional\IDependency.cs" />
+    <Compile Include="Additional\ITestingModuleSignInManager.cs" />
+    <Compile Include="Additional\ITestingModuleUserManager.cs" />
+    <Compile Include="Additional\ITestingModuleUserStore.cs" />
     <Compile Include="Additional\LectureHistoryHelper.cs" />
     <Compile Include="Additional\QuizManager.cs" />
     <Compile Include="Additional\AccountCredentials.cs" />
     <Compile Include="Additional\StudentPageHelper.cs" />
+    <Compile Include="Additional\TestingDBEntityService.cs" />
+    <Compile Include="Additional\TestingModuleSignInManager.cs" />
+    <Compile Include="Additional\TestingModuleUserManager.cs" />
+    <Compile Include="Additional\TestingModuleUserStore.cs" />
     <Compile Include="Additional\UsernameAndPassword.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
@@ -262,9 +285,11 @@
     <Compile Include="Models\Question.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\QuizTimer.cs" />
     <Compile Include="Models\RealtimeModulesPassed.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RealtimeQuizStudentMapping.cs" />
     <Compile Include="Models\RealtimeRespons.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
@@ -285,6 +310,7 @@
     <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>TestingDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TestingModuleUser.cs" />
     <Compile Include="ViewModels\ActiveLectureViewModel.cs" />
     <Compile Include="ViewModels\DiscLecotorViewModel.cs" />
     <Compile Include="ViewModels\QueAns.cs" />
@@ -535,6 +561,9 @@
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js">
       <DependentUpon>jquery.unobtrusive-ajax.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\quizstudent.js" />
+    <Content Include="Scripts\realtimequizlector.js" />
+    <Content Include="Scripts\studentcheckforquiz.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -590,7 +619,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ViewModels\Editors\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -8,8 +8,15 @@ using TestingModule.Models;
 
 namespace TestingModule.Controllers
 {
-    public class ErrorController : Controller
+    public class ErrorController : BaseController
     {
+        private readonly Editing _editing;
+
+        public ErrorController(ITestingDbEntityService context) : base(context)
+        {
+            _editing = new Editing(Context);
+        }
+
         // GET: Error
         public ActionResult NotFound()
         {
@@ -22,13 +29,12 @@ namespace TestingModule.Controllers
 
         public ActionResult Dashboard()
         {
-            var test = new List<ExeptionLog>();
-            test = new testingDbEntities().ExeptionLogs.Where(t => t.Resolved == false).ToList();
+            var test = Context.ExeptionLogs.Where(t => t.Resolved == false).ToList();
             return View(test);
         }
         public ActionResult Resolved(int exeptionId)
         {
-            new Editing().EditExeption(exeptionId);
+            _editing.EditExeption(exeptionId);
             return RedirectToAction("Dashboard");
         }
     }

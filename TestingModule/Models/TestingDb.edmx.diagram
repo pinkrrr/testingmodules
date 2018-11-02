@@ -20,16 +20,16 @@
         <EntityTypeShape EntityType="testingDbModel.LectureHistoryGroup" Width="1.5" PointX="8.75" PointY="0.75" />
         <EntityTypeShape EntityType="testingDbModel.Lecture" Width="1.5" PointX="8.75" PointY="3.75" />
         <EntityTypeShape EntityType="testingDbModel.LecturesHistory" Width="1.5" PointX="8.75" PointY="6.75" />
-        <EntityTypeShape EntityType="testingDbModel.ModuleHistory" Width="1.5" PointX="0.75" PointY="9.75" />
-        <EntityTypeShape EntityType="testingDbModel.Module" Width="1.5" PointX="2.75" PointY="9.75" />
-        <EntityTypeShape EntityType="testingDbModel.Question" Width="1.5" PointX="4.75" PointY="9.75" />
-        <EntityTypeShape EntityType="testingDbModel.RealtimeModulesPassed" Width="1.5" PointX="10.75" PointY="0.75" />
-        <EntityTypeShape EntityType="testingDbModel.RealtimeRespons" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.ModuleHistory" Width="1.5" PointX="4.75" PointY="9.75" />
+        <EntityTypeShape EntityType="testingDbModel.Module" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Question" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="testingDbModel.RealtimeModulesPassed" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="testingDbModel.RealtimeRespons" Width="1.5" PointX="10.75" PointY="6.75" />
         <EntityTypeShape EntityType="testingDbModel.Role" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="testingDbModel.Speciality" Width="1.5" PointX="10.75" PointY="7.75" />
-        <EntityTypeShape EntityType="testingDbModel.StudentDiscipline" Width="1.5" PointX="8.75" PointY="10.75" />
-        <EntityTypeShape EntityType="testingDbModel.Student" Width="1.5" PointX="10.75" PointY="10.75" />
-        <EntityTypeShape EntityType="testingDbModel.sysdiagram" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.Speciality" Width="1.5" PointX="8.75" PointY="10.75" />
+        <EntityTypeShape EntityType="testingDbModel.StudentDiscipline" Width="1.5" PointX="10.75" PointY="10.75" />
+        <EntityTypeShape EntityType="testingDbModel.Student" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="testingDbModel.sysdiagram" Width="1.5" PointX="2.75" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

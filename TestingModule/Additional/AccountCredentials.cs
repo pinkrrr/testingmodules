@@ -20,7 +20,7 @@ namespace TestingModule.Additional
 {
     public class AccountCredentials
     {
-        public string GetRole()
+        public static string GetRole()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return identity.Claims.Where(c => c.Type == ClaimTypes.Role)
@@ -28,38 +28,50 @@ namespace TestingModule.Additional
                    .SingleOrDefault();
         }
 
-        public async Task<Student> GetStudent()
+        public static async Task<Student> GetStudent()
         {
             testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            return await context.Students.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            int studentId = Convert.ToInt32(claimsIdentity.Identity.GetUserId());
+            return await context.Students.SingleOrDefaultAsync(s => s.Id == studentId);
         }
 
-        public int GetStudentId()
+        public static int GetStudentId()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            return int.Parse(identity.Claims.Where(c => c.Type == "StudentId").Select(c => c.Value).SingleOrDefault());
+            return Convert.ToInt32(identity.Identity.GetUserId());
+
         }
 
-        public string GetStudentGroup(ClaimsIdentity identity)
+        public static int GetStudentId(ClaimsIdentity identity)
+        {
+            return Convert.ToInt32(identity.GetUserId());
+        }
+
+        public static string GetStudentGroup(ClaimsIdentity identity)
         {
             return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
         }
 
-        public string GetStudentGroup()
+        public static string GetStudentGroup()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault();
         }
 
-        public async Task<Lector> GetLector()
+        public static async Task<Lector> GetLector()
         {
             testingDbEntities context = new testingDbEntities();
             var claimsIdentity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int accountId = int.Parse(claimsIdentity.Claims.Where(c => c.Type == "Id").Select(c => c.Value).SingleOrDefault());
-            Lector lector = await context.Lectors.SingleOrDefaultAsync(s => s.AccountId == accountId);
+            var lectorId = Convert.ToInt32(claimsIdentity.Identity.GetUserId());
+            Lector lector = await context.Lectors.SingleOrDefaultAsync(s => s.Id == lectorId);
             return lector;
+        }
+
+        public static bool AuthorizedAs(string role)
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            return identity.Claims.Where(c => c.Type == "Group").Select(c => c.Value).SingleOrDefault() == role;
         }
     }
 }

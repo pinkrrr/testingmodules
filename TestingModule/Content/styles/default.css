@@ -35,6 +35,13 @@ h2 .groupName {
     margin: 0 20px 20px 0;
 }
 
+    .btnSave.disabled {
+        background-color: #9b9b9b;
+        border: 3px solid #9b9b9b;
+        color: #ffffff;
+        cursor: not-allowed;
+    }
+
 .btnSave[disabled]{
     background-color: #9b9b9b;
     border: 3px solid #9b9b9b;

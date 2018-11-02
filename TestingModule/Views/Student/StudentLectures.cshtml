@@ -2,8 +2,7 @@
 @model LectureQuizViewModel
 @{
     ViewBag.Title = "Лекції";
-    Layout = "~/Views/Shared/_Layoutstudent.cshtml";
-}
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";}
 
 @if (@TempData["Success"] != null)
 {
@@ -43,17 +42,27 @@ else
 {
     <h2>Лекції дисципліни <u>@Model.Disciplines.FirstOrDefault(t => t.Id == Model.Lectures.FirstOrDefault().DisciplineId).Name</u></h2>
     <table class="table" border="1">
-        <tr class="table-row table-header-row"><th class="table-header table-header_name">Назва</th></tr>
+        <tr class="table-row table-header-row">
+            <th class="table-header table-header_name" style="width:80%">Назва</th>
+            <th>Індивідуальний тест</th>
+        </tr>
 
         @foreach (var item in Model.Lectures.OrderBy(t => t.Name))
         {
             <tr class="table-row">
                 <td class="table-item table-item_name"><a data-id="@item.Id" href="lectures/@item.Id/modules" class="table-item_name_text" data-editable>@item.Name</a></td>
-                @if (Model.LecturesForQuizId.Any(lfq=>lfq.Key==item.Id))
-                {
-                    <td class="table-item table-item_name"><a href=@Url.Action("IndividualQuiz","Quiz",new{individualQuizId=Model.LecturesForQuizId.Where(lfq=>lfq.Key==item.Id).Select(lfq=>lfq.Value).SingleOrDefault()})>Пройти тест</a></td>
-                }
-
+                <td class="table-item table-item_name" style="text-align: center">
+                    @if (Model.LecturesForQuizId.Any(lfq => lfq.Key == item.Id))
+                    {
+                        <form action=@Url.Action("IndividualQuiz", "Quiz", new {individualQuizId = Model.LecturesForQuizId.Where(lfq => lfq.Key == item.Id).Select(lfq => lfq.Value).SingleOrDefault()})>
+                            <button type="submit" class="btnSave">Пройти тест</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btnSave disabled" title="Лекційний тест не пройдений, зверніться до лектора даної дисципліни.">Пройти тест</button>
+                    }
+                </td>
             </tr>
         }
 
